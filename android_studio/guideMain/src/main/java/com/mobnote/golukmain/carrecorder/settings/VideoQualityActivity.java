@@ -115,6 +115,7 @@ public class VideoQualityActivity extends CarRecordBaseActivity implements OnCli
             mLayoutHigh720.setVisibility(View.VISIBLE);
             mLayoutMiddle720.setVisibility(View.VISIBLE);
         }
+
         if(IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().mIPCControlManager.mProduceName)){
             mLayoutHigh720.setVisibility(View.VISIBLE);
         }

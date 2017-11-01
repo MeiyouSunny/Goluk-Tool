@@ -286,6 +286,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 
 	private void saveCurrentState() {
 		SettingUtils.getInstance().putInt("ipctime", mCurrentState);
+		SettingUtils.getInstance().putBoolean("systemtime", mCurrentState == STATE_AUTO);
 	}
 
 	private void click_Date() {

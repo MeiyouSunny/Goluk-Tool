@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
-import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
 
 import java.util.ArrayList;
 import java.util.List;

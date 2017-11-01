@@ -8,7 +8,7 @@
     <item>
         <bitmap
             android:gravity="center"
-            android:src="@drawable/img_ae_trailer" />
+            android:src="@drawable/goluk_logo" />
     </item>
 
 </layer-list>

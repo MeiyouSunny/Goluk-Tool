@@ -153,6 +153,9 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	}
 
 	private void httpPost(boolean flag, String operation, String timestamp) {
+		if (GolukUtils.isCurrWifiGolukT(mContext)) {
+			return;
+		}
 		curOperation = operation;
 		if (flag) {
 			mRTPullListView.firstFreshState();

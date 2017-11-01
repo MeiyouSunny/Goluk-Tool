@@ -1085,6 +1085,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.close();
         }
+        mBaseApp.setIpcDisconnect();
         mLoadingDialog = null;
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
@@ -1283,6 +1284,8 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         isAlreadyExit = true;
         mBaseApp.isAlreadyLive = false;
         SharedPrefUtil.setIsLiveNormalExit(true);
+        // 注册回调监听
+        GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("live");
         // 移除监听
         mBaseApp.removeLocationListener(TAG);
         mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);

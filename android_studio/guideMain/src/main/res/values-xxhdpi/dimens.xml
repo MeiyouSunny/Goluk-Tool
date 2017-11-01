@@ -7,6 +7,10 @@
     <dimen name="live_text_size">25sp</dimen>
     <dimen name="live_text_time1_size">14sp</dimen>
     <dimen name="live_pause_size">14sp</dimen>
+    <dimen name="live_nickname_size">14sp</dimen>
+    <dimen name="live_time_size">12sp</dimen>
+    <dimen name="live_address_size">10sp</dimen>
+    <dimen name="share_type_size">14sp</dimen>
 
     <dimen name="indicator_right_padding">10dp</dimen>
     <dimen name="indicator_corner_radius">12dp</dimen>

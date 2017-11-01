@@ -20,7 +20,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.method.DigitsKeyListener;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -140,6 +143,11 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		mTextRight.setOnClickListener(this);
 		mEditSuggest.addTextChangedListener(mTextWatcher1);
 		mEditConnection.addTextChangedListener(mTextWatcher2);
+		if(!mApp.isMainland()){
+			mEditConnection.setHint(getResources().getString(R.string.email_hint));
+			mEditConnection.setInputType(InputType.TYPE_CLASS_TEXT|InputType.TYPE_TEXT_VARIATION_WEB_EMAIL_ADDRESS);
+			mEditConnection.setKeyListener(DigitsKeyListener.getInstance("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@._"));
+		}
 	}
 
 	@Override
@@ -160,6 +168,12 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		userOpinion = mEditSuggest.getText().toString();
 		userContact = mEditConnection.getText().toString();
 		UserUtils.hideSoftMethod(this);
+		if(mApp.isMainland()) {
+			if (TextUtils.isEmpty(userContact) || !UserUtils.emailValidation(userContact)) {
+				showToast(R.string.email_invalid);
+				return;
+			}
+		}
 		if(userOpinion.trim().equals("") && (userOpinion.replaceAll(" ", "")).equals("")) {
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_content_null));
 		} else {

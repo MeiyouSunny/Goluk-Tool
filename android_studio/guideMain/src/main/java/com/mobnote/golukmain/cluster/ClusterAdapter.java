@@ -58,7 +58,7 @@ import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 
 @SuppressLint("InflateParams")
-public class ClusterAdapter extends BaseAdapter implements IRequestResultListener, ZhugeParameterFn {
+public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IRequestResultListener, ZhugeParameterFn {
     private Context mContext = null;
 
     static final int VIEW_TYPE_HEAD = 0;
@@ -794,6 +794,28 @@ public class ClusterAdapter extends BaseAdapter implements IRequestResultListene
         FlowLayout nTagsFL;
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        int action = event.getAction();
+        int id = v.getId();
+
+        if (id == R.id.share_btn) {
+            Button sharebtn = (Button)v;
+            switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                Drawable more_down = mContext.getResources().getDrawable(R.drawable.share_btn_press);
+                sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_down, null, null, null);
+                sharebtn.setTextColor(Color.rgb(59, 151, 245));
+                break;
+            case MotionEvent.ACTION_UP:
+                Drawable more_up = mContext.getResources().getDrawable(R.drawable.share_btn);
+                sharebtn.setCompoundDrawablesWithIntrinsicBounds(more_up, null, null, null);
+                sharebtn.setTextColor(Color.rgb(136, 136, 136));
+                break;
+            }
+        }
+        return false;
+    }
 
     public void startUserCenter(VideoSquareInfo clusterInfo) {
         GolukUtils.startUserCenterActivity(mContext, clusterInfo.mUserEntity.uid);

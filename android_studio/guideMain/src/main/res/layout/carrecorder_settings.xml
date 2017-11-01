@@ -42,27 +42,33 @@
             <RelativeLayout
                 android:id="@+id/rlcx_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
+                    android:id="@+id/tv_g_setting_storage"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_toLeftOf="@+id/sc_right"
                     android:text="@string/rlcx_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/mStorayeText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_toLeftOf="@+id/sc_right"
+                    android:layout_below="@+id/tv_g_setting_storage"
                     android:gravity="center_vertical"
-                    android:paddingRight="10dp"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="6dp"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -93,27 +99,34 @@
             <RelativeLayout
                 android:id="@+id/mVideoDefinition"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
+                    android:id="@+id/tv_g_setting_vid_quality"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
+                    android:layout_toLeftOf="@+id/vd_r"
+                    android:layout_marginTop="6dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_alignParentTop="true"
                     android:text="@string/spzl_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/mVideoText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_g_setting_vid_quality"
                     android:layout_toLeftOf="@+id/vd_r"
                     android:gravity="center_vertical"
-                    android:paddingRight="10dp"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="6dp"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -145,13 +158,15 @@
             <RelativeLayout
                 android:id="@+id/hdr_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:layout_height="wrap_content"
+                android:background="@color/setting_white_color">
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/hdr"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/hdr_title"
@@ -165,6 +180,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
@@ -176,12 +193,12 @@
 
                 <TextView
                     android:text="@string/hdr_title"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignLeft="@+id/hdr"
-                    android:visibility="gone"
-                    android:layout_marginLeft="12dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_centerVertical="true"
                     android:id="@+id/textView" />
             </RelativeLayout>
 
@@ -189,8 +206,8 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:background="@color/setting_white_color" >
+                android:layout_height="wrap_content"
+                android:background="@color/setting_white_color">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -198,6 +215,11 @@
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/zdxhlx"
                     android:text="@string/zdxhlx_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -206,6 +228,8 @@
                     android:id="@+id/zdxhlx"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -215,7 +239,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             
@@ -224,32 +247,48 @@
             <RelativeLayout
                 android:id="@+id/ry_settings_wonderful_video_type"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
+                    android:id="@+id/tv_wonderful_vid_type_hint"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
                     android:text="@string/str_wonderful_video_type_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_settings_wonderfulvideo_type_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_wonderful_vid_type_hint"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/iv_wonderful_vid_type"
                     android:layout_marginRight="15dp"
                     android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
-                
+
+                <ImageButton
+                    android:id="@+id/iv_wonderful_vid_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
@@ -259,6 +298,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             
@@ -267,12 +307,15 @@
             <RelativeLayout
                 android:id="@+id/rl_carrecorder_settings_wonderfulvideo_quality"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
+                    android:id="@+id/tv_wonderful_vid_quality"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="6dp"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
@@ -283,15 +326,29 @@
                 <TextView
                     android:id="@+id/tv_carrecorder_settings_wonderfulvideo_quality_text"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_wonderful_vid_quality"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/iv_wonderful_vid_quality"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
                     android:layout_marginRight="15dp"
                     android:drawablePadding="10dp"
                     android:textColor="@color/setting_right_text_color"
-                    android:drawableRight="@drawable/icon_next_press"
                     android:text="1080P"
                     android:textSize="15sp" />
+
+                <ImageButton
+                    android:id="@+id/iv_wonderful_vid_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -305,13 +362,16 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/sylz"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/sylz_title"
@@ -322,6 +382,8 @@
                     android:id="@+id/sylz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -331,6 +393,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
             
@@ -477,13 +540,17 @@
             <RelativeLayout
                 android:id="@+id/kgjtsy_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/kgjtsy"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/str_settings_kgjtsy_title"
@@ -494,6 +561,8 @@
                     android:id="@+id/kgjtsy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -512,13 +581,17 @@
             <RelativeLayout
                 android:id="@+id/jcsp_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/jcsp"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/jcsp_title"
@@ -529,6 +602,8 @@
                     android:id="@+id/jcsp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -554,13 +629,17 @@
             <RelativeLayout
                 android:id="@+id/image_flip_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/btn_settings_image_flip"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/str_settings_image_flip_title"
@@ -571,6 +650,8 @@
                     android:id="@+id/btn_settings_image_flip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -579,26 +660,17 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="1px"
-                    android:layout_marginLeft="15dp"
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
+            <!-- 视频水印 -->
+
             <RelativeLayout
                 android:id="@+id/ry_t_settings_video_logo"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_video_logo_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
 
                 <Button
                     android:id="@+id/btn_t_settings_video_logo"
@@ -611,39 +683,68 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color" />
-            </RelativeLayout>
-            <RelativeLayout
-                android:id="@+id/rl_anti_flicker"
-                android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:visibility="gone"
-                android:background="@color/setting_white_color" >
-
-                <TextView
-                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_video_logo"
+                    android:text="@string/str_settings_video_logo_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_anti_flicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/setting_white_color" >
+
+                <TextView
+                    android:id="@+id/tv_tv_carrecorder_settings_anti_flicker_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/iv_carrecorder_settings_anti_flicker"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
                     android:text="@string/setting_anti_flicker"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_carrecorder_settings_anti_flicker"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_tv_carrecorder_settings_anti_flicker_hint"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/iv_carrecorder_settings_anti_flicker"
                     android:gravity="center_vertical"
                     android:layout_marginRight="15dp"
+                    android:layout_marginLeft="15dp"
                     android:drawablePadding="10dp"
+                    android:layout_marginBottom="6dp"
                     android:textColor="@color/setting_right_text_color"
-                    android:drawableRight="@drawable/icon_next_press"
                     android:text="@string/anti_flicker_50hz"
                     android:textSize="15sp" />
+
+                <ImageView
+                    android:id="@+id/iv_carrecorder_settings_anti_flicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -659,20 +760,25 @@
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:text="@string/str_smart_driving"/>
+
             <!-- 疲劳驾驶语音提示 -->
 
             <RelativeLayout
                 android:id="@+id/fatigue_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_centerVertical="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_toLeftOf="@+id/btn_settings_fatigue"
+                    android:layout_alignParentLeft="true"
                     android:text="@string/str_settings_fatigue_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -681,6 +787,8 @@
                     android:id="@+id/btn_settings_fatigue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -703,13 +811,17 @@
             <RelativeLayout
                 android:id="@+id/pzgylmd_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
+                    android:id="@+id/tv_emerge_sensor"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@+id/pzgy"
                     android:gravity="center_vertical"
+                    android:layout_marginTop="6dp"
+                    android:layout_alignParentTop="true"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/pzgy_title"
@@ -718,11 +830,14 @@
 
                 <TextView
                     android:id="@+id/mSensitivityText"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/tv_emerge_sensor"
                     android:layout_toLeftOf="@+id/pzgy"
                     android:gravity="center_vertical"
                     android:paddingRight="10dp"
+                    android:paddingLeft="15dp"
+                    android:layout_marginBottom="6dp"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
@@ -749,13 +864,17 @@
             <RelativeLayout
                 android:id="@+id/parking_sleep_line"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/btn_settings_parking_sleep"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/str_settings_parking_sleep_title"
@@ -766,6 +885,8 @@
                     android:id="@+id/btn_settings_parking_sleep"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -793,14 +914,18 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:background="@color/setting_white_color" >
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@+id/tcaf"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:text="@string/str_settings_security_title"
@@ -811,6 +936,8 @@
                     android:id="@+id/tcaf"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
@@ -839,6 +966,8 @@
                 android:text="@string/pzgy_text"
                 android:textColor="#999999"
                 android:textSize="12sp" />
+
+            <!-- 移动侦测 -->
 
             <RelativeLayout
                 android:id="@+id/ry_t_settings_adas_move_motion"
@@ -907,9 +1036,6 @@
                     android:textColor="#047cf3"
                     android:textSize="10sp" />
             </LinearLayout>
-
-
-
             <!-- ADAS 驾驶安全辅助-->
             <RelativeLayout
                 android:id = "@+id/layout_adas_assistance"

@@ -234,7 +234,7 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 				}
 			}
 
-			if (upnameresult.success) {
+			if (upnameresult!=null && upnameresult.success) {
 				GolukApplication.getInstance().setMyinfo("", "", mSignNewText,null);
 				Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 				it.putExtra("itSign", mSignNewText);

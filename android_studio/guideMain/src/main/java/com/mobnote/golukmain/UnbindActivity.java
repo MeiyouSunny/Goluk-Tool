@@ -99,7 +99,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mIPCNumberText = (TextView) findViewById(R.id.goluk_mobile);
         mIPCVersionText = (TextView) findViewById(R.id.goluk_version);
         mIPCimage = (ImageView) findViewById(R.id.goluk_icon);
-
+        mUnbindBtn.setVisibility(View.GONE);
         mTextTitle.setText(this.getResources().getString(R.string.my_camera_title_text));
 
         /**
@@ -254,7 +254,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
             } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
-                GolukUtils.startUpdateActivity(this, 1, mIpcInfo, false);
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
             }
         }
     }

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/praiseLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp" >
+
+        <ImageView
+            android:id="@+id/userhead"
+            android:layout_width="37.33dp"
+            android:layout_height="37.33dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:contentDescription="@string/imgdes" />
+        <ImageView 
+            android:id="@+id/v"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_alignRight="@id/userhead"
+            android:layout_alignBottom="@id/userhead"
+            android:background="@drawable/authentication_bluev_icon"/>
+
+        <LinearLayout
+            android:id="@+id/userinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_toLeftOf="@+id/videopic"
+            android:layout_toRightOf="@+id/userhead"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#1163a2"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/desc"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <!-- 视频缩略图片 -->
+
+        <ImageView
+            android:id="@+id/videopic"
+            android:layout_width="100dp"
+            android:layout_height="37dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/imgdes" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="59dp"
+        android:layout_marginRight="14dp"
+        android:background="#e5e5e5" >
+    </View>
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 <resources>
 
     <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="sizeSmallEst">4dp</dimen>
     <dimen name="sizeSmall">8dp</dimen>
     <!-- Default screen margidpns, per the Android Design guidelines. -->
     <dimen name="size_small">8dp</dimen>
@@ -11,6 +12,10 @@
     <dimen name="live_text_size">25sp</dimen>
     <dimen name="live_text_time1_size">14sp</dimen>
     <dimen name="live_pause_size">14sp</dimen>
+    <dimen name="live_nickname_size">14sp</dimen>
+    <dimen name="live_time_size">12sp</dimen>
+    <dimen name="live_address_size">10sp</dimen>
+    <dimen name="share_type_size">14sp</dimen>
     <dimen name="text_size_big">16sp</dimen>
 
     <dimen name="indicator_right_padding">10dp</dimen>
@@ -24,4 +29,5 @@
     <dimen name="mainactivity_bottom_height">48dp</dimen>
 
     <dimen name="ae_meta_height">45dp</dimen>
+    <dimen name="ae_meta_width">80dp</dimen>
 </resources>

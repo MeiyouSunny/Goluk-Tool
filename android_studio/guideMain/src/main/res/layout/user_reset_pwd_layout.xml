@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="@string/test_code_icon_txt_number"
+            android:text="@string/vcode_has_send_to"
             android:textColor="#000000"
             android:textSize="18sp" />
 
@@ -97,8 +97,8 @@
                 android:hint="@string/str_pwd_limit"
                 android:maxLength="16"
                 android:paddingLeft="10dp"
-                android:password="true"
-                android:singleLine="true"
+                android:inputType="textPassword"
+                android:lines="1"
                 android:textColor="#7f000000"
                 android:textColorHint="@color/user_hint_text_color"
                 android:textCursorDrawable="@drawable/cursor_color"

@@ -1,7 +1,7 @@
 package com.mobnote.eventbus;
 
 /**
- * Created by DELL-PC on 2017/3/22.
+ * Created by leege100 on 2017/1/22.
  */
 
 public class EventLoginSuccess {

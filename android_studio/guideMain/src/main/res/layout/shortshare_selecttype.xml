@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_bg_comm" >
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal" >
+
+        <!-- 类型 -->
+
+        <LinearLayout
+            android:id="@+id/share_type_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_type_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/share_type_icon"
+                android:contentDescription="@string/imgdes"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/share_switch_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="@string/share_type"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- 滤镜 -->
+
+        <LinearLayout
+            android:id="@+id/share_filter_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:id="@+id/share_filter_img"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/share_filter_icon"
+                android:contentDescription="@string/imgdes"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/share_switch_filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="3dp"
+                android:text="@string/share_filter"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

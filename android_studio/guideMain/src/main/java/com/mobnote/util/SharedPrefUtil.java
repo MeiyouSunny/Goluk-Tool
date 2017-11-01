@@ -256,12 +256,10 @@ public class SharedPrefUtil {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
         return preference.getBoolean(PROPERTY_LIVE_NORMAL_EXIT, true);
     }
-
     public static void setManualDownloadVideo(boolean manual) {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
         preference.edit().putBoolean(PROPERTY_MANUAL_DOWNLOAD, manual).commit();
     }
-
     public static boolean getManualDownloadVideo() {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("GuideActivity", Activity.MODE_PRIVATE);
         return preference.getBoolean(PROPERTY_MANUAL_DOWNLOAD, false);

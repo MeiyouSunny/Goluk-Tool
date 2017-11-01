@@ -285,7 +285,7 @@ public class InternationUserRepwdActivity extends BaseActivity implements OnClic
 		super.onActivityResult(requestCode, resultCode, data);
 		if (RESULT_OK == resultCode) { // 数据发送成功
 			if (FIND_REQUESTCODE_SELECTCTROY == requestCode) {
-				CountryBean bean = (CountryBean) data.getSerializableExtra(InternationUserLoginActivity.COURTRY_BEAN);
+				CountryBean bean = (CountryBean) data.getSerializableExtra(InternationUserLoginActivity.COUNTRY_BEAN);
 				zoneTv.setText(bean.area + " +" + bean.code);
 			}
 		}

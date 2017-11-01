@@ -63,7 +63,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	/** 声音录制开关 **/
 	private final int STATE_CLOSE = 0;
 	private final int STATE_OPEN = 1;
-	
+
 	private static final String TAG = "tSettings";
 	private RelativeLayout mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout, mWonderfulTypeLayout,
 			mWonderfulQualityLayout, mVoiceRecordLayout, mAutoPhotoLayout, mVolumeLayout, mKgjtsyLayout,
@@ -77,7 +77,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	/** ADAS **/
 	private Button mAdasAssistanceBtn, mForwardCloseBtn, mForwardSetupBtn, mMoveMotionBtn;
 	private RelativeLayout mForwardCloseLayout, mForwardSetupLayout, mAdasConfigLayout;
-	
+
 	private static final String GOLUK_LOCAL_LIST_T1 = "goluk_local_list_T1";
 	private static final String GOLUK_BASIC_LIST_T1 = "goluk_basic_list_T1";
 	private static final String GOLUK_LOCAL_LIST_T2 = "goluk_local_list_T2";
@@ -95,7 +95,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private String[] mIPCList = null;
 	private RelativeLayout[] mLayoutList = null;
 	private CustomLoadingDialog mCustomProgressDialog = null;
-	
+
 	/** ipc设备型号 **/
 	private String mIPCName = "";
 	/**分辨率**/
@@ -140,10 +140,17 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private int mWonderfulSwitchStatus = 1;
 	/** 开关机提示音(true)和精彩视频拍摄提示音(false)区分 **/
 	private boolean judgeSwitch = true;
+	/**
+	 * 国际版本固件是否支持俄语语言切换
+	 */
+	private boolean mSupportRussian = false;
 	/** 开关机提示音 0关闭 1打开 **/
 	private int speakerSwitch = 0;
 	/**疲劳驾驶**/
 	private int enableSecurity = 0;
+	/*
+	移动侦测配置
+	 */
 	private int enableMoveMonitor = 0;
 	/**停车休眠**/
 	private int snapInterval = 0;
@@ -166,18 +173,18 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mAutoState = GolukFileUtils.loadBoolean(GolukFileUtils.PROMOTION_AUTO_PHOTO, true);
 		loadRes();
 		mCustomProgressDialog = new CustomLoadingDialog(this, null);
-		
+
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener(TAG, this);
 		}
-		
+
 		initView();
 		setListener();
 		EventBus.getDefault().register(this);
 		requestIPCList();
 		requestInfo();
 	}
-	
+
 	@Override
 	protected void onResume() {
 		super.onResume();
@@ -190,7 +197,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			setData2UI();
 		}
 	}
-	
+
 	private void requestIPCList() {
 		boolean capacityList = GolukApplication.getInstance().getIPCControlManager().getCapacityList();
 		GolukDebugUtils.e("", "TSettingsActivity-----------requestIPCList-------capacityList: " + capacityList);
@@ -209,7 +216,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mWonderfulTypeLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_wonderful_video_type);
 		mWonderfulTypeDesc = (TextView) findViewById(R.id.tv_t_settings_wonderfulvideo_type_desc);
 		mWonderfulQualityLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_wonderful_video_quality);
-		mWonderfulQualityDesc = (TextView) findViewById(R.id.tv_t_settings_wonderfulvideo_quality_desc);
+		mWonderfulQualityDesc = (TextView) findViewById(R.id.tv_t_settings_wonderful_video_quality_desc);
 		mVoiceRecordLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_voice_record);
 		mVoiceRecordBtn = (Button) findViewById(R.id.btn_t_settings_voice_record);
 		mAutoPhotoLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_autophoto);
@@ -252,7 +259,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				mWonderfulTypeLayout, mWonderfulQualityLayout, mVolumeLayout, mKgjtsyLayout, mImageFlipLayout,
 				mVideoLogoLayout, mUrgentCrashLayout, mParkingsleepLayout, mAdasAssistanceLayout, mShutdownTimeLayout,
 				mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout };
-		
+
 		if (mAutoState) {
 			mAutophotoBtn.setBackgroundResource(R.drawable.set_open_btn);
 		} else {
@@ -274,7 +281,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		findViewById(R.id.ry_t_settings_version).setOnClickListener(this);
 		findViewById(R.id.ry_t_settings_restore).setOnClickListener(this);
 		findViewById(R.id.ly_t_settings_buy).setOnClickListener(this);
-		
+
 		mAutoRecycleBtn.setOnClickListener(this);// 自动循环录像
 		mVoiceRecordBtn.setOnClickListener(this);// 声音录制
 		mAutophotoBtn.setOnClickListener(this);// 自动同步照片到手机相册
@@ -291,7 +298,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mForwardSetupBtn.setOnClickListener(this);//前向车辆启动提示
 		mAdasConfigLayout.setOnClickListener(this);//前向距离预警配置
 	}
-	
+
 	private void requestInfo() {
 		boolean record = GolukApplication.getInstance().getIPCControlManager().getRecordState();
 		if (!record) {
@@ -354,6 +361,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			GolukApplication.getInstance().getIPCControlManager().getT1SW();
 		}else{
 			mMSLayout.setVisibility(View.GONE);
+		}
+		if(!mBaseApp.isMainland()){
+			GolukApplication.getInstance().getIPCControlManager().getTxLanguage();
 		}
 		showLoading();
 	}
@@ -423,11 +433,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			click_reset();
 		}
 	}
-	
+
 	private void exit() {
 		this.finish();
 	}
-	
+
 	private void matchDataToRefreshUI() {
 		String[] settingList = null;
 		String[] layoutList = new String[] { "sd", "conf_stream", "record", "conf_event_time", "conf_event_resolution",
@@ -500,8 +510,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			findViewById(R.id.tv_t_settings_parking_sleep_desc).setVisibility(View.GONE);
 			findViewById(R.id.tv_t_settings_security_desc).setVisibility(View.GONE);
 		}
+		//国际版购买链接https://www.amazon.com/Spy-Tec-Dash-Camera-Vehicle/dp/B00MH4ZVHO/ref=sr_1_8?ie=UTF8&qid=1478595877
 		//国际版不显示语言设置
-		if (!GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
+		if (mBaseApp.isMainland()
+				|| !GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
 				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T3U_SIGN)) {
 			mLanguageLayout.setVisibility(View.VISIBLE);
 		} else {
@@ -580,6 +592,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				callback_getPowerOffTime(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetPowerOffTime) {
 				callback_setPowerOffTime(msg, param1, param2);
+			} else if (msg == IPC_VDCP_Msg_GetVoiceTypeList) {
+				callback_getSupportRussian(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetVoiceType) {// 获取语言
 				callback_getVoiceType(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_SetVoiceType) {
@@ -591,7 +605,19 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			}
 		}
 	}
-	
+
+	private void callback_getSupportRussian(int msg, int param1, Object param2) {
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			String language = (String) param2;
+			if(!TextUtils.isEmpty(language)){
+				mSupportRussian = true;
+				return;
+			}
+		}
+		mSupportRussian = false;
+	}
+
 	private void callback_setMotionSW(int msg, int param1, Object param2) {
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
@@ -604,6 +630,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			}
 		}
 	}
+
 	private void callback_getMotionSW(int msg, int param1, Object param2) {
 		closeLoading();
 		if (RESULE_SUCESS == param1) {
@@ -621,6 +648,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			}
 		}
 	}
+
 	/**
 	 * 获取全设置列表
 	 * @param event
@@ -1537,7 +1565,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
-		mVoiceTypeList = getResources().getStringArray(R.array.list_language);
+		if(mBaseApp.isMainland()) {
+			mVoiceTypeList = getResources().getStringArray(R.array.list_language);
+		}else{
+			mVoiceTypeList = getResources().getStringArray(R.array.list_language_t);
+		}
 	}
 	
 	// 遍历分辨率，区分码率，改变UI
@@ -1616,7 +1648,13 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	 */
 	private void refreshVoiceType() {
 		int length = mVoiceTypeList.length;
-		String[] type = { "0", "1" };
+
+		String[] type;
+		if (mBaseApp.isMainland()){
+			type = new String[] { "0", "1" };
+		}else{
+			type = new String[] { "0", "1" ,"2"};
+		}
 		for (int i = 0; i < length; i++) {
 			if (mVoiceType.equals(type[i])) {
 				mLanguageDesc.setText(mVoiceTypeList[i]);
@@ -1805,12 +1843,14 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			showLoading();
 		}
 	}
+
 	private void click_move() {
 		boolean c = GolukApplication.getInstance().getIPCControlManager().setT1SW(String.valueOf(enableMoveMonitor==0?1:0));
 		if(c) {
 			showLoading();
 		}
 	}
+
 	//前向距离安全预警
 	private void click_assistance() {
 		if (mAdasConfigParamter == null) {
@@ -1888,7 +1928,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	//语言设置
 	private void click_voiceType() {
 		Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
-		itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+		if(mSupportRussian) {
+			itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE_T);
+		}else {
+			itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
+		}
 		itVoiceType.putExtra(SettingsItemActivity.PARAM, mVoiceType);
 		startActivityForResult(itVoiceType, REQUEST_CODE_LANGUAGE);
 	}

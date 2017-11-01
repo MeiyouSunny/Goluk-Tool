@@ -6,7 +6,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true">
 
         <!-- 重置密码title -->
 
@@ -20,12 +22,71 @@
             android:background="@color/white"
             android:orientation="vertical" >
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="36dp"
+                android:layout_marginRight="36dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginBottom="32dp"
+                android:gravity="center_vertical">
+
+                <View
+                    android:id="@+id/iv_center_flag"
+                    android:layout_width="1dp"
+                    android:layout_height="1dp"
+                    android:layout_centerInParent="true" />
+
+                <TextView
+                    android:id="@+id/tab_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp"
+                    android:layout_toLeftOf="@+id/iv_center_flag"
+                    android:gravity="center_horizontal"
+                    android:text="@string/phone_account"
+                    android:textColor="@color/tab_color_darker"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tab_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:padding="8dp"
+                    android:layout_toRightOf="@+id/iv_center_flag"
+                    android:gravity="center_horizontal"
+                    android:text="@string/email_account"
+                    android:textColor="@color/tab_color_lighter"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/tab_phone_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/tab_phone"
+                    android:layout_marginTop="8dp"
+                    android:layout_toLeftOf="@+id/iv_center_flag"
+                    android:background="@color/tab_color_darker" />
+
+                <View
+                    android:id="@+id/tab_email_indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_below="@+id/tab_email"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@+id/iv_center_flag"
+                    android:background="@color/tab_color_lighter" />
+            </RelativeLayout>
+
             <LinearLayout
+                android:id="@+id/ll_phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="32dp"
                 android:layout_marginRight="32dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/confirmation_code"
                 android:gravity="center" >
 
@@ -43,14 +104,34 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:hint="@string/user_login_phone_hint"
-                    android:numeric="integer"
+                    android:inputType="phone"
                     android:paddingLeft="10dp"
-                    android:singleLine="true"
+                    android:lines="1"
                     android:textColor="#7f000000"
                     android:textColorHint="@color/user_hint_text_color"
                     android:textCursorDrawable="@drawable/cursor_color"
                     android:textSize="12sp" />
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/et_email"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="32dp"
+                android:layout_marginRight="32dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/confirmation_code"
+                android:gravity="left|center"
+                android:hint="@string/email_hint"
+                android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@._"
+                android:inputType="textEmailAddress"
+                android:paddingLeft="10dp"
+                android:lines="1"
+                android:textColor="#7f000000"
+                android:textColorHint="@color/user_hint_text_color"
+                android:textCursorDrawable="@drawable/cursor_color"
+                android:textSize="12sp" />
 
             <Button
                 android:id="@+id/user_repwd_ok_btn"

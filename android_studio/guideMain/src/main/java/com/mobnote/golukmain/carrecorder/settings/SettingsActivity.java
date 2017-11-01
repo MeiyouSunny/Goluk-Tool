@@ -50,8 +50,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -196,6 +194,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** 语言 **/
 	private String mVoiceType = "";
 	private boolean mSetMove = false;
+	/*
+移动侦测配置
+ */
 	/**提示摄像头重启**/
 	private AlertDialog mRestartDialog = null;
 	/** 精彩视频类型 **/
@@ -662,9 +663,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mPowerTimeLayout.setVisibility(View.GONE);
 			mVoiceTypeLayout.setVisibility(View.GONE);
 		} else if (mIPCName.equals(IPCControlManager.G2_SIGN)
-				|| mIPCName.equals(T3_SIGN)
-				|| mIPCName.equals(T3U_SIGN)) {
-			if(mIPCName.equals(T3U_SIGN)) {
+				|| mIPCName.equals(IPCControlManager.T3_SIGN)
+				|| mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+			if(mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 				mISPLayout.setVisibility(View.GONE);
 				mRlAntiFlicker.setVisibility(View.VISIBLE);
 				if(mIPCName.equals(T3U_SIGN) && getApp().isMainland()){
@@ -672,6 +673,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					mRlAntiFlicker.setVisibility(View.GONE);
 				}else{
 					mVoiceTypeLayout.setVisibility(View.VISIBLE);
+					}
+				if(GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
+					mMSLayout.setVisibility(View.VISIBLE);
 				}
 			} else {
 				mISPLayout.setVisibility(View.VISIBLE);
@@ -702,6 +706,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mWonderfulVideoQualityLayout.setVisibility(View.VISIBLE);
 			mVolumeLayout.setVisibility(View.GONE);
 			mPowerTimeLayout.setVisibility(View.GONE);
+			if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+				mVideoLogoLayout.setVisibility(View.VISIBLE);
+			}
 		}
 
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -953,7 +960,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivityForResult(itPowerTime, REQUEST_CODE_SHUTDOWN_TIME);
 			} else if (id == R.id.rl_settings_language_line) {
 				Intent itVoiceType = new Intent(this, SettingsItemActivity.class);
-				if(mIPCName.equals(T3U_SIGN)){
+				if(mIPCName.equals(IPCControlManager.T3U_SIGN)){
 					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE_T);
 				}else {
 					itVoiceType.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_LANGUAGE);
@@ -1680,6 +1687,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
 		}
 	}
+
 	private void getMotionSW() {
 		if (1 == moveMonitor) {
 			mMoveMotionBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
@@ -1688,6 +1696,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mMoveMotionBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
 		}
 	}
+
 	private void click_move() {
 		mSetMove = true;
 		boolean c = GolukApplication.getInstance().getIPCControlManager().setT1SW(String.valueOf(moveMonitor==0?1:0));
@@ -1695,6 +1704,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			showLoading();
 		}
 	}
+
 	private void setT1AutoRotaingCallback(int msg, int param1, Object param2) {
 		if (RESULE_SUCESS == param1) {
 			GolukDebugUtils.e("", "------------setT1AutoRotaingCallback------param2:" + (String) param2);
@@ -2037,7 +2047,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVolumeList = getResources().getStringArray(R.array.list_tone_volume);
 		mVolumeValue = getResources().getStringArray(R.array.list_tone_volume_value);
 		mPowerTimeList = getResources().getStringArray(R.array.list_shutdown_time);
-		if (mIPCName.equals(T3U_SIGN)) {
+		if (mIPCName.equals(IPCControlManager.T3U_SIGN)) {
 			mVoiceTypeList = getResources().getStringArray(R.array.list_language_t);
 		}else{
 			mVoiceTypeList = getResources().getStringArray(R.array.list_language);
@@ -2453,7 +2463,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-
+	
 	/**
 	 * 更新语言设置
 	 */
@@ -2466,7 +2476,5 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-
-
 	
 }

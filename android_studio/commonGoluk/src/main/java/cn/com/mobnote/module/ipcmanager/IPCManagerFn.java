@@ -303,6 +303,10 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc时间同步配置
      **/
     int IPC_VDCP_Msg_SetAutoRotationCfg = 1052;
+    //获取ｉｐｃ移动侦测开关
+    int IPC_VDCP_Msg_GetMotionSW = 1053;
+    //设置ｉｐｃ移动侦测开关
+    int IPC_VDCP_Msg_SetMotionSW = 1054;
     /**
      * adas 推送的应答消息
      **/
@@ -407,6 +411,7 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置IPC抗闪烁模式
      */
     int IPC_VDCP_Msg_SetDeflickerMode = 2224;
+    int IPC_VDCP_Msg_GetVoiceTypeList = 2225;
 
     /**
      *
@@ -665,7 +670,7 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置ipc时间同步配置
      **/
     int IPC_VDCPCmd_SetTimeSyncCfg = 1050;
-    /**h
+    /**
      * 获取ipc时间同步配置
      **/
     int IPC_VDCPCmd_GetAutoRotationCfg = 1051;
@@ -675,8 +680,6 @@ public interface IPCManagerFn extends IGolukCommFn {
     int IPC_VDCPCmd_SetAutoRotationCfg = 1052;
 
 
-    int  IPC_VDCP_Msg_GetMotionSW = 1053;
-    int  IPC_VDCP_Msg_SetMotionSW = 1054;
     /**
      * 获取ipc移动侦测开关
      **/
@@ -686,7 +689,8 @@ public interface IPCManagerFn extends IGolukCommFn {
      **/
     int IPC_VDCPCmd_SetMotionSW = 1054;
 
-    /**`
+
+    /**
      * 获取ipc ADAS功能
      **/
     int IPC_VDCPCmd_GetADASConfig = 2000;
@@ -782,6 +786,10 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 设置IPC抗闪烁模式
      */
     int IPC_VDCPCmd_SetDeflickerMode = 2224;
+    /*
+    获取语音类型支持列表
+     */
+    int IPC_VDCPCmd_GetVoiceTypeList = 2225;
 
     /**
      * 命令数量

@@ -42,7 +42,6 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.promotion.PromotionActivity;
 import com.mobnote.golukmain.promotion.PromotionData;
-import com.mobnote.golukmain.promotion.PromotionItem;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
@@ -53,7 +52,7 @@ import com.mobnote.golukmain.thirdshare.SharePlatformAdapter;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.thirdshare.ThirdShareTool;
-import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
+import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
@@ -70,7 +69,6 @@ import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -233,7 +231,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mSelectedPromotionItem = (PromotionSelectItem) savedInstanceState.getSerializable(PhotoAlbumPlayer.ACTIVITY_INFO);
         }
 
-        mCurrSelectedSharePlatform = SharePlatformBean.SHARE_PLATFORM_NULL;
+        mCurrSelectedSharePlatform = SharePlatform.SHARE_PLATFORM_NULL;
 
         mSelectedShareType = ShareTypeBean.SHARE_TYPE_SSP;
         mSelectedShareString = "# " + getResources().getString(R.string.share_str_type_ssp);
@@ -270,7 +268,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
     public void onEventMainThread(EventShareCompleted event){
         if(event != null){
-            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+            if(mCurrSelectedSharePlatform == SharePlatform.SHARE_PLATFORM_COPYLINK){
                 Toast.makeText(this, getString(R.string.str_copy_link_success), Toast.LENGTH_SHORT).show();
             }else{
                 Toast.makeText(this, getString(R.string.str_share_success), Toast.LENGTH_SHORT).show();
@@ -307,8 +305,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     public void onEventMainThread(SharePlatformSelectedEvent event){
         if(event != null){
             this.mCurrSelectedSharePlatform = event.getSharePlatform();
-            if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL ||
-                    mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK){
+            if(mCurrSelectedSharePlatform == SharePlatform.SHARE_PLATFORM_NULL ||
+                    mCurrSelectedSharePlatform == SharePlatform.SHARE_PLATFORM_COPYLINK){
                 mShareTv.setText(getString(R.string.share_to_jishe));
             }else{
                 mShareTv.setText(getString(R.string.share_btn_text));
@@ -582,34 +580,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mStartShareDialog.show();
     }
 
-//    public void showPopup() {
-//        View contentView = this.getLayoutInflater().inflate(R.layout.promotion_popup_hint, null);
-//
-//        contentView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
-//        int popWidth = contentView.getMeasuredWidth();
-//        int popHeight = contentView.getMeasuredHeight();
-//        mPopupWindow = new PopupWindow(contentView, popWidth, popHeight);
-//        contentView.setOnTouchListener(new View.OnTouchListener() {
-//
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                // TODO Auto-generated method stub
-//                mPopupWindow.dismiss();
-//                return false;
-//            }
-//        });
-//
-//        mPopupWindow.setOutsideTouchable(true);
-//        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
-//
-//        int[] location = new int[2];
-//        mLocationTv.getLocationOnScreen(location);
-//
-//        mPopupWindow.showAtLocation(mLocationTv, Gravity.NO_GRAVITY, location[0], location[1] - popHeight);
-//        isPopup = false;
-//        GolukFileUtils.saveBoolean(GolukFileUtils.SHOW_PROMOTION_POPUP_FLAG, false);
-//    }
-
     @Override
     public void CallBack_Del(int event, Object data) {
         if (1 == event) {
@@ -813,12 +783,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             return;
         }
 
-        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_NULL) {
+        if(mCurrSelectedSharePlatform == SharePlatform.SHARE_PLATFORM_NULL) {
             EventBus.getDefault().post(new EventShareCompleted(true));
             return;
         }
 
-        if(mCurrSelectedSharePlatform == SharePlatformBean.SHARE_PLATFORM_COPYLINK) {
+        if(mCurrSelectedSharePlatform == SharePlatform.SHARE_PLATFORM_COPYLINK) {
             ClipboardManager cmb = (ClipboardManager)getSystemService(Context.CLIPBOARD_SERVICE);
             cmb.setPrimaryClip(ClipData.newPlainText("goluk", shareData.shorturl));
             EventBus.getDefault().post(new EventShareCompleted(true));
@@ -850,28 +820,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mThirdShareTool = new ThirdShareTool(this,new SharePlatformUtil(this),bean.surl,bean.curl,bean.db,bean.tl,
                 bean.bitmap,bean.realDesc,bean.videoId,bean.mShareType,bean.filePath, bean.from);
 
-        if(mSharePlatformAdapter != null && mSharePlatformAdapter.mCurrSelectedPlatform != SharePlatformBean.SHARE_PLATFORM_NULL){
-            if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE){
-                mThirdShareTool.click_wechat_circle();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEXIN){
-                mThirdShareTool.click_wechat();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA){
-                mThirdShareTool.click_sina();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ_ZONE){
-                mThirdShareTool.click_qqZone();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_QQ){
-                mThirdShareTool.click_QQ();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_FACEBOOK){
-                mThirdShareTool.click_facebook();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_TWITTER){
-                mThirdShareTool.click_twitter();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_INSTAGRAM){
-                mThirdShareTool.click_instagram(bean.filePath);
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_WHATSAPP){
-                mThirdShareTool.click_whatsapp();
-            }else if(mSharePlatformAdapter.mCurrSelectedPlatform == SharePlatformBean.SHARE_PLATFORM_LINE){
-                mThirdShareTool.click_line();
-            }
+        if(mSharePlatformAdapter != null && mSharePlatformAdapter.getCurrSelectedPlatformType() != SharePlatform.SHARE_PLATFORM_NULL){
+            mSharePlatformAdapter.getCurrSelectedPlatformzBean().startShare(this,new SharePlatformUtil(this),bean);
         }
     }
 

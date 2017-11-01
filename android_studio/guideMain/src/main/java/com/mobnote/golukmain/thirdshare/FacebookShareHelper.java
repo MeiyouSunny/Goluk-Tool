@@ -13,7 +13,9 @@ public class FacebookShareHelper {
 	private volatile static FacebookShareHelper mInstance;
 
 	private FacebookShareHelper() {
-		FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
+		if(FacebookSdk.isInitialized() == false) {
+			FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
+		}
 		mCallbackManager = CallbackManager.Factory.create();
 	}
 

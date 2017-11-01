@@ -26,17 +26,32 @@ import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKCallback;
+import com.vk.sdk.VKScope;
+import com.vk.sdk.VKSdk;
+import com.vk.sdk.api.VKError;
+import com.vk.sdk.api.model.VKApiPhoto;
+import com.vk.sdk.api.model.VKPhotoArray;
+import com.vk.sdk.api.photo.VKImageParameters;
+import com.vk.sdk.api.photo.VKUploadImage;
+import com.vk.sdk.dialogs.VKShareDialog;
+import com.vk.sdk.dialogs.VKShareDialogBuilder;
 
 import java.io.File;
 
 /**
  * Created by leege100 on 16/5/18.
  */
-public class ThirdShareTool extends AbsThirdShare{
+public class ThirdShareTool extends AbsThirdShare {
     public ThirdShareTool(Activity activity, SharePlatformUtil spf, String surl, String curl, String db, String tl, Bitmap bitmap, String realDesc, String videoId, String shareType, String filePath, String from) {
         super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filePath, from);
         modifyUMDialog();
         initFacebook();
+    }
+    public ThirdShareTool(Activity activity,SharePlatformUtil spf, ThirdShareBean shareBean) {
+        super(activity, spf, shareBean.surl, shareBean.curl, shareBean.db, shareBean.tl, shareBean.bitmap,
+                shareBean.realDesc, shareBean.videoId, shareBean.mShareType, shareBean.filePath, shareBean.from);
     }
 
     private void initFacebook() {
@@ -241,6 +256,7 @@ public class ThirdShareTool extends AbsThirdShare{
         mCurrentShareType = TYPE_FACEBOOK;
         shareUp();// 上报分享统计
     }
+
     // 点击　“微信”
     public void click_wechat() {
         if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.WEIXIN)) {
@@ -369,6 +385,21 @@ public class ThirdShareTool extends AbsThirdShare{
      * @author jyf
      */
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mCurrentShareType == TYPE_VK) {
+            if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
+                @Override
+                public void onResult(VKAccessToken res) {
+                    // User passed Authorization
+                    shareVK();
+                }
+
+                @Override
+                public void onError(VKError error) {
+                    // User didn't pass Authorization
+                }
+            }))
+                return;
+        }
         sharePlatform.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -408,5 +439,53 @@ public class ThirdShareTool extends AbsThirdShare{
         } else {
             sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap, false);
         }
+    }
+
+    public void click_VK() {
+        if (!isCanClick()) {
+            return;
+        }
+        final ShareContent sc = getShareContent(TYPE_VK);
+        if (null == sc) {
+            setCanJump();
+            return;
+        }
+        if (TextUtils.isEmpty(sc.mText)) {
+            sc.mText = mActivity.getResources().getString(R.string.app_name);
+        }
+        if (VKSdk.isLoggedIn()) {
+            shareVK();
+        } else {
+            VKSdk.login(mActivity, VKScope.WALL, VKScope.PHOTOS);
+        }
+
+        mCurrentShareType = TYPE_VK;
+        this.shareUp();// 上报分享统计
+    }
+
+    private void shareVK() {
+        VKShareDialogBuilder vkShareDialogBuilder = new VKShareDialogBuilder();
+        if (mThumbBitmap != null) {
+            vkShareDialogBuilder.setAttachmentImages(new VKUploadImage[]{
+                    new VKUploadImage(mThumbBitmap, VKImageParameters.pngImage())
+            });
+        }
+        vkShareDialogBuilder.setText(mDescribe)
+                .setAttachmentLink(mTitle, shareurl)
+                .setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
+                    public void onVkShareComplete(int postId) {
+                        mHander.sendEmptyMessage(100);
+                    }
+
+                    public void onVkShareCancel() {
+                        mHander.sendEmptyMessage(101);
+                    }
+
+                    @Override
+                    public void onVkShareError(VKError error) {
+                        mHander.sendEmptyMessage(102);
+                    }
+                })
+                .show(mActivity.getFragmentManager(), "VK_SHARE_DIALOG");
     }
 }

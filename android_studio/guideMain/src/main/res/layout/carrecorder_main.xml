@@ -224,25 +224,25 @@
 
     <ImageView
         android:id="@+id/position"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ipclive"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="5dp"
-        android:visibility="gone"
         android:background="@drawable/carrecorder_icon_position"
         android:contentDescription="@string/def" />
 
     <TextView
         android:id="@+id/mAddr"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ipclive"
         android:layout_marginBottom="6dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="4dp"
-        android:visibility="gone"
         android:layout_toRightOf="@+id/position"
         android:text="@string/str_localization_ongoing_default"
         android:textColor="@color/carrecorder_text_nor_color"
@@ -327,7 +327,6 @@
                 android:text="@string/sd_card_album"
                 android:textSize="12sp"
                 android:layout_toRightOf="@+id/layout2" />
-
         </RelativeLayout>
     </RelativeLayout>
 
@@ -372,6 +371,7 @@
 
         <LinearLayout
             android:id="@+id/ll_car_recorder_start_live"
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"

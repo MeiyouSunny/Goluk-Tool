@@ -1315,6 +1315,7 @@ public class GolukUtils {
             intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
             intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
             mContext.startActivity(intent);
+            ((Activity)mContext).finish();
         }
     }
 
@@ -1528,6 +1529,7 @@ public class GolukUtils {
             flowLayout.setVisibility(View.GONE);
         }
     }
+
     public static boolean isCurrWifiGolukT(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();

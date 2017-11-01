@@ -2,35 +2,60 @@
 <resources>
 
     <color name="color_bg_comm">#242629</color>
+    <color name="share_bg">#eeeeee</color>
     <!-- 按钮的背景颜色 -->
+    <color name="share_btn_disenable_bg">#9c9c9c</color>
     <!-- 白色 -->
     <color name="white">#FFFFFF</color>
     <color name="red">#FF0000</color>
     <!-- 黑色 -->
     <color name="black">#000000</color>
     <!-- 字体颜色 -->
+    <color name="font_gray">#E3E3E3</color>
     <!-- 点赞颜色 -->
+    <color name="font_like">#DC1430</color>
     <!-- 评论颜色 -->
+    <color name="font_comment">#14AFDC</color>
     <!-- 评论文字颜色 -->
+    <color name="font_text">#A6A6A6</color>
     <!-- 背景颜色 -->
     <color name="bg">#313131</color>
     <!-- tab背景颜色 -->
+    <color name="tab_bg">#131313</color>
     <!-- 背景颜色 -->
+    <color name="bg_curr">#FFFF00</color>
     <!-- 黑色分割线 -->
+    <color name="border_bg">#191919</color>
     <!-- 分享按钮颜色 -->
+    <color name="share_btn_bg">#14AFDC</color>
     <color name="name_color">#1163a2</color>
     <color name="live_time_desc">#888888</color>
+    <color name="blue">#0000FF</color>
 
     <!-- 按钮的背景颜色 -->
+    <color name="carrecorder_del_bg">#dedede</color>
+    <color name="carrecorder_del_def_bg">#b2b2b2</color>
+    <color name="carrecorder_line_bg">#ff0000</color>
+    <color name="share_btn_curr_bg">#009BDC</color>
+    <color name="carrecorder_tab_sel_color">#3b97f5</color>
+    <color name="carrecorder_tab_nor_color">#999999</color>
     <color name="carrecorder_text_nor_color">#b8b8b8</color>
+    <color name="carrecorder_text_sel_color">#3b97f5</color>
 
     <!-- user部分颜色 -->
     <color name="user_login_bg">#EDEDED</color>
     <color name="user_login_text">#333333</color>
+    <color name="user_regist_bottom_login">#737373</color>
+    <color name="user_regist_bottom_login_btn">#333333</color>
     <color name="user_hint_text_color">#b2b2b2</color>
+    <color name="user_identify_btn">#00C5A7</color>
     <color name="user_personal_black">#323232</color>
+    <color name="user_personal_gray">#AFAFAF</color>
     <color name="user_personal_homepage_text">#484848</color>
+    <color name="user_personal_edit_head_text">#292929</color>
+    <color name="user_personal_edit_head_title_bg">#E7E7E7</color>
     <color name="dialog_bg">#00000000</color>
+    <color name="dialog_bg_01">#d0ffffff</color>
     <color name="setting_text_color_nor">#333333</color>
     <color name="setting_text_color_sel">#3b97f5</color>
     <color name="user_identify_count_color">#0080ff</color>
@@ -38,9 +63,28 @@
     <color name="unbind_camera_wifi_hint_text_color">#666666</color>
 
     <!-- user部分颜色 -->
+    <color name="user_home_nologin">#999999</color>
     <!-- 直接界面 -->
+    <color name="live_color_time1">#b8b8b8</color>
     <color name="textcolor_select">#0b59be</color>
+    <color name="textcolor_qx">#dde6f5</color>
+    <color name="video_square_list_frame">#ededed</color>
     <!-- 说话中字体的颜色 -->
+    <color name="live_speaking">#00e8f0</color>
+    <color name="live_user_bg">#EEEEEE</color>
+    <color name="live_nickname_color">#333333</color>
+    <color name="live_address_color">#8e8e8e</color>
+    <color name="live_loginlayout_color">#7F151515</color>
+    <color name="carrecord_text_color">#3b97f5</color>
+
+    <color name="share_list_select">#3eaf2c</color>
+    <color name="share_list_unselect">#aaaaaa</color>
+    <color name="share_type_select">#0080ff</color>
+    <color name="share_type_unselect">#a5a7aa</color>
+    <color name="share_title_color">#ffffff</color>
+    <color name="share_type_shigu_select">#0080ff</color>
+    <color name="share_type_shigu_unselect">#d7d7d7</color>
+    <color name="share_filter_grid_txt">#d7d7d7</color>
 
     <!-- 友盟分享背景颜色 -->
     <color name="youmeng_share_bg">#303235</color>
@@ -49,6 +93,7 @@
     <!-- 相册按钮文字颜色 -->
     <color name="photoalbum_text_color">#0080ff</color>
     <color name="photoalbum_text_color_def">#ffffff</color>
+    <color name="photoalbum_text_color_gray">#eeeeee</color>
     <color name="photoalbum_line_color">#c8c7cc</color>
     <color name="photoalbum_title_bg_color">#242629</color>
     <color name="photoalbum_icon_color_gray">#a1a1a1</color>
@@ -63,8 +108,10 @@
     <color name="setting_line_color">#c8c7cc</color>
     
     <!-- 行车记录仪2.0 -->
-
-    <color name="wonderful_item_nor_color">#4c000000</color>
+	<color name="text_select_color">#e13737</color>
+	<color name="text_diff_color">#808181</color>
+	
+	<color name="wonderful_item_nor_color">#4c000000</color>
 	<color name="wonderful_item_sel_color">#4c0080ff</color>
 	<color name="cagtegory_text_color">#bfffffff</color>
 	<color name="cagtegory_title_color">#e5ffffff</color>
@@ -74,8 +121,10 @@
 	
 	<color name="login_next_btn_success">#ffffff</color>
 	<color name="login_next_btn_fial">#7fffffff</color>
-
-    <color name="color_bind_btn_txt">#047cf3</color>
+	
+	<color name="color_shareselecttype">#99ffffff</color>
+	
+	<color name="color_bind_btn_txt">#047cf3</color>
 	<color name="color_ipcbind_bg">#f7f9fa</color>
 	<color name="color_main_tab_bg">#f7f7f8</color>
 	<color name="color_list_divider">#bbbbbb</color>
@@ -92,4 +141,9 @@
     <color name="btn_startAE_press">#0080ff</color>
 
     <color name="color_ae_function_pressed">#929394</color>
+
+    <color name="tab_color_grey">#60ffffff</color>
+    <color name="tab_color_white">#ffffff</color>
+    <color name="tab_color_darker">#333333</color>
+    <color name="tab_color_lighter">#999999</color>
 </resources>

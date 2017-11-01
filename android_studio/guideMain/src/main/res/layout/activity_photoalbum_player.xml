@@ -326,21 +326,19 @@
         android:id="@+id/ll_start_videoedit"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:background="@drawable/btn_start_ae_bg"
-        android:gravity="center"
-        android:orientation="horizontal">
-
+        android:gravity="center">
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/icon_edit" />
-
+            android:src="@drawable/icon_edit"/>
         <TextView
             android:id="@+id/tv_start_videoedit"
+            android:layout_marginLeft="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
             android:gravity="center"
             android:text="@string/str_edit_short_video"
             android:textColor="#ffffff"

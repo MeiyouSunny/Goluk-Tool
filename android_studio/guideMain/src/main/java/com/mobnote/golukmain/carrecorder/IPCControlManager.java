@@ -919,6 +919,12 @@ public class IPCControlManager implements IPCManagerFn {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_GetMotionSW, "");
     }
+
+    public boolean getTxLanguage() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_GetVoiceTypeList, "");
+    }
+
     /**
      * 获取T1 ADAS配置
      *

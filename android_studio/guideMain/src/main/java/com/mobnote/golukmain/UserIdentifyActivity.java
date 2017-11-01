@@ -764,7 +764,7 @@ public class UserIdentifyActivity extends BaseActivity implements OnClickListene
 	 */
 	public void registLogin() {
 		
-		userloginBean.get(title_phone.replace("-", ""),  MD5.hexdigest(intentPassword),"");
+		userloginBean.loginByPhone(title_phone.replace("-", ""),  MD5.hexdigest(intentPassword),"");
 		mApp.loginStatus = 0;// 登录中
 //		
 //		GolukDebugUtils.i("", "---------registLogin()----------");

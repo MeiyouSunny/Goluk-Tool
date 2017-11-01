@@ -10,12 +10,10 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.thirdshare.IThirdShareFn;
-import com.mobnote.golukmain.thirdshare.bean.SharePlatformBean;
+import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
-
-import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * Created by lily on 16-6-1.
@@ -321,25 +319,25 @@ public class ZhugeUtils {
 
     private static String getSharePlatform(Context context, int channel) {
         switch (channel) {
-            case SharePlatformBean.SHARE_PLATFORM_QQ:
+            case SharePlatform.SHARE_PLATFORM_QQ:
                 return context.getString(R.string.str_zhuge_share_video_channel_qq);
-            case SharePlatformBean.SHARE_PLATFORM_QQ_ZONE:
+            case SharePlatform.SHARE_PLATFORM_QQ_ZONE:
                 return context.getString(R.string.str_zhuge_share_video_channel_qq_space);
-            case SharePlatformBean.SHARE_PLATFORM_WEXIN:
+            case SharePlatform.SHARE_PLATFORM_WEXIN:
                 return context.getString(R.string.str_zhuge_share_video_channel_weixin);
-            case SharePlatformBean.SHARE_PLATFORM_WEXIN_CIRCLE:
+            case SharePlatform.SHARE_PLATFORM_WEXIN_CIRCLE:
                 return context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
-            case SharePlatformBean.SHARE_PLATFORM_WEIBO_SINA:
+            case SharePlatform.SHARE_PLATFORM_WEIBO_SINA:
                 return context.getString(R.string.str_zhuge_share_video_channel_sina);
-            case SharePlatformBean.SHARE_PLATFORM_FACEBOOK:
+            case SharePlatform.SHARE_PLATFORM_FACEBOOK:
                 return context.getString(R.string.str_zhuge_share_video_channel_facebook);
-            case SharePlatformBean.SHARE_PLATFORM_LINE:
+            case SharePlatform.SHARE_PLATFORM_LINE:
                 return context.getString(R.string.str_zhuge_share_video_channel_line);
-            case SharePlatformBean.SHARE_PLATFORM_WHATSAPP:
+            case SharePlatform.SHARE_PLATFORM_WHATSAPP:
                 return context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
-            case SharePlatformBean.SHARE_PLATFORM_TWITTER:
+            case SharePlatform.SHARE_PLATFORM_TWITTER:
                 return context.getString(R.string.str_zhuge_share_video_channel_twitter);
-            case SharePlatformBean.SHARE_PLATFORM_INSTAGRAM:
+            case SharePlatform.SHARE_PLATFORM_INSTAGRAM:
                 return context.getString(R.string.str_zhuge_share_video_channel_instagram);
             default:
                 return context.getString(R.string.str_zhuge_have_not);

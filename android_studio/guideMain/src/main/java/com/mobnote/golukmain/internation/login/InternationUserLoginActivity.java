@@ -23,6 +23,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,11 +34,13 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -62,9 +65,9 @@ import de.greenrobot.event.EventBus;
  *
  * @author mobnote
  */
-public class InternationUserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface, OnTouchListener {
+public class InternationUserLoginActivity extends BaseActivity implements OnClickListener, UserLoginInterface {
 
-    private static final String TAG = "lily";
+    private static final String TAG = "InternationalLogin";
     /**
      * 判断是否能点击提交按钮
      **/
@@ -89,8 +92,9 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
      * context
      **/
     private Context mContext = null;
-    private String phone = null;
-    private String pwd = null;
+    private String mPhone = null;
+    private String mEmail = null;
+    private String mPwd = null;
     /**
      * 将用户的手机号和密码保存到本地
      **/
@@ -108,24 +112,46 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
     private UMShareAPI mShareAPI = null;
     private TextView mSelectCountryText = null;
     public static final int REQUEST_SELECT_COUNTRY_CODE = 1000;
-    public static final String COURTRY_BEAN = "countrybean";
+    public static final String COUNTRY_BEAN = "countrybean";
 
-    public TextView mLoginInfacebookTxt;
-    public ImageView mLoginInfacebookImg;
+    public TextView mLoginByFacebookTV;
+    public ImageView mLoginByFacebookIv;
     private ImageView mCloseBtn;
+
+    private EditText mEmailEt;
+    private TextView mPhoneTab;
+    private TextView mEmailTab;
+    private View mPhoneTabIndicator;
+    private View mEmailTabIndicator;
+    private LinearLayout mPhoneLL;
+
+    private boolean mIsPhoneSelected;
+    private boolean mIsPhoneEmpty;
+    private boolean mIsEmailEmpty;
+    private boolean mIsPwdEmpty;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.internation_user_login);
+        EventBus.getDefault().register(this);
 
+        initData();
+        initView();
+        UserUtils.addActivity(InternationUserLoginActivity.this);
+    }
+
+    private void initData() {
         mShareAPI = UMShareAPI.get(mContext);
 
         mContext = this;
         // 获得GolukApplication对象
         mApplication = (GolukApplication) getApplication();
-
+		mIsPhoneEmpty = true;
+        mIsEmailEmpty = true;
+        mIsPwdEmpty = true;
+        mIsPhoneSelected = true;
         initView();
         if (null == mCustomProgressDialog) {
             mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
@@ -148,7 +174,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                     return;
                 }
                 if (null != data) {
-                    CountryBean bean = (CountryBean) data.getSerializableExtra(COURTRY_BEAN);
+                    CountryBean bean = (CountryBean) data.getSerializableExtra(COUNTRY_BEAN);
                     mSelectCountryText.setText(bean.area + " +" + bean.code);
                 }
                 break;
@@ -156,6 +182,10 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             default:
                 break;
         }
+    }
+
+    public void onEventMainThread(EventLoginSuccess event) {
+        finish();
     }
 
     @Override
@@ -184,7 +214,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                     result.put("userinfo", URLEncoder.encode(new JSONObject(data).toString(), "utf-8"));
                     result.put("devices", "");
                     mApplication.mLoginManage.setUserLoginInterface(InternationUserLoginActivity.this);
-                    mApplication.mLoginManage.login(result);
+                    mApplication.mLoginManage.loginBy3rdPlatform(result);
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -236,9 +266,17 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
         mTextViewForgetPwd = (TextView) findViewById(R.id.user_login_forgetpwd);
         // select country
         mSelectCountryText = (TextView) findViewById(R.id.tv_user_login_select_country);
-        mLoginInfacebookTxt = (TextView) findViewById(R.id.login_facebook_btn_txt);
-        mLoginInfacebookImg = (ImageView) findViewById(R.id.login_facebook_btn_img);
+        mLoginByFacebookTV = (TextView) findViewById(R.id.login_facebook_btn_txt);
+        mLoginByFacebookIv = (ImageView) findViewById(R.id.login_facebook_btn_img);
         mCloseBtn = (ImageView) findViewById(R.id.close_btn);
+
+        mEmailEt = (EditText) findViewById(R.id.et_email);
+        mPhoneTab = (TextView) findViewById(R.id.tab_phone);
+        mEmailTab = (TextView) findViewById(R.id.tab_email);
+        mPhoneTabIndicator = findViewById(R.id.tab_phone_indicator);
+        mEmailTabIndicator = findViewById(R.id.tab_email_indicator);
+        mPhoneLL = (LinearLayout) findViewById(R.id.ll_login_by_phone);
+
         mCloseBtn.setOnClickListener(this);
         mSelectCountryText.setOnClickListener(this);
         if (mBaseApp.mLocationCityCode != null) {
@@ -251,11 +289,106 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 
         // 登录按钮
         mBtnLogin.setOnClickListener(this);
-        mLoginInfacebookTxt.setOnClickListener(this);
-        mLoginInfacebookImg.setOnClickListener(this);
+        mLoginByFacebookTV.setOnClickListener(this);
+        mLoginByFacebookIv.setOnClickListener(this);
         // 快速注册
         mTextViewRegist.setOnClickListener(this);
         mTextViewForgetPwd.setOnClickListener(this);
+
+        mPhoneTab.setOnClickListener(this);
+        mEmailTab.setOnClickListener(this);
+
+        if (null == mCustomProgressDialog) {
+            mCustomProgressDialog = new CustomLoadingDialog(mContext, this.getResources().getString(
+                    R.string.str_loginning));
+        }
+
+        if (null != mApplication && null != mApplication.mLoginManage) {
+            mApplication.mLoginManage.initData();
+        }
+
+        mEditTextPhoneNumber.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                String phone = mEditTextPhoneNumber.getText().toString();
+                if (!TextUtils.isEmpty(phone)) {
+                    mIsPhoneEmpty = false;
+                } else {
+                    mIsPhoneEmpty = true;
+                }
+                resetRegisterBtnState();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+            }
+        });
+
+        mEmailEt.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                String email = mEmailEt.getText().toString();
+                if (!TextUtils.isEmpty(email)) {
+                    mIsEmailEmpty = false;
+                } else {
+                    mIsEmailEmpty = true;
+                }
+                resetRegisterBtnState();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+            }
+        });
+
+        // 密码监听
+        mEditTextPwd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+                mPwd = mEditTextPwd.getText().toString();
+                if (TextUtils.isEmpty(mPwd)) {
+                    mIsPwdEmpty = true;
+                } else {
+                    mIsPwdEmpty = false;
+                }
+                resetRegisterBtnState();
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable arg0) {
+
+            }
+        });
+    }
+
+    private void resetRegisterBtnState() {
+        if (mIsPwdEmpty) {
+            mBtnLogin.setTextColor(Color.parseColor("#7fffffff"));
+            mBtnLogin.setEnabled(false);
+            return;
+        }
+        if (mIsPhoneSelected && !mIsPhoneEmpty) {
+            mBtnLogin.setTextColor(Color.parseColor("#FFFFFF"));
+            mBtnLogin.setEnabled(true);
+        } else if (!mIsPhoneSelected && !mIsEmailEmpty) {
+            mBtnLogin.setTextColor(Color.parseColor("#FFFFFF"));
+            mBtnLogin.setEnabled(true);
+        } else {
+            mBtnLogin.setTextColor(Color.parseColor("#7fffffff"));
+            mBtnLogin.setEnabled(false);
+        }
     }
 
     public void getInfo() {
@@ -378,7 +511,32 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             this.finish();
         } else if (view.getId() == R.id.user_login_layout_btn) {
             loginManage();
-        } else if (view.getId() == R.id.insert_user_btn) {
+        } else if(view.getId() == R.id.tab_email) {
+            if (!mIsPhoneSelected) {
+                return;
+            }
+            mIsPhoneSelected = false;
+            mEmailTabIndicator.setBackgroundColor(getResources().getColor(R.color.tab_color_white));
+            mPhoneTabIndicator.setBackgroundColor(getResources().getColor(R.color.tab_color_grey));
+            mEmailTab.setTextColor(getResources().getColor(R.color.tab_color_white));
+            mPhoneTab.setTextColor(getResources().getColor(R.color.tab_color_grey));
+            mPhoneLL.setVisibility(View.GONE);
+            mEmailEt.setVisibility(View.VISIBLE);
+            resetRegisterBtnState();
+
+        } else if(view.getId() == R.id.tab_phone) {
+            if (mIsPhoneSelected) {
+                return;
+            }
+            mIsPhoneSelected = true;
+            mEmailTabIndicator.setBackgroundColor(getResources().getColor(R.color.tab_color_grey));
+            mPhoneTabIndicator.setBackgroundColor(getResources().getColor(R.color.tab_color_white));
+            mEmailTab.setTextColor(getResources().getColor(R.color.tab_color_grey));
+            mPhoneTab.setTextColor(getResources().getColor(R.color.tab_color_white));
+            mPhoneLL.setVisibility(View.VISIBLE);
+            mEmailEt.setVisibility(View.GONE);
+            resetRegisterBtnState();
+        }else if (view.getId() == R.id.insert_user_btn) {
             mApplication.mLoginManage.setUserLoginInterface(null);
             UserUtils.hideSoftMethod(this);
             Intent itRegist = new Intent(InternationUserLoginActivity.this, InternationUserRegistActivity.class);
@@ -392,11 +550,12 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             } else if (justLogin.equals("profit")) {
                 itRegist.putExtra("fromRegist", "fromProfit");
             }
+            itRegist.putExtra("isPhoneSelected", mIsPhoneSelected);
             startActivity(itRegist);
         } else if (view.getId() == R.id.user_login_forgetpwd) {
             mApplication.mLoginManage.setUserLoginInterface(null);
             UserUtils.hideSoftMethod(this);
-            Intent itForget = new Intent(InternationUserLoginActivity.this, InternationUserRepwdActivity.class);
+            Intent itForget = new Intent(InternationUserLoginActivity.this, InternationalResetPwdActivity.class);
             if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
                 itForget.putExtra("fromRegist", "fromStart");
             } else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
@@ -406,6 +565,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             } else if (justLogin.equals("profit")) {
                 itForget.putExtra("fromRegist", "fromProfit");
             }
+            itForget.putExtra("isPhoneSelected", mIsPhoneSelected);
             startActivity(itForget);
         } else if (view.getId() == R.id.tv_user_login_select_country) {
             mApplication.mLoginManage.setUserLoginInterface(null);
@@ -431,19 +591,57 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
      * 登录管理类
      */
     public void loginManage() {
-        phone = mEditTextPhoneNumber.getText().toString().replace("-", "");
-        pwd = mEditTextPwd.getText().toString();
-        if (!"".equals(phone)) {
-//			if (UserUtils.isMobileNO(phone)) {
-            if (!"".equals(pwd)) {
-                if (pwd.length() >= 6 && pwd.length() <= 16) {
+
+        if(mIsPhoneSelected) {
+            loginByPhone();
+        } else {
+            loginByEmail();
+        }
+    }
+
+    private void loginByEmail() {
+        mEmail = mEmailEt.getText().toString();
+        mPwd = mEditTextPwd.getText().toString();
+        if (TextUtils.isEmpty(mEmail) || !UserUtils.emailValidation(mEmail)) {
+            showToast(R.string.email_invalid);
+            return;
+        }
+        if (TextUtils.isEmpty(mPwd) || mPwd.length() < 6 || mPwd.length() > 16) {
+            UserUtils.hideSoftMethod(this);
+            UserUtils.showDialog(mApplication.getContext(),
+                    this.getResources().getString(R.string.user_login_password_show_error));
+            return;
+        }
+
+        if (!UserUtils.isNetDeviceAvailable(this)) {
+            UserUtils.hideSoftMethod(this);
+            GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
+        } else {
+            mApplication.mLoginManage.setUserLoginInterface(this);
+            mApplication.mLoginManage.loginByEmail(mEmail, mPwd, "");
+            mApplication.loginStatus = 0;
+            UserUtils.hideSoftMethod(this);
+            mCustomProgressDialog.show();
+            mEditTextPhoneNumber.setEnabled(false);
+            mEditTextPwd.setEnabled(false);
+            mTextViewRegist.setEnabled(false);
+            mTextViewForgetPwd.setEnabled(false);
+            mBtnLogin.setEnabled(false);
+        }
+    }
+
+    private void loginByPhone() {
+        mPhone = mEditTextPhoneNumber.getText().toString().replace("-", "");
+        mPwd = mEditTextPwd.getText().toString();
+        if (!"".equals(mPhone)) {
+            if (!"".equals(mPwd)) {
+                if (mPwd.length() >= 6 && mPwd.length() <= 16) {
                     if (!UserUtils.isNetDeviceAvailable(this)) {
                         UserUtils.hideSoftMethod(this);
                         GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
                     } else {
                         mApplication.mLoginManage.setUserLoginInterface(this);
-                        mApplication.mLoginManage.login(phone, pwd, "");
-//							if (b) {
+                        mApplication.mLoginManage.loginByPhone(mPhone, mPwd, "");
                         mApplication.loginStatus = 0;
                         UserUtils.hideSoftMethod(this);
                         mCustomProgressDialog.show();
@@ -474,7 +672,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                 break;
             case 1:
                 // 登录成功后关闭个人中心启动模块页面
-
                 mApplication.isUserLoginSucess = true;
                 closeProgressDialog();
                 mEditTextPhoneNumber.setEnabled(true);
@@ -492,6 +689,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                     setResult(Activity.RESULT_OK, it);
                 }
                 EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
+                EventBus.getDefault().post(new EventLoginSuccess());
                 this.finish();
                 break;
             case 2:
@@ -511,9 +709,15 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                 mTextViewRegist.setEnabled(true);
                 mTextViewForgetPwd.setEnabled(true);
                 mBtnLogin.setEnabled(true);
+                String notRegistered = "";
+                if (mIsPhoneSelected) {
+                    notRegistered = this.getResources().getString(R.string.user_no_regist);
+                } else {
+                    notRegistered = this.getResources().getString(R.string.email_not_registered);
+                }
                 new AlertDialog.Builder(this)
                         .setTitle(this.getResources().getString(R.string.user_dialog_hint_title))
-                        .setMessage(this.getResources().getString(R.string.user_no_regist))
+                        .setMessage(notRegistered)
                         .setNegativeButton(this.getResources().getString(R.string.user_cancle), null)
                         .setPositiveButton(this.getResources().getString(R.string.user_regist),
                                 new DialogInterface.OnClickListener() {
@@ -522,7 +726,12 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         mApplication.mLoginManage.setUserLoginInterface(null);
                                         Intent it = new Intent(InternationUserLoginActivity.this, InternationUserRegistActivity.class);
-                                        it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
+                                        if (mIsPhoneSelected) {
+                                            it.putExtra("intentLogin", mEditTextPhoneNumber.getText().toString());
+                                        } else {
+                                            it.putExtra("intentLoginEmail", mEmailEt.getText().toString());
+                                        }
+                                        it.putExtra("isPhoneSelected", mIsPhoneSelected);
                                         if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
                                             it.putExtra("fromRegist", "fromStart");
                                         } else if (justLogin.equals("indexmore")) {// 从更多页个人中心注册
@@ -564,7 +773,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         mApplication.mLoginManage.setUserLoginInterface(null);
-                                        Intent it = new Intent(InternationUserLoginActivity.this, InternationUserRepwdActivity.class);
+                                        Intent it = new Intent(InternationUserLoginActivity.this, InternationalResetPwdActivity.class);
                                         it.putExtra("errorPwdOver", mEditTextPhoneNumber.getText().toString());
                                         if (justLogin.equals("main") || justLogin.equals("back")) {// 从起始页注册
                                             it.putExtra("fromRegist", "fromStart");
@@ -588,30 +797,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
 
                 break;
         }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    @Override
-    public boolean onTouch(View view, MotionEvent event) {
-        int action = event.getAction();
-        switch (view.getId()) {
-        /*case R.id.user_login_layout_btn:
-			switch (action) {
-			case MotionEvent.ACTION_DOWN:
-				mBtnLogin.setBackgroundResource(R.drawable.icon_login_click);
-				break;
-			case MotionEvent.ACTION_UP:
-				mBtnLogin.setBackgroundResource(R.drawable.icon_login);
-				break;
-			default:
-				break;
-			}
-			break;*/
-
-            default:
-                break;
-        }
-        return false;
     }
 
     /**
@@ -644,6 +829,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                 mCustomProgressDialog = null;
             }
         }
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -664,7 +850,6 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
         String topActivityClassName = null;
         ActivityManager activityManager = (ActivityManager) (context
                 .getSystemService(android.content.Context.ACTIVITY_SERVICE));
-        // android.app.ActivityManager.getRunningTasks(int maxNum)
         // 即最多取得的运行中的任务信息(RunningTaskInfo)数量
         List<RunningTaskInfo> runningTaskInfos = activityManager.getRunningTasks(1);
         if (runningTaskInfos != null && runningTaskInfos.size() > 0) {

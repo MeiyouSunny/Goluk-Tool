@@ -10,6 +10,7 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+
     <!-- 手机快速注册/找回密码Text设置 -->
     <style name="user_login">
         <item name="android:textSize">15sp</item>
@@ -31,6 +32,10 @@
         <item name="android:backgroundDimEnabled">true</item>
     </style>
 
+    <style name="NewCustomDialog" parent="@android:style/Theme.Dialog">
+
+    </style>
+
     <!-- Activity主题 -->
     <style name="activityTheme" parent="@android:style/Theme">
         <item name="android:windowIsTranslucent">true</item>
@@ -44,4 +49,5 @@
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">false</item>
     </style>
+
 </resources>

@@ -21,15 +21,14 @@ android {
     flavorDimensions "default"
     productFlavors {
         internal {
-            dimension "default"
+	    dimension "default"
             applicationId "cn.com.mobnote.golukmobile"
-            resValue 'string', 'FacebookID', '"771491992987541"'
-            resValue 'string', 'ZhugeAppkey', '"1eda80f18ad84c5d8c5add807fc1664f"'
+            resValue 'string', 'FacebookID', '"1693308594241132"'
+            resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"wandoujia"'
-            manifestPlaceholders=[HTML_SCHEME : "golukapp" ,
+            manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
                                   HTML_HOST : "goluk.app" ,
-                                  FacebookAuth : "com.facebook.app.FacebookContentProvider771491992987541"]
-        }
+                                  FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]        }
 
         international {
             dimension "default"
@@ -55,6 +54,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+        debug {
+            minifyEnabled false
+            zipAlignEnabled false
+            shrinkResources false
             signingConfig signingConfigs.release
         }
     }

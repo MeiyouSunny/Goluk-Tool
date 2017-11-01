@@ -253,9 +253,6 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
     public void onLoadComplete(int requestType, Object result) {
         if (requestType == IPageNotifyFn.PageType_BindInfo) {
             BindPhoneRetBean retBean = (BindPhoneRetBean) result;
-			if (retBean == null) {
-				return;
-			}
             if (null == retBean) {
                 registAndRepwdStatusChange(9);
                 return;

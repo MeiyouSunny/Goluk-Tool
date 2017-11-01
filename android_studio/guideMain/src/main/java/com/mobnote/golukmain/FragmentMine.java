@@ -600,10 +600,10 @@ public class FragmentMine extends Fragment implements OnClickListener,
                 Context.MODE_PRIVATE);
         mEditor = mPreferences.edit();
         Intent itNo = null;
-        if (GolukApplication.getInstance().isMainland() == false) {
-            itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
-        } else {
+        if (GolukApplication.getInstance().isMainland()) {
             itNo = new Intent(getActivity(), UserLoginActivity.class);
+        } else {
+            itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
         }
 
         if (intentType == TYPE_USER) {

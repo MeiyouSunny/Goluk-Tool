@@ -39,6 +39,7 @@ import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
@@ -538,7 +539,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     mConncetLayout.setVisibility(View.GONE);
                 }
                 mSettingBtn.setVisibility(View.GONE);
-//                mChangeBtn.setVisibility(View.GONE);
                 m8sBtn.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
                 mLiveBtn.setImageResource(R.drawable.driving_car_living_icon);
                 setVideoBtnState(false);
@@ -546,12 +546,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             case WIFI_STATE_SUCCESS:
                 mConnectTip.setText(wifiname);
                 // GolukApplication.getInstance().stopDownloadList();
-                // 国际版T1设备隐藏直播
-                if (!mApp.isMainland()) {
-                    mllStartLive.setVisibility(View.GONE);
-                } else {
-                    mllStartLive.setVisibility(View.VISIBLE);
-                }
                 startPlayVideo();
                 break;
             default:
@@ -560,6 +554,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void startPlayVideo() {
+        // 国际版T1设备隐藏直播
+        if (!mApp.isMainland()) {
+            mllStartLive.setVisibility(View.GONE);
+        } else {
+            mllStartLive.setVisibility(View.VISIBLE);
+        }
         mSettingBtn.setVisibility(View.VISIBLE);
         mPalyerLayout.setVisibility(View.VISIBLE);
         mNotconnected.setVisibility(View.GONE);

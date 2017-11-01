@@ -78,6 +78,11 @@ public class GolukConfig {
     public final static String LINE_PACKAGE = "jp.naver.line.android";
 
     /**
+     * VK package name
+     */
+    public final static String VK_PACKAGE = "com.vkontakte.android";
+
+    /**
      * 第三方登陆默认密码
      **/
     public final static String OTHER_PASSWORD = "lovegoluk@2016";

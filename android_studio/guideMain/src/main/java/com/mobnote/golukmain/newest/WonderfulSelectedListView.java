@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -24,6 +25,8 @@ import com.mobnote.util.ZhugeUtils;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
@@ -79,6 +82,7 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 
 	public WonderfulSelectedListView(Context context) {
 		mContext = context;
+		EventBus.getDefault().register(this);
 		sdf = new SimpleDateFormat(mContext.getString(R.string.str_date_formatter));
 		mDataList = new ArrayList<JXListItemDataInfo>();
 		mRTPullListView = new RTPullListView(mContext);
@@ -195,6 +199,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	}
 
 	private void httpPost(boolean flag, String jxid, String pagesize) {
+		if (GolukUtils.isCurrWifiGolukT(mContext)) {
+			return;
+		}
 		if (isGetFileListDataing) {
 			return;
 		}
@@ -409,7 +416,12 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 	}
 
 	public void onDestroy() {
-
+		EventBus.getDefault().unregister(this);
 	}
 
+
+
+	public void onEventMainThread(EventLoginSuccess event) {
+		shareBg.performClick();
+	}
 }

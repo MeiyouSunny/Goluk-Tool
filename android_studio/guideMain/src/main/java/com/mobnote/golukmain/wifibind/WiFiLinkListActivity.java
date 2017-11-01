@@ -317,13 +317,22 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("dealAutoConn", "-----5 NOT  NULL");
         mWillConnName = bean.getIpc_ssid();
         mWillConnMac = bean.getIpc_bssid();
-        if (mWillConnName == null || null == mWillConnMac || mWillConnName.length() <= 0 || mWillConnMac.length() <= 0) {
+        if (mWillConnName == null || mWillConnName.length() <= 0) {
+            showToast(getString(R.string.no_wifi_selected));
             GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed3  :");
             collectLog("isGetWifiBean", "-----3");
             // 连接失败
             connFailed();
             return false;
         }
+        if(!mWillConnName.startsWith("Goluk")){
+            showToast(getString(R.string.not_goluk_device));
+            collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
+            // 连接失败
+            connFailed();
+            return false;
+        }
+
 
         GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
 

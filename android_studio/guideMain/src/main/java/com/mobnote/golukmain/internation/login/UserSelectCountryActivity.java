@@ -121,7 +121,7 @@ public class UserSelectCountryActivity extends BaseActivity implements OnItemCli
 			mBaseApp.mLocationCityCode = bean;
 			GolukDebugUtils.e("", "onclick:  " + bean.toString());
 			Intent it = new Intent();
-			it.putExtra(InternationUserLoginActivity.COURTRY_BEAN, bean);
+			it.putExtra(InternationUserLoginActivity.COUNTRY_BEAN, bean);
 			setResult(RESULT_OK, it);
 		}
 		finish();

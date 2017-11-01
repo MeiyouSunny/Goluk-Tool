@@ -111,6 +111,9 @@ import de.greenrobot.event.EventBus;
 import android.support.multidex.MultiDexApplication;
 
 import com.mobnote.golukmain.userlogin.UserResult;
+import com.vk.sdk.VKAccessToken;
+import com.vk.sdk.VKAccessTokenTracker;
+import com.vk.sdk.VKSdk;
 import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -125,6 +128,15 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * 已获取的AppSecret
      */
     public static final String RD_APP_SECRET = "51b6e9f5866392a68f7515fe51746459PQhgN2vXUaqBFf49k9KmDRFR3ctgB19buZwHpfRXrOvJFWlltIVyYRRkahx7GMK4urpv0blxaIPjArqFKKpG2FG2mmXZ6Q/IRh9WFEv7a//LYG6L8NMx6pgGGU6lplTzrRsBxJRJjfFEKn9uJn7NZsJg0UkIyQRy7YELPV9AN5ce1ObP4ZxZeD/bOGGpGFA1qTatDjrsjsqY41ts/Tei0EcEQi/vQeHflxqzHBRs5X+fIRAC205pbXECo+OnUTzibQLiAuHD9pi9xjgDjizv4WD7thr7Rv01qFt5j1msNsGM54Ud8QK2L85x0ZPq1nwLxDTWm2SnkOb2e+np7HOHMmX0vom+1ZXUbeMaJByR1gTZ+FlyytIp5BcBUCOIJtgSUZ86QHJAGVgMTwVHDayAmIvzV9iFgwjREb7318ClF+OpBk+XQSl2+GVrPRZNYysAQZeSgknCobiB3jhdfkyKUBwUDMchBZfw4th1RfWAFBWK1epupyj5Tb/lId8GKOdHWY/BX2Sdd71IX19XjTYcPiSHdTReQaMrBRflysJYkLE=";
+
+    /**
+     * 已获取的AppKey
+     */
+    public static final String RD_APP_KEY_INNATIONAL = "dc8c35492a5e8ccc";
+    /**
+     * 已获取的AppSecret
+     */
+    public static final String RD_APP_SECRET_INNATIONAL = "bc1881461c91257c72d0559d6f66ef6djZQpXFK3gAKPmGcqK0Qd7G2jjg9TsqELabS6KF17gLej5d23f5BOK95uBHogQMNl1wKxBlCG+QU2q52vrDIXVaobaCUhjDOYSqHR9eFUDsmyo4SpjW0TyQOgUMDkFqWjKhIuebTCk99Jca5Gb0xfuDTRLvzo0yJzVSLen9xHIJnyM1gIrDEvlEd/m5fyFvLHf7pTF/vU/6nKWC2pQLjYTLksdVoD41wXa1o6cMzmooIVVXx8DKk6EsTvjHZ/YF/cXeUcbinAxnVchL/XR3Q9W4OSV5OF7XOMPCcbm4A4onsZFbHPsZO3tN3S86u5C8ceSnjd3kaAoSa3fuW70jM69hi6y7bLp7bm+1yxFb+0Cw/3Cdtbo/agrT0FGXXVVrgsNEy3a5hfANmu/zDS3hZ1hqOZXtYhudit42Ix+KC79upj+vZRRGwkSxbIdM2K+WIzzvav0boXdKD2fmCMoZRaypNVznjIolm1jA1vgFvp/JW/SV1uBukGGOf0EXFHrMpS4dGtIPiuE1fe7Mr15QWU+1JiDEkOJbz9MRNKYN9qLUo=";
 
     /**
      * JIN接口类
@@ -343,6 +355,15 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         return mIsExit;
     }
 
+    VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
+        @Override
+        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
+            if (newToken == null) {
+                // VKAccessToken is invalid
+            }
+        }
+    };
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -360,7 +381,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
             GolukUmConfig.UmInit();
             initXLog();
-
+            vkAccessTokenTracker.startTracking();
+            VKSdk.initialize(this);
             GolukMobUtils.initMob(this);
 
             //初始化诸葛io
@@ -1317,7 +1339,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
             // 获取ipc版本号
             GolukApplication.getInstance().getIPCControlManager().getVersion();
-                queryNewFileList();
+            queryNewFileList();
             if (null != mMainActivity) {
                 mMainActivity.wiFiLinkStatus(2);
             }
@@ -1863,9 +1885,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     String filePath = "";
                     if (filename.contains("WND")) {
                         filePath = "fs1:/video/wonderful/";
-                    }// else if (filename.contains("URG")) {
-                     //   filePath = "fs1:/video/urgent/";
-                   // }
+                    }
 
                     if (TextUtils.isEmpty(filePath)) {
                         continue;
@@ -2084,5 +2104,4 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     public boolean isDownloading() {
         return isDownloading;
     }
-
 }

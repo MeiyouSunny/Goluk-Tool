@@ -280,7 +280,6 @@ public class WifiConnectManagerSupport {
         bean.setPh_mac(info.getMacAddress());
         bean.setWifiSignal(getWifiLevel(info.getRssi()));
         bean.setPh_ip(int2ip(info.getIpAddress()));
-
         return bean;
     }
 
@@ -293,19 +292,19 @@ public class WifiConnectManagerSupport {
         WifiInfo info = wifiManager.getConnectionInfo();
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;
-        if (info != null && info.getSSID() != null) {
+        if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>")) {
 
             String tmpSsid = info.getSSID().replace("\"", "");
             ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "info true :ssid " + tmpSsid));
-            Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
-            if (matcher != null && matcher.find()) {
+            //Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
+            //if (matcher != null && matcher.find()) {
                 ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "matcher.find() true "));
                 bean = new WifiRsBean();
                 bean.setIpc_ssid(tmpSsid);
                 bean.setIpc_bssid(info.getMacAddress());
                 bean.setWifiSignal(getWifiLevel(info.getRssi()));
                 bean.setIpc_ip(int2ip(info.getIpAddress()));
-            }
+            //}
         }
         String msg ;
         if(bean == null){

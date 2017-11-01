@@ -44,30 +44,10 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_sd"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/rlcx_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_t_settings_sd_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/ib_t_settings_next_btn"
-                    android:gravity="center_vertical"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/setting_right_text_color"
-                    android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/ib_t_settings_next_btn"
@@ -80,11 +60,43 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color" />
+                    android:id="@+id/tv_t_settings_sd_card_storage_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
+                    android:layout_marginTop="6dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_next_btn"
+                    android:text="@string/rlcx_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_t_settings_sd_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_sd_card_storage_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_next_btn"
+                    android:layout_marginTop="0dp"
+                    android:maxLines="3"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/setting_line_color" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -96,30 +108,10 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_recycle_video_quality"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/spzl_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_t_settings_recycle_video_quality_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/ib_t_settings_recycle_video_quality_btn"
-                    android:gravity="center_vertical"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/setting_right_text_color"
-                    android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/ib_t_settings_recycle_video_quality_btn"
@@ -132,11 +124,43 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color" />
+                    android:id="@+id/tv_t_settings_recycle_video_quality_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
+                    android:layout_marginTop="6dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_recycle_video_quality_btn"
+                    android:text="@string/spzl_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <TextView
+                    android:id="@+id/tv_t_settings_recycle_video_quality_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_recycle_video_quality_label"
+                    android:layout_toLeftOf="@+id/ib_t_settings_recycle_video_quality_btn"
+                    android:layout_marginTop="0dp"
+                    android:gravity="center_vertical"
+                    android:paddingRight="15dp"
+                    android:paddingLeft="15dp"
+                    android:maxLines="3"
+                    android:layout_marginBottom="6dp"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/setting_line_color" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -170,7 +194,7 @@
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -182,16 +206,31 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_wonderful_video_type"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
+                <ImageButton
+                    android:id="@+id/ib_t_settings_wonderful_video_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tv_t_settings_wonderful_video_type_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_wonderful_video_type"
                     android:text="@string/str_wonderful_video_type_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -199,16 +238,19 @@
                 <TextView
                     android:id="@+id/tv_t_settings_wonderfulvideo_type_desc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_wonderful_video_type_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_wonderful_video_type"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -220,33 +262,51 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_wonderful_video_quality"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
+                <ImageButton
+                    android:id="@+id/ib_t_settings_wonderful_video_quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tv_t_settings_wonderful_video_quality_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_wonderful_video_quality"
                     android:text="@string/str_wonderful_video_quality_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
 
                 <TextView
-                    android:id="@+id/tv_t_settings_wonderfulvideo_quality_desc"
+                    android:id="@+id/tv_t_settings_wonderful_video_quality_desc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_wonderful_video_quality_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_wonderful_video_quality"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -296,15 +356,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="14dp"
-                    android:text="@string/str_setup_autophoto_title"
-                    android:textColor="#3f3f3f"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_autophoto"
                     android:layout_width="wrap_content"
@@ -315,11 +366,21 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_autophoto"
+                    android:text="@string/str_setup_autophoto_title"
+                    android:textColor="#3f3f3f"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/setting_line_color" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -330,17 +391,32 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_volume"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
+                <ImageButton
+                    android:id="@+id/ib_t_settings_volume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tv_t_settings_volume_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_volume"
                     android:text="@string/str_settings_tone_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -348,22 +424,24 @@
                 <TextView
                     android:id="@+id/tv_t_settings_volume_desc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_volume_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_volume"
+                    android:layout_marginBottom="6dp"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
                     android:gravity="center_vertical"
+                    android:maxLines="3"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/setting_line_color" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -379,16 +457,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_kgjtsy_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_kgjtsy"
                     android:layout_width="wrap_content"
@@ -399,6 +467,17 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_kgjtsy"
+                    android:text="@string/str_settings_kgjtsy_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -413,17 +492,6 @@
                 android:layout_height="42dp"
                 android:background="@color/setting_white_color" 
                 android:visibility="gone">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/jcsp_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_wonderful_takephoto_voice"
                     android:layout_width="wrap_content"
@@ -434,6 +502,17 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_wonderful_takephoto_voice"
+                    android:text="@string/jcsp_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -448,17 +527,6 @@
                 android:layout_height="42dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_image_flip_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_image_flip"
                     android:layout_width="wrap_content"
@@ -469,6 +537,17 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_image_flip"
+                    android:text="@string/str_settings_image_flip_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -484,16 +563,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_video_logo_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_video_logo"
                     android:layout_width="wrap_content"
@@ -504,6 +573,17 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_video_logo"
+                    android:text="@string/str_settings_video_logo_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -531,16 +611,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_fatigue_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_fatigue"
                     android:layout_width="wrap_content"
@@ -553,10 +623,20 @@
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_fatigue_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/setting_line_color" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -568,29 +648,9 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_urgent_crash"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/pzgy_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
-                <TextView
-                    android:id="@+id/tv_t_settings_urgent_crash_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@+id/ib_t_settings_urgent_crash"
-                    android:gravity="center_vertical"
-                    android:paddingRight="10dp"
-                    android:textColor="@color/setting_right_text_color"
-                    android:textSize="15sp" />
 
                 <ImageButton
                     android:id="@+id/ib_t_settings_urgent_crash"
@@ -603,6 +663,37 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
+                    android:id="@+id/tv_t_settings_urgent_crash_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_urgent_crash"
+                    android:text="@string/pzgy_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/tv_t_settings_urgent_crash_desc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_urgent_crash_label"
+                    android:layout_toLeftOf="@+id/ib_t_settings_urgent_crash"
+                    android:layout_marginBottom="6dp"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
+                    android:textColor="@color/setting_right_text_color"
+                    android:textSize="15sp" />
+
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -619,16 +710,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_parking_sleep_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_parking_sleep"
                     android:layout_width="wrap_content"
@@ -639,6 +720,17 @@
                     android:background="@drawable/set_open_btn" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/str_settings_parking_sleep_title"
+                    android:layout_toLeftOf="@id/btn_t_settings_parking_sleep"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -668,16 +760,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_settings_security_title"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_tcaf"
                     android:layout_width="wrap_content"
@@ -689,10 +771,21 @@
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_tcaf"
+                    android:text="@string/str_settings_security_title"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/setting_line_color" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -707,10 +800,43 @@
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="@string/pzgy_text"
                 android:textColor="#999999"
                 android:textSize="12sp"
                 android:visibility="gone" />
+            <!-- 购买连接 -->
+
+            <LinearLayout
+                android:id="@+id/ly_t_settings_buy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/def"
+                android:gravity="center_vertical"
+                android:visibility="gone"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="14dp"
+                    android:layout_height="14dp"
+                    android:background="@drawable/my_shopping_car_icon"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:contentDescription="@string/def"
+                    android:text="@string/str_buy_dropline"
+                    android:textColor="#047cf3"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <!-- 移动侦测 -->
 
             <RelativeLayout
                 android:id="@+id/ry_t_settings_adas_move_motion"
@@ -752,39 +878,6 @@
             </RelativeLayout>
 
 
-
-            <!-- 购买连接 -->
-
-            <LinearLayout
-                android:id="@+id/ly_t_settings_buy"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/def"
-                android:gravity="center_vertical"
-                android:visibility="gone"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="14dp"
-                    android:layout_height="14dp"
-                    android:background="@drawable/my_shopping_car_icon"
-                    android:contentDescription="@string/def" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="3dp"
-                    android:contentDescription="@string/def"
-                    android:text="@string/str_buy_dropline"
-                    android:textColor="#047cf3"
-                    android:textSize="10sp" />
-            </LinearLayout>
-
-
             <!-- ADAS 驾驶安全辅助 -->
 
             <RelativeLayout
@@ -794,16 +887,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_adas_driving_safety_assistance"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_adas_assistance"
                     android:layout_width="wrap_content"
@@ -812,6 +895,17 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_adas_assistance"
+                    android:text="@string/str_adas_driving_safety_assistance"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -834,16 +928,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_adas_forward_car_close_warning"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_forward_car_close_warning"
                     android:layout_width="wrap_content"
@@ -852,6 +936,17 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_forward_car_close_warning"
+                    android:text="@string/str_adas_forward_car_close_warning"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -868,16 +963,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_adas_forward_car_setup_hint"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <Button
                     android:id="@+id/btn_t_settings_forward_car_setup_hint"
                     android:layout_width="wrap_content"
@@ -886,6 +971,17 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
                     android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/btn_t_settings_forward_car_setup_hint"
+                    android:text="@string/str_adas_forward_car_setup_hint"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
                 <View
                     android:layout_width="match_parent"
@@ -903,16 +999,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/str_adas_config"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <ImageButton
                     android:id="@+id/ib_t_settings_adas_config"
                     android:layout_width="wrap_content"
@@ -925,6 +1011,17 @@
 
                 <TextView
                     android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/ib_t_settings_adas_config"
+                    android:text="@string/str_adas_config"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
+                    android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
@@ -935,17 +1032,32 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_shutdown"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
+                <ImageButton
+                    android:id="@+id/ib_t_settings_shutdown"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tv_t_settings_shutdown_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_shutdown"
                     android:text="@string/str_settings_shutdown_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -953,22 +1065,24 @@
                 <TextView
                     android:id="@+id/tv_t_settings_shutdown_desc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_shutdown_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_shutdown"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:background="@color/setting_line_color" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -980,16 +1094,31 @@
             <RelativeLayout
                 android:id="@+id/ry_t_settings_language"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
+                android:layout_height="wrap_content"
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
+                <ImageButton
+                    android:id="@+id/ib_t_settings_language"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:id="@+id/tv_t_settings_language_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
+                    android:layout_marginTop="6dp"
+                    android:maxLines="3"
+                    android:layout_alignParentLeft="true"
+                    android:layout_toLeftOf="@id/ib_t_settings_language"
                     android:text="@string/str_settings_language_title"
                     android:textColor="@color/setting_black_color"
                     android:textSize="16sp" />
@@ -997,17 +1126,19 @@
                 <TextView
                     android:id="@+id/tv_t_settings_language_desc"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:drawablePadding="10dp"
-                    android:drawableRight="@drawable/icon_next_press"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@id/tv_t_settings_language_label"
+                    android:layout_toLeftOf="@id/ib_t_settings_language"
+                    android:layout_marginBottom="6dp"
                     android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:maxLines="3"
                     android:textColor="@color/setting_right_text_color"
                     android:textSize="15sp" />
 
-                <TextView
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -1023,16 +1154,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/sjsz"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <ImageButton
                     android:id="@+id/ib_t_settings_time"
                     android:layout_width="wrap_content"
@@ -1044,6 +1165,17 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/ib_t_settings_time"
+                    android:text="@string/sjsz"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -1059,17 +1191,8 @@
                 android:background="@color/setting_white_color" 
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/bbxx"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <ImageButton
+                    android:id="@+id/ib_t_settings_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -1079,6 +1202,17 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/ib_t_settings_version"
+                    android:text="@string/bbxx"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
@@ -1095,16 +1229,6 @@
                 android:background="@color/setting_white_color"
                 android:visibility="gone" >
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:paddingLeft="15dp"
-                    android:paddingRight="15dp"
-                    android:text="@string/hfcc"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp" />
-
                 <ImageButton
                     android:id="@+id/ib_t_settings_restore"
                     android:layout_width="wrap_content"
@@ -1116,6 +1240,17 @@
                     android:contentDescription="@string/def" />
 
                 <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_toLeftOf="@id/ib_t_settings_restore"
+                    android:text="@string/hfcc"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <View
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"

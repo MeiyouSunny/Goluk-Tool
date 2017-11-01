@@ -28,6 +28,8 @@ public interface IThirdShareFn {
 	public static final String TYPE_WHATSAPP = "104";
 	/** Line **/
 	public static final String TYPE_LINE = "105";
+	/** VK **/
+	public static final String TYPE_VK = "106";
 
 	public void close();
 

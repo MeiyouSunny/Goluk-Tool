@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.Window;
@@ -18,6 +19,7 @@ import android.widget.ImageButton;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
@@ -54,6 +56,7 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
      * 从上个页面传来的phone
      **/
     private String mPhone = "";
+    private String mEmail = "";
     /**
      * 从上个页面传来的vcode
      **/
@@ -88,6 +91,7 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
     private void getDataInfo() {
         Intent it = getIntent();
         mPhone = it.getStringExtra("phone");
+        mEmail = it.getStringExtra("email");
         mVcode = it.getStringExtra("vcode");
         mZone = it.getStringExtra("zone");
         mFrom = it.getStringExtra("from");
@@ -98,6 +102,7 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
         mImageBtnBack = (ImageButton) findViewById(R.id.ib_internation_pwd_back);
         mPwdEditText = (EditText) findViewById(R.id.et_internation_pwd);
         mNextBtn = (Button) findViewById(R.id.btn_interantion_pwd_next);
+        mNextBtn.setEnabled(false);
 
         mImageBtnBack.setOnClickListener(this);
         mNextBtn.setOnClickListener(this);
@@ -105,6 +110,9 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
         if (null == mLoadingDialog) {
             mLoadingDialog = new CustomLoadingDialog(this, this.getResources().getString(
                     R.string.str_regist_loading));
+        }
+        if (!TextUtils.isEmpty(mEmail)) {
+            mNextBtn.setText(getString(R.string.user_regist));
         }
     }
 
@@ -152,20 +160,39 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
             GolukUtils.showToast(this, this.getResources().getString(R.string.user_net_unavailable));
         } else {
             if (null != pwd && pwd.length() >= 6 && pwd.length() <= 16) {
-                InternationRegistRequest request = new InternationRegistRequest(IPageNotifyFn.PageType_InternationalRegister, this);
-                boolean b = request.get(mPhone, MD5.hexdigest(pwd), mVcode, mZone, mStep2code);
-                if (b) {
-                    mLoadingDialog.show();
-                    mNextBtn.setEnabled(false);
+                if (!TextUtils.isEmpty(mPhone)) {
+                    registerByPhone(pwd);
                 } else {
-                    closeLoadingDialog();
-                    GolukUtils
-                            .showToast(this, this.getResources().getString(R.string.user_regist_fail));
+                    registerByEmail(pwd);
                 }
             } else {
                 UserUtils.showDialog(this,
                         this.getResources().getString(R.string.user_login_password_show_error));
             }
+        }
+    }
+
+    private void registerByPhone(String pwd) {
+        InternationalPhoneRegisterRequest request = new InternationalPhoneRegisterRequest(IPageNotifyFn.PageType_InternationalRegister, this);
+        boolean b = request.get(mPhone, MD5.hexdigest(pwd), mVcode, mZone, mStep2code);
+        if (b) {
+            mLoadingDialog.show();
+            mNextBtn.setEnabled(false);
+        } else {
+            closeLoadingDialog();
+            GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_fail));
+        }
+    }
+
+    private void registerByEmail (String pwd){
+        InternationalEmailRegisterRequest registerRequest = new InternationalEmailRegisterRequest(IPageNotifyFn.REGISTER_BY_EMAIL, this);
+        boolean b = registerRequest.get(mEmail, MD5.hexdigest(pwd));
+        if (b) {
+            mLoadingDialog.show();
+            mNextBtn.setEnabled(false);
+        } else {
+            closeLoadingDialog();
+            GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_fail));
         }
     }
 
@@ -190,9 +217,10 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
                 GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
                 final String pwd = mPwdEditText.getText().toString();
                 mApp.mLoginManage.setUserLoginInterface(this);
-//                GolukApplication.getInstance().mLoginManage.login(mPhone, pwd, "");
+
                 UserloginBeanRequest userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
-                userloginBean.get(mPhone, MD5.hexdigest(pwd), "");
+                userloginBean.loginByPhone(mPhone, MD5.hexdigest(pwd), "");
+
                 mApp.loginStatus = 0;// 登录中
             } else if (code == 20100) {
                 UserUtils.showDialog(this, this.getResources().getString(R.string.user_already_regist));
@@ -201,6 +229,24 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
             } else {
                 GolukUtils.showToast(this, bean.msg);
             }
+        } else if (requestType == IPageNotifyFn.REGISTER_BY_EMAIL) {
+            closeLoadingDialog();
+            RegistBean bean = (RegistBean) result;
+            if (null == bean) {
+                UserUtils.showDialog(this, this.getResources().getString(R.string.user_getidentify_fail));
+                return;
+            }
+            if (bean.code != 0) {
+                GolukUtils.showToast(this, bean.msg);
+                return;
+            }
+            GolukUtils.showToast(this, this.getResources().getString(R.string.user_regist_success));
+            final String pwd = mPwdEditText.getText().toString();
+            mApp.mLoginManage.setUserLoginInterface(this);
+
+            UserloginBeanRequest userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
+            userloginBean.loginByEmail(mEmail, MD5.hexdigest(pwd), "");
+            mApp.loginStatus = 0;// 登录中
         } else if (requestType == IPageNotifyFn.PageType_Login) {
             try {
                 GolukDebugUtils.i("lily", "-----UserLoginManage-----" + result);
@@ -241,28 +287,8 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
                         SharedPrefUtil.saveUserPwd(json.toString());
 
                         GolukApplication.getInstance().parseLoginData(userresult.data);
-                        if ("fromStart".equals(mFrom)) {
-                            it = new Intent(InternationUserPwdActivity.this, MainActivity.class);
-                            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(it);
-                        } else if ("fromIndexMore".equals(mFrom)) {
-                            it = new Intent(InternationUserPwdActivity.this, MainActivity.class);
-                            it.putExtra("showMe", "showMe");
-                            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(it);
-                        } else if ("fromSetup".equals(mFrom)) {
-                            it = new Intent(InternationUserPwdActivity.this, UserSetupActivity.class);
-                            it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            it.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                            startActivity(it);
-                        } else if ("fromProfit".equals(mFrom)) {
-                            it = new Intent(InternationUserPwdActivity.this, MyProfitActivity.class);
-                            it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                            startActivity(it);
-                            UserUtils.exit();
-                        }
+                        EventBus.getDefault().post(new EventLoginSuccess());
+                        EventBus.getDefault().post(new EventMessageUpdate(EventConfig.MESSAGE_REQUEST));
                         finish();
                         break;
 
@@ -359,7 +385,7 @@ public class InternationUserPwdActivity extends Activity implements View.OnClick
                                     @Override
                                     public void onClick(DialogInterface arg0, int arg1) {
                                         mApp.mLoginManage.setUserLoginInterface(null);
-                                        Intent it = new Intent(InternationUserPwdActivity.this, InternationUserRepwdActivity.class);
+                                        Intent it = new Intent(InternationUserPwdActivity.this, InternationalResetPwdActivity.class);
                                         it.putExtra("errorPwdOver", mPhone);
                                         if (mFrom.equals("main") || mFrom.equals("back")) {// 从起始页注册
                                             it.putExtra("fromRegist", "fromStart");

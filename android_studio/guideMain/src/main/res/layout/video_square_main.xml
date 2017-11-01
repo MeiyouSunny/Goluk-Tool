@@ -18,7 +18,7 @@
 
             <TextView
                 android:id="@+id/hot_title"
-                android:layout_width="50dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
                 android:text="@string/str_wonderful_text"
@@ -27,7 +27,7 @@
 
             <TextView
                 android:id="@+id/square_title"
-                android:layout_width="50dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:gravity="center_horizontal"
@@ -37,7 +37,7 @@
 
             <View
                 android:id="@+id/line_hot"
-                android:layout_width="50dp"
+                android:layout_width="60dp"
                 android:layout_height="2dp"
                 android:layout_below="@+id/hot_title"
                 android:layout_marginTop="5dp"

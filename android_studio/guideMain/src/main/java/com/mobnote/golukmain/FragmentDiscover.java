@@ -3,6 +3,7 @@ package com.mobnote.golukmain;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeleteVideo;
+import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.newest.NewestListView;
@@ -369,4 +370,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         mBannerLoaded = false;
         EventBus.getDefault().unregister(this);
     }
+
+
 }

@@ -51,6 +51,7 @@ public class UserLoginManage implements IRequestResultListener {
 
 	/** 用户信息 **/
 	private String mPhone = "";
+	private String mEmail = "";
 	/** 输入密码错误限制 */
 	public int countErrorPassword = 1;
 
@@ -72,19 +73,28 @@ public class UserLoginManage implements IRequestResultListener {
 		}
 	}
 
-	/**
-	 * 登陆 当帐号和密码输入框都有内容时,激活为可点击状态
-	 */
-	public void login(String phone, String pwd, String uid) {
-		mPhone = phone;
-		mPwd = pwd;
-		userloginBean.get(phone, MD5.hexdigest(mPwd), uid);
-	}
+    /**
+     * 登陆 当帐号和密码输入框都有内容时,激活为可点击状态
+     */
+    public void loginByPhone(String phone, String pwd, String uid) {
+        userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
+        mPhone = phone;
+        mPwd = pwd;
+        userloginBean.loginByPhone(phone, MD5.hexdigest(mPwd), uid);
+    }
 
-	public void login(HashMap<String, String> info) {
-		GolukDebugUtils.e("", "zh  登陆请求---" + info.toString());
-		otherloginBean.get(info);
-	}
+    public void loginByEmail(String email, String pwd, String uid) {
+        userloginBean = new UserloginBeanRequest(IPageNotifyFn.LOGIN_BY_EMAIL, this);
+        mEmail = email;
+        mPwd = pwd;
+        userloginBean.loginByEmail(email, MD5.hexdigest(mPwd), uid);
+    }
+
+    public void loginBy3rdPlatform(HashMap<String, String> info) {
+        otherloginBean = new OtherUserloginBeanRequest(IPageNotifyFn.PageType_OauthLogin, this);
+        GolukDebugUtils.e("", "zh  登陆请求---" + info.toString());
+        otherloginBean.get(info);
+    }
 
 	// /**
 	// * 登录回调
@@ -202,34 +212,36 @@ public class UserLoginManage implements IRequestResultListener {
 
 	}
 
-	@Override
-	public void onLoadComplete(int requestType, Object result) {
-		if (requestType == IPageNotifyFn.PageType_Login || IPageNotifyFn.PageType_OauthLogin == requestType) {
-			mApp.mUser.timerCancel();
-			GolukDebugUtils.e("", "登录回调---loginCallBack------" + JSON.toJSONString(result));
-			try {
-				GolukDebugUtils.i("lily", "-----UserLoginManage-----" + result);
-				UserResult userresult = (UserResult) result;
-				String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
-				mApp.setLoginRespInfo(loginMsg);
-				int code = Integer.parseInt(userresult.code);
-				switch (code) {
-				case 200:
-					String type = "";
-					if(requestType == IPageNotifyFn.PageType_Login){
-						type = mApp.getContext().getString(R.string.str_zhuge_login_style_phone);
-					} else {
-						type = mApp.getContext().getString(R.string.str_zhuge_wxin_login_event);
-					}
-					ZhugeUtils.eventLoginSuccess(mApp.getContext(), type);
-					// 登录成功后，存储用户的登录信息
-					UserData userdata = userresult.data;
-					String uid = userdata.uid;
-					mSharedPreferences = mApp.getContext().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
-					mEditor = mSharedPreferences.edit();
-					mEditor.putBoolean("FirstLogin", false);
-					// 提交
-					mEditor.commit();
+    @Override
+    public void onLoadComplete(int requestType, Object result) {
+        if (requestType == IPageNotifyFn.PageType_Login
+                || IPageNotifyFn.PageType_OauthLogin == requestType
+                || IPageNotifyFn.LOGIN_BY_EMAIL == requestType) {
+            mApp.mUser.timerCancel();
+            GolukDebugUtils.e("", "登录回调---loginCallBack------" + JSON.toJSONString(result));
+            try {
+                GolukDebugUtils.i("lily", "-----UserLoginManage-----" + result);
+                UserResult userresult = (UserResult) result;
+                String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
+                mApp.setLoginRespInfo(loginMsg);
+                int code = Integer.parseInt(userresult.code);
+                switch (code) {
+                    case 200:
+                        String type = "";
+                        if (requestType == IPageNotifyFn.PageType_Login) {
+                            type = mApp.getContext().getString(R.string.str_zhuge_login_style_phone);
+                        } else {
+                            type = mApp.getContext().getString(R.string.str_zhuge_wxin_login_event);
+                        }
+                        ZhugeUtils.eventLoginSuccess(mApp.getContext(), type);
+                        // 登录成功后，存储用户的登录信息
+                        UserData userdata = userresult.data;
+                        String uid = userdata.uid;
+                        mSharedPreferences = mApp.getContext().getSharedPreferences("firstLogin", Context.MODE_PRIVATE);
+                        mEditor = mSharedPreferences.edit();
+                        mEditor.putBoolean("FirstLogin", false);
+                        // 提交
+                        mEditor.commit();
 
 					mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();

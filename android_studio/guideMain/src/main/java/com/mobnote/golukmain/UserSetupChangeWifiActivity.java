@@ -94,13 +94,14 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		Intent it = getIntent();
 		String password = it.getStringExtra("wifiPwd").toString();
 		GolukDebugUtils.i("lily", password + "------ChangeWiFiPassword----");
-//		if (!"".equals(password)) {
-//			mEditText.setText(password);
-//			mEditText.setSelection(password.length());
-//		} else {
-//			mEditText.setText("");
-//		}
-		
+		if(mApp.isMainland()) {
+			if (!"".equals(password)) {
+				mEditText.setText(password);
+				mEditText.setSelection(password.length());
+			} else {
+				mEditText.setText("");
+			}
+		}
 		if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
 				|| IPCControlManager.T1s_SIGN.equals(mApp.mIPCControlManager.mProduceName)
 				|| IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)
@@ -166,7 +167,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			mEditText.requestFocus();
 			return;
 		}
-
 		String json = getSetIPCJson();
 		mApp.stopDownloadList();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
