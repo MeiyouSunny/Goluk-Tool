@@ -1,5 +1,18 @@
 apply plugin: 'com.android.library'
 
+task generateStrings(type: Exec) {
+    workingDir './'
+    commandLine "python", "excel2str.py"
+}
+
+//afterEvaluate {
+//    android.testVariants.all { variant ->
+//        variant.javaCompiler.dependsOn(generateStrings)
+//    }
+//    preBuild.dependsOn generateStrings
+//}
+
+
 android {
     compileSdkVersion 23
     buildToolsVersion '25.0.2'

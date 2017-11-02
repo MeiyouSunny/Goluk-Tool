@@ -486,7 +486,7 @@
     <string name="str_settings_video_type1">精彩連拍（6+6）</string>
     <string name="str_settings_video_type2">經典模式</string>
     <string name="str_seconds">秒</string>
-    <string name="str_settings_wonderful_video_type_hint_text">精彩連拍（6+6）：按下遙控器（KIT）鍵，錄製前後 6 秒 + 6 秒共 12 秒的精彩影片。\n經典模式：按下遙控器（KIT）鍵，錄製 30 秒精彩影片</string>
+    <string name="str_settings_wonderful_video_type_hint_text">精彩連拍（6+6）：按下遙控器（KIT）鍵，錄製前後 6 秒 + 6 秒共 12 秒的精彩影片。 經典模式：按下遙控器（KIT）鍵，錄製 30 秒精彩影片</string>
     <string name="str_usercenter_header_attention_each_other_text">相互關注</string>
     <string name="str_follow_list_title">我的關注</string>
     <string name="str_search_hint">搜尋用戶 (昵稱/認證說明)</string>
@@ -554,8 +554,8 @@
     <string name="videolist_edit">編輯</string>
     <string name="user_personal_info_title">編輯</string>
     <string name="user_login_title_text">登入</string>
-    <string name="live_str_look_default">0</string>
-    <string name="live_str_default_timer">00:00</string>
+    <string name="live_str_look_default">0.0</string>
+    <string name="live_str_default_timer">0.0</string>
     <string name="photoalbum_default_title">相簿</string>
     <string name="str_comment_title">評論</string>
     <string name="str_comment_send">發送</string>
@@ -567,9 +567,9 @@
     <string name="str_line">Line</string>
     <string name="str_colon">:</string>
     <string name="str_colon_english">:</string>
-    <string name="str_recorder_time1">00:</string>
-    <string name="str_recorder_time2">00:0</string>
-    <string name="zero">0</string>
+    <string name="str_recorder_time1">0.0</string>
+    <string name="str_recorder_time2">0.0</string>
+    <string name="zero">0.0</string>
     <string name="str_new">new</string>
     <string name="wifi_link_29_text">Goluk Wi-Fi</string>
     <string name="video_square">视频广场</string>
@@ -601,7 +601,6 @@
     <string name="str_usercenter_nowonderful_video">沒有影片</string>
     <string name="str_usercenter_recommend_video">沒有影片</string>
     <string name="str_usercenter_headlines_video">沒有影片</string>
-    <string name="str_sharing"></string>
     <string name="str_disconnect_ipc">連接已中斷</string>
     <string name="unbind_select_connect_ing">正在連接……</string>
     <string name="str_download">下載</string>
@@ -624,10 +623,10 @@
     <string name="str_settings_restart_ipc">修改成功，重启记录仪后生效。</string>
     <string name="str_guide_2_top_text">行车记录</string>
     <string name="str_guide_3_top_text">精彩分享</string>
-    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证\n随时抢拍 做不文明驾驶陋习的曝光台</string>
-    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间\n多么渴望与人分享</string>
-    <string name="str_guide_4_text">透过散落在世界的极路客\n去发现路上那些叹为观止的美</string>
-    <string name="str_guide_5_text">24小时全天候车辆监控\n极路客做你爱车的守卫星</string>
+    <string name="str_guide_2_text">一键预览 轻松完成碰瓷取证 随时抢拍 做不文明驾驶陋习的曝光台</string>
+    <string name="str_guide_3_text">这些沿途的风光 奇异的境遇 珍贵的瞬间 多么渴望与人分享</string>
+    <string name="str_guide_4_text">透过散落在世界的极路客 去发现路上那些叹为观止的美</string>
+    <string name="str_guide_5_text">24小时全天候车辆监控 极路客做你爱车的守卫星</string>
     <string name="str_guide_exprience">立即体验</string>
     <string name="str_sofa_text">沙发等您来坐</string>
     <string name="str_push_setting_save_fail">失敗</string>
@@ -671,26 +670,26 @@
     <string name="mv_text">MV</string>
     <string name="wifi_link_22_text">goluk123456</string>
     <string name="wifi_link_37_text">Connected successfully Goluk3213</string>
-    <string name="bubble_count">2000</string>
+    <string name="bubble_count">2000.0</string>
     <string name="user_personal_edit_weibo">Sina Weibo</string>
     <string name="str_omit">...</string>
     <string name="str_comma">,</string>
     <string name="str_bubble_image_download_fail">Bubble images download failed</string>
-    <string name="str_video_play_error">Video playing error,error number: </string>
-    <string name="str_video_error_info">,info: </string>
+    <string name="str_video_play_error">Video playing error,error number:</string>
+    <string name="str_video_error_info">,info:</string>
     <string name="str_month_day_refresh">MM.dd</string>
     <string name="str_year_month_day_refresh">yyyy.MM.dd</string>
     <string name="str_md5_test">This is a 3DES test. test</string>
-    <string name="str_updated"> &amp;#160;</string>
+    <string name="str_updated">  </string>
     <string name="str_facebook">Facebook</string>
     <string name="str_twitter">Twitter</string>
     <string name="str_instagram">Instagram</string>
     <string name="str_date_formatter">MM-dd HH:mm:ss</string>
-    <string name="str_bracket_left"> ( </string>
-    <string name="str_bracket_rigth"> ) </string>
+    <string name="str_bracket_left">(</string>
+    <string name="str_bracket_rigth">)</string>
     <string name="str_slash">/</string>
-    <string name="like_num_text">56</string>
-    <string name="wifibind_defaultpassword">123456789</string>
+    <string name="like_num_text">56.0</string>
+    <string name="wifibind_defaultpassword">123456789.0</string>
     <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
@@ -768,10 +767,10 @@
     <string name="wifi_link_wifi_name">已命名</string>
     <string name="wifi_link_wifi_name2"> Wi-Fi</string>
     <string name="wifi_link_complete_wait">正在等待極路客</string>
-    <string name="wifi_link_complete_conn"> 以連接</string>
-    <string name="wifi_link_complete_mobile"> 至您的裝置</string>
+    <string name="wifi_link_complete_conn">以連接</string>
+    <string name="wifi_link_complete_mobile">至您的裝置</string>
     <string name="wifi_link_complete_your_goluk">您的極路客</string>
-    <string name="wifi_link_complete_sucess_conn"> 已成功連接</string>
+    <string name="wifi_link_complete_sucess_conn">已成功連接</string>
     <string name="wifi_link_complete_foryou">立即</string>
     <string name="wifi_link_bind_failed_retry">無法配對，請重新連接</string>
     <string name="wifi_link_blackout">請關閉極路客 5 至 10 秒，然後重新啟動。點擊「確定」按鈕然後等待極路客連接至您的裝置</string>
@@ -782,7 +781,7 @@
     <string name="set_ipc_item_hint_text">當手機連接至極路客時，自動同步最近五部精彩紀錄影片</string>
     <string name="my_install_title_text">安裝指引</string>
     <string name="goluk_pull_to_refresh_footer_release_label">放手後上載</string>
-    <string name="goluk_pull_to_refresh_footer_refreshing_label">\u8f09\u5165\u4e2d\u2026</string>
+    <string name="goluk_pull_to_refresh_footer_refreshing_label">載入中…</string>
     <string name="ipc_hint_text">安裝韌體更新前，請確保已正確連接相機。在更新完成前請勿關閉電源。</string>
     <string name="str_tfcard_text">安裝新的韌體前，請確保已將記憶卡插進裝置</string>
     <string name="count_identify_count">您已收到多個驗證碼，請確保您的手機號碼正確，並確保有良好的訊號連接</string>
@@ -811,8 +810,8 @@
     <string name="live_pause">暫停</string>
     <string name="refreshing">正在刷新…</string>
     <string name="str_shortshare_other">談談其他內容！</string>
-    <string name="carrecorder_hint_text1"> 開啟泊車保護功能後，將會自動偵測車輛目前的狀況；當車輛處於泊車狀態，極路客將會每秒拍攝一張照片</string>
-    <string name="carrecorder_hint_text2"> 開啟泊車保護後，將會開啟車輛偵測功能，包括震動偵測 (於 8 秒前後觸發)，和動態偵測 (於 8 秒前後觸發)</string>
+    <string name="carrecorder_hint_text1">開啟泊車保護功能後，將會自動偵測車輛目前的狀況；當車輛處於泊車狀態，極路客將會每秒拍攝一張照片</string>
+    <string name="carrecorder_hint_text2">開啟泊車保護後，將會開啟車輛偵測功能，包括震動偵測 (於 8 秒前後觸發)，和動態偵測 (於 8 秒前後觸發)</string>
     <string name="str_video_not_exist">影片不存在</string>
     <string name="cluster_jx_zt_share">極路客特別物件分享</string>
     <string name="cluster_jxzt_share_txt">極路客特別物件 (由 #極路客# 所拍攝)</string>
@@ -836,8 +835,8 @@
     <string name="str_adas_road_offset_sensibility">車道偏離警告靈敏度</string>
     <string name="str_adas_assistance_info">輔助資料顯示 (OSD 疊加)</string>
     <string name="str_adas_paramter_error">為了提供準確資料助您安全駕使，請輸入正確的位置參數。</string>
-    <string name="str_ipc_update_first_period">已開始更新。過程可能需時幾分鐘。\n請不要關閉相機電源。 .....\n升級第 1 階段： </string>
-    <string name="str_ipc_update_second_period">已開始更新。過程可能需時幾分鐘。\n請不要關閉相機電源。 .....\n升級第 2 階段： </string>
+    <string name="str_ipc_update_first_period">已開始更新。過程可能需時幾分鐘。 請不要關閉相機電源。 ..... 升級第 1 階段：</string>
+    <string name="str_ipc_update_second_period">已開始更新。過程可能需時幾分鐘。 請不要關閉相機電源。 ..... 升級第 2 階段：</string>
     <string name="str_ipc_update_transfer_file_success">已成功傳送檔案。準備更新</string>
     <string name="str_ipc_update_success_t1">裝置已成功更新</string>
     <string name="str_ipc_update_fail">抱歉，無法更新，請再試一次。</string>
@@ -855,8 +854,7 @@
     <string name="str_vote_share_real_description">極路客調查分享 (由 #極路客# 所拍攝)</string>
     <string name="str_vote_share_title">極路客調查分享</string>
     <string name="str_version_text">極路客版本</string>
-    <string name="str_carrecorder_storage_hint_text">溫馨提示：\n請使用 Class 10 或以上規格有品牌的記憶卡。
-記憶卡品質不佳會引致記錄異常</string>
+    <string name="str_carrecorder_storage_hint_text">溫馨提示： 請使用 Class 10 或以上規格有品牌的記憶卡。 記憶卡品質不佳會引致記錄異常</string>
     <string name="str_msg_push_login">請登入並檢查訊息</string>
     <string name="msg_system_certificate_fail">抱歉，認證失敗</string>
     <string name="msg_system_reward_txt_began">取得</string>
@@ -1036,7 +1034,7 @@
     <string name="goluk_cannot_connect_hotspot">極路客連接到手機熱點失敗…</string>
     <string name="reconnect_hotspot">重新連接熱點</string>
     <string name="goluk_only_wifi">僅連接行車記錄儀</string>
-    <string name="connect_only_wifi_desc">僅以 Wi-Fi 連接行車記錄儀\n連接時停用直播功能和流動數據</string>
+    <string name="connect_only_wifi_desc">僅以 Wi-Fi 連接行車記錄儀 連接時停用直播功能和流動數據</string>
     <string name="disconnect_goluk_before_share">記錄儀需斷開 Wi-Fi 連接，才可使用流動數據分享</string>
     <string name="msg_system_certificate_success_sys">您已成為星級會員。快來看看！</string>
     <string name="install_new_firmware">安裝新韌體</string>
@@ -1047,25 +1045,19 @@
     <string name="settting_notify_friends">有朋友最新動態</string>
     <string name="str_tag_tab_hot">推薦</string>
     <string name="str_tag_description_more">more</string>
-    <string name="setting_anti_flicker" >抗光暈設定</string>
+    <string name="setting_anti_flicker">抗光暈設定</string>
     <string name="select_all">選擇全部</string>
     <string name="un_select_all">取消選擇</string>
-
-    <!-- v1.2.6 -->
     <string name="phone_account">手機</string>
     <string name="email_account">電郵</string>
     <string name="email_invalid">請輸入有效的電郵地址</string>
     <string name="email_hint">請輸入電郵地址</string>
     <string name="email_not_registered">電郵地址並未註冊</string>
     <string name="vcode_has_send_to">驗證碼已發送到</string>
-
-    <!-- optimize ipc conn -->
     <string name="msg_of_exit_when_download">您正在下載內容，退出將取消下載</string>
     <string name="please_change_network_from_car_recorder_to_others">當前網路被記錄儀wifi佔用，需要聯網請切換到有效網絡</string>
     <string name="sd_card_album">SD卡相册</string>
     <string name="local_album">本地相冊</string>
-
-    <!--1.3.0-->
     <string name="ignore_curr_ipc_version">忽略此版本</string>
     <string name="upload_log">發送診斷</string>
     <string name="upload_success">成功</string>
@@ -1073,20 +1065,17 @@
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">請輸入密碼 (6-16 個字元)</string>
     <string name="change_resolution_hint">點擊這類可改變分辯率</string>
-
     <string name="stop_play_remote">提示：播放 SD 卡影片時，記錄儀將停止錄影，停出播放 30 秒後再恢復錄影。</string>
     <string name="new_password">輸入新密碼</string>
     <string name="confirm_password">確認新密碼</string>
     <string name="confirm_password_error">兩次輪入的密碼不一致，請重新輸入</string>
     <string name="Acknowledged">已確認</string>
-    <string name="no_log_file">暫無日誌數據</string>
-
     <string name="change_wifi_hint">Wi-Fi名稱必須為1-10個英文或數位。更改後將斷開手機與極路客的連接，再連接新的Wi-Fi。</string>
     <string name="str_wifi_limit">請輸入Wi-Fi名稱 (1-10 個字元)</string>
     <string name="str_wifi_title">Wi-Fi名稱</string>
     <string name="str_wifi_success">已設定 Wi-Fi名稱</string>
     <string name="str_wifi_name_fail">無法設定Wi-Fi名稱</string>
-
     <string name="not_goluk_device">你正在連接到非GOLUK Wi-Fi，請切換到GOLUK Wi-Fi後再試一次</string>
     <string name="no_wifi_selected">請連接到GOLUK Wi-Fi。如果您已連接，請關閉藍牙和VPN，然後再試一次</string>
+    <string name="no_log_file">暫無日誌數據</string>
 </resources>

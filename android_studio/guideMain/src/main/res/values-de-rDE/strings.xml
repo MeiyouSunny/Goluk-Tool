@@ -296,7 +296,7 @@
     <string name="str_video_uploading">Video wird hochgeladen</string>
     <string name="str_share_fail">Fehler beim Teilen des Videos</string>
     <string name="str_adas_select_car">Bitte deinen Fahrzeugtyp auswählen</string>
-    <string name="str_adas_adjust_camera_angle">Kalibrierung des Kamerawinkels </string>
+    <string name="str_adas_adjust_camera_angle">Kalibrierung des Kamerawinkels</string>
     <string name="str_adas_guide">Konfigurationshandbuch</string>
     <string name="str_config_complete">Fertig</string>
     <string name="str_carrecoder_setting_failed">Fehler beim Konfigurieren</string>
@@ -326,7 +326,7 @@
     <string name="str_message_center_system">Systemmeldungen</string>
     <string name="msg_system_no_message">Keine Systemmeldungen</string>
     <string name="msg_system_certificate_success">Dein Name wurde überprüft. Probiere es jetzt aus!</string>
-    <string name="msg_system_select_txt">Herzlichen Glückwunsch! Dein Video wurde empfohlen.  Schaue es dir an!</string>
+    <string name="msg_system_select_txt">Herzlichen Glückwunsch! Dein Video wurde empfohlen. Schaue es dir an!</string>
     <string name="msg_system_poll_txt">Es wird gerade über dein Video abgestimmt. Schau es dir an!</string>
     <string name="msg_system_withdraw_check_fail">Deine Auszahlung wurde nicht genehmigt. Tippe für weitere Informationen</string>
     <string name="msg_system_withdraw_fail">Deine Auszahlung wurde genehmigt. Die Auszahlung wird innerhalb von 7 Werktagen abgeschlossen</string>
@@ -344,7 +344,7 @@
     <string name="str_loginout_fail">Fehler beim Abmelden</string>
     <string name="video_more">Mich</string>
     <string name="my_skill_title_text">Goluk-Tipps</string>
-    <string name="ipc_update_layout_text">Goluk-Firmware </string>
+    <string name="ipc_update_layout_text">Goluk-Firmware</string>
     <string name="back_text">Zurück</string>
     <string name="str_network_unavailable">Schlechte Netzwerkverbindung. Bitte überprüfe deine Verbindung und versuche es erneut</string>
     <string name="str_button_ok">Bestätigen</string>
@@ -374,7 +374,7 @@
     <string name="ipc_upgrade_voice_text">Bitte warte auf die Sprachansage nachdem die Aktualisierung abgeschlossen ist</string>
     <string name="str_ipc_update_undownload">Nicht Heruntergeladen</string>
     <string name="str_ipc_update_downloading">Wird heruntergeladen</string>
-    <string name="ipc_download_text">Heruntergeladen </string>
+    <string name="ipc_download_text">Heruntergeladen</string>
     <string name="str_ipc_update_install_ok">Installiert</string>
     <string name="ipc_hint_below_image">Firmware-Upgrade wird ausgeführt, bitte nicht von der Stromversorgung trennen</string>
     <string name="str_ipc_update_download_file_fail">Fehler beim Herunterladen. Bitte Netzwerkverbindung überprüfen und erneut versuchen</string>
@@ -424,7 +424,7 @@
     <string name="user_identify_format">Ungültiger Bestätigungscode.</string>
     <string name="str_user_protocol_and_privacy">Datenschutzrichtlinie</string>
     <string name="str_comment_no_input">Kommentare wurden deaktiviert</string>
-    <string name="str_msgcenter_comment_replyme"> Mich:</string>
+    <string name="str_msgcenter_comment_replyme">Mich:</string>
     <string name="str_weixin_login">Mit WeChat anmelden</string>
     <string name="str_adas_front_wheelbase">Radstand (A)</string>
     <string name="str_adas_headway_distance">Vordere Länge (B)</string>
@@ -554,8 +554,8 @@
     <string name="videolist_edit">Bearbeiten</string>
     <string name="user_personal_info_title">Bearbeiten</string>
     <string name="user_login_title_text">Anmelden</string>
-    <string name="live_str_look_default">0</string>
-    <string name="live_str_default_timer">00:00</string>
+    <string name="live_str_look_default">0.0</string>
+    <string name="live_str_default_timer">0.0</string>
     <string name="photoalbum_default_title">Alben</string>
     <string name="str_comment_title">Kommentar</string>
     <string name="str_comment_send">Senden</string>
@@ -567,9 +567,9 @@
     <string name="str_line">Line</string>
     <string name="str_colon">:</string>
     <string name="str_colon_english">:</string>
-    <string name="str_recorder_time1">00:</string>
-    <string name="str_recorder_time2">00:0</string>
-    <string name="zero">0</string>
+    <string name="str_recorder_time1">0.0</string>
+    <string name="str_recorder_time2">0.0</string>
+    <string name="zero">0.0</string>
     <string name="str_new">new</string>
     <string name="wifi_link_29_text">Goluk Wi-Fi</string>
     <string name="video_square">Video quadrato</string>
@@ -601,7 +601,6 @@
     <string name="str_usercenter_nowonderful_video">Keine Videos</string>
     <string name="str_usercenter_recommend_video">Keine Videos</string>
     <string name="str_usercenter_headlines_video">Keine Videos</string>
-    <string name="str_sharing"></string>
     <string name="str_disconnect_ipc">Nicht verbunden</string>
     <string name="unbind_select_connect_ing">Verbindung wird hergestellt...</string>
     <string name="str_download">Herunterladen</string>
@@ -621,13 +620,13 @@
     <string name="guide_start">Tocca qui per iniziare il tuo viaggio Goluk</string>
     <string name="str_asycned">Sincronizzato</string>
     <string name="str_upgrade_check_sdcard_t1">Siamo spiacenti, il trasferimento del file di aggiornamento non è riuscito. Assicurati che una storage card sia inserita.</string>
-    <string name="str_settings_restart_ipc">Revisione effettiva dopo il riavvio. </string>
+    <string name="str_settings_restart_ipc">Revisione effettiva dopo il riavvio.</string>
     <string name="str_guide_2_top_text">Registrazione di eventi di guida</string>
     <string name="str_guide_3_top_text">Condivisione spettacolare</string>
     <string name="str_guide_2_text">Anteprima da un tocco. Offre facilmente prove di simulazione di lesioni. Registra sempre per esporre abitudini di guida incivili.</string>
     <string name="str_guide_3_text">Paesaggi fenomenali, corcostanze eccezionali e momenti preziosi da condividere.</string>
     <string name="str_guide_4_text">Scopri scene mozzafiato immortalate sulla strada da Goluk sparse per tutto il mndo</string>
-    <string name="str_guide_5_text">Sorveglianza veicoli 24 ore su 24\nGoluk è il guardiano della tua preziosa automobile</string>
+    <string name="str_guide_5_text">Sorveglianza veicoli 24 ore su 24 Goluk è il guardiano della tua preziosa automobile</string>
     <string name="str_guide_exprience">Scoprila subito</string>
     <string name="str_sofa_text">Sii il primo a commentare</string>
     <string name="str_push_setting_save_fail">Fehlgeschlagen</string>
@@ -671,26 +670,26 @@
     <string name="mv_text">MV</string>
     <string name="wifi_link_22_text">goluk123456</string>
     <string name="wifi_link_37_text">Connected successfully Goluk3213</string>
-    <string name="bubble_count">2000</string>
+    <string name="bubble_count">2000.0</string>
     <string name="user_personal_edit_weibo">Sina Weibo</string>
     <string name="str_omit">...</string>
     <string name="str_comma">,</string>
     <string name="str_bubble_image_download_fail">Bubble images download failed</string>
-    <string name="str_video_play_error">Video playing error,error number: </string>
-    <string name="str_video_error_info">,info: </string>
+    <string name="str_video_play_error">Video playing error,error number:</string>
+    <string name="str_video_error_info">,info:</string>
     <string name="str_month_day_refresh">MM.dd</string>
     <string name="str_year_month_day_refresh">yyyy.MM.dd</string>
     <string name="str_md5_test">This is a 3DES test. test</string>
-    <string name="str_updated"> &amp;#160;</string>
+    <string name="str_updated">  </string>
     <string name="str_facebook">Facebook</string>
     <string name="str_twitter">Twitter</string>
     <string name="str_instagram">Instagram</string>
     <string name="str_date_formatter">MM-dd HH:mm:ss</string>
-    <string name="str_bracket_left"> ( </string>
-    <string name="str_bracket_rigth"> ) </string>
+    <string name="str_bracket_left">(</string>
+    <string name="str_bracket_rigth">)</string>
     <string name="str_slash">/</string>
-    <string name="like_num_text">56</string>
-    <string name="wifibind_defaultpassword">123456789</string>
+    <string name="like_num_text">56.0</string>
+    <string name="wifibind_defaultpassword">123456789.0</string>
     <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
@@ -766,12 +765,12 @@
     <string name="wifi_link_twinkle">blinken（Durchgängig für T2）</string>
     <string name="wifi_link_wifi_light">WLAN-Anzeige</string>
     <string name="wifi_link_wifi_name">Benannt</string>
-    <string name="wifi_link_wifi_name2"> WLAN</string>
+    <string name="wifi_link_wifi_name2">WLAN</string>
     <string name="wifi_link_complete_wait">Goluk wartet auf</string>
-    <string name="wifi_link_complete_conn"> die Verbindung</string>
-    <string name="wifi_link_complete_mobile"> mit Ihrem Gerät.</string>
+    <string name="wifi_link_complete_conn">die Verbindung</string>
+    <string name="wifi_link_complete_mobile">mit Ihrem Gerät.</string>
     <string name="wifi_link_complete_your_goluk">Ihr Goluk</string>
-    <string name="wifi_link_complete_sucess_conn"> wurde erfolgreich verbunden</string>
+    <string name="wifi_link_complete_sucess_conn">wurde erfolgreich verbunden</string>
     <string name="wifi_link_complete_foryou">Jetzt</string>
     <string name="wifi_link_bind_failed_retry">Paaren nicht möglich. Bitte erneut verbinden.</string>
     <string name="wifi_link_blackout">Bitte schalten Sie Goluk für 5 bis 10 Sekunden ab, dann starten Sie es erneut. Drücken Sie den Button OK und warten Sie, bis Goluk sich mit Ihrem Gerät verbindet.</string>
@@ -782,7 +781,7 @@
     <string name="set_ipc_item_hint_text">Die letzten fünf wunderbaren Videos automatisch synchronisieren, sobald Ihr Mobiltelefon mit Goluk verbunden ist</string>
     <string name="my_install_title_text">Installationsanweisungen</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Nach Freigabe hochladen</string>
-    <string name="goluk_pull_to_refresh_footer_refreshing_label">Wird geladen\u00a0...</string>
+    <string name="goluk_pull_to_refresh_footer_refreshing_label">Wird geladen ...</string>
     <string name="ipc_hint_text">Vor der Installation des Firmware-Upgrades, stellen Sie sicher, dass die Kamera korrekt verbunden ist. Bitte nicht den Strom abschalten, bevor das Upgrade abgeschlossen ist.</string>
     <string name="str_tfcard_text">Vor der Installation der neuen Firmware stellen Sie sicher, dass die Speicherkarte in das Gerät eingelegt wurde.</string>
     <string name="count_identify_count">Sie haben mehrere Bestätigungscodes erhalten. Bitte stellen Sie sicher, dass Ihre Telefonnummer korrekt ist und das Gerät ein gutes Empfangssignal hat.</string>
@@ -811,8 +810,8 @@
     <string name="live_pause">Pause</string>
     <string name="refreshing">Aktualisierung ...</string>
     <string name="str_shortshare_other">Sagen Sie etwas anderes!</string>
-    <string name="carrecorder_hint_text1"> Der aktueller Fahrzeugstatus wird nach dem Öffnen der Parkschutzfunktion automatisch festgestellt. Wenn das Fahrzeug parkt, wird Goluk ein Bild pro Sekunde aufnehmen.</string>
-    <string name="carrecorder_hint_text2"> Die Fahrzeug-Erkennungsfunktionen werden aktiviert, wenn der Parkschutz geöffnet ist. Die eine ist Vibrationserkennung (löst 8 Sekunden vorher und 8 Sekunden nacher aus), die andere ist Bewegungserkennung (löst 8 Sekunden vorher und 8 Sekunden nacher aus).</string>
+    <string name="carrecorder_hint_text1">Der aktueller Fahrzeugstatus wird nach dem Öffnen der Parkschutzfunktion automatisch festgestellt. Wenn das Fahrzeug parkt, wird Goluk ein Bild pro Sekunde aufnehmen.</string>
+    <string name="carrecorder_hint_text2">Die Fahrzeug-Erkennungsfunktionen werden aktiviert, wenn der Parkschutz geöffnet ist. Die eine ist Vibrationserkennung (löst 8 Sekunden vorher und 8 Sekunden nacher aus), die andere ist Bewegungserkennung (löst 8 Sekunden vorher und 8 Sekunden nacher aus).</string>
     <string name="str_video_not_exist">Video existiert nicht.</string>
     <string name="cluster_jx_zt_share">Goluk Teilung von besonderen Themen</string>
     <string name="cluster_jxzt_share_txt">Goluk besonderes Thema (Aufgenommen von #Goluk#)</string>
@@ -836,8 +835,8 @@
     <string name="str_adas_road_offset_sensibility">Spurentfernung-Warnsensibilität</string>
     <string name="str_adas_assistance_info">Anzeige der Hilfsinformationen (auf Bildschirm eingeblendet)</string>
     <string name="str_adas_paramter_error">Um Ihnen genaue Informationen für die Assistenz bei einer sicheren Fahrt zu liefern, geben Sie bitte die korrekten Standortparameter ein.</string>
-    <string name="str_ipc_update_first_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern.\nBitte schalten Sie nicht die Stromzufuhr der Kamera ab. ...\nUpgrade Stufe 1: </string>
-    <string name="str_ipc_update_second_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern.\nBitte schalten Sie nicht die Stromzufuhr der Kamera ab. ...\nUpgrade Stufe 2: </string>
+    <string name="str_ipc_update_first_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 1:</string>
+    <string name="str_ipc_update_second_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 2:</string>
     <string name="str_ipc_update_transfer_file_success">Dateiübertragung war erfolgreich. Upgrade wird vorbereitet.</string>
     <string name="str_ipc_update_success_t1">Upgrade des Geräts war erfolgreich.</string>
     <string name="str_ipc_update_fail">Entschuldigung, Upgrade nicht möglich. Bitte erneut versuchen.</string>
@@ -855,8 +854,7 @@
     <string name="str_vote_share_real_description">Goluk Umfrage-Teilung (Aufgenommen von #Goluk#)</string>
     <string name="str_vote_share_title">Goluk Umfrage-Teilung</string>
     <string name="str_version_text">Goluk-Version</string>
-    <string name="str_carrecorder_storage_hint_text">Sanfte Erinnerung:\n Bitte benutzen Sie Marken-Speicherkarten mit Spezifikationen der Klasse 10 und darüber.
-Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
+    <string name="str_carrecorder_storage_hint_text">Sanfte Erinnerung: Bitte benutzen Sie Marken-Speicherkarten mit Spezifikationen der Klasse 10 und darüber. Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_msg_push_login">Bitte anmelden und nach Nachrichten sehen.</string>
     <string name="msg_system_certificate_fail">Entschuldigung, Ihre Authentifizierung ist fehlgeschlagen.</string>
     <string name="msg_system_reward_txt_began">Abfragen</string>
@@ -994,9 +992,9 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_global_cancel_success">Videosynchronisierung wurde abgebrochen.</string>
     <string name="str_authorize_cancel">Autorisierung abgebrochen</string>
     <string name="str_authorize_fail">Autorisierung fehlgeschlagen</string>
-    <string name="str_frist_refresh_begen_txt">Heute vorgestellt </string>
-    <string name="str_frist_refresh_end_txt"> Neues Video</string>
-    <string name="str_more_refresh_begen_txt">Erneut finden </string>
+    <string name="str_frist_refresh_begen_txt">Heute vorgestellt</string>
+    <string name="str_frist_refresh_end_txt">Neues Video</string>
+    <string name="str_more_refresh_begen_txt">Erneut finden</string>
     <string name="str_token_timeout_volley">Bitte ab- und wieder anmelden.</string>
     <string name="str_video_music_wave">Welle</string>
     <string name="str_video_music_Humor">Humor</string>
@@ -1036,7 +1034,7 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="goluk_cannot_connect_hotspot">Goluk konnte keine Verbindung zum Hotspot des Telefons herstellen.</string>
     <string name="reconnect_hotspot">Wieder mit Hotspot verbinden</string>
     <string name="goluk_only_wifi">Nur mit Dashcam verbunden</string>
-    <string name="connect_only_wifi_desc">Mit Dashcam nur via WLAN verbunden.\nWenn verbunden, sind die Livestream-Funktion sowie das mobile Datennetzwerk nicht verfügbar.</string>
+    <string name="connect_only_wifi_desc">Mit Dashcam nur via WLAN verbunden. Wenn verbunden, sind die Livestream-Funktion sowie das mobile Datennetzwerk nicht verfügbar.</string>
     <string name="disconnect_goluk_before_share">Darf nicht mit Dashcam-WLAN verbunden sein, um Freigabe für Netzwerk nutzen zu können.</string>
     <string name="msg_system_certificate_success_sys">Du bist jetzt ein Stern-Mitglied. Probiere es aus!</string>
     <string name="install_new_firmware">Installieren</string>
@@ -1047,25 +1045,19 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
     <string name="str_tag_tab_hot">Empfehlen</string>
     <string name="str_tag_description_more">more</string>
-    <string name="setting_anti_flicker" >Antiflimmer-Einstellungen</string>
+    <string name="setting_anti_flicker">Antiflimmer-Einstellungen</string>
     <string name="select_all">Alles auswählen</string>
     <string name="un_select_all">Abbrechen</string>
-
-    <!-- v1.2.6 -->
     <string name="phone_account">Mobiltelefon</string>
     <string name="email_account">E-Mail</string>
     <string name="email_invalid">Bitte geben Sie eine gültige E-Mail-Adresse ein.</string>
     <string name="email_hint">E-Mail eingeben</string>
     <string name="email_not_registered">Ungültige E-Mail-Adresse</string>
     <string name="vcode_has_send_to">Verifizierungscode gesendet an</string>
-
-    <!-- optimize ipc conn -->
     <string name="msg_of_exit_when_download">Es wird gerade ein Download ausgeführt. Beim Verlassen wird der Download abgebrochen</string>
     <string name="please_change_network_from_car_recorder_to_others">Momentan mit WLAN auf dem Recorder verbunden. Bitte wechseln, wenn Sie eine Internetverbindung benötigen.</string>
     <string name="sd_card_album">Album auf SD-Karte</string>
     <string name="local_album">Lokales Album</string>
-
-    <!--1.3.0-->
     <string name="ignore_curr_ipc_version">Ignorieren sie diese version</string>
     <string name="upload_log">Diagnose Daten</string>
     <string name="upload_success">Erfolgreich</string>
@@ -1073,20 +1065,16 @@ Qualität der Speicherkarte kann zu gestörter Aufnahme führen.</string>
     <string name="str_vk">VKontakte</string>
     <string name="input_pwd">Bitte Passwort eingeben (6-16 Zeichen)</string>
     <string name="change_resolution_hint">wechselndes bild entschließung ermöglicht videos</string>
-
-
     <string name="stop_play_remote">Tipp: Wenn ein Video von der SD-Karte abgespielt wird, wird die Dashcam die Aufzeichnung temporär anhalten und diese 30s nach Beendigung des Videos fortsetzen.</string>
     <string name="new_password">Neues Passwort eingeben</string>
     <string name="confirm_password">Neues Passwort bestätigen</string>
     <string name="confirm_password_error">Die eingegebenen Passwörter stimmen nicht überein. Bitte erneut versuchen</string>
     <string name="Acknowledged">Bestätigt</string>
-
-    <string name="change_wifi_hint">Das Wi-Fi name muss 1-10 Zeichen lang sein Nach der Änderung Wi-Fi name, wird dein Telefon von Goluk getrennt und du musst dich mit deinem neuen Wi-Fi  erneut anmelden</string>
+    <string name="change_wifi_hint">Das Wi-Fi name muss 1-10 Zeichen lang sein Nach der Änderung Wi-Fi name, wird dein Telefon von Goluk getrennt und du musst dich mit deinem neuen Wi-Fi erneut anmelden</string>
     <string name="str_wifi_limit">Bitte Wi-Fi name eingeben (1-10 Zeichen)</string>
     <string name="str_wifi_title">WLAN-name</string>
     <string name="str_wifi_success">WLAN-name wurde festgelegt</string>
     <string name="str_wifi_name_fail">WLAN-name kann nicht festgelegt werden</string>
-
     <string name="not_goluk_device">Sie sind zur zeit im nicht - GOLUK  Wi-Fi, wechseln sie bitte auf GOLUK  Wi-Fi und versuchen sie es erneut.</string>
     <string name="no_wifi_selected">Passez à GOLUK Wi-Fi.si vous êtes connecté, éteignez le bluetooth et le rpv et essayer de nouveau.</string>
 </resources>
