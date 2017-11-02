@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 25
     buildToolsVersion '25.0.2'
     dexOptions {
         jumboMode = true
@@ -10,8 +10,8 @@ android {
 
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
-        minSdkVersion 18
-        targetSdkVersion 22
+        minSdkVersion 19
+        targetSdkVersion 25
         multiDexEnabled true
         ndk{
             abiFilters 'armeabi'
