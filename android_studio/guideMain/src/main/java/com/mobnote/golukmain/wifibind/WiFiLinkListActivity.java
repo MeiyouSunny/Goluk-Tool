@@ -309,6 +309,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         WifiRsBean bean = mWac.getConnResult();
         collectLog("isGetWifiBean", "-----1");
         if (null == bean) {
+            showToast(getString(R.string.no_wifi_selected));
             GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed2  :");
             collectLog("isGetWifiBean", "-----2");
             connFailed();

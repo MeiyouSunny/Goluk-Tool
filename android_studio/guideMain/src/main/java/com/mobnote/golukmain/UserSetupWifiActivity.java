@@ -16,6 +16,8 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
@@ -171,6 +173,10 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         LiveDialogManager.getManagerInstance().dissmissCustomDialog();
         if (0 == state) {
             GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_success));
+            WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+            if (null != bean) {
+                WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+            }
             this.setResult(11);
             this.finish();
         } else {
@@ -185,22 +191,11 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             mEditText2.requestFocus();
             return;
         }
-//        final String newPwdConfirm = mEditText2.getText().toString();
-//        if (newPwdConfirm.length() < 8 || newPwdConfirm.length() > 15) {
-//            GolukUtils.showToast(this, this.getResources().getString(R.string.confirm_password));
-//            mEditText2.requestFocus();
-//            return;
-//        }
-
         String json = getSetIPCJson();
         mApp.stopDownloadList();
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-//		if (!b) {
-//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
-//		} else {
         LiveDialogManager.getManagerInstance().showCustomDialog(this,
                 this.getResources().getString(R.string.str_wait));
-//		}
     }
 
     private String getSetIPCJson() {
@@ -217,11 +212,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             JSONObject obj = new JSONObject();
             obj.put("AP_SSID", apSSID);
             obj.put("AP_PWD", apPWD);
-            // obj.put("GolukSSID", golukSSID);
-            // obj.put("GolukPWD", golukPWD);
-            // obj.put("GolukIP", ip);
-            // obj.put("GolukGateway", way);
-
             json = obj.toString();
         } catch (Exception e) {
 

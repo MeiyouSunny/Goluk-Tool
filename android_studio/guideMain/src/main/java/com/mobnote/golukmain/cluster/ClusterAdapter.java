@@ -300,7 +300,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                             Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
                             photoalbum.putExtra(FragmentAlbum.PARENT_VIEW,true);
-                            photoalbum.putExtra("from", "cloud");
+                            photoalbum.putExtra("from", true);
 
                             PromotionSelectItem item = new PromotionSelectItem();
                             item.activityid = mHeadData.activity.activityid;
@@ -351,7 +351,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
 
                         Intent photoalbum = new Intent(mContext, PhotoAlbumActivity.class);
                         photoalbum.putExtra(FragmentAlbum.PARENT_VIEW,true);
-                        photoalbum.putExtra("from", "cloud");
+                        photoalbum.putExtra("from", true);
 
                         PromotionSelectItem item = new PromotionSelectItem();
                         item.activityid = mHeadData.tag.tagid;

@@ -97,6 +97,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
      */
     public boolean parentViewIsMainActivity = true;
     public boolean selectMode = false;
+    public boolean fromCloud = false;
 
     public PromotionSelectItem mPromotionSelectItem;
 
@@ -108,6 +109,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (bundle != null) {
             parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW,true);
             selectMode = bundle.getBoolean(SELECT_MODE,false);
+            fromCloud = bundle.getBoolean("from",false);
         }
 
         if (savedInstanceState == null) {
@@ -200,11 +202,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.VISIBLE);
-            if(!selectMode) {
+            if(selectMode) {
+                mTabLocal.setText(R.string.str_ae_add_video_title);
+            }
+            if(!selectMode && !fromCloud){
                 mBackBtn.setImageResource(R.drawable.remote_album_sd);
                 mBackBtn.setBackgroundResource(0);
-            }else{
-                mTabLocal.setText(R.string.str_ae_add_video_title);
             }
             mTabLocal.setVisibility(View.VISIBLE);
             mTabWonderful.setVisibility(View.GONE);
@@ -377,7 +380,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
-            if(parentViewIsMainActivity && !selectMode){
+            if(parentViewIsMainActivity && !selectMode && !fromCloud){
                 final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
                 mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
                 mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {

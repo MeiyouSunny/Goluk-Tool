@@ -359,6 +359,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
 		if(IPCControlManager.T1U_SIGN.equals(mIPCName) || IPCControlManager.T2U_SIGN.equals(mIPCName)) {
 			GolukApplication.getInstance().getIPCControlManager().getT1SW();
+		}
+		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
+			mMSLayout.setVisibility(View.VISIBLE);
 		}else{
 			mMSLayout.setVisibility(View.GONE);
 		}
@@ -1130,7 +1133,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 					enableSecurity = json.getInt("enableSecurity");
 					snapInterval = json.getInt("snapInterval");
 					if (1 == enableSecurity) {
-						if(IPCControlManager.T1U_SIGN.equals(mIPCName) ||  IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+						if(mBaseApp.getIPCControlManager().isSupportMoveDection()) {
 							mMSLayout.setVisibility(View.VISIBLE);
 						}
 						mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
@@ -1156,7 +1159,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if (RESULE_SUCESS == param1) {
 			if (1 == enableSecurity) {
 				mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
-				if(IPCControlManager.T1U_SIGN.equals(mIPCName) ||  IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+				if(mBaseApp.getIPCControlManager().isSupportMoveDection()) {
 					mMSLayout.setVisibility(View.VISIBLE);
 				}
 				// TODO 判断休眠是否打开
