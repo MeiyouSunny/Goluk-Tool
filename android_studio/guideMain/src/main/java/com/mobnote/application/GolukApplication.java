@@ -400,7 +400,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     private void initializeSDK() {
         SdkEntry.enableDebugLog(true);
         String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
-        SdkEntry.initialize(this,videoPath,RD_APP_KEY,RD_APP_SECRET,new SdkHandler().getCallBack());
+        if(isMainland()) {
+            SdkEntry.initialize(this, videoPath, RD_APP_KEY, RD_APP_SECRET, new SdkHandler().getCallBack());
+        }else{
+            SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
+        }
     }
 
 
