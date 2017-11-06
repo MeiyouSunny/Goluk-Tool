@@ -1493,7 +1493,7 @@ public class VideoEditActivity extends BaseActivity implements
                 mSbPlayControl.setProgress(0);
                 notifyCurrentPosition(0);
                 mTvCurTime.setText(getFormatTime(0));
-                mLastPlayPostion=0;
+                mLastPlayPostion = 0;
                 mVirtualVideoView.seekTo(0);
             }
             for (int nTmp = 0; nTmp < mSaEditorPostionListener.size(); nTmp++) {
@@ -2497,7 +2497,17 @@ public class VideoEditActivity extends BaseActivity implements
             mGotoBack = false;
             getWindow().clearFlags(
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
+            if (!VideoEditActivity.this.isFinishing()) {
+                if (epdExport != null) {
+                    epdExport.dismiss();
+                    epdExport = null;
+                }
+                if (dialog != null) {
+                    dialog.dismiss();
+                    dialog.cancel();
+                    dialog = null;
+                }
+            }
             if (nResult >= VirtualVideo.RESULT_SUCCESS) {
                 if (mIsFromCamera) {
                     SdkEntryHandler.getInstance().onExportRecorderEdit(
@@ -2541,16 +2551,6 @@ public class VideoEditActivity extends BaseActivity implements
                     start();
                 }
             }
-            if (dialog != null) {
-                dialog.dismiss();
-                dialog.cancel();
-                dialog = null;
-            }
-            if (epdExport != null) {
-                epdExport.dismiss();
-                epdExport = null;
-            }
-
         }
     };
 

@@ -276,6 +276,10 @@ public class EditPreviewActivity extends BaseActivity {
         }
     }
 
+    /***
+     * 响应当前选中项
+     * @param position
+     */
     private void onDragItemClick(int position) {
 
         mIndex = position;
@@ -424,7 +428,9 @@ public class EditPreviewActivity extends BaseActivity {
         }
     }
 
-
+    /***
+     * 响应被选中项的UI
+     */
     private void onListViewItemSelected() {
         mCurrentScene = mAdapterScene.getItem(mIndex);
         if (null == mCurrentScene) {
@@ -435,113 +441,125 @@ public class EditPreviewActivity extends BaseActivity {
         mMenuLayout.setVisibility(View.VISIBLE);
         onUI(false);
         if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
-            int buttonCount = 6;
-            mSplit.setVisibility(View.VISIBLE);
-            mSpeed.setVisibility(View.VISIBLE);
-            mTrim.setVisibility(View.VISIBLE);
-            mEdit.setVisibility(View.VISIBLE);
-            mReverse.setVisibility(View.VISIBLE);
-            mText.setVisibility(View.GONE);
-            mDuration.setVisibility(View.GONE);
-            if (mUIConfig.isHideSpeed()) {
-                buttonCount -= 1;
-                mSpeed.setVisibility(View.GONE);
-            }
-            if (mUIConfig.isHideEdit()) {
-                buttonCount -= 1;
-                mEdit.setVisibility(View.GONE);
-            }
-            if (mUIConfig.isHideTrim()) {
-                buttonCount -= 1;
-                mTrim.setVisibility(View.GONE);
-            }
-            if (mUIConfig.isHideSplit()) {
-                buttonCount -= 1;
-                mSplit.setVisibility(View.GONE);
-            }
-            if (mUIConfig.isHideReverse()) {
-                buttonCount -= 1;
-                mReverse.setVisibility(View.GONE);
-            }
-            if (mUIConfig.isHideCopy()) {
-                buttonCount -= 1;
-                if (buttonCount == 0) {
-                    findViewById(R.id.preview_copy).setVisibility(
-                            View.INVISIBLE);
-                } else {
-                    findViewById(R.id.preview_copy).setVisibility(View.GONE);
-                }
-            }
-            LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT);
-            if (buttonCount <= 3) {
-                int dwidth = getWindowManager().getDefaultDisplay().getWidth();
-                int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
-                int margin = (dwidth - width) / 2;
-                lp.setMargins(margin, 0, margin, 0);
+            onVideoUI();
+        } else {
+            VideoOb vob = (VideoOb) mediaObject.getTag();
+            onPhotoUI(vob.isExtPic == 1);
+        }
+    }
 
+    /**
+     * 选中视频 UI
+     */
+    private void onVideoUI() {
+        int buttonCount = 6;
+        mSplit.setVisibility(View.VISIBLE);
+        mSpeed.setVisibility(View.VISIBLE);
+        mTrim.setVisibility(View.VISIBLE);
+        mEdit.setVisibility(View.VISIBLE);
+        mReverse.setVisibility(View.VISIBLE);
+        mText.setVisibility(View.GONE);
+        mDuration.setVisibility(View.GONE);
+        if (mUIConfig.isHideSpeed()) {
+            buttonCount -= 1;
+            mSpeed.setVisibility(View.GONE);
+        }
+        if (mUIConfig.isHideEdit()) {
+            buttonCount -= 1;
+            mEdit.setVisibility(View.GONE);
+        }
+        if (mUIConfig.isHideTrim()) {
+            buttonCount -= 1;
+            mTrim.setVisibility(View.GONE);
+        }
+        if (mUIConfig.isHideSplit()) {
+            buttonCount -= 1;
+            mSplit.setVisibility(View.GONE);
+        }
+        if (mUIConfig.isHideReverse()) {
+            buttonCount -= 1;
+            mReverse.setVisibility(View.GONE);
+        }
+        if (mUIConfig.isHideCopy()) {
+            buttonCount -= 1;
+            if (buttonCount == 0) {
+                findViewById(R.id.preview_copy).setVisibility(
+                        View.INVISIBLE);
             } else {
-                lp.gravity = Gravity.LEFT;
+                findViewById(R.id.preview_copy).setVisibility(View.GONE);
             }
-            mMenuLayout.setLayoutParams(lp);
+        } else {
+            findViewById(R.id.preview_copy).setVisibility(View.VISIBLE);
+        }
+        LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (buttonCount <= 3) {
+            int dwidth = CoreUtils.getMetrics().widthPixels;
+            int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
+            int margin = (dwidth - width) / 2;
+            lp.setMargins(margin, 0, margin, 0);
 
         } else {
-            mSplit.setVisibility(View.GONE);
-            mSpeed.setVisibility(View.GONE);
-            mReverse.setVisibility(View.GONE);
-            VideoOb vo = (VideoOb) mediaObject.getTag();
+            lp.gravity = Gravity.LEFT;
+        }
+        mMenuLayout.setLayoutParams(lp);
+    }
 
-            if (vo.isExtPic == 1) {
-                mText.setVisibility(View.VISIBLE);
-                mTrim.setVisibility(View.GONE);
-                mEdit.setVisibility(View.GONE);
-                mDuration.setVisibility(View.GONE);
+    /**
+     * 图片UI
+     *
+     * @param isExtPic 是否是文字版图片
+     */
 
-                int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
-                int dwidth = getWindowManager().getDefaultDisplay().getWidth();
-                int margin = (dwidth - width) / 2;
+    private void onPhotoUI(boolean isExtPic) {
+        mSplit.setVisibility(View.GONE);
+        mSpeed.setVisibility(View.GONE);
+        mReverse.setVisibility(View.GONE);
+        int count = 3;
 
-                LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(margin, 0, margin, 0);
-                mMenuLayout.setLayoutParams(lp);
+        int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
+        int dwidth = CoreUtils.getMetrics().widthPixels;
+        int margin = (dwidth - width) / 2;
 
-            } else {
-                mText.setVisibility(View.GONE);
-                mTrim.setVisibility(View.GONE);
-                mEdit.setVisibility(View.VISIBLE);
-
+        LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(margin, 0, margin, 0);
+        if (isExtPic) {
+            mText.setVisibility(View.VISIBLE);
+            mTrim.setVisibility(View.GONE);
+            mEdit.setVisibility(View.GONE);
+            mDuration.setVisibility(View.GONE);
+        } else {
+            mText.setVisibility(View.GONE);
+            mTrim.setVisibility(View.GONE);
+            if (!mUIConfig.isHideDuration()) {
                 mDuration.setVisibility(View.VISIBLE);
+            }
+            if (!mUIConfig.isHideEdit()) {
+                mEdit.setVisibility(View.VISIBLE);
+            }
+        }
+        mMenuLayout.setLayoutParams(lp);
 
-                int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
-                int dwidth = getWindowManager().getDefaultDisplay().getWidth();
-                int margin = (dwidth - width) / 2;
-
-                LayoutParams lp = new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-                lp.setMargins(margin, 0, margin, 0);
-                mMenuLayout.setLayoutParams(lp);
+        if (mUIConfig.isHideDuration()) {
+            mDuration.setVisibility(View.GONE);
+            count -= 1;
+        }
+        if (mUIConfig.isHideEdit()) {
+            mEdit.setVisibility(View.GONE);
+            count -= 1;
+        }
+        if (mUIConfig.isHideCopy()) {
+            if (count == 1 && !isExtPic) {
+                findViewById(R.id.preview_copy).setVisibility(
+                        View.INVISIBLE);
+            } else {
+                findViewById(R.id.preview_copy).setVisibility(View.GONE);
             }
-            int count = 3;
-            if (mUIConfig.isHideDuration()) {
-                mDuration.setVisibility(View.GONE);
-                count -= 1;
-            }
-            if (mUIConfig.isHideEdit()) {
-                mEdit.setVisibility(View.GONE);
-                count -= 1;
-            }
-            if (mUIConfig.isHideCopy()) {
-                if (count == 1 && vo.isExtPic != 1) {
-                    findViewById(R.id.preview_copy).setVisibility(
-                            View.INVISIBLE);
-                } else {
-                    findViewById(R.id.preview_copy).setVisibility(View.GONE);
-                }
-            }
+        } else {
+            findViewById(R.id.preview_copy).setVisibility(View.VISIBLE);
         }
     }
 
@@ -862,7 +880,7 @@ public class EditPreviewActivity extends BaseActivity {
             SysAlertDialog.cancelLoadingDialog();
             updatePreviewFrameAspect(mMediaPlayer.getWidth(), mMediaPlayer.getHeight());
             mAdapterScene.notifyDataSetChanged();
-            mMediaPlayer.setFilterType(VideoEditActivity.mCurrentFilterType);
+//            mMediaPlayer.setFilterType(VideoEditActivity.mCurrentFilterType);
 
             mPlaybackDurationMs = Utils.s2ms(mMediaPlayer.getDuration());
             mTvVideoDuration.setText(gettime(Utils.s2ms(mMediaPlayer.getCurrentPosition())) + "/" + gettime(mPlaybackDurationMs));
@@ -944,7 +962,7 @@ public class EditPreviewActivity extends BaseActivity {
     }
 
 
-    private int mIndex;// 记录正在编辑的视频的index
+    private int mIndex = 0;// 记录正在编辑的视频的index
     private int mAddItemIndex = -1; // 记录当前加号按钮的index
     private final int REQUESTCODE_FOR_SPEED = 7;
     private final int REQUESTCODE_FOR_APPEND = 10;
@@ -1466,7 +1484,7 @@ public class EditPreviewActivity extends BaseActivity {
                 Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
 
 
-                Scene old=    mAdapterScene.getItem(mIndex);
+                Scene old = mAdapterScene.getItem(mIndex);
                 mAdapterScene.onClear(old);
                 mSceneList.set(mIndex, scene);
                 mAdapterScene.getMediaList().set(mIndex, scene);
@@ -1595,7 +1613,8 @@ public class EditPreviewActivity extends BaseActivity {
             } else if (requestCode == REQUESTCODE_FOR_TRANSITION) {
                 ArrayList<Transition> arrTransitions = data.getParcelableArrayListExtra(IntentConstants.INTENT_EXTRA_TRANSITION);
                 if (data.getBooleanExtra(IntentConstants.TRANSITION_APPLY_TO_ALL, false)) {
-                    for (int nTemp = 0; nTemp < arrTransitions.size(); nTemp++) {
+                    int len = arrTransitions.size();
+                    for (int nTemp = 0; nTemp < len; nTemp++) {
                         mSceneList.get(nTemp).setTransition(arrTransitions.get(nTemp));
                     }
                 } else {
@@ -1647,27 +1666,26 @@ public class EditPreviewActivity extends BaseActivity {
                 media.getTrimEnd(), isextpic, info, 0));
     }
 
-
-    private void initListView(final int index) {
+    /**
+     * 设置适配器
+     *
+     * @param index 默认选中项
+     */
+    private void initListView(int index) {
         mGridVideosArray.setAdapter(mAdapterScene);
         mCurrentScene = mAdapterScene.getItem(mIndex);
-        mGridVideosArray.post(new Runnable() {
-
-            @Override
-            public void run() {
-                if (mAddItemIndex >= mSceneList.size()) {
-                    mAddItemIndex = mSceneList.size() - 1;
-                }
-                if (mAddItemIndex == -1 || mAddItemIndex == 0) {
-                    onDragItemClick(index);
-                } else {
-                    mGridVideosArray.setAddItemSelect(mAddItemIndex - 1);
-                    mMenuLayout.setVisibility(View.GONE);
-                    onUI(true);
-                    mAdapterScene.setCheckId(-1);
-                }
-            }
-        });
+        int len = mSceneList.size();
+        if (mAddItemIndex >= len) {
+            mAddItemIndex = len - 1;
+        }
+        if (mAddItemIndex == -1 || mAddItemIndex == 0) {
+            onDragItemClick(index);
+        } else {
+            mGridVideosArray.setAddItemSelect(mAddItemIndex - 1);
+            mMenuLayout.setVisibility(View.GONE);
+            onUI(true);
+            mAdapterScene.setCheckId(-1);
+        }
     }
 
     /**
@@ -1738,7 +1756,6 @@ public class EditPreviewActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         SysAlertDialog.cancelLoadingDialog();
-
         if (null != mMediaPlayer) {
             mMediaPlayer.cleanUp();
             mMediaPlayer = null;
@@ -1748,7 +1765,6 @@ public class EditPreviewActivity extends BaseActivity {
             mAdapterScene = null;
         }
 
-        super.onDestroy();
         unregisterReceiver(mReceiver);
         if (null != TempVideoParams.getInstance() && mUIConfig.isEnableWizard()) {
             // 删除倒序临时文件
@@ -1764,7 +1780,8 @@ public class EditPreviewActivity extends BaseActivity {
             }
             mTempRecfile = null;
         }
-        System.gc();
+        mVirtualVideo.release();
+        super.onDestroy();
     }
 
     @Override
@@ -1798,7 +1815,7 @@ public class EditPreviewActivity extends BaseActivity {
                 playBackSeekTo(mLastPlayPostion);
                 mLastPlayPostion = -1;
             }
-            if (mLastPlaying){
+            if (mLastPlaying) {
                 playVideo();
             }
         }
@@ -1890,6 +1907,23 @@ public class EditPreviewActivity extends BaseActivity {
         public void onRemove(int position) {
             if (mAdapterScene.getCount() == 1) {
                 int msgResId = R.string.just_only_one_scene;
+                try {
+                    Scene scene = mAdapterScene.getItem(0);
+                    if (null != scene) {
+                        List<MediaObject> list = scene.getAllMedia();
+                        if (null != list && list.size() >= 1) {
+                            MediaType mediaType = list.get(0).getMediaType();
+                            if (mediaType == MediaType.MEDIA_VIDEO_TYPE) {
+                                msgResId = R.string.just_only_one_video;
+                            } else if (mediaType == MediaType.MEDIA_IMAGE_TYPE) {
+                                msgResId = R.string.just_only_one_image;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
                 SysAlertDialog.showAutoHideDialog(EditPreviewActivity.this,
                         null, getString(msgResId), Toast.LENGTH_SHORT);
             } else {
@@ -1936,11 +1970,6 @@ public class EditPreviewActivity extends BaseActivity {
             mVirtualVideo.build(mMediaPlayer);
         } catch (InvalidStateException e) {
             e.printStackTrace();
-        }
-
-        if (!mUIConfig.isHideSoundTrack()) {
-//            mVirtualVideo.addMusic(TempVideoParams.getInstance()
-//                    .getMusic().getMediaFilePath(),true);
         }
         playVideo();
     }

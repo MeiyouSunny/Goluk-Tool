@@ -206,7 +206,7 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
         MediaObject mediaObject = tempScene.getAllMedia().get(0);
         return MD5.getMD5(mediaObject.getMediaPath() + mediaObject.getTrimStart() + "..."
                 + mediaObject.getTrimEnd())
-                + getKind(tempScene) + "id:" + mediaObject.getId();
+                + getKind(tempScene) + "id:" + mediaObject.getId()+"scene:"+tempScene.hashCode();
     }
 
     private int selectedIndex = -1;

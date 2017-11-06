@@ -45,8 +45,8 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.rd:base:0.3.2'
-    compile 'com.rd:recorderbase:0.4.2'
+    compile 'com.rd:base:0.3.3'
+    compile 'com.rd:recorderbase:0.4.4'
     compile project(':rdVECore')
 
     compile ('com.facebook.fresco:fresco:1.3.0')

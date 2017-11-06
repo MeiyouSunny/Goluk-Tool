@@ -592,6 +592,17 @@ public class SinglePointRotate extends View {
                         mPaint);
             }
         }
+        //测试专用
+//        mPaint.setColor(Color.RED);
+//        canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y,
+//                mPaint);
+//        canvas.drawLine(mPoint2.x, mPoint2.y, mPoint3.x, mPoint3.y,
+//                mPaint);
+//        canvas.drawLine(mPoint3.x, mPoint3.y, mPoint4.x, mPoint4.y,
+//                mPaint);
+//        canvas.drawLine(mPoint4.x, mPoint4.y, mPoint1.x, mPoint1.y,
+//                mPaint);
+
         if (null == mOriginalBitmap || mOriginalBitmap.isRecycled()) {
             Log.e("mOriginalBitmap...", "no has mOriginalBitmap.... ");
             return;
@@ -636,6 +647,13 @@ public class SinglePointRotate extends View {
 
             // 左下角坐标
             Point mp41 = new Point(mleft, mbottom);
+
+
+//            mPaint.setColor(Color.BLACK);
+//            canvasTmp.drawLine(mp11.x, mp11.y, mp21.x, mp21.y, mPaint);
+//            canvasTmp.drawLine(mp21.x, mp21.y, mp31.x, mp31.y, mPaint);
+//            canvasTmp.drawLine(mp31.x, mp31.y, mp41.x, mp41.y, mPaint);
+//            canvasTmp.drawLine(mp41.x, mp41.y, mp11.x, mp11.y, mPaint);
 
             Point centerPoint = intersects(mp41, mp21, mp11, mp31);
 
@@ -997,22 +1015,28 @@ public class SinglePointRotate extends View {
                         // 记录当前位置
                         mBPoint.set(event.getX() + mImageViewLeft, event.getY()
                                 + mImageViewTop);
-
-                        //
+                        //自定义了默认大小
+                        int tmpW = 0, tmpH;
+                        if (isLaShen()) {
+                            tmpW = mOriginalBitmap.getWidth();
+                            tmpH = mOriginalBitmap.getHeight();
+                        } else {
+                            tmpW = (int) (msi.w);
+                            tmpH = (int) (msi.h);
+                        }
                         float realL = (float) Math
-                                .sqrt((float) (mOriginalBitmap.getWidth()
-                                        * mOriginalBitmap.getWidth() + mOriginalBitmap
-                                        .getHeight() * mOriginalBitmap.getHeight()) / 4);
+                                .sqrt((float) (tmpW * tmpW + tmpH * tmpH) / 4);
 
-                        //
                         float newL = (float) Math
                                 .sqrt((mBPoint.x - (float) mImageCenterPoint.x)
                                         * (mBPoint.x - (float) mImageCenterPoint.x)
                                         + (mBPoint.y - (float) mImageCenterPoint.y)
                                         * (mBPoint.y - (float) mImageCenterPoint.y));
 
+
                         // 计算缩放系数，太复杂了。看不懂
                         disf = newL / realL;
+
 
                         // 计算旋转角度
                         double a = spacing(mAPoint.x, mAPoint.y,
@@ -1085,6 +1109,8 @@ public class SinglePointRotate extends View {
                                 disf = MAX_SCALE;
                             }
                         }
+//                        Log.e(TAG, "onTouchEvent: move" + disf);
+
                         // 设置图片参数
                         setImageViewParams(mOriginalBitmap, mImageCenterPoint,
                                 mRotateAngle + newAngle, disf);
@@ -1212,7 +1238,8 @@ public class SinglePointRotate extends View {
                 sbmpW = (int) (msi.w * zoomFactor);
                 sbmpH = (int) (msi.h * zoomFactor);
             }
-//            Log.e(TAG, "setImageViewParams: " + msi.w + "*" + msi.h + "......sb:" + sbmpW + "*" + sbmpH);
+//            false....2.0setImageViewParams: 234.0*88.0......sb:720*272
+//            Log.e(TAG, zoomFactor + "...." + isLaShen() + "...." + zoomFactor + "setImageViewParams: " + msi.w + "*" + msi.h + "......sb:" + sbmpW + "*" + sbmpH);
         } catch (Exception e) {
             sbmpW = 100;
             sbmpH = 100;
@@ -1229,6 +1256,9 @@ public class SinglePointRotate extends View {
         // 设置移动
         mMatrix.postTranslate(dx + mOutLayoutImageWidth, dy
                 + mOutLayoutImageHeight);
+
+//        setImageViewParams: 744*346...center:568*317
+//        Log.e(TAG, "setImageViewParams: " + mRotatedImageWidth + "*" + mRotatedImageHeight + "...center:" + mImageCenterPoint.x + "*" + mImageCenterPoint.y);
 
         // 设置小图片的宽高
         setImageViewWH(mRotatedImageWidth, mRotatedImageHeight,

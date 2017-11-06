@@ -36,28 +36,32 @@
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/intercept_button"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_intercept"/>
+                android:text="@string/preview_intercept"
+                android:visibility="gone"/>
 
             <com.rd.lib.ui.ExtButton
                 android:id="@+id/preview_spilt"
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/splite"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_spilt"/>
+                android:text="@string/preview_spilt"
+                android:visibility="gone"/>
 
             <com.rd.lib.ui.ExtButton
                 android:id="@+id/preview_edit"
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/edit_button"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_edit_pic"/>
+                android:text="@string/preview_edit_pic"
+                android:visibility="gone"/>
 
             <com.rd.lib.ui.ExtButton
                 android:id="@+id/preview_speed"
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/speed"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_speed"/>
+                android:text="@string/preview_speed"
+                android:visibility="gone"/>
 
             <com.rd.lib.ui.ExtButton
                 android:id="@+id/preview_duration"
@@ -80,14 +84,16 @@
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/copy"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_copy"/>
+                android:text="@string/preview_copy"
+                android:visibility="gone"/>
 
             <com.rd.lib.ui.ExtButton
                 android:id="@+id/preview_reverse"
                 style="@style/edit_menu_style"
                 android:drawableTop="@drawable/reverse"
                 android:onClick="onPreviewOptionClick"
-                android:text="@string/preview_reverse"/>
+                android:text="@string/preview_reverse"
+                android:visibility="gone"/>
 
         </LinearLayout>
 

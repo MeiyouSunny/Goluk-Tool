@@ -431,6 +431,7 @@
     <string name="video_duration_too_short_to_trim">视频小于1秒，无法截取</string>
     <string name="export_duration_limit">当前视频时长超过了最长导出时间限制(%d秒)。您可以关闭本提示去调整，或继续导出</string>
     <string name="cancel_export">视频尚未导出完成，是否取消？</string>
+    <string name="video_speed_duration_too_short_to_change">视频时长过短，不能变速</string>
 
     <!-- 人脸贴纸 -->
     <string name="camare_fu_beauty">美颜</string>

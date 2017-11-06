@@ -324,6 +324,17 @@ class SpecialHandler {
         }
     };
 
+    /**
+     * @param txtSize
+     * @return
+     */
+    private float getCustomSize(int txtSize) {
+        //像素大小转成缩放比
+        float disf = mSizePicker.textToDisf(txtSize);
+        mSizePicker.setDisf(disf);
+        return disf;
+    }
+
     private void onStyleItem(int position) {
         StyleInfo info = mSpAapter.getItem(position);
         if (null == info) {
@@ -333,7 +344,16 @@ class SpecialHandler {
         if (info.isdownloaded) {
             mCurInfo.setStyleId(info.pid);
             if (mCurInfo.getDisf() == 1) {
-                mCurInfo.setDisf(info.disf);
+//                mCurInfo.setDisf(info.disf);
+                float mdisf = 1.4f;
+                if (CoreUtils.getMetrics().density >= 3.0) {
+                    //1080p屏幕
+                    mdisf = getCustomSize(22);
+                } else {
+                    //<=720p 屏幕
+                    mdisf = getCustomSize(17);
+                }
+                mCurInfo.setDisf(mdisf);
             }
             mSpAapter.setCheckItem(position);
             if (mSprCurView != null) {
@@ -347,7 +367,7 @@ class SpecialHandler {
 
                     mSprCurView.setStyleInfo(true, info, (int) (mCurInfo
                                     .getEnd() - mCurInfo.getStart()), true,
-                            info.disf);
+                            mCurInfo.getDisf());
 
                 }
                 int x = 0, y = 0;

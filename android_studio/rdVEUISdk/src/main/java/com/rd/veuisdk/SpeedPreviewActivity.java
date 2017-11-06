@@ -56,6 +56,7 @@ public class SpeedPreviewActivity extends BaseActivity {
         onLoad();
         playVideo();
         mSpeedIndex = getSpeedIndex(mMedia.getSpeed());
+        mDragSpeed.setDuration(mMedia.getDuration());
         mDragSpeed.postDelayed(new Runnable() {
 
             @Override
@@ -195,6 +196,7 @@ public class SpeedPreviewActivity extends BaseActivity {
         mLastPlayPostion = -1;
 
         mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
+        mMediaPlayer.setClearFirst(true);
         mMediaPlayer.setOnClickListener(mOnPlayerClickListener);
         mMediaPlayer.setOnPlaybackListener(mPlayerListener);
         mMediaPlayer.setOnInfoListener(new VirtualVideo.OnInfoListener() {

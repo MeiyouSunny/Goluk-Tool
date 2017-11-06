@@ -6,7 +6,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
@@ -18,7 +17,6 @@ import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
 import com.rd.vecore.exception.InvalidStateException;
-import com.rd.vecore.models.AspectRatioFitMode;
 import com.rd.vecore.models.FlipType;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
@@ -252,6 +250,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
         int id = v.getId();
 
         if (id == R.id.tvResetAll) {
+            mRectVideoClipBound.setEmpty();
             mMedia.setAngle(0);
             mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
             changeCropMode(CROP_MODE_FREE);
@@ -484,7 +483,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
     protected void onVideoViewPrepared() {
         changeCropMode(mVideoOb.getCropMode());
         if (bCropShow) {
-            mRectVideoClipBound.setEmpty();
+//            mRectVideoClipBound.setEmpty();
         }
         View frame = findViewById(R.id.ivVideoConver);
         if (null != frame) {
@@ -558,7 +557,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
         if (mMedia == null) {
             return;
         }
-        mCvCrop.setVisibility(View.INVISIBLE);
+
         nRotateAngle = mMedia.getAngle();
         // 如果是横屏对象，要将显示区域和裁剪区域清空
         mMedia.setShowRectF(null);
@@ -569,7 +568,28 @@ public class CropRotateMirrorActivity extends BaseActivity {
         } else if (updown) {
             mMedia.setAngle(nRotateAngle += 180);
         } else {
+            mCvCrop.setVisibility(View.INVISIBLE);
             mMedia.setAngle(nRotateAngle += 270);
+            mRectVideoClipBound = mCvCrop.getCrop();
+            if (checkIsLandRotate()) {
+                mRectVideoClipBound.set(mRectVideoClipBound.top, mMedia.getWidth() - mRectVideoClipBound.right,
+                        mRectVideoClipBound.bottom, mMedia.getWidth() - mRectVideoClipBound.left);
+                if (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
+                        .getFlipType() == FlipType.FLIP_TYPE_VERTICAL) {
+                    mRectVideoClipBound.set(mMedia.getHeight() - mRectVideoClipBound.right, mMedia.getWidth() - mRectVideoClipBound.bottom,
+                            mMedia.getHeight() - mRectVideoClipBound.left, mMedia.getWidth() - mRectVideoClipBound.top);
+                }
+            } else {
+                mRectVideoClipBound.set(mRectVideoClipBound.top, mMedia.getHeight() - mRectVideoClipBound.right,
+                        mRectVideoClipBound.bottom, mMedia.getHeight() - mRectVideoClipBound.left);
+                if (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
+                        .getFlipType() == FlipType.FLIP_TYPE_VERTICAL) {
+                    mRectVideoClipBound.set(mMedia.getWidth() - mRectVideoClipBound.right, mMedia.getHeight() - mRectVideoClipBound.bottom,
+                            mMedia.getWidth() - mRectVideoClipBound.left, mMedia.getHeight() - mRectVideoClipBound.top);
+                }
+            }
+
+
         }
         if (checkIsLandRotate()) {
             mPlayout.setAspectRatio((double) mMedia.getHeight() / mMedia.getWidth());
@@ -581,7 +601,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
     }
 
     private void setVideoMirror(boolean updown) {
-        mCvCrop.setVisibility(View.INVISIBLE);
+//        mCvCrop.setVisibility(View.INVISIBLE);
         if (updown) {
             if (FlipType.FLIP_TYPE_VERTICAL == mMedia.getFlipType()) {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
@@ -591,6 +611,15 @@ public class CropRotateMirrorActivity extends BaseActivity {
             } else {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_VERTICAL);
             }
+            mRectVideoClipBound = mCvCrop.getCrop();
+            if (checkIsLandRotate()) {
+                mRectVideoClipBound.set(mRectVideoClipBound.left, mMedia.getWidth() - mRectVideoClipBound.bottom,
+                        mRectVideoClipBound.right, mMedia.getWidth() - mRectVideoClipBound.top);
+            }else{
+                mRectVideoClipBound.set(mRectVideoClipBound.left, mMedia.getHeight() - mRectVideoClipBound.bottom,
+                        mRectVideoClipBound.right, mMedia.getHeight() - mRectVideoClipBound.top);
+            }
+
         } else {
             if (FlipType.FLIP_TYPE_HORIZONTAL == mMedia.getFlipType()) {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
@@ -600,6 +629,15 @@ public class CropRotateMirrorActivity extends BaseActivity {
             } else {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_HORIZONTAL);
             }
+            mRectVideoClipBound = mCvCrop.getCrop();
+            if (checkIsLandRotate()) {
+                mRectVideoClipBound.set(mMedia.getHeight() - mRectVideoClipBound.right, mRectVideoClipBound.top,
+                        mMedia.getHeight() - mRectVideoClipBound.left, mRectVideoClipBound.bottom);
+            }else{
+                mRectVideoClipBound.set(mMedia.getWidth() - mRectVideoClipBound.right, mRectVideoClipBound.top,
+                        mMedia.getWidth() - mRectVideoClipBound.left, mRectVideoClipBound.bottom);
+            }
+
         }
         reload();
         videoPlay();

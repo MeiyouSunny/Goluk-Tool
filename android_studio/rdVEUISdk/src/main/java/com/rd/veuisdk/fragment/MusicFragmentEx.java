@@ -104,6 +104,11 @@ public class MusicFragmentEx extends BaseFragment {
     private boolean isHideDubbing = false;
 
     /**
+     * 当前选中id
+     */
+    private int mCurrentItemId;
+
+    /**
      * @param trailerDuration
      * @param _musicUrl        背景音乐
      * @param _voiceLayout
@@ -180,6 +185,9 @@ public class MusicFragmentEx extends BaseFragment {
                 public void onStopTrackingTouch(SeekBar seekBar) {
                     if (null != audio) {
                         factor = 100 - mFactor.getProgress();
+                        if (mCurrentItemId != MENU_NONE && mFactor.isEnabled()) {
+                            mMusicFactor = mFactor.getProgress();
+                        }
                         audio.setMixFactor(factor);
                     }
                     mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(mFactor.getProgress());
@@ -332,6 +340,9 @@ public class MusicFragmentEx extends BaseFragment {
             public void onSelected(View view, int nItemId, boolean user) {
                 // Log.e("onSelected", nItemId + "--" + mIsFirstCreate + "/..."
                 // + user);
+                if (nItemId != MENU_ORIGIN) {
+                    mCurrentItemId = nItemId;
+                }
                 onSelectedImp(nItemId, user);
 
             }
@@ -393,7 +404,8 @@ public class MusicFragmentEx extends BaseFragment {
         onlyReloadMusic(onlyMusic);
     }
 
-    private int factor = 50;
+    private int factor = 0;
+    private int mMusicFactor = 50;
 
     /**
      * 音乐列表选中处理
@@ -415,9 +427,13 @@ public class MusicFragmentEx extends BaseFragment {
                                 : R.string.video_voice_p);
 
                 if (isOriginMute) {
-                    factor = 50;
+                    factor = 100 - factor;
                     if (null != mFactor) {
-                        mFactor.setProgress(50);
+                        if (mCurrentItemId == MENU_NONE) {
+                            mFactor.setProgress(100);
+                        } else {
+                            mFactor.setProgress(mMusicFactor);
+                        }
                         mFactor.setEnabled(true);
                     }
                 } else {
@@ -451,7 +467,7 @@ public class MusicFragmentEx extends BaseFragment {
                 }
                 //原音关闭时，设置配乐->最大（100)
                 boolean isOriginMute = mHlrVideoEditor.isMediaMute();
-                factor = isOriginMute ? 100 : 50;
+                factor = isOriginMute ? 100 : 0;
                 mFactor.setProgress(100 - factor);
                 TempVideoParams.getInstance().recycleMusicObject();
                 onlyReloadMusic(true);
@@ -485,7 +501,7 @@ public class MusicFragmentEx extends BaseFragment {
                     }
                     if (null != mMusicListener) {
                         Music ao = VirtualVideo.createMusic(info.getLocalPath());
-                        ao.setMixFactor(factor);
+                        ao.setMixFactor(mMusicFactor);
                         onMusicChecked(ao, true);
                     }
                     lastItemId = nItemId;
@@ -521,6 +537,7 @@ public class MusicFragmentEx extends BaseFragment {
         } else {
             if (null != mFactor) {
                 mFactor.setEnabled(true);
+                mFactor.setProgress(mMusicFactor);
             }
         }
     }
@@ -548,6 +565,7 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mHanlder) {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
                                     0).sendToTarget();
+
                         }
                     }
                     if (null != mDownloading) {
@@ -819,7 +837,11 @@ public class MusicFragmentEx extends BaseFragment {
                         int id = msg.arg1;
                         if (null != mListView) {
                             mListView.setdownEnd(id);
-                            mListView.selectListItem(id, true);
+                            if (mCurrentItemId == id) {
+                                mListView.selectListItem(id, true);
+                            } else {
+                                mListView.resetItem(id);
+                            }
                         }
 
                     }

@@ -388,11 +388,16 @@ class SubtitleHandler {
                 return;
             }
             if (winfo.getDisf() == 1) {
-                float mdisf = getCustomSize(22);
+                float mdisf = 1.4f;
+                if (CoreUtils.getMetrics().density >= 3.0) {
+                    //1080p屏幕
+                    mdisf = getCustomSize(22);
+                } else {
+                    //<=720p 屏幕
+                    mdisf = getCustomSize(17);
+                }
                 winfo.setDisf(mdisf);
             }
-
-//            Log.e(TAG, "onStyleItem: "+winfo.getDisf() );
             winfo.setStyleId(info.pid);
             mAnimAdapter.setCheckItem(position);
             if (mSprCurView != null) {

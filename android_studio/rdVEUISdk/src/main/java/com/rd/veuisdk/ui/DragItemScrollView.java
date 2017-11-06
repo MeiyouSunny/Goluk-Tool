@@ -16,6 +16,7 @@ import android.view.View;
 
 import com.rd.lib.utils.CoreUtils;
 import com.rd.veuisdk.R;
+import com.rd.veuisdk.utils.SysAlertDialog;
 
 /**
  * 横向拖动单个item
@@ -23,6 +24,8 @@ import com.rd.veuisdk.R;
  * @author JIAN
  */
 public class DragItemScrollView extends View {
+    private final float MIN_DURATION = 0.2f;
+
     private final int MPADDING = 30;
     private final int BORDER_WIDTH = 4;
     private Paint mBorderPaint = new Paint(), mWhitePaint = new Paint(),
@@ -39,6 +42,8 @@ public class DragItemScrollView extends View {
     private int mTextHeightOff1 = 0, mTextHeightOff2;
     private int MPADDING_LEFT = 60;
     private int mItemSizeN = 0, mItemSizeP = 0, mItemP = 0;
+    private float mDuration;
+    private boolean mIsLimit;
 
     public DragItemScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
@@ -137,6 +142,10 @@ public class DragItemScrollView extends View {
     }
 
     private int mTextY1, mTextY2;
+
+    public void setDuration(float duration) {
+        mDuration = duration;
+    }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right,
@@ -251,11 +260,31 @@ public class DragItemScrollView extends View {
             if (mCurrentCheckedRect.left >= tempRect.left - mHalfItemWidth
                     && mCurrentCheckedRect.right < tempRect.right
                     + mHalfItemWidth) {
+                int scale = i - mIndex;
+                float speed = 1;
+                if (scale > 0) {
+                    for (int n = 0; n < scale; n++) {
+                        speed *= 2;
+                    }
+                } else {
+                    for (int n = 0; n < Math.abs(scale); n++) {
+                        speed /= 2;
+                    }
+                }
+                if (mDuration / speed < MIN_DURATION) {
+                    mIsLimit = true;
+                    break;
+                }
+                mIsLimit = false;
+                mDuration /= speed;
                 mIndex = i;
                 break;
             }
         }
         if (setLocation) {
+            if(mIsLimit){
+                SysAlertDialog.showAutoHideDialog(getContext(),0,R.string.video_speed_duration_too_short_to_change,2000);
+            }
             setLocation(user);
         }
     }
@@ -268,7 +297,6 @@ public class DragItemScrollView extends View {
      * @param index
      */
     public void setCheckIndex(int index) {
-
         mIndex = index;
         if (mIndex > mCharArrays.length || mIndex < 0) {
             mIndex = (int) (Math.ceil(mCharArrays.length / 2.0) - 1);
