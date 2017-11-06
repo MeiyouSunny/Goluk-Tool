@@ -19,7 +19,11 @@
             android:label="@string/app_name"
             android:theme="@style/Theme.AppStartLoad"
             android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <!-- 小白 Start-->
@@ -27,11 +31,7 @@
         <activity
             android:name="com.mobnote.t1sp.ui.setting.DeviceSettingsActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity
             android:name="com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity"
@@ -45,6 +45,11 @@
             android:name="com.mobnote.t1sp.ui.setting.version.VersionInfoActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name="com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait" />
 
         <!-- 小白 End-->
 

@@ -17,7 +17,6 @@ import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.bean.SettingValue;
 import com.mobnote.t1sp.service.HeartbeatTask;
-import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
 import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
@@ -80,8 +79,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         getPresenter().enterOrExitSettingMode(true);
         mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
         mHeartbeatTask.start();
-
-        ViewUtil.startService(this, T1SPUdpService.class);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,

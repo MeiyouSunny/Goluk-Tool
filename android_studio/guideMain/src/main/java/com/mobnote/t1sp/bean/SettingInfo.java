@@ -2,6 +2,7 @@ package com.mobnote.t1sp.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 /**
  * 设置信息
@@ -40,6 +41,20 @@ public class SettingInfo implements Parcelable {
     public String deviceVersion;
 
     public SettingInfo() {
+    }
+
+    /**
+     * 清晰度是否是1080P
+     */
+    public boolean is1080P() {
+        return !TextUtils.isEmpty(videoRes) && videoRes.contains("1080");
+    }
+
+    /**
+     * 抓拍精彩视频时间是否为30秒
+     */
+    public boolean captureTimeIs30S() {
+        return !TextUtils.isEmpty(captureTime) && captureTime.contains("30");
     }
 
     protected SettingInfo(Parcel in) {
