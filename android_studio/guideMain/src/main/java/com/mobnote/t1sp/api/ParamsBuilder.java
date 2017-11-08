@@ -131,6 +131,7 @@ public class ParamsBuilder {
         params.put(KEY_FORMAT, values[1]);
         params.put(KEY_FROM, values[2]);
         params.put(KEY_COUNT, values[3]);
+        params.put(KEY_BACKWARD, "");
 
         return params;
     }

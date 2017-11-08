@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.drawable.AnimationDrawable;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
@@ -25,12 +24,17 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -47,10 +51,12 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.t1sp.base.ui.AbsActivity;
+import com.mobnote.t1sp.bean.FileInfo;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.listener.OnCaptureListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
+import com.mobnote.t1sp.util.ThumbUtil;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -64,6 +70,7 @@ import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
+import java.util.List;
 import java.util.Timer;
 
 import cn.com.mobnote.eventbus.EventLocationFinish;
@@ -408,13 +415,64 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     @Override
+    public void onGetLatestCaptureVideos(List<FileInfo> videos) {
+        image1.setImageBitmap(ThumbUtil.getNetVideoThumb(videos.get(0).getUrl()));
+        if (videos.size() >= 2)
+            image2.setImageBitmap(ThumbUtil.getNetVideoThumb(videos.get(1).getUrl()));
+
+        FileDownloader.setup(this);
+
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "" + videos.get(0).name;
+        FileDownloader.getImpl().create(videos.get(0).getUrl()).setPath(filePath).setListener(new FileDownloadListener() {
+            @Override
+            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+            }
+
+            @Override
+            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+                int percent = (int) ((double) soFarBytes / (double) totalBytes * 100);
+                System.out.print("");
+            }
+
+            @Override
+            protected void blockComplete(BaseDownloadTask task) {
+
+            }
+
+            @Override
+            protected void completed(BaseDownloadTask task) {
+                System.out.print("");
+            }
+
+            @Override
+            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+
+            }
+
+            @Override
+            protected void error(BaseDownloadTask task, Throwable e) {
+                System.out.print("");
+            }
+
+            @Override
+            protected void warn(BaseDownloadTask task) {
+                System.out.print("");
+            }
+        }).start();
+    }
+
+    @Override
     public void onCapturePic(String path) {
     }
 
     @Override
     public void onCaptureVideo(String path) {
         // 抓拍精彩视频回调
-        System.out.print("");
+        if(TextUtils.isEmpty(path))
+            return;
+        // 开始下载
+
     }
 
     @Override

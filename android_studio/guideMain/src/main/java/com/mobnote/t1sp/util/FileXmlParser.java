@@ -34,7 +34,8 @@ public class FileXmlParser {
                         if ("file".equals(xmlPullParser.getName())) {
                             fileInfo = new FileInfo();
                         } else if ("name".equals(xmlPullParser.getName())) {
-                            fileInfo.name = xmlPullParser.nextText();
+                            fileInfo.path = xmlPullParser.nextText();
+                            fileInfo.name = fileInfo.path.substring(fileInfo.path.lastIndexOf("/"));
                         } else if ("format".equals(xmlPullParser.getName())) {
                             final int attributeCount = xmlPullParser.getAttributeCount();
                             for (int i = 0; i < attributeCount; i++) {
