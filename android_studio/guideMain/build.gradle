@@ -15,13 +15,13 @@ task generateStrings(type: Exec) {
 
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 23
     buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 25
+        targetSdkVersion 22
     }
 
     buildTypes {
@@ -98,10 +98,10 @@ dependencies {
     compile 'com.vk:androidsdk:1.6.8'
 
     //T1SP libs
-    compile 'likly.mvp:mvp:0.0.2'
+    compile 'com.hmcx:mvp:1.0.3'
     compile 'likly.reverse:rxandroid:0.0.2'
-    compile 'com.hmcx:dialogger:1.0.2'
-    compile 'com.hmcx:repeatview:1.0.1'
+    compile 'com.hmcx:dialogger:1.0.3'
+    compile 'com.hmcx:repeatview:1.0.3'
     compile 'likly.dollar:dollar:0.0.3'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
     // butterknife
