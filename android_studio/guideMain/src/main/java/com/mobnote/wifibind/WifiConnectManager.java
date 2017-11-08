@@ -127,7 +127,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
      * @return
      */
     public WifiRsBean getConnResult() {
-        return wifiSupport.getConnResult(TITLE);
+        //return wifiSupport.getConnResult(TITLE);
+        WifiRsBean wifiBean = wifiSupport.getConnResult(TITLE);
+        if (wifiBean != null)
+            return wifiBean;
+        return wifiSupport.getConnResult("Car");
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//

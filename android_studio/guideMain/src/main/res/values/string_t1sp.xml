@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 小白 -->
+    <!-- String -->
+    <string name="capture_time_5_7">精彩抓拍(5+7)</string>
+    <string name="storage_left">剩余空间</string>
+
+    <!-- Array -->
+    <!-- 视频清晰度 -->
+    <array name="video_res">
+        <item>@string/str_album_video_1080</item>
+        <item>@string/str_album_video_720</item>
+    </array>
+    <array name="video_res_values">
+        <item>1080P30fps</item>
+        <item>720P30fps</item>
+    </array>
+
+    <!-- 抓拍视频时长 -->
+    <array name="capture_time">
+        <item>@string/capture_time_5_7</item>
+        <item>@string/str_settings_video_type2</item>
+    </array>
+    <array name="capture_time_values">
+        <item>12S</item>
+        <item>30S</item>
+    </array>
+
+    <!-- GSendor灵敏度 -->
+    <array name="gsendor_level">
+        <item>@string/live_str_close</item>
+        <item>@string/str_low</item>
+        <item>@string/str_middle</item>
+        <item>@string/str_high</item>
+    </array>
+    <array name="gsendor_level_values">
+        <item>OFF</item>
+        <item>LEVEL0</item>
+        <item>LEVEL2</item>
+        <item>LEVEL4</item>
+    </array>
+
+    <!-- 停车安防/移动监测 共用 -->
+    <array name="parking_guard_and_mtd">
+        <item>@string/live_str_close</item>
+        <item>@string/str_low</item>
+        <item>@string/str_middle</item>
+        <item>@string/str_high</item>
+    </array>
+    <array name="parking_guard_and_mtd_values">
+        <item>OFF</item>
+        <item>LOW</item>
+        <item>MIDDLE</item>
+        <item>HIGH</item>
+    </array>
+
+    <!-- 关机延时时长 -->
+    <array name="power_off_delay">
+        <item>10S</item>
+        <item>60S</item>
+    </array>
+    <array name="power_off_delay_values">
+        <item>10SEC</item>
+        <item>60SEC</item>
+    </array>
+
+</resources>
