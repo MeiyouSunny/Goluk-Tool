@@ -1,16 +1,5 @@
 package com.mobnote.application;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -20,21 +9,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
-
-import cn.com.mobnote.logic.GolukLogic;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.module.location.GolukPosition;
-import cn.com.mobnote.module.location.ILocationFn;
-import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.tiros.api.Const;
-import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.baidu.BaiduLocation;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
@@ -74,12 +51,12 @@ import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
 import com.mobnote.golukmain.livevideo.VdcpLiveBean;
 import com.mobnote.golukmain.player.SdkHandler;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.userlogin.UserData;
+import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.wifibind.IpcConnSuccessInfo;
@@ -90,6 +67,7 @@ import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifimanage.WifiApAdmin;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.map.LngLat;
+import com.mobnote.t1sp.base.ui.BaseOnViewBindListener;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
 import com.mobnote.user.User;
@@ -105,17 +83,38 @@ import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
-
-import de.greenrobot.event.EventBus;
-
-import android.support.multidex.MultiDexApplication;
-
-import com.mobnote.golukmain.userlogin.UserResult;
+import com.rd.veuisdk.SdkEntry;
 import com.vk.sdk.VKAccessToken;
 import com.vk.sdk.VKAccessTokenTracker;
 import com.vk.sdk.VKSdk;
-import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import cn.com.mobnote.logic.GolukLogic;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.GolukPosition;
+import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.tiros.api.Const;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
+import likly.dollar.$;
+import likly.mvp.MVP;
 
 import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
 
@@ -389,6 +388,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //            ZhugeSDK.getInstance().openDebug();
             ZhugeSDK.getInstance().init(getApplicationContext());
             initializeSDK();
+
+            // T1SP
+            MVP.registerOnViewBindListener(new BaseOnViewBindListener());
+            $.initialize(this);
+            com.mobnote.t1sp.api.HttpManager.initHttp();
         }
 
         // TODO 此处不要做初始化相关的工作

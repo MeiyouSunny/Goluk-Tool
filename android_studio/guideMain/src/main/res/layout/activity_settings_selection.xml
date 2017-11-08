@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#F1F1F2"
+              android:orientation="vertical"
+              tools:context="com.mobnote.t1sp.ui.setting.DeviceSettingsActivity">
+
+    <include layout="@layout/app_bar_base"/>
+
+    <likly.view.repeat.RepeatView
+        android:id="@+id/repeater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:canRefresh="false"
+        app:hasMore="false"
+        app:viewHolderClass="com.mobnote.t1sp.ui.setting.selection.SettingSelectionViewHolder"
+        app:viewHolderLayout="@layout/viewholder_setting_selection_item"/>
+
+
+</LinearLayout>

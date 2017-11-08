@@ -29,7 +29,6 @@ import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UnbindActivity;
 import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
@@ -37,11 +36,16 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.service.T1SPUdpService;
+import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
+import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -521,6 +525,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
+        // T1SP
+        connect();
+
         if(!mAutoConn){
             mStartSystemWifi = true;
             GolukUtils.startSystemWifiList(this);
@@ -531,6 +538,25 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
             autoConnWifi();
         mIsCanAcceptNetState = true;
+    }
+
+    private void connect() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                System.out.print("");
+                //toNextView();
+                ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
+
+                ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
+                finish();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                System.out.print("");
+            }
+        });
     }
 
     @Override
