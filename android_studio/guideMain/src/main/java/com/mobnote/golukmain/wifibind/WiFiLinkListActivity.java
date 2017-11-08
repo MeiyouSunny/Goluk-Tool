@@ -525,17 +525,19 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
-//        if(!mAutoConn){
-//            mStartSystemWifi = true;
-//            GolukUtils.startSystemWifiList(this);
-//            mAutoConn = true;
-//            return;
-//        }
-//        collectLog("onResume", "----1:");
-//        if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
-//            autoConnWifi();
-//        mIsCanAcceptNetState = true;
+        // T1SP
         connect();
+
+        if(!mAutoConn){
+            mStartSystemWifi = true;
+            GolukUtils.startSystemWifiList(this);
+            mAutoConn = true;
+            return;
+        }
+        collectLog("onResume", "----1:");
+        if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
+            autoConnWifi();
+        mIsCanAcceptNetState = true;
     }
 
     private void connect() {
