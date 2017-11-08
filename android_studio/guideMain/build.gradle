@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
 
 task generateStrings(type: Exec) {
     workingDir './'
@@ -15,13 +14,13 @@ task generateStrings(type: Exec) {
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.3'
+    compileSdkVersion 23
+    buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         minSdkVersion 18
-        targetSdkVersion 25
+        targetSdkVersion 22
     }
 
     buildTypes {
@@ -51,7 +50,6 @@ dependencies {
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.android.support:support-v4:23.3.0'
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:support-v4:25.3.1'
     compile files('libs/mid-sdk-2.20.jar')
   //  compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/com.rd.car.player.jar')
@@ -94,20 +92,8 @@ dependencies {
     compile files('libs/SocialSDK_Sina.jar')
     compile files('libs/SocialSDK_instagram.jar')
     compile files('libs/mta-sdk-1.6.2.jar')
-    compile 'com.android.support:recyclerview-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:23.3.0'
     compile 'com.elvishew:xlog:1.3.0'
     compile 'com.vk:androidsdk:1.6.8'
-    //T1SP libs
-    compile 'likly.mvp:mvp:0.0.2'
-    compile 'likly.reverse:rxandroid:0.0.2'
-    compile 'com.hmcx:dialogger:1.0.2'
-    compile 'com.hmcx:repeatview:1.0.1'
-    compile 'likly.dollar:dollar:0.0.3'
-    compile 'com.kyleduo.switchbutton:library:1.4.6'
-    // butterknife
-    compile 'com.jakewharton:butterknife:8.8.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    // Downloader
-    compile 'com.liulishuo.filedownloader:library:1.6.4'
 }
 
