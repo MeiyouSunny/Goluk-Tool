@@ -233,18 +233,21 @@ public class T1SPUdpService extends Service {
             info = data.split(ACTION_TAG);
             if (info.length > 1 && info[1].contains(ACTION_CAPTURE_PIC)) {
                 String path = data.split(MEDIA_PATH)[1].split("\n")[0];
+                path = "\\" + path; // 返回的路径前面缺少\
                 if (path.contains(".JPG") && path.contains("IMG") && path.contains("SD"))
                     if (mListener != null)
                         mListener.onCapturePic(path);
                 return;
             } else if (info.length > 1 && info[1].contains(ACTION_CAPTURE_VIDEO)) {
                 String path = data.split(MEDIA_PATH)[1].split("\n")[0];
+                path = "\\" + path; // 返回的路径前面缺少\
                 if (path.contains(".MP4") && path.contains("SHARE") && path.contains("SD"))
                     if (mListener != null)
                         mListener.onCaptureVideo(path);
                 return;
             } else if (info.length > 1 && info[1].contains(ACTION_LOCK_VIDEO)) {
                 String path = data.split(MEDIA_PATH)[1].split("\n")[0];
+                path = "\\" + path; // 返回的路径前面缺少\
                 if (path.contains(".MP4") && path.contains("SD")) {
                     String status = data.split(ACTION_STUTAS)[1].split("\n")[0];
                     if (mListener != null)

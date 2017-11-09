@@ -526,7 +526,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
         // T1SP
-        connect();
+        if (mAutoConn)
+            connect();
 
         if(!mAutoConn){
             mStartSystemWifi = true;
@@ -540,14 +541,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mIsCanAcceptNetState = true;
     }
 
+    /**
+     * T1SP连接
+     */
     private void connect() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new CommonCallback() {
             @Override
             protected void onSuccess() {
-                System.out.print("");
-                //toNextView();
+                // T1SP连接成功
+                // 保存WIFI信息
+                saveT1SPInfo();
+                // 开启UDP监听
                 ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
-
                 ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
                 finish();
             }
@@ -557,6 +562,26 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 System.out.print("");
             }
         });
+    }
+
+    /**
+     * 保存T1SP信息
+     */
+    private void saveT1SPInfo() {
+        if (null == mWac)
+            return;
+
+        WifiRsBean wifiResult = mWac.getConnResult();
+        if (null == wifiResult)
+            return;
+
+        mWillConnName = wifiResult.getIpc_ssid();
+        mWillConnMac = wifiResult.getIpc_bssid();
+        if (mWillConnName == null || mWillConnName.length() <= 0)
+            return;
+
+        saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
+        //setIpcMode(mWillConnName);
     }
 
     @Override

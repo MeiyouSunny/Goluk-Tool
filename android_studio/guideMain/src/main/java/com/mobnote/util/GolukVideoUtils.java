@@ -15,24 +15,24 @@ import java.io.File;
  * Created by leege100 on 16/5/23.
  */
 public class GolukVideoUtils {
-    public static VideoInfo getVideoInfo(String fileName){
+    public static VideoInfo getVideoInfo(String fileName) {
         try {
 
             GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
             VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
 
             int currType = 0;
-            if(!TextUtils.isEmpty(fileName)){
-                if(fileName.startsWith("NRM")){
+            if (!TextUtils.isEmpty(fileName)) {
+                if (fileName.startsWith("NRM")) {
                     currType = 1;
-                }else if(fileName.startsWith("URG")){
+                } else if (fileName.startsWith("URG")) {
                     currType = 2;
-                }else if(fileName.startsWith("WND")){
+                } else if (fileName.startsWith("WND")) {
                     currType = 4;
                 }
             }
 
-            String[] videoPaths = {"","loop/", "urgent/", "", "wonderful/" };
+            String[] videoPaths = {"", "loop/", "urgent/", "", "wonderful/"};
             String mFilePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
             String videoPath = mFilePath + videoPaths[currType] + fileName;
             String resolution = "";
@@ -103,4 +103,5 @@ public class GolukVideoUtils {
         }
         return null;
     }
+
 }

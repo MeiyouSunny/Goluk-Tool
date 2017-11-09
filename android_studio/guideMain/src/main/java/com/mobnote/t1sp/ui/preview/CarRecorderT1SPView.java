@@ -1,6 +1,5 @@
 package com.mobnote.t1sp.ui.preview;
 
-import com.mobnote.t1sp.bean.FileInfo;
 import com.mobnote.t1sp.bean.SettingInfo;
 
 import java.util.List;
@@ -20,6 +19,6 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     void onCaptureStart();
 
-    void onGetLatestCaptureVideos(List<FileInfo> videos);
+    void onGetLatestTwoVideos(List<String> videos);
 
 }

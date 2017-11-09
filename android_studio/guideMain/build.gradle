@@ -109,6 +109,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Downloader
     compile 'com.liulishuo.filedownloader:library:1.6.4'
+    compile 'org.succlz123.okdownload:okdownload:0.0.1'
 
 }
 

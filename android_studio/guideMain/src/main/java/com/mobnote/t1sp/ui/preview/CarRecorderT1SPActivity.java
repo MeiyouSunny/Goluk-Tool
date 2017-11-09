@@ -36,7 +36,6 @@ import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
-import com.mobnote.golukmain.carrecorder.entity.VideoShareInfo;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
@@ -45,15 +44,16 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.videosuqare.RingView;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.t1sp.base.ui.AbsActivity;
-import com.mobnote.t1sp.bean.FileInfo;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.listener.OnCaptureListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ThumbUtil;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.GolukFileUtils;
@@ -68,6 +68,12 @@ import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
+import org.succlz123.okdownload.OkDownloadEnqueueListener;
+import org.succlz123.okdownload.OkDownloadError;
+import org.succlz123.okdownload.OkDownloadManager;
+import org.succlz123.okdownload.OkDownloadRequest;
+
+import java.io.File;
 import java.util.List;
 import java.util.Timer;
 
@@ -264,8 +270,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     private View mConncetLayout = null;
 
-    private VideoShareInfo[] images = null;
-
     private String wifiname;
 
     /**
@@ -301,6 +305,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private SettingInfo mSettingInfo;
     private Handler mHandlerCapture;
     private int mCaptureTime;
+    // 最新2视频(精彩视频和紧急视频)
+    private List<String> mLatestTwoVideos;
 
     @Override
     public int initLayoutResId() {
@@ -364,10 +370,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         start();
 
-        getPresenter().getVideoSettingInfo();
+        //getPresenter().getVideoSettingInfo();
 
         // 设置抓拍回调
         T1SPUdpService.setCaptureListener(this);
+        // 获取本地最近2个视频(精彩视频和紧急视频综合)
+        getPresenter().getLatestTwoVideos();
     }
 
     /**
@@ -413,39 +421,64 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     @Override
-    public void onGetLatestCaptureVideos(List<FileInfo> videos) {
-        image1.setImageBitmap(ThumbUtil.getNetVideoThumb(videos.get(0).getUrl()));
-        if (videos.size() >= 2)
-            image2.setImageBitmap(ThumbUtil.getNetVideoThumb(videos.get(1).getUrl()));
+    public void onGetLatestTwoVideos(List<String> videos) {
+        if (videos == null || videos.isEmpty())
+            return;
 
+        mLatestTwoVideos = videos;
+        image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
+        new1.setVisibility(View.VISIBLE);
+        if (videos.size() >= 2) {
+            image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(1)));
+            new2.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onCapturePic(String path) {
+    }
+
+    @Override
+    public void onCaptureVideo(String path) {
+        // 抓拍精彩视频回调
+        if (TextUtils.isEmpty(path))
+            return;
+        // 开始下载
+        path = FileUtil.getVideoUrlByPath(path);
+        path = path.replace("\\", "/");
         FileDownloader.setup(this);
-
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "" + videos.get(0).name;
-        FileDownloader.getImpl().create(videos.get(0).getUrl()).setPath(filePath).setListener(new FileDownloadListener() {
+        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Wonderful.MP4";
+        FileDownloader.getImpl().create(path).setPath(filePath).setListener(new FileDownloadListener() {
             @Override
             protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            }
 
+            @Override
+            protected void started(BaseDownloadTask task) {
+                // 开始下载
+                downloadSize.setVisibility(View.VISIBLE);
+                image2.setImageResource(R.drawable.share_video_no_pic);
             }
 
             @Override
             protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
                 int percent = (int) ((double) soFarBytes / (double) totalBytes * 100);
                 System.out.print("");
+                downloadSize.setProcess(percent);
             }
 
             @Override
             protected void blockComplete(BaseDownloadTask task) {
-
             }
 
             @Override
             protected void completed(BaseDownloadTask task) {
                 System.out.print("");
+                downloadSize.setVisibility(View.GONE);
             }
 
             @Override
             protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-
             }
 
             @Override
@@ -458,19 +491,57 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 System.out.print("");
             }
         }).start();
-    }
 
-    @Override
-    public void onCapturePic(String path) {
-    }
 
-    @Override
-    public void onCaptureVideo(String path) {
-        // 抓拍精彩视频回调
-        if(TextUtils.isEmpty(path))
-            return;
-        // 开始下载
+        OkDownloadRequest request = new OkDownloadRequest.Builder()
+                .url(url)
+                .filePath(filePath)
+                .build();
 
+        OkDownloadManager.getInstance(mContext).enqueue(request, listener);
+
+        OkDownloadEnqueueListener listener = new OkDownloadEnqueueListener() {
+
+            @Override
+            public void onStart(int id) {
+                Log.e("OkDownload", "onStart : the download request id = "+id);
+                // 开始下载
+                downloadSize.setVisibility(View.VISIBLE);
+                image2.setImageResource(R.drawable.share_video_no_pic);
+            }
+
+            @Override
+            public void onProgress(int progress, long cacheSize, long totalSize) {
+                Log.e("OkDownload", cacheSize + "/" + totalSize);
+                downloadSize.setProcess(progress);
+            }
+
+            @Override
+            public void onRestart() {
+                Log.e("OkDownload", "onRestart");
+            }
+
+            @Override
+            public void onPause() {
+                Log.e("OkDownload", "onPause");
+            }
+
+            @Override
+            public void onCancel() {
+                Log.e("OkDownload", "onCancel");
+            }
+
+            @Override
+            public void onFinish() {
+                Log.e("OkDownload", "onFinish");
+                downloadSize.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onError(OkDownloadError error) {
+                Log.e("OkDownload", error.getMessage());
+            }
+        };
     }
 
     @Override
@@ -522,6 +593,27 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //                break;
 //        }
 //    }
+
+    /**
+     * 跳转到播放本地视频页面
+     */
+    private void gotoPlayVideo(String videoName) {
+        int type;
+        if (videoName.indexOf("URG") >= 0) {
+            type = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
+        } else if (videoName.indexOf("WND") >= 0) {
+            type = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
+        } else {
+            type = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
+        }
+        SettingUtils.getInstance().putBoolean("Local_" + videoName, false);
+        VideoInfo mVideoInfo = GolukVideoUtils.getVideoInfo(videoName);
+        if (mVideoInfo != null) {
+            GolukUtils.startPhotoAlbumPlayerActivity(this, type, "local", mVideoInfo.videoPath,
+                    mVideoInfo.filename, mVideoInfo.videoCreateDate, mVideoInfo.videoHP, mVideoInfo.videoSize, null);
+            overridePendingTransition(R.anim.shortshare_start, 0);
+        }
+    }
 
     private void startPlayVideo() {
         mSettingBtn.setVisibility(View.VISIBLE);
@@ -602,7 +694,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         lp.leftMargin = 0;
         mRtmpPlayerLayout.setLayoutParams(lp);
 
-        mConnectTip.setText(wifiname);
+        //mConnectTip.setText(wifiname);
+        mConnectTip.setText(WiFiInfo.IPC_SSID);
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
         }
@@ -690,6 +783,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 // 隐藏
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
+
+                getPresenter().getVideoSettingInfo();
             }
         });
     }
@@ -893,19 +988,18 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.image1) {
-            new1.setVisibility(View.GONE);
-            if (images[0] != null) {
-                // 如果当前不处于占位图下载过程中，才允许点击
-                if (downloadSize.getVisibility() != View.VISIBLE) {
-                    open_shareVideo(images[0].getName());
-                }
+            if (mLatestTwoVideos.size() > 0) {
+                new1.setVisibility(View.GONE);
+                String videoName = mLatestTwoVideos.get(0);
+                videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
+                gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image2) {
-            new2.setVisibility(View.GONE);
-            if (images[1] == null || images[1].getName().equals("")) {
-                return;
-            } else {
-                open_shareVideo(images[1].getName());
+            if (mLatestTwoVideos.size() > 1) {
+                new2.setVisibility(View.GONE);
+                String videoName = mLatestTwoVideos.get(1);
+                videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
+                gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
             //相册页面访问统计
@@ -915,8 +1009,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
         } else if (id == R.id.mRtmpPlayerView) {
-            if (!GolukApplication.getInstance().getIpcIsLogin())
-                return;
             if (m_bIsFullScreen) {
                 setFullScreen(false);
             } else {
@@ -1047,9 +1139,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             this.moveTaskToBack(true);
             isBackGroundStart = false;
         }
-
-        // 获取精彩视频类型
-        //boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
     }
 
     @Override

@@ -267,20 +267,6 @@
                 android:layout_height="64dp"
                 android:layout_marginLeft="5dp">
 
-                <ImageView
-                    android:id="@+id/image1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/share_video_no_pic"/>
-
-                <ImageView
-                    android:id="@+id/new1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/video_new_icon"
-                    android:visibility="gone"/>
-
                 <com.mobnote.golukmain.videosuqare.RingView
                     android:id="@+id/downloadSize"
                     android:layout_width="50dp"
@@ -289,19 +275,13 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="5dp"
                     android:visibility="gone"/>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/layout2"
-                android:layout_width="114dp"
-                android:layout_height="64dp"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/new_image_layout">
 
                 <ImageView
                     android:id="@+id/image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
                     android:src="@drawable/share_video_no_pic"/>
 
                 <ImageView
@@ -311,6 +291,32 @@
                     android:layout_alignParentRight="true"
                     android:src="@drawable/video_new_icon"
                     android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout2"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/new_image_layout">
+
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/share_video_no_pic"/>
+                <ImageView
+                    android:id="@+id/new1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/video_new_icon"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
 
             <TextView

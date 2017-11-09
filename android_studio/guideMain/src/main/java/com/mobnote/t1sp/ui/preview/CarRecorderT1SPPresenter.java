@@ -22,8 +22,8 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
     void captureVideo();
 
     /**
-     * 获取最近的抓拍视频(前2个)
+     * 获取最新2个视频(精彩视频和紧急视频综合)
      */
-    void getLatestCaptureVideos();
+    void getLatestTwoVideos();
 
 }
