@@ -285,8 +285,8 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             mSelectCountryText.setText(GolukUtils.getDefaultZone());
         }
         TextView text = (TextView) findViewById(R.id.user_login_phoneRegist);
-        text.setText(this.getString(R.string.user_login_phone));
-
+        text.setText(this.getString(R.string.user_login_phone) + this.getString(R.string.user_login_forgetpwd));
+        text.setOnClickListener(this);
         // 登录按钮
         mBtnLogin.setOnClickListener(this);
         mLoginByFacebookTV.setOnClickListener(this);
@@ -552,7 +552,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             }
             itRegist.putExtra("isPhoneSelected", mIsPhoneSelected);
             startActivity(itRegist);
-        } else if (view.getId() == R.id.user_login_forgetpwd) {
+        } else if (view.getId() == R.id.user_login_phoneRegist) {
             mApplication.mLoginManage.setUserLoginInterface(null);
             UserUtils.hideSoftMethod(this);
             Intent itForget = new Intent(InternationUserLoginActivity.this, InternationalResetPwdActivity.class);
