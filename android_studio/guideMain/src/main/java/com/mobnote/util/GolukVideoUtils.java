@@ -27,7 +27,7 @@ public class GolukVideoUtils {
                     currType = 1;
                 } else if (fileName.startsWith("URG")) {
                     currType = 2;
-                } else if (fileName.startsWith("WND")) {
+                } else if (fileName.startsWith("WND") || fileName.startsWith("SHARE")) {
                     currType = 4;
                 }
             }

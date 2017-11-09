@@ -13,6 +13,13 @@ import java.util.List;
  * File工具类
  */
 public class FileUtil {
+    /* SD卡路径 */
+    public static final String EXTERNAL_SD_PATH = Environment.getExternalStorageDirectory().getPath();
+    /* 精彩视频路径 */
+    public static final String WONDERFUL_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/wonderful/";
+    /* 紧急视频路径 */
+    public static final String URGENT_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/urgent/";
+
     /* 精彩视频 */
     public static final int VIDEO_TYPE_WONDERFUL = 1;
     /* 紧急视频 */
@@ -26,12 +33,12 @@ public class FileUtil {
     public static List<String> getNewVideoByType(int type) {
         String path = "";
         if (type == VIDEO_TYPE_WONDERFUL) {
-            path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/wonderful/";
+            path = WONDERFUL_VIDEO_PATH;
         } else if (type == VIDEO_TYPE_URGENT) {
-            path = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/urgent/";
+            path = URGENT_VIDEO_PATH;
         }
 
-        List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?mp4)");
+        List<String> list = FileInfoManagerUtils.getFileNames(path, "(.+?(mp|MP)4)");
         Collections.sort(list, new SortByDate());
         List<String> result = new ArrayList<String>();
         if (list.size() > 0)
@@ -72,6 +79,13 @@ public class FileUtil {
      */
     public static String getVideoUrlByPath(String videoPath) {
         return Const.HTTP_SCHEMA + Const.IP + videoPath;
+    }
+
+    /**
+     * 根据视频名获取精彩视频绝对路径
+     */
+    public static String getWonderfulVideoPathByName(String videoName) {
+        return WONDERFUL_VIDEO_PATH + videoName;
     }
 
 }

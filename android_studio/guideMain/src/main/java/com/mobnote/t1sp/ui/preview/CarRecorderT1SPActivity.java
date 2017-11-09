@@ -27,9 +27,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.liulishuo.filedownloader.BaseDownloadTask;
-import com.liulishuo.filedownloader.FileDownloadListener;
-import com.liulishuo.filedownloader.FileDownloader;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventHotSpotSuccess;
@@ -372,10 +369,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         start();
 
-        //getPresenter().getVideoSettingInfo();
-
         // 设置抓拍回调
         T1SPUdpService.setCaptureListener(this);
+        // 获取设备信息
+        getPresenter().getVideoSettingInfo();
         // 获取本地最近2个视频(精彩视频和紧急视频综合)
         getPresenter().getLatestTwoVideos();
     }
@@ -448,8 +445,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 开始下载
         path = FileUtil.getVideoUrlByPath(path);
         path = path.replace("\\", "/");
-        FileDownloader.setup(this);
-        String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Wonderful.MP4";
+        final String videoName = path.substring(path.lastIndexOf("/"));
+        final String filePath = FileUtil.getWonderfulVideoPathByName(videoName);
 
         OkDownloadRequest request = new OkDownloadRequest.Builder()
                 .url(path)
@@ -519,6 +516,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                     break;
                 case 2:
                     downloadSize.setVisibility(View.GONE);
+                    // 刷新最近2个视频
+                    getPresenter().getLatestTwoVideos();
                     break;
             }
         }
@@ -581,7 +580,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         int type;
         if (videoName.indexOf("URG") >= 0) {
             type = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (videoName.indexOf("WND") >= 0) {
+        } else if (videoName.indexOf("SHARE") >= 0) {
             type = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
         } else {
             type = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
@@ -763,8 +762,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 // 隐藏
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
-
-                getPresenter().getVideoSettingInfo();
             }
         });
     }
