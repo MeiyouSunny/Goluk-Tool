@@ -10,8 +10,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -448,57 +450,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         path = path.replace("\\", "/");
         FileDownloader.setup(this);
         String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "Wonderful.MP4";
-        FileDownloader.getImpl().create(path).setPath(filePath).setListener(new FileDownloadListener() {
-            @Override
-            protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            }
-
-            @Override
-            protected void started(BaseDownloadTask task) {
-                // 开始下载
-                downloadSize.setVisibility(View.VISIBLE);
-                image2.setImageResource(R.drawable.share_video_no_pic);
-            }
-
-            @Override
-            protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-                int percent = (int) ((double) soFarBytes / (double) totalBytes * 100);
-                System.out.print("");
-                downloadSize.setProcess(percent);
-            }
-
-            @Override
-            protected void blockComplete(BaseDownloadTask task) {
-            }
-
-            @Override
-            protected void completed(BaseDownloadTask task) {
-                System.out.print("");
-                downloadSize.setVisibility(View.GONE);
-            }
-
-            @Override
-            protected void paused(BaseDownloadTask task, int soFarBytes, int totalBytes) {
-            }
-
-            @Override
-            protected void error(BaseDownloadTask task, Throwable e) {
-                System.out.print("");
-            }
-
-            @Override
-            protected void warn(BaseDownloadTask task) {
-                System.out.print("");
-            }
-        }).start();
-
 
         OkDownloadRequest request = new OkDownloadRequest.Builder()
-                .url(url)
+                .url(path)
                 .filePath(filePath)
                 .build();
-
-        OkDownloadManager.getInstance(mContext).enqueue(request, listener);
 
         OkDownloadEnqueueListener listener = new OkDownloadEnqueueListener() {
 
@@ -506,14 +462,16 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             public void onStart(int id) {
                 Log.e("OkDownload", "onStart : the download request id = "+id);
                 // 开始下载
-                downloadSize.setVisibility(View.VISIBLE);
-                image2.setImageResource(R.drawable.share_video_no_pic);
+                mUiHandler.sendEmptyMessage(0);
             }
 
             @Override
             public void onProgress(int progress, long cacheSize, long totalSize) {
                 Log.e("OkDownload", cacheSize + "/" + totalSize);
-                downloadSize.setProcess(progress);
+                Message msg = Message.obtain();
+                msg.what = 1;
+                msg.obj = progress;
+                mUiHandler.sendMessage(msg);
             }
 
             @Override
@@ -534,7 +492,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             @Override
             public void onFinish() {
                 Log.e("OkDownload", "onFinish");
-                downloadSize.setVisibility(View.GONE);
+                mUiHandler.sendEmptyMessage(2);
             }
 
             @Override
@@ -542,7 +500,29 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 Log.e("OkDownload", error.getMessage());
             }
         };
+
+        OkDownloadManager.getInstance(this).enqueue(request, listener);
     }
+
+    private Handler mUiHandler = new Handler(Looper.getMainLooper()) {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 0:
+                    downloadSize.setVisibility(View.VISIBLE);
+                    image2.setImageResource(R.drawable.share_video_no_pic);
+                    new2.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    int progress = (int) msg.obj;
+                    downloadSize.setProcess(progress);
+                    break;
+                case 2:
+                    downloadSize.setVisibility(View.GONE);
+                    break;
+            }
+        }
+    };
 
     @Override
     public void onLockVideo(String path, boolean isLock) {

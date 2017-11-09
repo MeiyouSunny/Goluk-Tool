@@ -267,22 +267,13 @@
                 android:layout_height="64dp"
                 android:layout_marginLeft="5dp">
 
-                <com.mobnote.golukmain.videosuqare.RingView
-                    android:id="@+id/downloadSize"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="5dp"
-                    android:visibility="gone"/>
-
                 <ImageView
                     android:id="@+id/image2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_alignParentStart="true"
+                    android:src="@drawable/share_video_no_pic"
                     android:layout_alignParentTop="true"
-                    android:src="@drawable/share_video_no_pic"/>
+                    android:layout_alignParentStart="true"/>
 
                 <ImageView
                     android:id="@+id/new2"
@@ -290,6 +281,15 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:src="@drawable/video_new_icon"
+                    android:visibility="gone"/>
+
+                <com.mobnote.golukmain.videosuqare.RingView
+                    android:id="@+id/downloadSize"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
                     android:visibility="gone"/>
 
             </RelativeLayout>
