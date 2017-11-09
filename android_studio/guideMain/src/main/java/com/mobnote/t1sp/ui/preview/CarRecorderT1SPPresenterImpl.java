@@ -21,7 +21,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
                 getView().onGetVideoSettingInfo(settingInfo);
-                getLatestCaptureVideos();
+                //getLatestCaptureVideos();
             }
 
             @Override
