@@ -133,12 +133,12 @@
             android:background="@drawable/progress_bg"
             android:clickable="false"
             android:longClickable="false"
+            android:paddingEnd="0dp"
             android:max="100"
-            android:paddingLeft="-3dp"
-            android:paddingRight="-10dp"
             android:progress="0"
             android:progressDrawable="@drawable/video_detail_seekbar_style"
-            android:thumb="@null" />
+            android:paddingStart="0dp"
+            android:thumb="@null"/>
 
         <!-- loading -->
 
