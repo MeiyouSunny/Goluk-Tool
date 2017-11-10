@@ -668,7 +668,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					bean.mSeq = item.seq;
 					bean.mCommentId = item.commentId;
 					bean.mCommentTime = item.time;
-					bean.mCommentTxt = item.text;
+					bean.mCommentTxt = String.valueOf(item.text);
 					if (item.reply != null) {
 						bean.mReplyId = item.reply.id;
 						bean.mReplyName = item.reply.name;
