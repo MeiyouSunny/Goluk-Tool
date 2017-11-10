@@ -47,6 +47,9 @@ public class UserCenterHeader implements OnClickListener {
 
 	public void setHeaderData(HomeData data) {
 		this.mData = data;
+		if(data!=null && data.user!=null) {
+			GolukApplication.getInstance().setMyinfo(data.user.nickname, data.user.index, data.user.introduction, data.user.customavatar);
+		}
 	}
 
 	public View createHeader() {
@@ -85,7 +88,7 @@ public class UserCenterHeader implements OnClickListener {
 			} else {
 				UserUtils.focusHead(mContext, user.avatar, mImageHead);
 			}
-			
+
 			mTextName.setText(user.nickname);
 			mTextAttention.setText(mContext.getString(R.string.str_usercenter_header_attention_text) + " "
 					+ GolukUtils.getFormatNumber(user.following));
