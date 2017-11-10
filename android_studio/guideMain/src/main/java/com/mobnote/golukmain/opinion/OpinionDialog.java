@@ -73,7 +73,7 @@ public class OpinionDialog extends Dialog implements android.view.View.OnClickLi
 	}
 	
 	public interface OpinionDialogFn {
-
+		int TYPE_UNKNOWN = -1;
 		public static final int TYPE_FIRST = 1;
 		public static final int TYPE_SECOND = 2;
 		public static final int TYPE_THIRD = 3;

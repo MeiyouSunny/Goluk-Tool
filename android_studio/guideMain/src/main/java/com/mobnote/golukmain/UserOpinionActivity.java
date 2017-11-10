@@ -79,14 +79,16 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 	/** 选择意见反馈类型的Dialog **/
 	private OpinionDialog mOpinionDialog = null;
 
-	private String selectType = "5";
+	private String selectType = TYPE_UNKNOWN + "";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_opinion_layout);
-
+		if(mApp.isMainland()){
+			selectType = TYPE_UNKNOWN + "";
+		}
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
@@ -168,11 +170,15 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		userOpinion = mEditSuggest.getText().toString();
 		userContact = mEditConnection.getText().toString();
 		UserUtils.hideSoftMethod(this);
-		if(mApp.isMainland()) {
+		if(!mApp.isMainland()) {
 			if (TextUtils.isEmpty(userContact) || !UserUtils.emailValidation(userContact)) {
 				showToast(R.string.email_invalid);
 				return;
 			}
+		}
+		if((TYPE_UNKNOWN+"").equals(selectType)){
+			showToast(getString(R.string.user_opinion_type_select));
+			return;
 		}
 		if(userOpinion.trim().equals("") && (userOpinion.replaceAll(" ", "")).equals("")) {
 			UserUtils.showDialog(mContext, this.getResources().getString(R.string.opinion_content_null));
