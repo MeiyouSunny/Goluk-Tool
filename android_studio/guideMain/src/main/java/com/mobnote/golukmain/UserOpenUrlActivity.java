@@ -484,8 +484,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface arg0, int arg1) {
-								Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(phoneNumber));
-								startActivity(intent);
+								try {
+									Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(phoneNumber));
+									startActivity(intent);
+								}catch (Exception ex){}
 							}
 						}).setNegativeButton(this.getResources().getString(R.string.dialog_str_cancel), null).create()
 				.show();

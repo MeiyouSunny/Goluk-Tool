@@ -59,8 +59,6 @@
     <uses-permission android:name="android.permission.WRITE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <!-- 通话相关权限 -->
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     <!-- 解决三星手机因为权限问题死机问题 -->
     <uses-permission android:name="android.permission.INTERACT_ACROSS_USERS_FULL" />
 
