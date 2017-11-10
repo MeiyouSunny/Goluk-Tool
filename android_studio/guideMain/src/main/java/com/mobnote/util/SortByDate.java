@@ -1,11 +1,12 @@
 package com.mobnote.util;
 
-import java.util.Comparator;
+import android.text.TextUtils;
 
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
+import com.mobnote.t1sp.util.FileUtil;
 
-import android.text.TextUtils;
+import java.util.Comparator;
 
 public class SortByDate implements Comparator<String> {
 	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
@@ -34,17 +35,35 @@ public class SortByDate implements Comparator<String> {
 		return (date2.compareTo(date1));
 	}
 
-	private String getDateFromName(String s) {
-		String[] videos = s.split("_");
+	private String getDateFromName(String fileName) {
 		String date = "";
-		if (videos.length == 3) {
-			date = videos[1];
+		if (fileName.contains("_")) {
+			// 传统视频文件,如 WND3_171101112822_0030.mp4
+			String[] videos = fileName.split("_");
+			if (videos.length == 3) {
+				date = videos[1];
+				date = "20" + date;
+			} else if (videos.length == 7) {
+				date = videos[2];
+			} else if (videos.length == 8) {
+				date = videos[1];
+			}
+		} else if (fileName.contains("-")) {
+			// T1SP视频文件, 如 SHARE171109-173846F.MP4
+			int startIndex = 0;
+			if (fileName.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
+				startIndex = FileUtil.WONDERFUL_VIDEO_PREFIX.length();
+			} else if (fileName.contains(FileUtil.URGENT_VIDEO_PREFIX)) {
+				startIndex = FileUtil.URGENT_VIDEO_PREFIX.length();
+			} else if (fileName.contains(FileUtil.LOOP_VIDEO_PREFIX)) {
+				startIndex = FileUtil.LOOP_VIDEO_PREFIX.length();
+			}
+			date = fileName.substring(startIndex, fileName.indexOf("F."));
 			date = "20" + date;
-		} else if (videos.length == 7) {
-			date = videos[2];
-		} else if (videos.length == 8) {
-			date = videos[1];
+			date = date.replace("-", "");
 		}
-		return  date;
+
+		return date;
 	}
+
 }

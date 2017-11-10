@@ -22,6 +22,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.veuisdk.SdkEntry;
@@ -273,9 +274,9 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     public int getVideoType(String name) {
-        if (name.contains("WND")) {
+        if (name.contains("WND") || name.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
             return 1;
-        } else if (name.contains("URG")) {
+        } else if (name.contains("URG") || name.contains(FileUtil.URGENT_VIDEO_PREFIX)) {
             return 2;
         } else {
             return 3;
