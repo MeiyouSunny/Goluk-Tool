@@ -426,11 +426,19 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         mLatestTwoVideos = videos;
         image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
-        new1.setVisibility(View.VISIBLE);
+        new1.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
         if (videos.size() >= 2) {
             image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(1)));
-            new2.setVisibility(View.VISIBLE);
+            new2.setVisibility(isNewByName(videos.get(1)) ? View.VISIBLE : View.GONE);
         }
+    }
+
+    /**
+     * 根据视频路径判断视频文件是否为new
+     */
+    private boolean isNewByName(String videoPath) {
+        videoPath = videoPath.substring(videoPath.lastIndexOf("/") + 1);
+        return SettingUtils.getInstance().getBoolean("Local_" + videoPath, true);
     }
 
     @Override
@@ -457,7 +465,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
             @Override
             public void onStart(int id) {
-                Log.e("OkDownload", "onStart : the download request id = "+id);
+                Log.e("OkDownload", "onStart : the download request id = " + id);
                 // 开始下载
                 mUiHandler.sendEmptyMessage(0);
             }
@@ -577,13 +585,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * 跳转到播放本地视频页面
      */
     private void gotoPlayVideo(String videoName) {
-        int type;
-        if (videoName.indexOf("URG") >= 0) {
+        int type = 0;
+        if (videoName.indexOf(FileUtil.URGENT_VIDEO_PREFIX) >= 0) {
             type = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (videoName.indexOf("SHARE") >= 0) {
+        } else if (videoName.indexOf(FileUtil.WONDERFUL_VIDEO_PREFIX) >= 0) {
             type = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-        } else {
-            type = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
         }
         SettingUtils.getInstance().putBoolean("Local_" + videoName, false);
         VideoInfo mVideoInfo = GolukVideoUtils.getVideoInfo(videoName);

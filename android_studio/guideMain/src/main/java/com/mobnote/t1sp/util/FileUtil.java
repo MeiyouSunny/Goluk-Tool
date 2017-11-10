@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * File工具类
+ * File工具类: T1SP
  */
 public class FileUtil {
     /* SD卡路径 */
@@ -19,6 +19,13 @@ public class FileUtil {
     public static final String WONDERFUL_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/wonderful/";
     /* 紧急视频路径 */
     public static final String URGENT_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/urgent/";
+
+    /* 精彩视频文件前缀 */
+    public static final String WONDERFUL_VIDEO_PREFIX = "SHARE";
+    /* 紧急视频文件前缀 */
+    public static final String URGENT_VIDEO_PREFIX = "EMER";
+    /* 循环视频文件前缀 */
+    public static final String LOOP_VIDEO_PREFIX = "FILE";
 
     /* 精彩视频 */
     public static final int VIDEO_TYPE_WONDERFUL = 1;
