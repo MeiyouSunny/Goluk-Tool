@@ -2003,7 +2003,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (head != null && !"".equals(head)) {
                     myInfo.head = head;
                 }
-                myInfo.desc = desc;
+                if(!TextUtils.isEmpty(desc)) {
+                    myInfo.desc = desc;
+                }
                 if (url != null) {
                     myInfo.customavatar = url;
                 }
