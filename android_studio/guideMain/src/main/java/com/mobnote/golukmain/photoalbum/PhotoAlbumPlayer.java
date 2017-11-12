@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +13,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -55,7 +53,6 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -74,6 +71,7 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
@@ -838,7 +836,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @date 2015年6月5日
      */
     private void getPlayAddr() {
+        // T1SP
+        if (mPath.contains(Const.HTTP_SCHEMA + Const.IP)) {
+            mVideoUrl = mPath;
+            return;
+        }
 
+        // Other
         String ip = SettingUtils.getInstance().getString("IPC_IP");
 
         if (TextUtils.isEmpty(mVideoFrom)) {
