@@ -466,9 +466,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     /**
      * ipc连接成功回调
      */
-    public void ipcSucessCallBack(Object param2) {
+    public boolean ipcSucessCallBack(Object param2) {
         if (!mIsCanAcceptIPC) {
-            return;
+            return true;
         }
         collectLog("ipcLinkedCallBack", "ipc Conn----sucess!!!: ");
         GolukDebugUtils.e("", "bindbind-------------ipcSucessCallBack  :");
@@ -489,7 +489,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             String str = (String) param2;
             if (TextUtils.isEmpty(str)) {
                 collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version Failed");
-                return;
+                return true;
             }
             try {
                 JSONObject json = new JSONObject(str);
@@ -502,6 +502,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                     mCurrentState = STATE_FAILED;
                     mBaseHandler.sendEmptyMessage(MSG_H_REGION);
                     collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version forbidden");
+                    return false;
                 } else {
                     mCurrentState = STATE_SUCCESS;
                     mNeverReceiveMessage = false;
@@ -515,6 +516,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mCurrentState = STATE_SUCCESS;
             doConnect();
         }
+        return true;
     }
 
     @Override
@@ -810,6 +812,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
+            mApp.disableWiFiAndLogOutDevice();
             finish();
         }else if(SHOW_TOAST  == msg.what){
             GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));

@@ -17,6 +17,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -117,6 +119,10 @@ import com.vk.sdk.VKSdk;
 import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1U_SIGN;
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1_SIGN;
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2U_SIGN;
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2_SIGN;
 import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
@@ -400,9 +406,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     private void initializeSDK() {
         SdkEntry.enableDebugLog(true);
         String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
-        if(isMainland()) {
+        if (isMainland()) {
             SdkEntry.initialize(this, videoPath, RD_APP_KEY, RD_APP_SECRET, new SdkHandler().getCallBack());
-        }else{
+        } else {
             SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
         }
     }
@@ -1305,7 +1311,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         isIpcConnSuccess = true;
         // 如果在wifi连接页面,通知连接成功
         if (mPageSource == "WiFiLinkList") {
-            ((WiFiLinkListActivity) mContext).ipcSucessCallBack(param2);
+            if (!((WiFiLinkListActivity) mContext).ipcSucessCallBack(param2)) {
+                return;
+            }
         }
         // 如果在wifi连接页面,通知连接成功
         if (mPageSource.equals("WiFiLinkBindAll")) {
@@ -1356,6 +1364,14 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     private void saveIpcProductName(IpcConnSuccessInfo ipcInfo) {
         if (null != ipcInfo && !TextUtils.isEmpty(ipcInfo.productname)) {
             mIPCControlManager.setProduceName(ipcInfo.productname);
+            //t1u and t2u hardware version can not be figured by productName. only by property version name
+            if(T1_SIGN.equals(ipcInfo.productname) || T2_SIGN.equals(ipcInfo.productname)){
+                if(!TextUtils.isEmpty( ipcInfo.version) ) {
+                    if(ipcInfo.version.startsWith(T1U_SIGN)|| ipcInfo.version.startsWith(T2U_SIGN)) {
+                        mIPCControlManager.setProduceName(ipcInfo.version.substring(0, 3));
+                    }
+                }
+            }
             // 保存设备型号
             SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
         }
@@ -2003,7 +2019,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (head != null && !"".equals(head)) {
                     myInfo.head = head;
                 }
-                if(!TextUtils.isEmpty(desc)) {
+                if (!TextUtils.isEmpty(desc)) {
                     myInfo.desc = desc;
                 }
                 if (url != null) {
@@ -2110,4 +2126,16 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     public boolean isDownloading() {
         return isDownloading;
     }
+
+
+    public void disableWiFiAndLogOutDevice() {
+        mIPCControlManager.setVdcpDisconnect();
+        setIpcLoginOut();
+        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo != null) {
+            wifiManager.disableNetwork(wifiInfo.getNetworkId());
+        }
+    }
+
 }

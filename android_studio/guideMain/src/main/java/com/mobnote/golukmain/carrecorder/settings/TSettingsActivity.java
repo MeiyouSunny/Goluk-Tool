@@ -360,11 +360,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if(IPCControlManager.T1U_SIGN.equals(mIPCName) || IPCControlManager.T2U_SIGN.equals(mIPCName)) {
 			GolukApplication.getInstance().getIPCControlManager().getT1SW();
 		}
-		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
-			mMSLayout.setVisibility(View.VISIBLE);
-		}else{
-			mMSLayout.setVisibility(View.GONE);
-		}
+//		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
+//			mMSLayout.setVisibility(View.VISIBLE);
+//		}else{
+//			mMSLayout.setVisibility(View.GONE);
+//		}
 		if(!mBaseApp.isMainland()){
 			GolukApplication.getInstance().getIPCControlManager().getTxLanguage();
 		}
@@ -516,7 +516,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		//国际版购买链接https://www.amazon.com/Spy-Tec-Dash-Camera-Vehicle/dp/B00MH4ZVHO/ref=sr_1_8?ie=UTF8&qid=1478595877
 		//国际版不显示语言设置
 		if (mBaseApp.isMainland()
-				|| !GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
+				|| GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
 				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T3U_SIGN)) {
 			mLanguageLayout.setVisibility(View.VISIBLE);
 		} else {
