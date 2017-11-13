@@ -1256,7 +1256,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     bean.mSeq = addBean.seq;
                     bean.result = addBean.result;
                     bean.mCommentTime = addBean.time;
-                    bean.mCommentTxt = addBean.text;
+                    bean.mCommentTxt = String.valueOf(addBean.text);
                     bean.mCommentId = addBean.commentid;
                     bean.mUserHead = addBean.authoravatar;
                     bean.mUserId = addBean.authorid;
