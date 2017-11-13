@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
     <string name="watch_live_text">Tocca leggermente e continua a guardare</string>
     <string name="video_live_5s_tip">Aspetta un momento, la visione dal vivo inizierà immediatamente</string>
-    <string name="set_ipc_item_hint_text">Sincronizza automaticamente gli ultimi cinque video meravigliosi quando connetti il telefono con Goluk</string>
+    <string name="set_ipc_item_hint_text">Sincronizza automaticamente gli ultimi video meravigliosi e d\'emergenza quando connetti il telefono con Goluk</string>
     <string name="my_install_title_text">Istruzioni d\'installazione</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Carica dopo la pubblicazione</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">In caricamento</string>

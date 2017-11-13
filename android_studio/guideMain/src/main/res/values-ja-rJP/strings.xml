@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Young Wanderers Club（トラベルタイポグラフィ）</string>
     <string name="watch_live_text">軽くタッチして視聴を続けます</string>
     <string name="video_live_5s_tip">少々お待ちください。ライブはすぐに開始します</string>
-    <string name="set_ipc_item_hint_text">お使いの携帯をGolukと接続すると、最新のハイライトビデオビデオ5個が同期されます</string>
+    <string name="set_ipc_item_hint_text">お使いの携帯をGolukと接続すると、最新のハイライトビデオと緊急ビデオ同期されます</string>
     <string name="my_install_title_text">インストールの手順</string>
     <string name="goluk_pull_to_refresh_footer_release_label">リリース後にアップロードします</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">読み込み中...</string>

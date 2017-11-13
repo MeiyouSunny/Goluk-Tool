@@ -776,7 +776,7 @@
     <string name="video_live_desc_text">젊은 방랑자 클럽 (여행 서체)</string>
     <string name="watch_live_text">가볍게 터치 한 후 계속 감상하세요</string>
     <string name="video_live_5s_tip">잠시만 기다리세요. 라이브가 즉시 시작합니다.</string>
-    <string name="set_ipc_item_hint_text">휴대전화기를 Goluk에 연결하는 즉시 자동으로 최신 5편의 원더풀 동영상 동기화</string>
+    <string name="set_ipc_item_hint_text">휴대전화기를 Goluk에 연결하는 즉시 자동으로 최신 원더풀 및 비상 동영상 동기화</string>
     <string name="my_install_title_text">설치 방법</string>
     <string name="goluk_pull_to_refresh_footer_release_label">출시 후 업로드</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">로딩 중...</string>
