@@ -57,6 +57,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
     private final String way = "192.168.1.103";
 
     private ImageView mImageView1, mImageView2;
+    private String newName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +177,8 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
             if (null != bean) {
                 WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+                bean.ipc_ssid =newName;
+                WifiBindDataCenter.getInstance().saveBindData(bean);
             }
             this.setResult(11);
             this.finish();
@@ -201,7 +204,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
     private String getSetIPCJson() {
         // 连接ipc热点wifi---调用ipc接口
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-        final String newName = mTvName.getText().toString() + mEditText2.getText().toString();
+        newName = mTvName.getText().toString() + mEditText2.getText().toString();
         String json = getIPCJson(mGolukSSID, mGolukPWD, newName, mApPWD);
         return json;
     }
