@@ -6,16 +6,21 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class GlideUtils {
 
 	public static void loadNetHead(Context context, ImageView view, String headUrl, int placeholder) {
-		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
 		try {
 			if (placeholder < 0) {
 				Glide.with(context).load(headUrl).transform(new GlideCircleTransform(context)).into(view);
 			} else {
-				Glide.with(context).load(headUrl).placeholder(placeholder).transform(new GlideCircleTransform(context))
+				Glide.with(context)
+						.load(headUrl)
+						.diskCacheStrategy(DiskCacheStrategy.NONE)
+						.skipMemoryCache(true)
+						.placeholder(placeholder)
+						.transform(new GlideCircleTransform(context))
 						.into(view);
 			}
 		} catch (Exception e) {
@@ -25,9 +30,12 @@ public class GlideUtils {
 	}
 
 	public static void loadLocalHead(Context context, ImageView view, int headId) {
-		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
 		try {
-			Glide.with(context).load(headId).transform(new GlideCircleTransform(context)).into(view);
+			Glide.with(context)
+					.load(headId)
+					.diskCacheStrategy(DiskCacheStrategy.NONE)
+					.skipMemoryCache(true)
+					.transform(new GlideCircleTransform(context)).into(view);
 		} catch (Exception e) {
 
 		}
