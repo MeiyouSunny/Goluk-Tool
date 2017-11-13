@@ -322,7 +322,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             return;
         }
         //G系列和T1s关闭时不需要发送notification
-        if(GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)
+        if (GolukUtils.isIPCTypeG(mBaseApp.mIPCControlManager.mProduceName)
                 || GolukUtils.isIPCTypeT1S(mBaseApp.mIPCControlManager.mProduceName)
                 || GolukUtils.isIPCTypeT3(mBaseApp.mIPCControlManager.mProduceName)) {
             return;
@@ -444,7 +444,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
 
                     if (!isMineLiveVideo) {
                         // 如果是直播观看者，则定时获取发布者的定位信息
-                        GetPositionRequest getPositionRequest = new GetPositionRequest(IPageNotifyFn.GET_LIVE_POSITION_INFO,LiveActivity.this);
+                        GetPositionRequest getPositionRequest = new GetPositionRequest(IPageNotifyFn.GET_LIVE_POSITION_INFO, LiveActivity.this);
                         getPositionRequest.request();
                     }
 
@@ -519,7 +519,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != sharePlatform) {
             sharePlatform.onActivityResult(requestCode, resultCode, data);
         }
-        if(isMineLiveVideo && !isUploadSuccess) {
+        if (isMineLiveVideo && !isUploadSuccess) {
             getLiveSign();
         }
     }
@@ -537,13 +537,13 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
      * 获取直播签名
      */
     private void getLiveSign() {
-        if(!isMineLiveVideo) {
+        if (!isMineLiveVideo) {
             return;
         }
-        if(mUserInfo == null) {
+        if (mUserInfo == null) {
             return;
         }
-        if(mSettingData == null) {
+        if (mSettingData == null) {
             return;
         }
         LiveSignRequest liveSignRequest = new LiveSignRequest(IPageNotifyFn.PageType_LiveSign, this);
@@ -1085,12 +1085,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (mLoadingDialog != null && mLoadingDialog.isShowing()) {
             mLoadingDialog.close();
         }
-        mBaseApp.setIpcDisconnect();
         mLoadingDialog = null;
-        WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        if (wifiInfo != null) {
-            wifiManager.disableNetwork(wifiInfo.getNetworkId());
+        if (isMineLiveVideo) {
+            mBaseApp.disableWiFiAndLogOutDevice();
         }
         super.onDestroy();
     }
@@ -1323,9 +1320,9 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
         if (null != mLiveManager) {
             mLiveManager.cancelTimer();
         }
-        if(mBaseApp.isIpcLoginSuccess && mBaseApp.mIPCControlManager.getSupportT3DualMode()) {
+        if (mBaseApp.isIpcLoginSuccess && mBaseApp.mIPCControlManager.getSupportT3DualMode()) {
             mBaseApp.mIPCControlManager.setT3WifiMode(0);
-        }else {
+        } else {
             mBaseApp.setIpcDisconnect();
             finish();
         }
@@ -1759,7 +1756,7 @@ public class LiveActivity extends BaseActivity implements View.OnClickListener,
             if (getPositionRetBean == null || getPositionRetBean.info == null || getPositionRetBean.info.size() < 1) {
                 return;
             }
-            GetPositionInfoBean getPositionInfoBean =  getPositionRetBean.info.get(0);
+            GetPositionInfoBean getPositionInfoBean = getPositionRetBean.info.get(0);
             if (getPositionInfoBean == null || TextUtils.isEmpty(getPositionInfoBean.lat)
                     || TextUtils.isEmpty(getPositionInfoBean.lon)) {
                 return;
