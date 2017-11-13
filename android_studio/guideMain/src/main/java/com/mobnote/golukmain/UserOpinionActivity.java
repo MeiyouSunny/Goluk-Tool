@@ -86,13 +86,12 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_opinion_layout);
-		if(mApp.isMainland()){
-			selectType = TYPE_UNKNOWN + "";
-		}
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-
+		if(mApp.isMainland()){
+			selectType = TYPE_UNKNOWN + "";
+		}
 		initView();
 		// 初始化字数限制
 		int count_suggest = mEditSuggest.getText().toString().length();
