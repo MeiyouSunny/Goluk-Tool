@@ -39,7 +39,6 @@ import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.videosuqare.RingView;
@@ -51,6 +50,7 @@ import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.listener.OnCaptureListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
+import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ThumbUtil;
@@ -72,7 +72,6 @@ import org.succlz123.okdownload.OkDownloadError;
 import org.succlz123.okdownload.OkDownloadManager;
 import org.succlz123.okdownload.OkDownloadRequest;
 
-import java.io.File;
 import java.util.List;
 import java.util.Timer;
 
@@ -415,7 +414,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onCaptureStart() {
         // 抓拍精彩视频开始
         mHandlerCapture.removeMessages(0);
-        mCaptureTime = mSettingInfo.captureTimeIs30S() ? CAPTURE_TIME_30 : CAPTURE_TIME_12;
+        mCaptureTime = mSettingInfo.captureTimeIs12S() ? CAPTURE_TIME_12 : CAPTURE_TIME_30;
         mHandlerCapture.sendEmptyMessage(0);
     }
 
@@ -425,11 +424,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             return;
 
         mLatestTwoVideos = videos;
-        image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
-        new1.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
+        image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
+        new2.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
         if (videos.size() >= 2) {
-            image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(1)));
-            new2.setVisibility(isNewByName(videos.get(1)) ? View.VISIBLE : View.GONE);
+            image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(1)));
+            new1.setVisibility(isNewByName(videos.get(1)) ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -517,6 +516,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                     downloadSize.setVisibility(View.VISIBLE);
                     image2.setImageResource(R.drawable.share_video_no_pic);
                     new2.setVisibility(View.GONE);
+
+                    if (mLatestTwoVideos != null && mLatestTwoVideos.size() > 1) {
+                        mLatestTwoVideos.remove(1);
+                        image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(mLatestTwoVideos.get(0)));
+                        new1.setVisibility(isNewByName(mLatestTwoVideos.get(0)) ? View.VISIBLE : View.GONE);
+                    }
                     break;
                 case 1:
                     int progress = (int) msg.obj;
@@ -971,16 +976,22 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.image1) {
-            if (mLatestTwoVideos.size() > 0) {
-                new1.setVisibility(View.GONE);
-                String videoName = mLatestTwoVideos.get(0);
+            new1.setVisibility(View.GONE);
+            String videoName = "";
+            if (mLatestTwoVideos.size() == 1) {
+                videoName = mLatestTwoVideos.get(0);
+            }
+            if (mLatestTwoVideos.size() > 1) {
+                videoName = mLatestTwoVideos.get(1);
+            }
+            if (!TextUtils.isEmpty(videoName)) {
                 videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image2) {
-            if (mLatestTwoVideos.size() > 1) {
+            if (mLatestTwoVideos.size() > 0) {
                 new2.setVisibility(View.GONE);
-                String videoName = mLatestTwoVideos.get(1);
+                String videoName = mLatestTwoVideos.get(0);
                 videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
                 gotoPlayVideo(videoName);
             }
@@ -988,7 +999,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             //相册页面访问统计
             ZhugeUtils.eventCallAlbum(this, this.getString(R.string.str_zhuge_call_album_source_ipc));
 
-            Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumActivity.class);
+            Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
         } else if (id == R.id.mRtmpPlayerView) {

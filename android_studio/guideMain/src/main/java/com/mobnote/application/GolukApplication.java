@@ -1234,7 +1234,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
     // 设置连接状态
-    private void setIpcLoginState(boolean isSucess) {
+    public void setIpcLoginState(boolean isSucess) {
         isIpcLoginSuccess = isSucess;
         isIpcConnSuccess = isSucess;
         if (isSucess) {

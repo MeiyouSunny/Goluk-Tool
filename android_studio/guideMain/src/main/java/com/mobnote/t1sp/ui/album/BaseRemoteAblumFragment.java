@@ -22,7 +22,6 @@ import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.photoalbum.CloudWonderfulVideoAdapter;
-import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.golukmain.photoalbum.LocalWonderfulVideoAdapter;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
@@ -31,7 +30,10 @@ import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.FileListCallback;
+import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -39,6 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
+ */
 public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn {
 
     private View mWonderfulVideoView;
@@ -64,7 +69,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     // 列表添加页脚标识
     private boolean addFooter = false;
 
-    private FragmentAlbum mFragmentAlbum;
+    private FragmentAlbumT1SP mFragmentAlbum;
 
     public boolean isShowPlayer = false;
 
@@ -107,9 +112,9 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         return mWonderfulVideoView;
     }
 
-    public FragmentAlbum getFragmentAlbum() {
+    public FragmentAlbumT1SP getFragmentAlbum() {
         if (mFragmentAlbum == null) {
-            mFragmentAlbum = (FragmentAlbum) getParentFragment();
+            mFragmentAlbum = (FragmentAlbumT1SP) getParentFragment();
         }
         return mFragmentAlbum;
     }
@@ -125,7 +130,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
                 .findViewById(R.id.mStickyListHeadersListView);
         mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(),
-                (FragmentAlbum) getParentFragment(), mStickyListHeadersListView, this);
+                (FragmentAlbumT1SP) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
         loadData(true);
     }
@@ -300,18 +305,12 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             return;
         }
 
-        isGetFileListDataing = true;
         if (null == empty || null == mStickyListHeadersListView) {
             return;
         }
 
         if (flag) {
-            if (null != mCustomProgressDialog && !mCustomProgressDialog.isShowing()) {
-                mCustomProgressDialog.show();
-            }
-            empty.setVisibility(View.GONE);
             mStickyListHeadersListView.setVisibility(View.VISIBLE);
-            isGetFileListDataing = true;
 
             // 获取文件列表
             ApiUtil.apiServiceAit().sendRequest(getRequestParam(), mFileCallback);
@@ -355,11 +354,18 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private static final int FILE_COUNT_ONE_TIME = 20;
     private FileListCallback mFileCallback = new FileListCallback() {
         @Override
-        public void onGetFileList(List<VideoInfo> files) {
-            System.out.print("");
-            mLastFileIndex += FILE_COUNT_ONE_TIME;
+        public void onStart() {
+            isGetFileListDataing = true;
+            if (mDataList.isEmpty())
+                showLoading();
+        }
 
-            updateData(files);
+        @Override
+        public void onGetFileList(List<VideoInfo> files) {
+            if (files != null && !files.isEmpty()) {
+                mLastFileIndex += files.size();
+                updateData(files);
+            }
         }
 
         @Override
@@ -369,16 +375,28 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         @Override
         public void onFinish() {
             isGetFileListDataing = false;
-            if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
-                mCustomProgressDialog.close();
-            }
+            closeLoading();
+            checkListState();
         }
 
         @Override
         protected void onServerError(int errorCode, String errorMessage) {
-            System.out.print("");
+            empty.setVisibility(View.VISIBLE);
+            mStickyListHeadersListView.setVisibility(View.GONE);
         }
     };
+
+    protected void showLoading() {
+        if (mCustomProgressDialog != null && !mCustomProgressDialog.isShowing()) {
+            mCustomProgressDialog.show();
+        }
+    }
+
+    protected void closeLoading() {
+        if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
+            mCustomProgressDialog.close();
+        }
+    }
 
     private void updateEditState(boolean isHasData) {
         getFragmentAlbum().setEditBtnState(isHasData);
@@ -396,10 +414,33 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         } else {
             isHasData = true;
         }
+
+        parseDataAndShow();
+    }
+
+    private void parseDataAndShow() {
+        mDoubleDataList.clear();
         mDoubleDataList.clear();
         mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
         mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
         mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+    }
+
+    private void checkListState() {
+        if (mDataList == null || mDataList.isEmpty()) {
+            empty.setVisibility(View.VISIBLE);
+            Drawable drawable = this.getResources().getDrawable(R.drawable.album_img_novideo);
+            empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
+            empty.setText(getActivity().getResources().getString(R.string.photoalbum_no_video_text));
+            mStickyListHeadersListView.setVisibility(View.GONE);
+            updateEditState(false);
+        } else {
+            empty.setVisibility(View.GONE);
+            mStickyListHeadersListView.setVisibility(View.VISIBLE);
+            if (!mFragmentAlbum.getEditState()) {
+                updateEditState(true);
+            }
+        }
     }
 
     /**
@@ -413,6 +454,73 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             isGetFileListDataing = false;
             mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
         }
+    }
+
+    /**
+     * 删除选中的远程文件
+     */
+    public void deleteListData(List<String> selectedList) {
+        // 列表已经删除完成
+        if (CollectionUtils.isEmpty(selectedList)) {
+            closeLoading();
+            GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_delete_ok));
+            // 恢复顶部按钮状态
+            getFragmentAlbum().resetTopBar();
+            return;
+        }
+
+        // 删除文件
+        // http://192.72.1.1/SD/Share/F/SHARE171113-151216F.MP4 --> /SD/Share/F/SHARE171113-151216F.MP4
+        String filelPath = selectedList.get(0);
+        if (filelPath.contains(Const.HTTP_SCHEMA_ADD_IP)) {
+            filelPath = filelPath.substring(Const.HTTP_SCHEMA_ADD_IP.length());
+        }
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.deleteFileParam(filelPath), mDeleteCallback);
+    }
+
+    private CommonCallback mDeleteCallback = new CommonCallback() {
+        @Override
+        public void onStart() {
+            showLoading();
+        }
+
+        @Override
+        protected void onSuccess() {
+            List<String> selectedList = getFragmentAlbum().getSelectedList();
+            deleteFromDataByVideoName(selectedList.get(0));
+            selectedList.remove(0);
+            // 更新显示
+            parseDataAndShow();
+            // 删除下一个
+            deleteListData(selectedList);
+        }
+
+        @Override
+        protected void onServerError(int errorCode, String errorMessage) {
+            closeLoading();
+        }
+
+        @Override
+        public void onFinish() {
+        }
+    };
+
+    /**
+     * 根据视频文件从列表中移除对应的数据
+     */
+    private void deleteFromDataByVideoName(String videoPath) {
+        if (TextUtils.isEmpty(videoPath))
+            return;
+        int size = mDataList.size();
+        VideoInfo tempInfo = null;
+        for (int i = 0; i < size; i++) {
+            tempInfo = mDataList.get(i);
+            if (tempInfo != null && tempInfo.videoPath.contains(videoPath)) {
+                mDataList.remove(i);
+                return;
+            }
+        }
+
     }
 
     /**

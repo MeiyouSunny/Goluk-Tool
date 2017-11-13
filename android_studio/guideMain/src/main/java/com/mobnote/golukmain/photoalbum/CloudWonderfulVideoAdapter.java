@@ -29,10 +29,11 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.t1sp.ui.album.AlbumCloudAdapterListener;
 import com.mobnote.util.GlideUtils;
 
 public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
-    private FragmentAlbum mFragment = null;
+    private AlbumCloudAdapterListener mAlbumFragmentListener = null;
     private Context mContext;
     private LayoutInflater inflater = null;
     private StickyListHeadersListView mListView = null;
@@ -48,8 +49,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
      * 滚动中锁标识
      */
 //	private boolean lock = false;
-    public CloudWonderfulVideoAdapter(Context c, FragmentAlbum fragment, StickyListHeadersListView listview, LocalWonderfulVideoAdapter.IListViewItemClickColumn itemClickColumnListener) {
-        this.mFragment = fragment;
+    public CloudWonderfulVideoAdapter(Context c, AlbumCloudAdapterListener albumFragmentListener, StickyListHeadersListView listview, LocalWonderfulVideoAdapter.IListViewItemClickColumn itemClickColumnListener) {
+        this.mAlbumFragmentListener = albumFragmentListener;
         this.mContext = c;
         this.mListView = listview;
         this.inflater = LayoutInflater.from(c);
@@ -221,8 +222,8 @@ public class CloudWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     private void updateEditState(DoubleVideoInfo mDoubleVideoInfo, RelativeLayout mTMLayout1, RelativeLayout mTMLayout2) {
         VideoInfo mVideoInfo1 = mDoubleVideoInfo.getVideoInfo1();
         VideoInfo mVideoInfo2 = mDoubleVideoInfo.getVideoInfo2();
-        List<String> selectedData = mFragment.getSelectedList();
-        if (mFragment.getEditState()) {
+        List<String> selectedData = mAlbumFragmentListener.getSelectedList();
+        if (mAlbumFragmentListener.getEditState()) {
             if (selectedData.contains(mVideoInfo1.videoPath)) {
                 mTMLayout1.setVisibility(View.VISIBLE);
             } else {

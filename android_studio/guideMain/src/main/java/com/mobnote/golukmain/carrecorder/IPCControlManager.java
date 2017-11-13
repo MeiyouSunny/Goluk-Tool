@@ -2,16 +2,6 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.text.TextUtils;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TimeZone;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -23,6 +13,15 @@ import com.mobnote.golukmain.reportlog.ReportLog;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -49,6 +48,7 @@ public class IPCControlManager implements IPCManagerFn {
     public static final String T2U_SIGN = "T2U";
     public static final String T3_SIGN = "T3";
     public static final String T3U_SIGN = "T3U";
+    public static final String T1SP_SIGN = "T1SP";
 
     public static final String MODEL_T = "T";
     public static final String MODEL_G = "G";
@@ -118,6 +118,13 @@ public class IPCControlManager implements IPCManagerFn {
         return T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName) ||
                 T1U_SIGN.equals(mProduceName) || T2U_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName) ||
                 T1s_SIGN.equals(mProduceName);
+    }
+
+    /**
+     * 是否是T1SP设备
+     */
+    public boolean isT1SP() {
+        return !TextUtils.isEmpty(mProduceName) && TextUtils.equals(mProduceName, T1SP_SIGN);
     }
 
     /**

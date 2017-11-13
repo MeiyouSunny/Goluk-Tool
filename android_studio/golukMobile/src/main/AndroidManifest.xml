@@ -49,6 +49,13 @@
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait" />
+        <activity
+            android:name="com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait">
+        </activity>
 
         <!-- 小白 End-->
 

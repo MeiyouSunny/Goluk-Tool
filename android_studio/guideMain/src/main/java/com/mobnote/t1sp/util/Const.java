@@ -7,5 +7,6 @@ public class Const {
 
     public static final String IP = "192.72.1.1";
     public static final String HTTP_SCHEMA = "http://";
+    public static final String HTTP_SCHEMA_ADD_IP = HTTP_SCHEMA + IP;
 
 }

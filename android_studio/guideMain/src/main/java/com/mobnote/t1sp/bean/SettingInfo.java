@@ -51,10 +51,10 @@ public class SettingInfo implements Parcelable {
     }
 
     /**
-     * 抓拍精彩视频时间是否为30秒
+     * 抓拍精彩视频时间是否为12秒
      */
-    public boolean captureTimeIs30S() {
-        return !TextUtils.isEmpty(captureTime) && captureTime.contains("30");
+    public boolean captureTimeIs12S() {
+        return !TextUtils.isEmpty(captureTime) && captureTime.contains("12");
     }
 
     protected SettingInfo(Parcel in) {
