@@ -48,7 +48,7 @@ public class UserCenterHeader implements OnClickListener {
 	public void setHeaderData(HomeData data) {
 		this.mData = data;
 		if(data!=null && data.user!=null) {
-			GolukApplication.getInstance().setMyinfo(data.user.nickname, data.user.index, data.user.introduction, data.user.customavatar);
+			GolukApplication.getInstance().setMyinfo(data.user.nickname, data.user.avatar, data.user.introduction, data.user.customavatar);
 		}
 	}
 
