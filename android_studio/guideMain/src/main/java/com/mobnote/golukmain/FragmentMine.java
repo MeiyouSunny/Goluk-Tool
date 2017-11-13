@@ -687,6 +687,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
             userSex = userInfo.sex;
             customavatar = userInfo.customavatar;
             userPhone = userInfo.phone;
+            GolukApplication.getInstance().mCurrentPhoneNum = userInfo.phone;
             if (customavatar != null && !"".equals(customavatar)) {
                 mImageHead.setImageURI(Uri.parse(customavatar));
                 if (null != getActivity()) {
