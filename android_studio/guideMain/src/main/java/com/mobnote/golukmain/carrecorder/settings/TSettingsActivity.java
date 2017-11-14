@@ -55,7 +55,9 @@ import com.mobnote.util.JsonUtil;
 
 import de.greenrobot.event.EventBus;
 
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1U_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1_SIGN;
+import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2U_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
 
 public class TSettingsActivity extends BaseActivity implements OnClickListener,IPCManagerFn,ForbidBack {
@@ -516,7 +518,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		//国际版购买链接https://www.amazon.com/Spy-Tec-Dash-Camera-Vehicle/dp/B00MH4ZVHO/ref=sr_1_8?ie=UTF8&qid=1478595877
 		//国际版不显示语言设置
 		if (mBaseApp.isMainland()
-				|| GolukApplication.getInstance().mIpcVersion.toLowerCase().startsWith("t1u")
+				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T1U_SIGN)
+				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T2U_SIGN)
 				|| GolukApplication.getInstance().mIpcVersion.toUpperCase().startsWith(T3U_SIGN)) {
 			mLanguageLayout.setVisibility(View.VISIBLE);
 		} else {

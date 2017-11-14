@@ -89,10 +89,8 @@ public class UserOpinionActivity extends BaseActivity implements OnClickListener
 		mContext = this;
 		// 获得GolukApplication对象
 		mApp = (GolukApplication) getApplication();
-		if(mApp.isMainland()){
-			selectType = TYPE_UNKNOWN + "";
-		}
 		initView();
+		showOpinionDialog(TYPE_FOUR);
 		// 初始化字数限制
 		int count_suggest = mEditSuggest.getText().toString().length();
 		mTextSuggestCount.setText(this.getResources().getString(R.string.str_bracket_left)
