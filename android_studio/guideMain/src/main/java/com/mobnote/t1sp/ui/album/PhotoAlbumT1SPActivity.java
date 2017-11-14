@@ -6,10 +6,15 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.service.HeartbeatTask;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -18,7 +23,9 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     private boolean mShowLocal;
     private boolean mSelectMode;
     private boolean mFromCloud;
-    private FragmentAlbumT1SP fa;
+    private FragmentAlbumT1SP mFragmentAlubm;
+
+    private HeartbeatTask mHeartbeatTask;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,17 +41,36 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         bundle.putBoolean(FragmentAlbum.PARENT_VIEW, mShowLocal);
         bundle.putBoolean(FragmentAlbum.SELECT_MODE, mSelectMode);
         bundle.putBoolean("from", mFromCloud);
-        fa = new FragmentAlbumT1SP();
-        fa.setArguments(bundle);
-        fragmentTransaction.add(R.id.photo_album_fragment, fa);
+        mFragmentAlubm = new FragmentAlbumT1SP();
+        mFragmentAlubm.setArguments(bundle);
+        fragmentTransaction.add(R.id.photo_album_fragment, mFragmentAlubm);
         fragmentTransaction.commitAllowingStateLoss();
+
+        enterPlaybackMode();
     }
 
+    private void enterPlaybackMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(true), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                // 开始加载数据
+                mFragmentAlubm.loadData();
+                // 发送心跳
+                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_PLAYBACK);
+                mHeartbeatTask.start();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                Log.e("mode", errorMessage);
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
-        if (fa != null && mShouldClose) {
-            fa.checkDowningExit();
+        if (mFragmentAlubm != null && mShouldClose) {
+            mFragmentAlubm.checkDowningExit();
         }else {
             super.onBackPressed();
         }
@@ -62,5 +88,8 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
                 wifiManager.disableNetwork(wifiInfo.getNetworkId());
             }
         }
+
+        if (mHeartbeatTask != null)
+            mHeartbeatTask.stop();
     }
 }

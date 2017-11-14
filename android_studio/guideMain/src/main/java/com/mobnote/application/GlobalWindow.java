@@ -1,17 +1,13 @@
 package com.mobnote.application;
 
-import com.mobnote.golukmain.R;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
-import android.media.audiofx.BassBoost;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +18,9 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.t1sp.ui.download.DownloaderT1spImpl;
 
 import java.lang.reflect.Method;
 
@@ -326,7 +325,10 @@ public class GlobalWindow implements View.OnClickListener {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
 						dimissDialog();
-						GolukApplication.getInstance().userStopDownLoadList();
+						if (GolukApplication.getInstance().getIPCControlManager().isT1SP())
+							DownloaderT1spImpl.getInstance().destory();
+						else
+							GolukApplication.getInstance().userStopDownLoadList();
 					}
 				});
 		mTwoButtonDialog.show();

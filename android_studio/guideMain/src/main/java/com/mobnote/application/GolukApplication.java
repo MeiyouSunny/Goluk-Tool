@@ -68,6 +68,7 @@ import com.mobnote.golukmain.wifimanage.WifiApAdmin;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.map.LngLat;
 import com.mobnote.t1sp.base.ui.BaseOnViewBindListener;
+import com.mobnote.t1sp.ui.download.DownloaderT1spImpl;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
 import com.mobnote.user.User;
@@ -393,6 +394,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             MVP.registerOnViewBindListener(new BaseOnViewBindListener());
             $.initialize(this);
             com.mobnote.t1sp.api.HttpManager.initHttp();
+            // Downloader
+            DownloaderT1spImpl.init(this);
         }
 
         // TODO 此处不要做初始化相关的工作

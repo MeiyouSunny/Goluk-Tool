@@ -246,29 +246,25 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     @Override
     public void onResume() {
         super.onResume();
-        GolukDebugUtils.e(TAG, "FragmentAlbum-----onResume------------:");
         GolukApplication.getInstance().setContext(getActivity(), "ipcfilemanager");
+    }
 
-        if (parentViewIsMainActivity && !getEditState()) {
-            if (GolukApplication.getInstance().isIpcLoginSuccess) {
-                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-                    if (!mWonderfulFragment.isShowPlayer) {
-                        mWonderfulFragment.loadData(true);
-                    }
-
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-                    if (!mUrgentFragment.isShowPlayer) {
-                        mUrgentFragment.loadData(true);
-                    }
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-                    if (!mLoopFragment.isShowPlayer) {
-                        mLoopFragment.loadData(true);
-                    }
-
-                }
+    public void loadData() {
+        if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            if (!mWonderfulFragment.isShowPlayer) {
+                mWonderfulFragment.loadData(true);
             }
-        }
 
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+            if (!mUrgentFragment.isShowPlayer) {
+                mUrgentFragment.loadData(true);
+            }
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+            if (!mLoopFragment.isShowPlayer) {
+                mLoopFragment.loadData(true);
+            }
+
+        }
     }
 
     /**
@@ -285,14 +281,17 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             //mLocalFragment.loadData(true);
             mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
         } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-            //mWonderfulFragment.loadData(true);
             mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
+            if (!mWonderfulFragment.hasLoadedFirst())
+                mWonderfulFragment.loadData(true);
         } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-            //mUrgentFragment.loadData(true);
             mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
+            if (!mUrgentFragment.hasLoadedFirst())
+                mUrgentFragment.loadData(true);
         } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-            //mLoopFragment.loadData(true);
             mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
+            if (!mLoopFragment.hasLoadedFirst())
+                mLoopFragment.loadData(true);
         }
     }
 
@@ -319,11 +318,11 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
                 //相册页面-批量下载到本地
                 ZhugeUtils.eventAlbumBatchDownload(getActivity(), mCurrentType);
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-                    //mWonderfulFragment.downloadVideoFlush(selectedListData);
+                    mWonderfulFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-                    //mUrgentFragment.downloadVideoFlush(selectedListData);
+                    mUrgentFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-                    //mLoopFragment.downloadVideoFlush(selectedListData);
+                    mLoopFragment.downloadVideoFlush(selectedListData);
                 }
 
             }

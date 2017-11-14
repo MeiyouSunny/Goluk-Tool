@@ -19,6 +19,8 @@ public class FileUtil {
     public static final String WONDERFUL_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/wonderful/";
     /* 紧急视频路径 */
     public static final String URGENT_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/urgent/";
+    /* 循环视频路径 */
+    public static final String LOOP_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/loop/";
 
     /* 精彩视频文件前缀 */
     public static final String WONDERFUL_VIDEO_PREFIX = "SHARE";

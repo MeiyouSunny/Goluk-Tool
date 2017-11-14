@@ -32,8 +32,11 @@ import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.FileListCallback;
+import com.mobnote.t1sp.ui.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.ui.download.Task;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -58,6 +61,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private StickyListHeadersListView mStickyListHeadersListView = null;
     private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
 
+    // 是否下载了一次数据(刚进入页面时)
+    private boolean isInitLoadData;
     // 保存列表一个显示项索引
     private int firstVisible;
     // 保存列表显示item个数
@@ -132,7 +137,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(),
                 (FragmentAlbumT1SP) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
-        loadData(true);
+        //loadData(true);
     }
 
     @Override
@@ -301,6 +306,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     }
 
     public void loadData(boolean flag) {
+        isInitLoadData = true;
         if (isGetFileListDataing) {
             return;
         }
@@ -454,6 +460,47 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             isGetFileListDataing = false;
             mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
         }
+    }
+
+    /**
+     * 下载选中的视频
+     */
+    public void downloadVideoFlush(List<String> selectedList) {
+        if (CollectionUtils.isEmpty(selectedList))
+            return;
+
+        List<Task> downloadTasks = new ArrayList<>();
+        Task task = null;
+        String savePath = "";
+        for (String videoPath : selectedList) {
+            savePath = videoPath.substring(videoPath.lastIndexOf("/") + 1);
+            savePath = getSavePath(savePath);
+            task = new Task(videoPath, savePath);
+            downloadTasks.add(task);
+        }
+
+        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks);
+    }
+
+    /**
+     * 根据视频名获取本地保存路径
+     *
+     * @param videoName 视频名
+     */
+    private String getSavePath(String videoName) {
+        switch ((getVideoType())) {
+            case PhotoAlbumConfig.PHOTO_BUM_IPC_WND:
+                return FileUtil.WONDERFUL_VIDEO_PATH + videoName;
+            case PhotoAlbumConfig.PHOTO_BUM_IPC_URG:
+                return FileUtil.URGENT_VIDEO_PATH + videoName;
+            case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
+                return FileUtil.LOOP_VIDEO_PATH + videoName;
+        }
+        return "";
+    }
+
+    public boolean hasLoadedFirst() {
+        return isInitLoadData;
     }
 
     /**
