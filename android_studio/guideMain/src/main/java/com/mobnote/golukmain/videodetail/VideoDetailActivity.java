@@ -1347,7 +1347,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             case IPageNotifyFn.PageType_Praise:
                 PraiseResultBean praiseResultBean = (PraiseResultBean) result;
                 if (praiseResultBean == null || !praiseResultBean.success) {
-                    GolukUtils.showToast(this, this.getString(R.string.user_net_unavailable));
+                    GolukUtils.showToast(this, this.getString(R.string.str_praise_failed));
                     return;
                 }
 
@@ -1368,7 +1368,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
             case IPageNotifyFn.PageType_PraiseCancel:
                 PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
                 if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
-                    GolukUtils.showToast(this, this.getString(R.string.user_net_unavailable));
+                    GolukUtils.showToast(this, this.getString(R.string.str_cancel_praise_failed));
                     return;
                 }
 

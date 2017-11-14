@@ -469,7 +469,11 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                     FollowedRecomUserBean userBean = (FollowedRecomUserBean) mFollowedList.get(i);
                     userBean.link = bean.data.link;
                     mAdapter.notifyDataSetChanged();
-
+                    if(userBean.link == 0){
+                        Toast.makeText(getActivity(),getString(R.string.str_usercenter_attention_cancle_ok), Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(getActivity(),getString(R.string.str_usercenter_attention_ok), Toast.LENGTH_SHORT).show();
+                    }
                     //关注页推荐——关注统计
                     ZhugeUtils.eventFollowed(getActivity(), getActivity().getString(R.string.str_zhuge_followed_from_followed_recommed));
                 }
