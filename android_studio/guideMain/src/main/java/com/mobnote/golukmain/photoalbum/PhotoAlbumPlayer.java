@@ -567,11 +567,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
     }
 
+    /**
+     * use RD player , supported JELLY_BEAN_MR2
+     * @return
+     */
     private boolean videoEditSupport() {
         // judge android os
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-            return false;
-        }
+//        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.JELLY_BEAN_MR2) {
+//            return false;
+//        }
 
         // forbid some manufacturers, now htc
 //        if(android.os.Build.MANUFACTURER.toLowerCase().contains("htc")) {
