@@ -523,6 +523,10 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     private void startShare(){
+        if(!GolukUtils.isNetworkConnected(VideoShareActivity.this)) {
+            showToast(VideoShareActivity.this.getString(R.string.network_error));
+            return;
+        }
         if (GolukApplication.getInstance().isIpcLoginSuccess) {
             showToast(getString(R.string.please_change_network_from_car_recorder_to_others));
             return;
