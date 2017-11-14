@@ -9,6 +9,8 @@ import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class PhotoAlbumActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -21,12 +23,16 @@ public class PhotoAlbumActivity extends BaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.photo_album_activity);
         mShouldClose = getIntent().getBooleanExtra(CLOSE_WHEN_EXIT, false);
         mShowLocal = getIntent().getBooleanExtra(FragmentAlbum.PARENT_VIEW, false);
         mSelectMode = getIntent().getBooleanExtra(FragmentAlbum.SELECT_MODE, false);
+        if(mSelectMode){
+            requestWindowFeature(Window.FEATURE_NO_TITLE);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         mFromCloud = getIntent().getBooleanExtra("from", false);
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.photo_album_activity);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         Bundle bundle = new Bundle();
