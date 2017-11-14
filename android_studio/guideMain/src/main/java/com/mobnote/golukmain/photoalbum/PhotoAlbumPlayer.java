@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -334,6 +335,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         threshold = DensityUtil.dip2px(this, 18);
         mOrignManager = new OrientationManager(this, this);
+        if (android.provider.Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 0) {
+            mOrignManager.clearListener();
+        }
     }
 
     public void onEventMainThread(EventShareCompleted event) {
@@ -1782,7 +1786,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         VideoConfig config = new VideoConfig();
         config.enableHWEncoder(CoreUtils.hasJELLY_BEAN_MR2());
         config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
-        config.setVideoSize(mVideoView.getVideoWidth(),mVideoView.getVideoHeight());
+        config.setVideoSize(mVideoView.getVideoWidth(), mVideoView.getVideoHeight());
         String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
         String nickName;
         if (GolukApplication.getInstance().isUserLoginSucess) {
@@ -1855,7 +1859,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         @Override
         public void onExportEnd(int result) {
-            if(mDialog!=null && mDialog.isShowing()) {
+            if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
             if (result >= VirtualVideo.RESULT_SUCCESS) {
