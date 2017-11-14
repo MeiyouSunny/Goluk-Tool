@@ -110,13 +110,16 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
     }
 
     @Override
-    public void cancelAllDownloadTask() {
-
+    public void cancelAllDownloadTask(boolean showCancelMsg) {
+        if (showCancelMsg) {
+            GlobalWindow.getInstance().reset();
+            GlobalWindow.getInstance().toFailed(getString(R.string.str_video_transfer_cancle));
+        }
+        destory();
     }
 
     @Override
     public void destory() {
-        cancelAllDownloadTask();
         isRunning = false;
         if (mListTotal != null)
             mListTotal.clear();
@@ -209,6 +212,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
     private Handler mUihandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
+            if (!isRunning)
+                return;
             switch (msg.what) {
                 case MSG_TYPE_START:
                     newTaskStart();

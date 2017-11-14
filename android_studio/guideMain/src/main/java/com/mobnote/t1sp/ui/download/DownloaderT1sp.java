@@ -9,7 +9,7 @@ public interface DownloaderT1sp {
 
     void addDownloadTasks(List<Task> tasks);
 
-    void cancelAllDownloadTask();
+    void cancelAllDownloadTask(boolean showCancelMsg);
 
     void destory();
 

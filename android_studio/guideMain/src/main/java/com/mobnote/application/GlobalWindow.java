@@ -326,7 +326,7 @@ public class GlobalWindow implements View.OnClickListener {
 					public void onClick(DialogInterface dialoginterface, int i) {
 						dimissDialog();
 						if (GolukApplication.getInstance().getIPCControlManager().isT1SP())
-							DownloaderT1spImpl.getInstance().destory();
+							DownloaderT1spImpl.getInstance().cancelAllDownloadTask(true);
 						else
 							GolukApplication.getInstance().userStopDownLoadList();
 					}
