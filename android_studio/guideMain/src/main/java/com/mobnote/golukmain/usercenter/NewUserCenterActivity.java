@@ -85,6 +85,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	private String mLastIndex = "";
 	/** 是否是第一次请求数据 **/
 	private boolean mIsFirst = false;
+	private boolean activityHidden;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,8 +113,15 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 	@Override
 	protected void onResume() {
 		super.onResume();
+		activityHidden = false;
 		httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
 		ZhugeUtils.eventUserCenter(this);
+	}
+
+	@Override
+	protected void onPause(){
+		super.onPause();
+		activityHidden = true;
 	}
 
 	private void initView() {
@@ -491,7 +499,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	@Override
 	public void forbidBackKey(int backKey) {
-		if (1 == backKey) {
+		if (1 == backKey && !activityHidden ) {
 			exit();
 		}
 	}
