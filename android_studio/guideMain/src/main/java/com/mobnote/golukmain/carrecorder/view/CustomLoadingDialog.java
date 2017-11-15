@@ -61,7 +61,7 @@ public class CustomLoadingDialog {
 						GolukDebugUtils.e("", "------------------customDialog-------------back");
 						setData(1);
 					}
-					return false;
+					return true;
 				}
 			});
 			this.mDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {

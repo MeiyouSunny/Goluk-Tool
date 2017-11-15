@@ -90,7 +90,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setProduceName(String name) {
-        if(G1S_SIGN.equals(name)) {
+        if (G1S_SIGN.equals(name)) {
             mProduceName = G2_SIGN;
             return;
         }
@@ -98,7 +98,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setIpcMode() {
-        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
+        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_IPCDirect);
         } else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_T1);
@@ -313,20 +313,20 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean setIPCSystemTime(long time) {
         String zone = "";
         String json = "";
-        int hourOffset =0 ,minOffset = 0;
-        if (isT1Relative() || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
+        int hourOffset = 0, minOffset = 0;
+        if (isT1Relative() || T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)) {
             TimeZone tz = TimeZone.getDefault();
             zone = tz.getID();
             Calendar cal = GregorianCalendar.getInstance(tz);
-            int seconds = tz.getOffset(cal.getTimeInMillis())/1000;
-            hourOffset = seconds/60 / 60;
-            minOffset  = Math.abs(seconds/60 % 60);
+            int seconds = tz.getOffset(cal.getTimeInMillis()) / 1000;
+            hourOffset = seconds / 60 / 60;
+            minOffset = Math.abs(seconds / 60 % 60);
         } else {
             zone = "";
         }
-        if(T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)){
-            json = JsonUtil.getTimeAndZoneJson(time, zone,hourOffset,minOffset);
-        }else {
+        if (T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)) {
+            json = JsonUtil.getTimeAndZoneJson(time, zone, hourOffset, minOffset);
+        } else {
             json = JsonUtil.getTimeJson(time, zone);
         }
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTime, json);
@@ -700,8 +700,8 @@ public class IPCControlManager implements IPCManagerFn {
     /**
      * wifi直连的之后，需要调用这个函数，设备就不会发出“下载app的语音提示”了
      */
-    public boolean setBindStatus(){
-        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,IPC_VDCPCmd_SetBindStatus,"");
+    public boolean setBindStatus() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetBindStatus, "");
     }
 
     /**
@@ -915,6 +915,7 @@ public class IPCControlManager implements IPCManagerFn {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_SetMotionSW, s);
     }
+
     public boolean getT1SW() {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_GetMotionSW, "");
@@ -1000,12 +1001,12 @@ public class IPCControlManager implements IPCManagerFn {
                 IPCManagerFn.IPC_VDCPCmd_GetVideoResolution, "");
     }
 
-    public boolean getAntiFlicker(){
+    public boolean getAntiFlicker() {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_GetDeflickerMode, "");
     }
 
-    public boolean setAntiFlicker(String value){
+    public boolean setAntiFlicker(String value) {
         String s = "{\"mode\":" + value + "}";
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_SetDeflickerMode, s);
@@ -1205,10 +1206,18 @@ public class IPCControlManager implements IPCManagerFn {
 
     }
 
+
     public boolean isSupportMoveDection() {
-        if(!GolukApplication.getInstance().isMainland() &&
-           ( T1U_SIGN.equals(mProduceName) || T2U_SIGN.equals(mProduceName))){
+        if (!GolukApplication.getInstance().isMainland()) {
             return true;
+        }
+        //t1u and t2u hardware version can not be figured by productName. only by property version name
+        if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
+            if (!TextUtils.isEmpty(mApplication.mIpcVersion)) {
+                if (mApplication.mIpcVersion.startsWith(T1U_SIGN) || mApplication.mIpcVersion.startsWith(T2U_SIGN)) {
+                    return true;
+                }
+            }
         }
         //t3u从 1.2版本开始支持移动探测
         if (T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0) {
@@ -1230,12 +1239,12 @@ public class IPCControlManager implements IPCManagerFn {
         }
     }
 
-    public boolean isSupportVideoLogo(){
-        if((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >=0)
+    public boolean isSupportVideoLogo() {
+        if ((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
                 ||
-                (T3U_SIGN.equals(mProduceName))){
+                (T3U_SIGN.equals(mProduceName))) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -1253,8 +1262,8 @@ public class IPCControlManager implements IPCManagerFn {
         return version;
     }
 
-    public boolean getT3WifiMode(){
-        if(T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)){
+    public boolean getT3WifiMode() {
+        if (T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)) {
             return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                     IPCManagerFn.IPC_VDCPCmd_GetWirelessMode, "");
         }
@@ -1263,32 +1272,32 @@ public class IPCControlManager implements IPCManagerFn {
 
 
     /**
-     * @param mode  0 //0:单Ap模式，1：单Station模式，2：Ap+Station混合模式
+     * @param mode 0 //0:单Ap模式，1：单Station模式，2：Ap+Station混合模式
      */
-    public boolean setT3WifiMode(int mode){
+    public boolean setT3WifiMode(int mode) {
         String s = "{\"mode\":" + mode + "}";
         return mApplication.mGoluk.GolukLogicCommRequest(
-                                                        GolukModule.Goluk_Module_IPCManager,
-                                                        IPCManagerFn.IPC_VDCPCmd_SetWirelessMode,
-                                                        s);
+                GolukModule.Goluk_Module_IPCManager,
+                IPCManagerFn.IPC_VDCPCmd_SetWirelessMode,
+                s);
     }
 
-    public boolean getSupportT3DualMode(){
-        if((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
+    public boolean getSupportT3DualMode() {
+        if ((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
                 ||
-                (T3U_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)){
+                (T3U_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean getSupportT3Logo(){
-        if((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
+    public boolean getSupportT3Logo() {
+        if ((T3_SIGN.equals(mProduceName) && getVersionCode().compareTo("1.3") >= 0)
                 ||
-                T3U_SIGN.equals(mProduceName)){
+                T3U_SIGN.equals(mProduceName)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }

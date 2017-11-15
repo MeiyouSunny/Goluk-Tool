@@ -148,7 +148,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
         mContext = this;
         // 获得GolukApplication对象
         mApplication = (GolukApplication) getApplication();
-		mIsPhoneEmpty = true;
+        mIsPhoneEmpty = true;
         mIsEmailEmpty = true;
         mIsPwdEmpty = true;
         mIsPhoneSelected = true;
@@ -429,7 +429,9 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                 if (Phonenum.equals("")) {
                     isOnClick = false;
                 }
-
+                if (!mIsPhoneSelected) {
+                    return;
+                }
                 if (!Phonenum.equals("") && UserUtils.isNumber(Phonenum) && !"".equals(psw.trim())) {
                     mBtnLogin.setTextColor(Color.parseColor("#FFFFFF"));
                     mBtnLogin.setEnabled(true);
@@ -469,6 +471,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             @Override
             public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
                 String number = mEditTextPhoneNumber.getText().toString().replace("-", "");
+                String email = mEmailEt.getText().toString().replace("-", "");
                 String psw = mEditTextPwd.getText().toString();
                 if (isOnClick) {
                     if (!"".equals(psw.trim()) && !"".equals(number)) {
@@ -479,7 +482,10 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
                         mBtnLogin.setEnabled(false);
                     }
                 }
-                if (!psw.equals("") && !"".equals(number) && UserUtils.isNumber(number) && psw.trim().length() >= 6) {
+                if ((!psw.equals("") && psw.trim().length() >= 6) &&
+                        (mIsPhoneSelected && !"".equals(number) && UserUtils.isNumber(number))
+                        ||
+                        (!mIsPhoneSelected && !TextUtils.isEmpty(email))) {
                     mBtnLogin.setTextColor(Color.parseColor("#FFFFFF"));
                     mBtnLogin.setEnabled(true);
                     mEditTextPwd.setTextColor(getResources().getColor(R.color.login_next_btn_fial));
@@ -511,7 +517,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             this.finish();
         } else if (view.getId() == R.id.user_login_layout_btn) {
             loginManage();
-        } else if(view.getId() == R.id.tab_email) {
+        } else if (view.getId() == R.id.tab_email) {
             if (!mIsPhoneSelected) {
                 return;
             }
@@ -524,7 +530,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             mEmailEt.setVisibility(View.VISIBLE);
             resetRegisterBtnState();
 
-        } else if(view.getId() == R.id.tab_phone) {
+        } else if (view.getId() == R.id.tab_phone) {
             if (mIsPhoneSelected) {
                 return;
             }
@@ -536,7 +542,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             mPhoneLL.setVisibility(View.VISIBLE);
             mEmailEt.setVisibility(View.GONE);
             resetRegisterBtnState();
-        }else if (view.getId() == R.id.insert_user_btn) {
+        } else if (view.getId() == R.id.insert_user_btn) {
             mApplication.mLoginManage.setUserLoginInterface(null);
             UserUtils.hideSoftMethod(this);
             Intent itRegist = new Intent(InternationUserLoginActivity.this, InternationUserRegistActivity.class);
@@ -592,7 +598,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
      */
     public void loginManage() {
 
-        if(mIsPhoneSelected) {
+        if (mIsPhoneSelected) {
             loginByPhone();
         } else {
             loginByEmail();

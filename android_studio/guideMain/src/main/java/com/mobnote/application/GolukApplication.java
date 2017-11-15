@@ -1364,14 +1364,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     private void saveIpcProductName(IpcConnSuccessInfo ipcInfo) {
         if (null != ipcInfo && !TextUtils.isEmpty(ipcInfo.productname)) {
             mIPCControlManager.setProduceName(ipcInfo.productname);
-            //t1u and t2u hardware version can not be figured by productName. only by property version name
-            if(T1_SIGN.equals(ipcInfo.productname) || T2_SIGN.equals(ipcInfo.productname)){
-                if(!TextUtils.isEmpty( ipcInfo.version) ) {
-                    if(ipcInfo.version.startsWith(T1U_SIGN)|| ipcInfo.version.startsWith(T2U_SIGN)) {
-                        mIPCControlManager.setProduceName(ipcInfo.version.substring(0, 3));
-                    }
-                }
-            }
             // 保存设备型号
             SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
         }

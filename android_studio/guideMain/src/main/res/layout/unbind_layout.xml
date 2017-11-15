@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#EDEDED"
-    android:orientation="vertical" >
+    android:orientation="vertical">
 
     <!-- 摄像头管理title -->
 
@@ -13,17 +13,17 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/rl_unbind_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/goluk_icon"
@@ -58,8 +58,8 @@
                     android:id="@+id/goluk_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_below="@id/goluk_mobile"
+                    android:layout_centerHorizontal="true"
                     android:layout_marginTop="4dp"
                     android:textColor="#4d4d4d"
                     android:textSize="12sp" />
@@ -87,7 +87,7 @@
                 android:id="@+id/unbind_layout_camera"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4" >
+                android:background="#f4f4f4">
 
                 <TextView
                     android:id="@+id/unbind_camera_text"
@@ -130,7 +130,7 @@
                 android:id="@+id/unbind_layout_password"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4" >
+                android:background="#f4f4f4">
 
                 <TextView
                     android:id="@+id/unbind_password_text"
@@ -146,7 +146,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" >
+                    android:layout_centerVertical="true">
 
                     <TextView
                         android:id="@+id/unbind_password_name"
@@ -195,8 +195,8 @@
             <RelativeLayout
                 android:id="@+id/unbind_layout_update"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="#f4f4f4" >
+                android:layout_height="wrap_content"
+                android:background="#f4f4f4">
 
                 <TextView
                     android:id="@+id/unbind_update_text"
@@ -212,7 +212,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" >
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/sizeSmall"
+                    android:layout_toRightOf="@id/unbind_update_text"
+                    android:gravity="right">
 
                     <TextView
                         android:id="@+id/unbind_update_name"
@@ -244,15 +247,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_marginTop="10dp"
-                android:background="@drawable/solid" />
+                android:background="@drawable/solid"
+                android:visibility="gone" />
             <!-- 解除绑定 -->
 
             <LinearLayout
                 android:id="@+id/unbind_linearlayout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:visibility="gone"
-                android:background="#f4f4f4" >
+                android:background="#f4f4f4"
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/unbind_layout_btn"
@@ -267,7 +271,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="1dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/solid" />
+                android:background="@drawable/solid"
+                android:visibility="gone" />
         </LinearLayout>
     </ScrollView>
 

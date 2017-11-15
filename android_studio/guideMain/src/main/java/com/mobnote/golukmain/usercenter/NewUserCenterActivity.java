@@ -499,8 +499,10 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
 	@Override
 	public void forbidBackKey(int backKey) {
-		if (1 == backKey && !activityHidden ) {
-			exit();
+		if (1 == backKey ) {
+			if(mLoadinDialog.isShowing()){
+				mLoadinDialog.close();
+			}
 		}
 	}
 
