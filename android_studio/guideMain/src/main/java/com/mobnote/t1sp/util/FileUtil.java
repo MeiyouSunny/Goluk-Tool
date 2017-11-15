@@ -1,11 +1,14 @@
 package com.mobnote.t1sp.util;
 
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.text.TextUtils;
 
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.SortByDate;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -170,6 +173,32 @@ public class FileUtil {
                     fs.close();
                 }
             } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 保存Bitmap到本地文件
+     *
+     * @param bitmap   Bitmap
+     * @param savePath 保存路径
+     * @param percent 压缩百分比
+     */
+    public static void saveBitmap(Bitmap bitmap, File savePath, int percent) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, percent, baos);
+        byte[] byteArray = baos.toByteArray();
+        try {
+            FileOutputStream fos = new FileOutputStream(savePath);
+            BufferedOutputStream bos = new BufferedOutputStream(fos);
+            bos.write(byteArray);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                baos.close();
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }

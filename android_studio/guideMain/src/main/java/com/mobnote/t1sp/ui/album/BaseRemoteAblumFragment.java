@@ -141,10 +141,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 (FragmentAlbumT1SP) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
         //loadData(true);
-        if (getVideoType() != PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-            mThumbDownloader = new ThumbDownloader(getActivity());
-            mThumbDownloader.setListener(this);
-        }
+
+        mThumbDownloader = new ThumbDownloader(getActivity(), isWonderfulVideoType());
+        mThumbDownloader.setListener(this);
+    }
+
+    private boolean isWonderfulVideoType() {
+        return getVideoType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
     }
 
     @Override
@@ -439,8 +442,12 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
         List<String> thumbUrls = new ArrayList<>(fileList.size());
         for (VideoInfo videoInfo : fileList) {
-            if (videoInfo.videoPath.contains("/SD/")) {
-                thumbUrls.add(videoInfo.videoPath.replace("/SD/", "/thumb/"));
+            if (isWonderfulVideoType()) {
+                thumbUrls.add(videoInfo.videoPath);
+            } else {
+                if (videoInfo.videoPath.contains("/SD/")) {
+                    thumbUrls.add(videoInfo.videoPath.replace("/SD/", "/thumb/"));
+                }
             }
         }
 

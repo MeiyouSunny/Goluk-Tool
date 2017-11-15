@@ -255,12 +255,10 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
      * @date 2015年6月8日
      */
     private void loadImage(String videoPath, ImageView image) {
-        if (mVideoType != PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-            if (TextUtils.isEmpty(videoPath))
-                return;
-            final String thumbPath = FileUtil.getThumbCacheByVideoName(FileUtil.getFileNameFromPath(videoPath));
-            GlideUtils.loadRemoteT1SPImage(mContext, image, thumbPath, R.drawable.album_default_img);
-        }
+        if (TextUtils.isEmpty(videoPath))
+            return;
+        final String thumbPath = FileUtil.getThumbCacheByVideoName(FileUtil.getFileNameFromPath(videoPath));
+        GlideUtils.loadRemoteT1SPImage(mContext, image, thumbPath, R.drawable.album_default_img);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.mobnote.t1sp.ui.download;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -8,11 +9,10 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.FileUtil;
+import com.mobnote.t1sp.util.ThumbUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -28,9 +28,11 @@ public class ThumbDownloader implements Runnable {
     private List<String> mUrls;
     private boolean isRunning;
     private ThumbDownloadListener mListener;
+    private boolean mIsWonderfulVideo;
 
-    public ThumbDownloader(Context context) {
+    public ThumbDownloader(Context context, boolean isWonderfulVideo) {
         mContext = context;
+        mIsWonderfulVideo = isWonderfulVideo;
         mUrls = new ArrayList<>();
     }
 
@@ -49,7 +51,8 @@ public class ThumbDownloader implements Runnable {
 
     @Override
     public void run() {
-        for (String url : mUrls) {
+        for (int i = 0; i < mUrls.size(); i++) {
+            String url = mUrls.get(i);
             if (!isRunning)
                 return;
             try {
@@ -57,19 +60,10 @@ public class ThumbDownloader implements Runnable {
                 if (thumbCacheFile.exists())
                     continue;
 
-                File result = Glide.with(mContext)
-                        .load(url)
-                        .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
-                        .get(10, TimeUnit.SECONDS);
-
-                if (result != null) {
-                    FileUtil.copyFile(result, getThumbCacheFileByUrl(url));
-                    if (mListener != null) {
-                        Message msg = Message.obtain(mUihandler, 0, url);
-                        msg.sendToTarget();
-                    }
-                    Log.e("Thumb", "Success");
-                }
+                if (mIsWonderfulVideo)
+                    getThumbFromVideo(url, thumbCacheFile);
+                else
+                    getThumbFromThumbFile(url, thumbCacheFile);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -80,6 +74,45 @@ public class ThumbDownloader implements Runnable {
 
         isRunning = false;
         mUrls.clear();
+    }
+
+    /**
+     * 从视频文件获取第一帧下载到本地作为缩略图
+     *
+     * @param url            视频地址
+     * @param thumbCacheFile 保存的缩略图文件
+     */
+    private void getThumbFromVideo(String url, File thumbCacheFile) {
+        Bitmap bitmapThumb = ThumbUtil.getNetVideoThumb(url);
+        if (bitmapThumb != null) {
+            // 保存到本地缓存目录
+            FileUtil.saveBitmap(bitmapThumb, thumbCacheFile, 10);
+            if (mListener != null) {
+                Message msg = Message.obtain(mUihandler, 0, url);
+                msg.sendToTarget();
+            }
+        }
+    }
+
+    /**
+     * 直接下载缩略图文件到本地
+     *
+     * @param url            视频地址
+     * @param thumbCacheFile 保存的缩略图文件
+     */
+    private void getThumbFromThumbFile(String url, File thumbCacheFile) throws Exception {
+        File result = Glide.with(mContext)
+                .load(url)
+                .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+                .get(10, TimeUnit.SECONDS);
+
+        if (result != null) {
+            FileUtil.copyFile(result, thumbCacheFile);
+            if (mListener != null) {
+                Message msg = Message.obtain(mUihandler, 0, url);
+                msg.sendToTarget();
+            }
+        }
     }
 
     private File getThumbCacheFileByUrl(String thumbUrl) {
@@ -106,21 +139,6 @@ public class ThumbDownloader implements Runnable {
         public void handleMessage(Message msg) {
             if (mListener != null)
                 mListener.onThumbDownload((String) msg.obj);
-        }
-    };
-
-    private RequestListener mGlideListener = new RequestListener<String, GlideDrawable>() {
-        @Override
-        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-            return false;
-        }
-
-        @Override
-        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-            //imageView.setImageDrawable(resource);
-            Message msg = Message.obtain(mUihandler, 0, model);
-            msg.sendToTarget();
-            return false;
         }
     };
 
