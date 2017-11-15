@@ -7,8 +7,8 @@
     <string name="music_soundtrack">配乐</string>
     <string name="musicVoice">配乐</string>
     <string name="videoVoice">原音</string>
-    <string name="video_voice_p">原音 开</string>
-    <string name="video_voice_n">原音 关</string>
+    <string name="video_voice_p">原音开</string>
+    <string name="video_voice_n">原音关</string>
     <string name="music_none">无配乐</string>
     <string name="music_no_song">无配乐</string>
     <string name="sp_music_chaowan">潮玩</string>
@@ -63,4 +63,20 @@
     <string name="quit_edit">确定要放弃编辑吗？</string>
     <string name="priview_title">预览</string>
     <string name="preview">预览</string>
+    <string name="video_duration_too_short_to_trim">视频小于1秒，无法截取</string>
+    <string name="video_duration_too_short_to_split">视频小于0.5秒，无法分割</string>
+    <string name="split_duration_too_low">分割视频的时间太短</string>
+    <string name="sp_filter_4">空白</string>
+    <string name="release_hand_for_del">松开手删除</string>
+    <string name="quit_partedit">您确定要放弃片段编辑吗？</string>
+    <string name="please_open_wifi">Please turn on the Internet connection</string>
+    <string name="please_check_network">Please turn on the Internet connection</string>
+    <string name="last_split_cannt_del">至少保留一段视频</string>
+    <string name="dragged_into_trash">拖进垃圾桶删除</string>
+    <string name="dragged_info_trash_del">拖进垃圾桶删除</string>
+    <string name="drag_for_split">拖动选择分割位置</string>
+    <string name="canceling">取消中…</string>
+    <string name="cancel_export_video">正在导出，是否取消？</string>
+    <string name="cancel_export">正在导出，是否取消？</string>
+    <string name="video_speed_duration_too_short_to_change">视频时长过短，无法截取视频</string>
 </resources>

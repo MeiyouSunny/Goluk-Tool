@@ -22,6 +22,7 @@ public class AutoView extends LinearLayout {
     private View mAutoView;
     private TextView mTextView;
     private String mText;
+    private int mAutoViewMargin = -1;
 
 
     public AutoView(Context context, AttributeSet attrs) {
@@ -43,12 +44,20 @@ public class AutoView extends LinearLayout {
 
     }
 
+    public TextView getTextView() {
+        return mTextView;
+    }
+
+    public void setAutoViewMargin(int margin) {
+        mAutoViewMargin = margin;
+    }
 
     public void setUpOrDown(boolean mOnUp, int offXpx, int strId, boolean isLeft,
                             double pCenterX) {
         this.mOnUp = mOnUp;
         this.mIsLeft = isLeft;
         mPcenterX = pCenterX;
+
 
         if (offXpx == -1) {
             mAutoView.setVisibility(View.GONE);
@@ -88,7 +97,11 @@ public class AutoView extends LinearLayout {
             this.addView(mTextView);
 
             if (mIsLeft) {
-                lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+                if (mAutoViewMargin != -1) {
+                    lp.setMargins(mAutoViewMargin, 0, 0, lp.height);
+                } else {
+                    lp.setMargins(mOffXPx, 0, mOffXPx + lp.width, lp.height);
+                }
             } else {
                 int right = mTextView.getWidth() - mOffXPx;
                 lp.setMargins(right - SRCWIDTH, 0, right, lp.height);
@@ -100,6 +113,7 @@ public class AutoView extends LinearLayout {
         }
 
     }
+
 
     /**
      * 重新刷新位置

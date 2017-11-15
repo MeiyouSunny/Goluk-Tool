@@ -9,10 +9,9 @@ import android.text.TextUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.vecore.models.SubtitleObject;
 import com.rd.veuisdk.TempVideoParams;
-import com.rd.veuisdk.model.FilterInfo2;
 import com.rd.veuisdk.model.SpecialInfo;
 import com.rd.veuisdk.model.StyleInfo;
-import com.rd.veuisdk.model.StyleT;
+import com.rd.veuisdk.model.FrameInfo;
 import com.rd.veuisdk.model.TimeArray;
 import com.rd.veuisdk.model.WordInfo;
 import com.rd.veuisdk.net.SpecialUtils;
@@ -96,7 +95,7 @@ public class SpecialExportUtils {
                 StyleInfo fi = SpecialUtils.getInstance().getStyleInfo(
                         mWordInfo.getStyleId());
 
-                FilterInfo2 mfi = fi.getFilterInfo2();
+//                CaptionFilterInfo mfi = fi.getCaptionFilter();
 
                 String bgpath = null;
 
@@ -232,12 +231,12 @@ public class SpecialExportUtils {
             RectF rect = new RectF((float) mWordInfo.getLeft(), (float) mWordInfo.getTop(), (float) (mWordInfo.getLeft() + mWordInfo.getWidthx()), (float) (mWordInfo.getTop() + mWordInfo.getHeighty()));
 //            Log.e("sputils22222", mLayoutWidth + "*" + mLayoutHeight + Arrays.toString(mWordInfo.getCenterxy()) + ".." + mWordInfo.getWidth() + "*" + mWordInfo.getHeight() + ",,,," + mWordInfo.getLeft() + "..." + mWordInfo.getTop() + "...." + mWordInfo.getWidthx() + "....." + mWordInfo.getHeighty() + "...." + rect.toShortString() + ",,,,," + nOutVideoWidth + "*" + nOutVideoHeight);
 
-            FilterInfo2 mfi = fi.getFilterInfo2();
+//            CaptionFilterInfo mfi = fi.getCaptionFilter();
 
-            StyleT st = null;
+            FrameInfo st = null;
 
-            mItemTime = fi.frameArry.valueAt(1).time // 每帧持续时间
-                    - fi.frameArry.valueAt(0).time;
+            mItemTime = fi.frameArray.valueAt(1).time // 每帧持续时间
+                    - fi.frameArray.valueAt(0).time;
             int mdu = (int) (mWordInfo.getEnd() - mWordInfo.getStart());
             int timeArraySize = fi.timeArrays.size();
 
@@ -250,11 +249,11 @@ public class SpecialExportUtils {
 
                 int tCount = headArray.getDuration() / mItemTime;
                 for (int m = 0; m < tCount; m++) {
-                    st = fi.frameArry.valueAt(m);
+                    st = fi.frameArray.valueAt(m);
                     if (null == st) {
                         continue;
                     }
-                    mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx, mcentery);
+                    mSprMain = getSingle(mWordInfo, fi, st, mcenterx, mcentery);
 
                     String path = PathUtils.getTempFileNameForSdcard(
                             PathUtils.TEMP_WORD + mPosition + "j_" + m + "_"
@@ -292,12 +291,12 @@ public class SpecialExportUtils {
                                 / mTimeDuration);
                         int len = mTimeDuration / mItemTime;
                         int max = len + tCount;
-                        for (int j = tCount; j < max && j < fi.frameArry.size(); j++) {
-                            st = fi.frameArry.valueAt(j);
+                        for (int j = tCount; j < max && j < fi.frameArray.size(); j++) {
+                            st = fi.frameArray.valueAt(j);
                             if (null == st) {
                                 continue;
                             }
-                            mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx, mcentery);
+                            mSprMain = getSingle(mWordInfo, fi, st, mcenterx, mcentery);
 
                             String path = PathUtils.getTempFileNameForSdcard(
                                     PathUtils.TEMP_WORD + mPosition + "j_" + j
@@ -342,11 +341,11 @@ public class SpecialExportUtils {
                                     .getDuration());
 
                             for (int j = startIndex; j < endIndex; j++) {
-                                st = fi.frameArry.valueAt(j);
+                                st = fi.frameArray.valueAt(j);
                                 if (null == st) {
                                     continue;
                                 }
-                                mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx,
+                                mSprMain = getSingle(mWordInfo,  fi, st, mcenterx,
                                         mcentery);
 
                                 String path = PathUtils
@@ -392,11 +391,11 @@ public class SpecialExportUtils {
                             int max = len + tCount;
 
                             for (int j = tCount; j < max; j++) {
-                                st = fi.frameArry.valueAt(j);
+                                st = fi.frameArray.valueAt(j);
                                 if (null == st) {
                                     continue;
                                 }
-                                mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx,
+                                mSprMain = getSingle(mWordInfo,   fi, st, mcenterx,
                                         mcentery);
 
                                 String path = PathUtils
@@ -442,15 +441,15 @@ public class SpecialExportUtils {
                             int startIndex = lastArray.getBegin() / mItemTime, endIndex = (int) ((mWordInfo
                                     .getEnd() - mstart) / mItemTime);
 
-                            int len = fi.frameArry.size();
+                            int len = fi.frameArray.size();
                             for (int j = startIndex; j < endIndex; j++) {
                                 if (j < len) {
-                                    st = fi.frameArry.valueAt(j);
+                                    st = fi.frameArray.valueAt(j);
                                     if (null == st) {
                                         continue;
                                     }
 
-                                    mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx,
+                                    mSprMain = getSingle(mWordInfo,  fi, st, mcenterx,
                                             mcentery);
 
                                     String path = PathUtils
@@ -493,13 +492,13 @@ public class SpecialExportUtils {
 
             } else {
                 int tLineCount = (int) Math.ceil((mdu + 0.0) / fi.du);
-                int len = fi.frameArry.size();
+                int len = fi.frameArray.size();
                 for (int j = 0; j < len; j++) {
-                    st = fi.frameArry.valueAt(j);
+                    st = fi.frameArray.valueAt(j);
                     if (null == st) {
                         continue;
                     }
-                    mSprMain = getSingle(mWordInfo, mfi, fi, st, mcenterx, mcentery);
+                    mSprMain = getSingle(mWordInfo,  fi, st, mcenterx, mcentery);
 
                     String path = PathUtils.getTempFileNameForSdcard(
                             PathUtils.TEMP_WORD + mPosition + "j_" + j, "png");
@@ -542,11 +541,10 @@ public class SpecialExportUtils {
         }
     }
 
-    private SinglePointRotate getSingle(WordInfo mWordInfo, FilterInfo2 mfi,
-                                        StyleInfo fi, StyleT st, int mcenterx, int mcentery) {
+    private SinglePointRotate getSingle(WordInfo mWordInfo, StyleInfo fi, FrameInfo st, int mcenterx, int mcentery) {
         return new SinglePointRotate(mContext, mWordInfo.getRotateAngle(),
-                TextUtils.isEmpty(mWordInfo.getText()) ? mfi.getHint() : mWordInfo.getText(),
-                mWordInfo.getTextColor() == Color.WHITE ? mfi.getTextDefaultColor() : mWordInfo
+                TextUtils.isEmpty(mWordInfo.getText()) ? fi.getHint() : mWordInfo.getText(),
+                mWordInfo.getTextColor() == Color.WHITE ? fi.getTextDefaultColor() : mWordInfo
                         .getTextColor(), mWordInfo.getTtfLocalPath(), mWordInfo.getDisf(),
                 new Point(mLayoutWidth, mLayoutHeight), new Point(mcenterx,
                 mcentery), mWordInfo.getTextSize(), mWordInfo.getShadowColor(), fi,

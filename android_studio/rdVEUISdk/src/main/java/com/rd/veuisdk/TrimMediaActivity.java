@@ -688,11 +688,11 @@ public class TrimMediaActivity extends BaseActivity {
                         R.string.isloading);
                 mPdLoading.show();
             }
-            mPflVideoPreview.post(new Runnable() {
-                public void run() {
-                    mMediaPlayer.seekTo(Math.max(mOb.nEnd, 0.3f));
-                }
-            });
+//            mPflVideoPreview.post(new Runnable() {
+//                public void run() {
+//                    mMediaPlayer.seekTo(Math.max(mOb.nEnd, 0.3f));
+//                }
+//            });
 
 
             VideoConfig srcConfig = new VideoConfig();

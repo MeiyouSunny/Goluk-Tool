@@ -501,7 +501,7 @@ public class MusicFragmentEx extends BaseFragment {
                     }
                     if (null != mMusicListener) {
                         Music ao = VirtualVideo.createMusic(info.getLocalPath());
-                        ao.setMixFactor(mMusicFactor);
+                        ao.setMixFactor(100-mMusicFactor);
                         onMusicChecked(ao, true);
                     }
                     lastItemId = nItemId;
@@ -655,38 +655,39 @@ public class MusicFragmentEx extends BaseFragment {
                 } else {
                     File cacheDir = mContext.getCacheDir();
                     File f = new File(cacheDir, MD5.getMD5("music_data.json"));
-                    boolean bNeedLoadLocal = true;//加载网络数据失败就加载本地离线
-                    if (!bLoadWebDataSuccessed
-                            && CoreUtils.checkNetworkInfo(mContext) != CoreUtils.UNCONNECTED) {
-                        String str = RdHttpClient.PostJson(mMusicUrl,
-                                new NameValuePair("type", "android"));
-                        if (!TextUtils.isEmpty(str)) {// 加载网络数据
-                            onParseJson(str);
-                            try {
-                                String data = URLEncoder.encode(str, "UTF-8");
-                                FileUtils.writeText2File(data,
-                                        f.getAbsolutePath());
-                                bNeedLoadLocal = false;
-                                bLoadWebDataSuccessed = true;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
+                    if (!bLoadWebDataSuccessed) {
+                        int netState = CoreUtils.checkNetworkInfo(mContext);
+                        if (netState == CoreUtils.UNCONNECTED) {
+                            String offline = null;
+                            if (null != f && f.exists() && !TextUtils.isEmpty(offline = FileUtils.readTxtFile(f
+                                    .getAbsolutePath()))) {// 加载离线数据
+                                try {
+                                    offline = URLDecoder.decode(offline, "UTF-8");
+                                    if (!TextUtils.isEmpty(offline)) {
+                                        onParseJson(offline);
+                                    }
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
+                            } else {
+                                onToast(getString(R.string.please_open_wifi));
+                            }
+                        } else {
+                            String str = RdHttpClient.PostJson(mMusicUrl,
+                                    new NameValuePair("type", "android"));
+                            if (!TextUtils.isEmpty(str)) {// 加载网络数据
+                                onParseJson(str);
+                                try {
+                                    String data = URLEncoder.encode(str, "UTF-8");
+                                    FileUtils.writeText2File(data,
+                                            f.getAbsolutePath());
+                                    bLoadWebDataSuccessed = true;
+                                } catch (UnsupportedEncodingException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
-                    if (bNeedLoadLocal && null != f && f.exists()) {// 加载离线数据
-                        String offline = FileUtils.readTxtFile(f
-                                .getAbsolutePath());
-                        // Log.e("str", str + "");
-                        try {
-                            offline = URLDecoder.decode(offline, "UTF-8");
-                            if (!TextUtils.isEmpty(offline)) {
-                                onParseJson(offline);
-                            }
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
                 }
                 if (null != mHanlder) {
                     mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();

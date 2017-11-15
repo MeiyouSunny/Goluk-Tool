@@ -7,6 +7,8 @@
     <string name="music_soundtrack">사운드 추가</string>
     <string name="musicVoice">사운드 추가</string>
     <string name="videoVoice">오디오  원본</string>
+    <string name="video_voice_p">들린다</string>
+    <string name="video_voice_n">꺼짐</string>
     <string name="music_none">없음</string>
     <string name="music_no_song">없음</string>
     <string name="sp_music_chaowan">웨이브</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">本当に編集をキャンセルしてよろしいですか？</string>
     <string name="priview_title">미리보기</string>
     <string name="preview">미리보기</string>
+    <string name="video_duration_too_short_to_trim">비디오를 캡처 할 수 없습니다. 비디오는 1 초보다 짧습니다.</string>
+    <string name="video_duration_too_short_to_split">비디오를 분할 할 수 없습니다. 비디오는 0.5 초 미만입니다.</string>
+    <string name="split_duration_too_low">분할된 동영상 섹션의 길이가 너무 짧습니다.</string>
+    <string name="sp_filter_4">공백</string>
+    <string name="release_hand_for_del">삭제하려면 놓으세요</string>
+    <string name="quit_partedit">\'섹션 수정\'을 취소 하시겠습니까?</string>
+    <string name="please_open_wifi">インターネット接続を有効にしてください</string>
+    <string name="please_check_network">インターネット接続を有効にしてください</string>
+    <string name="last_split_cannt_del">최소 한 개의 동영상 유지</string>
+    <string name="dragged_into_trash">삭제하려면 휴지통으로 드래그 하세요</string>
+    <string name="dragged_info_trash_del">삭제하려면 휴지통으로 드래그 하세요</string>
+    <string name="drag_for_split">드래그하여 분할 영역 선택</string>
+    <string name="canceling">취소 중 ...</string>
+    <string name="cancel_export_video">불완전 내보내기, 취소 하시겠습니까?</string>
+    <string name="cancel_export">불완전 내보내기, 취소 하시겠습니까?</string>
+    <string name="video_speed_duration_too_short_to_change">비디오를 캡처 할 수 없습니다. 비디오가 너무 짧습니다.</string>
 </resources>

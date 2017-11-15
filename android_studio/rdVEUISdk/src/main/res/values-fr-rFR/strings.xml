@@ -7,6 +7,8 @@
     <string name="music_soundtrack">Ajouter le son</string>
     <string name="musicVoice">Ajouter le son</string>
     <string name="videoVoice">Audio original </string>
+    <string name="video_voice_p">Sonne sur</string>
+    <string name="video_voice_n">Sonne de</string>
     <string name="music_none">Aucun</string>
     <string name="music_no_song">Aucun</string>
     <string name="sp_music_chaowan">Vague</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">Voulez-vous vraiment arrêter de modifie?</string>
     <string name="priview_title">Prévisualiser</string>
     <string name="preview">Prévisualiser</string>
+    <string name="video_duration_too_short_to_trim">Impossible de capturer la vidéo, la vidéo est plus courte que 1s</string>
+    <string name="video_duration_too_short_to_split">Impossible de diviser la vidéo, la vidéo est plus courte que 0.5s.</string>
+    <string name="split_duration_too_low">Les sections découpées de la vidéo sont trop courtes en longueur</string>
+    <string name="sp_filter_4">Blanc</string>
+    <string name="release_hand_for_del">Relâchez pour supprimer</string>
+    <string name="quit_partedit">Annuler \'Modifier les sections\'?</string>
+    <string name="please_open_wifi">請開啟網絡連接</string>
+    <string name="please_check_network">請開啟網絡連接</string>
+    <string name="last_split_cannt_del">Gardez au moins une vidéo</string>
+    <string name="dragged_into_trash">Glissez dans la corbeille pour supprimer</string>
+    <string name="dragged_info_trash_del">Glissez dans la corbeille pour supprimer</string>
+    <string name="drag_for_split">Glissez pour sélectionner la zone de découpe</string>
+    <string name="canceling">Annulation ...</string>
+    <string name="cancel_export_video">Exporter incomplet, annuler?</string>
+    <string name="cancel_export">Exporter incomplet, annuler?</string>
+    <string name="video_speed_duration_too_short_to_change">Impossible de capturer la vidéo, la vidéo est trop courte.</string>
 </resources>

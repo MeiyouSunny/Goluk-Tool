@@ -14,6 +14,7 @@ import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Point;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Handler;
@@ -30,9 +31,8 @@ import android.view.View;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.database.TTFData;
-import com.rd.veuisdk.model.FilterInfo2;
+import com.rd.veuisdk.model.FrameInfo;
 import com.rd.veuisdk.model.StyleInfo;
-import com.rd.veuisdk.model.StyleT;
 import com.rd.veuisdk.model.TimeArray;
 import com.rd.veuisdk.net.TTFUtils;
 import com.rd.veuisdk.utils.BitmapUtils;
@@ -336,11 +336,9 @@ public class SinglePointRotate extends View {
         if (isMain) {
             isRunning = false;
             mhandler.removeCallbacks(runnable);
-            FilterInfo2 f2 = msi.getFilterInfo2();
-            if (null != f2) {
-                textcolor = f2.getTextDefaultColor();
-            }
-            if (msi.shadow == 1) {
+            textcolor = msi.getTextDefaultColor();
+
+            if (msi.shadow) {
                 this.shadowColor = msi.strokeColor;
             } else {
                 this.shadowColor = 0;
@@ -354,25 +352,25 @@ public class SinglePointRotate extends View {
         if (msi.st == com.rd.veuisdk.utils.CommonStyleUtils.STYPE.special) {
             invaView(drawFrame);
             try {
-                mItemDelayMillis = msi.frameArry.valueAt(1).time
-                        - msi.frameArry.valueAt(0).time;
+                mItemDelayMillis = msi.frameArray.valueAt(1).time
+                        - msi.frameArray.valueAt(0).time;
             } catch (Exception e) {
                 e.printStackTrace();
                 FileLog.writeLog(e.getMessage() + "...->" + msi.code + "...."
-                        + msi.frameArry.size());
+                        + msi.frameArray.size());
                 mItemDelayMillis = 100;
             }
             if (drawFrame) {
                 mhandler.obtainMessage(MSG_CHANG_FRAME,
-                        msi.frameArry.valueAt(0).pic).sendToTarget();
+                        msi.frameArray.valueAt(0).pic).sendToTarget();
 
             }
-        } else if (msi.frameArry.size() > 0) {
+        } else if (msi.frameArray.size() > 0) {
 
-            if (msi.lashen == 1) {
-                drawFrame(msi.frameArry.valueAt(0).pic);
+            if (msi.lashen) {
+                drawFrame(msi.frameArray.valueAt(0).pic);
             } else {
-                setImageStyle(msi.frameArry.valueAt(0).pic, drawFrame);
+                setImageStyle(msi.frameArray.valueAt(0).pic, drawFrame);
             }
         }
 
@@ -456,7 +454,7 @@ public class SinglePointRotate extends View {
                     }
                 }
 
-                StyleT st = CommonStyleUtils.search(tdu, msi.frameArry, msi.timeArrays, true, 0);
+                FrameInfo st = CommonStyleUtils.search(tdu, msi.frameArray, msi.timeArrays, true, 0);
 //                android.util.Log.e(TAG, "st" + ((null != st) ? (st.pic + "--->" + st.time) : "null")+"....tdu:"+tdu);
                 if (null != st) {
                     mhandler.removeMessages(MSG_CHANG_FRAME);
@@ -472,7 +470,7 @@ public class SinglePointRotate extends View {
         progress = 0;
         mhandler.removeMessages(MSG_CHANG_FRAME);
         mhandler.obtainMessage(MSG_CHANG_FRAME,
-                msi.frameArry.valueAt(0).pic).sendToTarget();
+                msi.frameArray.valueAt(0).pic).sendToTarget();
     }
 
     private boolean isRunning = false;
@@ -562,7 +560,7 @@ public class SinglePointRotate extends View {
      * @return
      */
     private boolean isLaShen() {
-        return (msi.lashen == 1);
+        return (msi.lashen);
     }
 
     private Point mTemp = new Point(); // 减少获取字体大小
@@ -625,16 +623,14 @@ public class SinglePointRotate extends View {
         canvasTmp.setDrawFilter(new PaintFlagsDrawFilter(0,
                 Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
         canvasTmp.drawBitmap(mOriginalBitmap, new Rect(0, 0, mOriginalBitmap.getWidth(), mOriginalBitmap.getHeight()), new Rect(0, 0, bwidth, bheight), null);
-        FilterInfo2 currentFilter = msi.getFilterInfo2();
-        if (null != currentFilter) {
-            float[] fstart = currentFilter.getStart();
-            float[] fend = currentFilter.getEnd();
+        RectF rectF = msi.getTextRectF();
+        if (null != rectF) {
 
-            int mleft = (int) (bwidth * fstart[0]);
-            int mtop = (int) (bheight * fstart[1]);
+            int mleft = (int) (bwidth * rectF.left);
+            int mtop = (int) (bheight * rectF.top);
 
-            int mright = (int) (bwidth * fend[0]);
-            int mbottom = (int) (bheight * fend[1]);
+            int mright = (int) (bwidth * rectF.right);
+            int mbottom = (int) (bheight * rectF.bottom);
 
             // 左上角的坐标
             Point mp11 = new Point(mleft, mtop);
@@ -669,9 +665,8 @@ public class SinglePointRotate extends View {
             canvas.drawBitmap(newb, mMatrix, mPaint);
             maps.put(System.currentTimeMillis(), newb);
             if (!TextUtils.isEmpty(mText)) {
-                if (msi.lashen == 1) {
+                if (!msi.lashen) {
 
-                } else {
                     /**
                      * 新增部分 画text
                      */
@@ -1005,10 +1000,10 @@ public class SinglePointRotate extends View {
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-                    FilterInfo2 currentFilter = msi.getFilterInfo2();
+//                    CaptionFilterInfo currentFilter = msi.getCaptionFilter();
                     // 如果为移动缩放模式
                     if (mDefautMode == ZOOM_ROTATE) {
-                        if (null != currentFilter && msi.pid != spId) {
+                        if (msi.pid != spId) {
                             disf = MAX_SCALE;
                         }
 
@@ -1105,7 +1100,7 @@ public class SinglePointRotate extends View {
                         if (disf <= MIN_SCALE) {
                             disf = MIN_SCALE;
                         } else if (disf >= MAX_SCALE) {
-                            if (null != currentFilter && msi.pid != spId) {
+                            if (msi.pid != spId) {
                                 disf = MAX_SCALE;
                             }
                         }
@@ -1534,12 +1529,9 @@ public class SinglePointRotate extends View {
      */
     public void setImageStyle(StyleInfo info) {
         msi = info;
-        FilterInfo2 f2 = msi.getFilterInfo2();
-        if (null != f2) {
-            mTextPaint.setColor(f2.getTextDefaultColor());
-            if (TextUtils.isEmpty(mText)) {
-                mText = f2.getHint();
-            }
+        mTextPaint.setColor(msi.getTextDefaultColor());
+        if (TextUtils.isEmpty(mText)) {
+            mText = msi.getHint();
         }
         invaView(true);
     }
@@ -1571,9 +1563,8 @@ public class SinglePointRotate extends View {
         if (mdisf <= MIN_SCALE) {
             mdisf = MIN_SCALE;
         } else if (mdisf >= MAX_SCALE) {
-            FilterInfo2 currentFilter = msi.getFilterInfo2();
 
-            if (null != currentFilter && msi.pid != spId) {
+            if (msi.pid != spId) {
                 mdisf = MAX_SCALE;
             }
         }
@@ -1676,7 +1667,7 @@ public class SinglePointRotate extends View {
         }
         int addWPix = 0;
         int addHPix = 0;
-        if (msi.onlyone == 1) {
+        if (msi.onlyone) {
             Rect onlyOneLineRect = new Rect();
             textPaint.getTextBounds(getText(), 0, getText().length(),
                     onlyOneLineRect);
@@ -1870,7 +1861,7 @@ public class SinglePointRotate extends View {
         float offY = fontTotalHeight / 2 - fontMetrics.bottom;
         float newY = TextRect.top + offY * 2 + 4;
 
-        if (msi.onlyone == 1) {
+        if (msi.onlyone) {
 
             String strTempLine = getText();
             if (strTempLine == null)
@@ -1965,7 +1956,7 @@ public class SinglePointRotate extends View {
             {
                 mImageCenterPoint.y = mRotatedImageHeight / 2 + nMark;
             }
-            if (msi.onlyone != 1)// 多行
+            if (!msi.onlyone)// 多行
             {
                 if ((mImageCenterPoint.x + mRotatedImageWidth / 2) > this.end.x)// 右边超出范围
                 {
@@ -2024,39 +2015,37 @@ public class SinglePointRotate extends View {
     public void setInputText(String text) {
         this.mText = text;
         mTemp.set(0, 0);
-        FilterInfo2 currentFilter = msi.getFilterInfo2();
-        if (null != currentFilter) {
-            if (msi.pid == spId) {
-                mTextPaint.setTextSize(24f);
-                int mwidth = (int) mTextPaint.measureText(text);
-                int mRectWidth = (int) (mOriginalBitmap.getWidth() * (currentFilter
-                        .getEnd()[0] - currentFilter.getStart()[0])); // 原始图片可填充字幕的区域的宽度
+        if (msi.pid == spId) {
+            mTextPaint.setTextSize(24f);
+            int mwidth = (int) mTextPaint.measureText(text);
 
-                int mscaWidth = (int) (mRectWidth * disf);
+            int mRectWidth = (int) (mOriginalBitmap.getWidth() * msi.getTextRectF().width()); // 原始图片可填充字幕的区域的宽度
 
-                float targetDisf = disf;
+            int mscaWidth = (int) (mRectWidth * disf);
 
-                int twidth = mwidth + 50;
+            float targetDisf = disf;
 
-                if (mscaWidth <= twidth) {
-                    // 放大disf
-                    float canMaxDisf = (float) ((display.widthPixels - 100.0) / mRectWidth);
-                    int targetWidth = mscaWidth;
-                    while (targetWidth < twidth) {
-                        targetDisf += 0.2f;
-                        if (targetDisf >= canMaxDisf) {
-                            targetDisf = canMaxDisf;
-                            break;
-                        }
-                        targetWidth = (int) (mRectWidth * targetDisf);
+            int twidth = mwidth + 50;
 
+            if (mscaWidth <= twidth) {
+                // 放大disf
+                float canMaxDisf = (float) ((display.widthPixels - 100.0) / mRectWidth);
+                int targetWidth = mscaWidth;
+                while (targetWidth < twidth) {
+                    targetDisf += 0.2f;
+                    if (targetDisf >= canMaxDisf) {
+                        targetDisf = canMaxDisf;
+                        break;
                     }
-                    setDisf(targetDisf);
+                    targetWidth = (int) (mRectWidth * targetDisf);
+
                 }
-            } else if (msi.lashen == 1) {
-                setSameParamWithText(isUserWriting);
+                setDisf(targetDisf);
             }
+        } else if (msi.lashen) {
+            setSameParamWithText(isUserWriting);
         }
+
 
         this.invalidate();
 
@@ -2069,7 +2058,7 @@ public class SinglePointRotate extends View {
      */
     public void setInputTextColor(int textColor) {
         this.textcolor = textColor;
-        if (msi.lashen == 1) {
+        if (msi.lashen) {
             setSameParamWithText();
         }
         this.invalidate();
@@ -2091,7 +2080,7 @@ public class SinglePointRotate extends View {
         if (shadowColor != shadow) {
             shadowColor = shadow;
         }
-        if (msi.lashen == 1) {
+        if (msi.lashen) {
             setSameParamWithText();
         }
         if (minvalidate)
@@ -2125,7 +2114,7 @@ public class SinglePointRotate extends View {
             }
 
             if (postInvalidateEnable) {
-                if (msi.lashen == 1) {
+                if (msi.lashen) {
                     setSameParamWithText();
                 }
                 this.invalidate();
@@ -2152,7 +2141,7 @@ public class SinglePointRotate extends View {
         this.mTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT,
                 Typeface.NORMAL));
         if (postInvalidateEnable) {
-            if (msi.lashen == 1) {
+            if (msi.lashen) {
                 setSameParamWithText();
             }
             this.invalidate();

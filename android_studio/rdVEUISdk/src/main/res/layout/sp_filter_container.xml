@@ -1,33 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:extCircle="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/sp_rl_filter_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/sp_rl_filter_container"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/music_bar_height"
+        android:orientation="horizontal">
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/mlineView"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"/>
 
     <HorizontalScrollView
         android:id="@+id/sp_hsv_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:scrollbars="@null" >
+        android:scrollbars="@null">
 
         <LinearLayout
             android:id="@+id/ll_sp_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="15dp"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter1"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter1"
@@ -37,7 +48,7 @@
                         android:src="@drawable/sp_filter_01"
                         extCircle:circleBgColor="@color/transparent"
                         extCircle:circleBorderColor="@color/main_orange"
-                        extCircle:circleChecked="true" />
+                        extCircle:circleChecked="true"/>
                 </RelativeLayout>
 
                 <TextView
@@ -48,18 +59,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_1"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter2"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter2"
@@ -68,7 +79,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_02"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -79,18 +90,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_2"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter3"
@@ -99,7 +110,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_03"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -110,18 +121,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_3"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter4"
@@ -130,7 +141,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_04"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -141,18 +152,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_4"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter5"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter5"
@@ -161,7 +172,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_05"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -172,18 +183,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_5"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter6"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter6"
@@ -192,7 +203,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_06"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -203,18 +214,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_6"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter7"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter7"
@@ -223,7 +234,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_07"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -234,18 +245,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_7"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter8"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter8"
@@ -254,7 +265,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_08"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -265,18 +276,18 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_8"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp" >
+                android:layout_marginLeft="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter9"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter9"
@@ -285,7 +296,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_09"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -296,19 +307,19 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_9"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp" >
+                android:layout_marginRight="15dp">
 
                 <RelativeLayout
                     android:id="@+id/sp_rl_filter10"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" >
+                    android:layout_height="wrap_content">
 
                     <com.rd.veuisdk.ui.ExtCircleImageView
                         android:id="@+id/sp_iv_filter10"
@@ -317,7 +328,7 @@
                         android:background="@null"
                         android:src="@drawable/sp_filter_10"
                         extCircle:circleBgColor="@color/transparent"
-                        extCircle:circleBorderColor="@color/main_orange" />
+                        extCircle:circleBorderColor="@color/main_orange"/>
                 </RelativeLayout>
 
                 <TextView
@@ -328,9 +339,9 @@
                     android:layout_centerHorizontal="true"
                     android:text="@string/sp_filter_10"
                     android:textColor="@drawable/sp_music_text_color"
-                    android:textSize="@dimen/text_size_14" />
+                    android:textSize="@dimen/text_size_14"/>
             </RelativeLayout>
         </LinearLayout>
     </HorizontalScrollView>
 
-</RelativeLayout>
+</LinearLayout>

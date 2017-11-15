@@ -7,6 +7,8 @@
     <string name="music_soundtrack">配樂</string>
     <string name="musicVoice">配樂</string>
     <string name="videoVoice">原音</string>
+    <string name="video_voice_p">原音開</string>
+    <string name="video_voice_n">原音關</string>
     <string name="music_none">無配樂</string>
     <string name="music_no_song">無配樂</string>
     <string name="sp_music_chaowan">潮玩</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">您確定要取消編輯？</string>
     <string name="priview_title">預覽</string>
     <string name="preview">預覽</string>
+    <string name="video_duration_too_short_to_trim">視頻小於1秒，無法截取</string>
+    <string name="video_duration_too_short_to_split">視頻小於0.5秒，無法分割</string>
+    <string name="split_duration_too_low">分割影片的時間太短</string>
+    <string name="sp_filter_4">空白</string>
+    <string name="release_hand_for_del">鬆開手刪除</string>
+    <string name="quit_partedit">您確定要放棄片段編輯嗎？</string>
+    <string name="please_open_wifi"> 没有可用的网络</string>
+    <string name="please_check_network"> 没有可用的网络</string>
+    <string name="last_split_cannt_del">至少保留一段影片</string>
+    <string name="dragged_into_trash">拖進垃圾桶刪除</string>
+    <string name="dragged_info_trash_del">拖進垃圾桶刪除</string>
+    <string name="drag_for_split">拖動選擇分割位置</string>
+    <string name="canceling">正在取消…</string>
+    <string name="cancel_export_video">正在導出，是否取消？</string>
+    <string name="cancel_export">正在導出，是否取消？</string>
+    <string name="video_speed_duration_too_short_to_change">視頻時長過短，無法截取視頻</string>
 </resources>

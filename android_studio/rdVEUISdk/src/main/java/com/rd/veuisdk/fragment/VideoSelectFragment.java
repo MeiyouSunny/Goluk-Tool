@@ -304,7 +304,8 @@ public class VideoSelectFragment extends BaseV4Fragment {
                 // || videoInfo.getWidth() == 0 || videoInfo.getHeight() == 0
                 continue;
             }
-            if (new File(videoInfo.getDataPath()).exists()) {
+            File fv = new File(videoInfo.getDataPath());
+            if (fv.exists() && !fv.getName().endsWith(".wmv")) {
                 ImageItem ii = new ImageItem(videoInfo);
                 mVideos.add(ii);
                 ii.selected = mVideoSelected.get(ii.imageItemKey) != null;

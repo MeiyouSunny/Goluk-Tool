@@ -38,10 +38,9 @@ import com.rd.veuisdk.adapter.SpecialStyleAdapter;
 import com.rd.veuisdk.database.SpecialData;
 import com.rd.veuisdk.export.IExportSpecial;
 import com.rd.veuisdk.export.SpecialExportUtils;
-import com.rd.veuisdk.model.FilterInfo2;
+import com.rd.veuisdk.model.FrameInfo;
 import com.rd.veuisdk.model.SpecialInfo;
 import com.rd.veuisdk.model.StyleInfo;
-import com.rd.veuisdk.model.StyleT;
 import com.rd.veuisdk.model.WordInfo;
 import com.rd.veuisdk.net.SpecialUtils;
 import com.rd.veuisdk.ui.CircleProgressBarView;
@@ -363,7 +362,7 @@ class SpecialHandler {
                 } else {
                     mSprCurView.setRotate(info.rotateAngle);
                 }
-                if (info.frameArry.size() > 0) {
+                if (info.frameArray.size() > 0) {
 
                     mSprCurView.setStyleInfo(true, info, (int) (mCurInfo
                                     .getEnd() - mCurInfo.getStart()), true,
@@ -381,8 +380,7 @@ class SpecialHandler {
                 }
                 mSprCurView.setCenter(new Point(x, y));
                 if (info.type == 0) {
-                    if (null != info.getFilterInfo2())
-                        mSprCurView.setInputText(info.getFilterInfo2().getHint());
+                    mSprCurView.setInputText(info.getHint());
                     mSprCurView.setImageStyle(info);
                 } else {
                     mSprCurView.setInputText("");
@@ -1203,10 +1201,10 @@ class SpecialHandler {
                 }
                 StyleInfo si = SpecialUtils.getInstance().getStyleInfo(
                         w.getStyleId());
-                if (null != si.frameArry && si.frameArry.size() > 0) {
+                if (null != si.frameArray && si.frameArray.size() > 0) {
 
-                    int itemTime = si.frameArry.valueAt(1).time
-                            - si.frameArry.valueAt(0).time;
+                    int itemTime = si.frameArray.valueAt(1).time
+                            - si.frameArray.valueAt(0).time;
                     int np = (int) (cp - w.getStart());//当前进度在该特效段中的位置
 
                     int tdu = np;
@@ -1279,7 +1277,7 @@ class SpecialHandler {
                     }
 //                    Log.e(TAG, timeArrayCount + "timeArrayCount:initwords" + i + "----wordinfo:" + w.getStart() + "<>" + w.getEnd() + "---->" + tdu + "................cp:" + cp);
 
-                    StyleT st = CommonStyleUtils.search(tdu, si.frameArry, si.timeArrays, currentIsEditing, (int) (w.getEnd() - w.getStart()));
+                    FrameInfo st = CommonStyleUtils.search(tdu, si.frameArray, si.timeArrays, currentIsEditing, (int) (w.getEnd() - w.getStart()));
                     if (null != st) {
                         tv.setImageStyle(st.pic, true);
                     } else {
@@ -1376,20 +1374,19 @@ class SpecialHandler {
 
         StyleInfo si = SpecialUtils.getInstance().getStyleInfo(w.getStyleId());
 
-        FilterInfo2 fi = si.getFilterInfo2();
 
         String text = "";
         int color = Color.WHITE;
-        if (null != fi) {
+        if (null != si) {
 
-            text = TextUtils.isEmpty(w.getText()) ? fi.getHint() : w.getText();
+            text = TextUtils.isEmpty(w.getText()) ? si.getHint() : w.getText();
 
-            color = (w.getTextColor() == Color.WHITE ? fi.getTextDefaultColor()
+            color = (w.getTextColor() == Color.WHITE ? si.getTextDefaultColor()
                     : w.getTextColor());
         }
         String bgpath = null;
-        if (si.frameArry.size() > 0) {
-            bgpath = si.frameArry.valueAt(0).pic;
+        if (si.frameArray.size() > 0) {
+            bgpath = si.frameArray.valueAt(0).pic;
         }
 
         SinglePointRotate tv = new SinglePointRotate(mLinearWords.getContext(),

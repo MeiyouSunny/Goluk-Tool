@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.vecore.models.SubtitleObject;
 import com.rd.veuisdk.TempVideoParams;
-import com.rd.veuisdk.model.FilterInfo2;
 import com.rd.veuisdk.model.StyleInfo;
 import com.rd.veuisdk.model.WordInfo;
 import com.rd.veuisdk.net.SubUtils;
@@ -100,11 +99,10 @@ public class SubExportUtils {
 
                 StyleInfo fi = SubUtils.getInstance().getStyleInfo(mWordInfo.getStyleId());
 //			fi.zoomFactor = mWordInfo.getZoomFactor();
-                FilterInfo2 mfi = fi.getFilterInfo2();
 
                 String bgpath = null;
-//			if (fi.frameArry.size() > 0) {
-//				bgpath = fi.frameArry.valueAt(0).pic;
+//			if (fi.frameArray.size() > 0) {
+//				bgpath = fi.frameArray.valueAt(0).pic;
 //			}
                 bgpath = mWordInfo.getBgPicpath();
 //			SinglePointRotate mSprMain  =null;
@@ -232,17 +230,16 @@ public class SubExportUtils {
 
             StyleInfo fi = SubUtils.getInstance().getStyleInfo(mWordInfo.getStyleId());
 //			fi.zoomFactor = mWordInfo.getZoomFactor();
-            FilterInfo2 mfi = fi.getFilterInfo2();
 
             String bgpath = null;
-            if (fi.frameArry.size() > 0) {
-                bgpath = fi.frameArry.valueAt(0).pic;
+            if (fi.frameArray.size() > 0) {
+                bgpath = fi.frameArray.valueAt(0).pic;
             }
 
             mSprMain = new SinglePointRotate(mContext, mWordInfo.getRotateAngle(),
-                    TextUtils.isEmpty(mWordInfo.getText()) ? mfi.getHint() : mWordInfo
+                    TextUtils.isEmpty(mWordInfo.getText()) ? fi.getHint() : mWordInfo
                             .getText(),
-                    mWordInfo.getTextColor() == Color.WHITE ? mfi.getTextDefaultColor()
+                    mWordInfo.getTextColor() == Color.WHITE ? fi.getTextDefaultColor()
                             : mWordInfo.getTextColor(), mWordInfo.getTtfLocalPath(),
                     mWordInfo.getDisf(), new Point(mLayoutWidth, mLayoutHeight),
                     new Point(mcenterx, mcentery), mWordInfo.getTextSize(),

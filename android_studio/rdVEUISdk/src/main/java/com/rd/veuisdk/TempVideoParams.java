@@ -1,7 +1,5 @@
 package com.rd.veuisdk;
 
-import android.util.Log;
-
 import com.rd.vecore.Music;
 import com.rd.vecore.models.SubtitleObject;
 import com.rd.veuisdk.fragment.AudioInfo;
@@ -382,7 +380,6 @@ public class TempVideoParams {
     private Music mMusicObject;
 
     public void setMusicObject(Music music) {
-        Log.e(TAG, "setMusicObject: " + music.getMusicPath());
         mMusicObject = music;
     }
 
@@ -402,9 +399,8 @@ public class TempVideoParams {
      */
     public Music getMusic() {
         if (null != mMusicObject) {
-            Log.e(TAG, "getMusic: " + mMusicObject.getMusicPath());
             mMusicObject.setTimelineRange(Utils.ms2s(this.mHeadTime), -Utils.ms2s(this.mTailTime));
-            mMusicObject.setFadeInOut(Utils.ms2s(800), Utils.ms2s(800));// 淡入淡出
+            mMusicObject.setFadeInOut(Utils.ms2s(3000), Utils.ms2s(1500));// 淡入淡出
             return mMusicObject;
         }
         return null;

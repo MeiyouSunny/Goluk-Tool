@@ -3,14 +3,14 @@ package com.rd.veuisdk.utils;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Color;
+import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.SparseArray;
 
 import com.rd.lib.utils.CoreUtils;
 import com.rd.net.JSONObjectEx;
-import com.rd.veuisdk.model.FilterInfo2;
+import com.rd.veuisdk.model.FrameInfo;
 import com.rd.veuisdk.model.StyleInfo;
-import com.rd.veuisdk.model.StyleT;
 import com.rd.veuisdk.model.TimeArray;
 import com.rd.veuisdk.model.WordInfo;
 
@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class CommonStyleUtils {
-    // static String STYLEINFO_TXT = "styleInfo.txt";
     public static final String CONFIG_JSON = "config.json";
 
     private CommonStyleUtils() {
@@ -31,7 +30,7 @@ public class CommonStyleUtils {
 
     private static double OUT_WIDTH = 640.0, OUT_HEIGHT = 360.0;
     private static final double PWIDTH = 640.0, PHEIGHT = 360.0;
-    public static double asp = -1.0;
+    private static double asp = -1.0;
 
     public static void init(double width, double height) {
         OUT_WIDTH = width;
@@ -39,6 +38,12 @@ public class CommonStyleUtils {
         asp = OUT_WIDTH / OUT_HEIGHT;
     }
 
+    /**
+     * 解析配置文件中的字幕、特效样式
+     *
+     * @param config
+     * @param info
+     */
     public static void getConfig(File config, StyleInfo info) {
         String content = FileUtils.readTxtFile(config.getAbsolutePath());
         if (!TextUtils.isEmpty(content)) {
@@ -58,16 +63,16 @@ public class CommonStyleUtils {
                 info.h = json.getDouble("h");
                 info.a = json.getDouble("a");
                 // new change
-                info.lashen = 0;
-                info.onlyone = 0;
-                info.shadow = 0;
+                info.lashen = false;
+                info.onlyone = false;
+                info.shadow = false;
                 if (json.has("shadow")) {
-                    info.shadow = json.getInt("shadow");
+                    info.shadow = (json.getInt("shadow") == 1);
                 }
                 if (json.has("lashen")) {
-                    info.lashen = json.getInt("lashen");
+                    info.lashen = (json.getInt("lashen") == 1);
                     if (json.has("onlyone")) {
-                        info.onlyone = json.getInt("onlyone");
+                        info.onlyone = (json.getInt("onlyone") == 1);
                     }
 
                     info.left = json.getDouble("left");
@@ -94,7 +99,7 @@ public class CommonStyleUtils {
 
                     info.tLeft = json.getInt("tLeft");
                     info.tTop = json.getInt("tTop");
-                    if (info.lashen == 1) {
+                    if (info.lashen) {
                         info.tRight = json.getInt("tRight");
                         info.tButtom = json.getInt("tButtom");
                         info.tWidth = 0;
@@ -124,34 +129,21 @@ public class CommonStyleUtils {
                 info.du = (int) (json.getDouble("du") * 1000);
 
                 JSONObject jtemp = null;
-                StyleT tempT = null;
-                FilterInfo2 finfo;
-
-                float[] start = new float[2], end = new float[2];
+                FrameInfo tempT = null;
                 int halfw = info.tWidth / 2;
                 int halfh = info.tHeight / 2;
                 if (info.type == 0) {
 
-                    start[0] = (float) ((info.tLeft - halfw + 0.0) / info.w);
-                    start[1] = (float) ((info.tTop - halfh + 0.0) / info.h);
-                    end[0] = (float) ((info.tLeft + halfw + 0.0) / info.w);
-                    end[1] = (float) ((info.tTop + halfh + 0.0) / info.h);
+                    float left = (float) ((info.tLeft - halfw + 0.0) / info.w);
+                    float top = (float) ((info.tTop - halfh + 0.0) / info.h);
+                    float right = (float) ((info.tLeft + halfw + 0.0) / info.w);
+                    float bottom = (float) ((info.tTop + halfh + 0.0) / info.h);
                     String ptext = json.optString("pText");
-                    finfo = new FilterInfo2(ptext, Color.rgb(json.getInt("tR"),
-                            json.getInt("tG"), json.getInt("tB")), start, end,
-                            info.pid);
-
+                    info.initDefault(ptext, Color.rgb(json.getInt("tR"),
+                            json.getInt("tG"), json.getInt("tB")), new RectF(left, top, right, bottom));
                 } else {
-                    start[0] = 0.01f;
-                    start[1] = 0.01f;
-                    end[0] = 0.99f;
-                    end[1] = 0.99f;
-                    finfo = new FilterInfo2("", Color.parseColor("#ffffff"),
-                            start, end, info.pid);
-                    // info.centerxy[0] = (float) (info.x / PWIDTH);
-                    // info.centerxy[1] = (float) (info.y / PHEIGHT);
+
                 }
-                info.setFilterInfo2(finfo);
 
                 info.centerxy[0] = (float) info.x;
                 info.centerxy[1] = (float) info.y;
@@ -160,16 +152,14 @@ public class CommonStyleUtils {
 
                 JSONArray jarr = json.getJSONArray("frameArry");
                 String tpictemp = config.getParent() + "/" + info.code;
-                // info.icon = config.getParent() + "/icon.png";
                 int len = jarr.length();
                 for (int i = 0; i < len; i++) {
                     jtemp = jarr.getJSONObject(i);
-                    tempT = new StyleT();
+                    tempT = new FrameInfo();
                     int ntime = (int) (jtemp.getDouble("time") * 1000);
                     tempT.time = ntime;
                     tempT.pic = tpictemp + jtemp.getInt("pic") + ".png";
-                    info.frameArry.put(ntime, tempT);
-
+                    info.frameArray.put(ntime, tempT);
                 }
 
                 jarr = json.getJSONArray("timeArry");
@@ -186,7 +176,7 @@ public class CommonStyleUtils {
 
                 Options op = new Options();
                 op.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(info.frameArry.valueAt(0).pic, op);
+                BitmapFactory.decodeFile(info.frameArray.valueAt(0).pic, op);
 
                 // Log.e("sic",
                 // OUT_WIDTH+"...."+PWIDTH+".....arr"+Arrays.toString(start)+"...."+Arrays.toString(end));
@@ -228,16 +218,15 @@ public class CommonStyleUtils {
         info.x = (int) (OUT_WIDTH / 2);
         info.y = (int) (OUT_HEIGHT / 2);
 
-        float[] start = new float[2], end = new float[2];
-        start[0] = (float) (10.0 / 400);
-        start[1] = (float) (5.0 / 60);
-        end[0] = (float) (390.0 / 400);
-        end[1] = (float) (55.0 / 60);
+        float l = (float) (10.0 / 400);
+        float t = (float) (5.0 / 60);
+        float r = (float) (390.0 / 400);
+        float b = (float) (55.0 / 60);
 
         info.type = 0;// only subtitle
-        FilterInfo2 finfo = new FilterInfo2("", Color.parseColor("#ffffff"),
-                start, end, info.pid);
-        info.setFilterInfo2(finfo);
+
+        info.initDefault("", Color.parseColor("#ffffff"), new RectF(l, t, r, b));
+
         info.centerxy[0] = (float) (info.x / OUT_WIDTH);
         info.centerxy[1] = (float) (info.y / OUT_HEIGHT);
 
@@ -299,8 +288,8 @@ public class CommonStyleUtils {
      * @param spDuration 当前特效的duration 单位：ms
      * @return
      */
-    public static StyleT search(int nearNum, SparseArray<StyleT> arrayList, ArrayList<TimeArray> timeArrays, boolean isEdit, int spDuration) {
-        StyleT item, resultP = null;
+    public static FrameInfo search(int nearNum, SparseArray<FrameInfo> arrayList, ArrayList<TimeArray> timeArrays, boolean isEdit, int spDuration) {
+        FrameInfo item, resultP = null;
         int len = 0;
         if (null != arrayList && (len = arrayList.size()) > 0) {
             int itemDuration = 100;

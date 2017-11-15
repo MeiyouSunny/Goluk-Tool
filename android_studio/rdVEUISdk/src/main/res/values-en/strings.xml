@@ -7,6 +7,8 @@
     <string name="music_soundtrack">Add sound</string>
     <string name="musicVoice">Add sound</string>
     <string name="videoVoice">Orginal audio </string>
+    <string name="video_voice_p">Sounds On</string>
+    <string name="video_voice_n">Sounds Off</string>
     <string name="music_none">None</string>
     <string name="music_no_song">None</string>
     <string name="sp_music_chaowan">Wave</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">Are you sure cancel to editor?</string>
     <string name="priview_title">Preview</string>
     <string name="preview">Preview</string>
+    <string name="video_duration_too_short_to_trim">Unable to capture video, video is shorter than 1s</string>
+    <string name="video_duration_too_short_to_split">Unable to split video, video is shorter than 0.5s.  </string>
+    <string name="split_duration_too_low">The split video sections are too short in length</string>
+    <string name="sp_filter_4">Blank</string>
+    <string name="release_hand_for_del">Release to delete</string>
+    <string name="quit_partedit">Cancel ‘Edit sections’?      </string>
+    <string name="please_open_wifi"> 没有可用的网络</string>
+    <string name="please_check_network"> 没有可用的网络</string>
+    <string name="last_split_cannt_del">Keep at least one video</string>
+    <string name="dragged_into_trash">Drag into the trash can to delete</string>
+    <string name="dragged_info_trash_del">Drag into the trash can to delete</string>
+    <string name="drag_for_split">Drag to select split area</string>
+    <string name="canceling">Canceling…</string>
+    <string name="cancel_export_video">Export incomplete, cancel?  </string>
+    <string name="cancel_export">Export incomplete, cancel?  </string>
+    <string name="video_speed_duration_too_short_to_change">Unable to capture video, video is too short.    </string>
 </resources>

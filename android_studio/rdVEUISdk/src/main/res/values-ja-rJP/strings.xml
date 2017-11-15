@@ -7,6 +7,8 @@
     <string name="music_soundtrack">音声を追加</string>
     <string name="musicVoice">音声を追加</string>
     <string name="videoVoice">元のオーディオ</string>
+    <string name="video_voice_p">聞こえる</string>
+    <string name="video_voice_n">音がする</string>
     <string name="music_none">なし</string>
     <string name="music_no_song">なし</string>
     <string name="sp_music_chaowan">ウェーブ</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">Действительно отменить pедактиредактировать?</string>
     <string name="priview_title">プレビュー</string>
     <string name="preview">プレビュー</string>
+    <string name="video_duration_too_short_to_trim">ビデオをキャプチャできません、ビデオは1秒未満です</string>
+    <string name="video_duration_too_short_to_split">動画を分割できません。動画は0.5秒未満です。</string>
+    <string name="split_duration_too_low">分割されたビデオセクションの長さが短すぎます</string>
+    <string name="sp_filter_4">ブランク</string>
+    <string name="release_hand_for_del">リリースして削除します</string>
+    <string name="quit_partedit">「セクションの編集」をキャンセルしますか？</string>
+    <string name="please_open_wifi">Accendi la connessione a internet</string>
+    <string name="please_check_network">Accendi la connessione a internet</string>
+    <string name="last_split_cannt_del">ビデオを少なくとも1つ残します</string>
+    <string name="dragged_into_trash">ゴミ箱にドラッグして削除します</string>
+    <string name="dragged_info_trash_del">ゴミ箱にドラッグして削除します</string>
+    <string name="drag_for_split">ドラッグして分割領域を選択します</string>
+    <string name="canceling">キャンセル中...</string>
+    <string name="cancel_export_video">不完全な輸出、キャンセル？</string>
+    <string name="cancel_export">不完全な輸出、キャンセル？</string>
+    <string name="video_speed_duration_too_short_to_change">ビデオをキャプチャできません、ビデオが短すぎます。</string>
 </resources>

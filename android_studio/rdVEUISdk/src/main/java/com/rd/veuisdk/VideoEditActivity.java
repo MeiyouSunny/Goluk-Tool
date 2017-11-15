@@ -1751,6 +1751,7 @@ public class VideoEditActivity extends BaseActivity implements
                 }
             }
         }
+
         mCanExport = true;
         mIsInAudioFragment = false;
         mPlayStatusShowing = true;
@@ -2528,7 +2529,8 @@ public class VideoEditActivity extends BaseActivity implements
             } else {
                 new File(mStrSaveMp4FileName).delete();
                 if (nResult != VirtualVideo.RESULT_EXPORT_CANCEL) {
-                    if (nResult == VirtualVideo.RESULT_CORE_ERROR_ENCODE_VIDEO
+                    if ((nResult == VirtualVideo.RESULT_CORE_ERROR_ENCODE_VIDEO ||
+                            nResult == VirtualVideo.RESULT_CORE_ERROR_OPEN_VIDEO_ENCODER)
                             && mHWCodecEnabled) {
                         // FIXME:开启硬编后出现了编码错误，使用软编再试一次
                         mHWCodecEnabled = false;

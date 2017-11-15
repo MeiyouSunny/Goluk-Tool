@@ -50,7 +50,6 @@ import com.rd.veuisdk.adapter.TTFAdapter;
 import com.rd.veuisdk.database.SubData;
 import com.rd.veuisdk.export.IExportSub;
 import com.rd.veuisdk.export.SubExportUtils;
-import com.rd.veuisdk.model.FilterInfo2;
 import com.rd.veuisdk.model.StyleInfo;
 import com.rd.veuisdk.model.WordInfo;
 import com.rd.veuisdk.net.SubUtils;
@@ -409,7 +408,7 @@ class SubtitleHandler {
                 }
 
 
-                if (info.lashen != 1) {
+                if (!info.lashen) {
                     int x = (int) (mLayoutWidth * info.centerxy[0]);
                     int y = (int) (mLayoutHeight * info.centerxy[1]);
                     mSprCurView.setCenter(new Point(x, y));
@@ -418,7 +417,7 @@ class SubtitleHandler {
                     mSprCurView.setFirstIn(true);
                 }
 
-                if (info.frameArry.size() > 0) {
+                if (info.frameArray.size() > 0) {
                     mSprCurView.setStyleInfo(true, info,
                             (int) (winfo.getEnd() - winfo.getStart()), true,
                             winfo.getDisf());
@@ -429,11 +428,8 @@ class SubtitleHandler {
                     if (!TextUtils.isEmpty(winfo.getText())) {
                         mEtSubtitle.setText(winfo.getText());
                     } else {
-                        if (null != info.getFilterInfo2()) {
-                            mEtSubtitle.setHint(R.string.sub_hint);
-                            mSprCurView.setInputText(info.getFilterInfo2()
-                                    .getHint());
-                        }
+                        mEtSubtitle.setHint(R.string.sub_hint);
+                        mSprCurView.setInputText(info.getHint());
                     }
                     mSprCurView.setImageStyle(info);
                 } else {
@@ -1575,27 +1571,26 @@ class SubtitleHandler {
         StyleInfo si = SubUtils.getInstance().getStyleInfo(w.getStyleId());
         si.zoomFactor = w.getZoomFactor();
 
-        FilterInfo2 fi = si.getFilterInfo2();
 
         int color = Color.WHITE;
 
         String text = "";
-        if (null != fi) {
-            text = TextUtils.isEmpty(w.getText()) ? fi.getHint() : w.getText();
-            color = (w.getTextColor() == Color.WHITE ? fi.getTextDefaultColor()
+        if (null != si) {
+            text = TextUtils.isEmpty(w.getText()) ? si.getHint() : w.getText();
+            color = (w.getTextColor() == Color.WHITE ? si.getTextDefaultColor()
                     : w.getTextColor());
 
         }
         if (TextUtils.isEmpty(w.getText()))
             mEtSubtitle.setHint(R.string.sub_hint);
         else {
-            if (null != fi) {
+            if (null != si) {
                 mEtSubtitle.setText(w.getText());
             }
         }
         String bgpath = null;
-        if (si.frameArry.size() > 0) {
-            bgpath = si.frameArry.valueAt(0).pic;
+        if (si.frameArray.size() > 0) {
+            bgpath = si.frameArray.valueAt(0).pic;
         }
         SinglePointRotate tv = new SinglePointRotate(mLinearWords.getContext(),
                 w.getRotateAngle(), text, color, w.getTtfLocalPath(),

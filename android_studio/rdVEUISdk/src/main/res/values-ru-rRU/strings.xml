@@ -7,6 +7,8 @@
     <string name="music_soundtrack">Добавить звук</string>
     <string name="musicVoice">Добавить звук</string>
     <string name="videoVoice">Исходный звук</string>
+    <string name="video_voice_p">Звуки вкл.</string>
+    <string name="video_voice_n">Звуки выкл</string>
     <string name="music_none">Нет</string>
     <string name="music_no_song">Нет</string>
     <string name="sp_music_chaowan">Волна</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">정말 팔로우를 수정 하시겠습니까?</string>
     <string name="priview_title">Просмотр</string>
     <string name="preview">Просмотр</string>
+    <string name="video_duration_too_short_to_trim">Видео короче 1 сек, не удалось захватить видео.</string>
+    <string name="video_duration_too_short_to_split">Видео короче 0.5 сек, не удалось разделить видео</string>
+    <string name="split_duration_too_low">Слишком короткие разделы видео</string>
+    <string name="sp_filter_4">пустой</string>
+    <string name="release_hand_for_del">Отпустите, чтобы удалить</string>
+    <string name="quit_partedit">Отменить редактирование?</string>
+    <string name="please_open_wifi">인터넷 연결을 켜세요</string>
+    <string name="please_check_network">인터넷 연결을 켜세요</string>
+    <string name="last_split_cannt_del">Сохраните как минимум одно видео</string>
+    <string name="dragged_into_trash">Чтобы удалить, перетащите в корзину</string>
+    <string name="dragged_info_trash_del">Чтобы удалить, перетащите в корзину</string>
+    <string name="drag_for_split">Перетащите, чтобы выбрать область разделения</string>
+    <string name="canceling">Отмена ...</string>
+    <string name="cancel_export_video">Экспорт видео не завершён, отменить?</string>
+    <string name="cancel_export">Экспорт видео не завершён, отменить?</string>
+    <string name="video_speed_duration_too_short_to_change">Видео слишком короткое, не удалось захватить видео.</string>
 </resources>

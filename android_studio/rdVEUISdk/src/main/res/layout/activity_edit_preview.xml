@@ -1,10 +1,10 @@
 <com.rd.veuisdk.ui.NoneMultiTouchLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/public_background_color"
-    android:orientation="vertical">
+                                              android:layout_width="match_parent"
+                                              android:layout_height="match_parent"
+                                              android:background="@color/public_background_color"
+                                              android:orientation="vertical">
 
-    <include layout="@layout/rdveuisdk_public_title_bar" />
+    <include layout="@layout/rdveuisdk_public_title_bar"/>
 
     <com.rd.veuisdk.ui.PriviewLayout
         android:id="@+id/mroot_priview_layout"
@@ -35,15 +35,15 @@
                             android:id="@+id/vvMediaPlayer"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_centerInParent="true" />
+                            android:layout_centerInParent="true"/>
 
                         <com.rd.lib.ui.PreviewFrameLayout
                             android:id="@+id/rlPreview_player"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_alignParentTop="true"
                             android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true">
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true">
 
                             <ImageView
                                 android:id="@+id/ivPlayerState"
@@ -53,7 +53,7 @@
                                 android:contentDescription="@string/empty"
                                 android:onClick="clickView"
                                 android:scaleType="center"
-                                android:src="@drawable/btn_play" />
+                                android:src="@drawable/btn_play"/>
 
                         </com.rd.lib.ui.PreviewFrameLayout>
 
@@ -72,9 +72,9 @@
                     android:layout_below="@id/flUpperZone"
                     android:minHeight="100dp">
 
-                    <include layout="@layout/preview_edit" />
+                    <include layout="@layout/preview_edit"/>
 
-                    <include layout="@layout/preview_edit_split" />
+                    <include layout="@layout/preview_edit_split"/>
                 </FrameLayout>
 
                 <ImageView
@@ -84,7 +84,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginRight="7dp"
                     android:layout_marginTop="3dp"
-                    android:background="@drawable/edit_more_orientation_button" />
+                    android:background="@drawable/edit_more_orientation_button"/>
 
                 <com.rd.veuisdk.ui.RdSeekBar
                     android:id="@+id/sbPreview"
@@ -96,7 +96,7 @@
                     android:minHeight="8px"
                     android:progressDrawable="@drawable/video_editor_progress"
                     android:thumb="@drawable/seekbar_thumb"
-                    android:thumbOffset="23dp" />
+                    android:thumbOffset="23dp"/>
             </RelativeLayout>
         </com.rd.veuisdk.ui.PriviewLinearLayout>
         <!-- 可拖动的层 -->
@@ -111,8 +111,16 @@
             <com.rd.veuisdk.ui.DraggedView
                 android:id="@+id/dragged_info_trash_View"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"/>
         </com.rd.veuisdk.ui.DraggedTrashLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlSplitScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+        </RelativeLayout>
     </com.rd.veuisdk.ui.PriviewLayout>
 
 </com.rd.veuisdk.ui.NoneMultiTouchLinearLayout>

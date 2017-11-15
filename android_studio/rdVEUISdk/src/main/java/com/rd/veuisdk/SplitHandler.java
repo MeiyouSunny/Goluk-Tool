@@ -12,6 +12,7 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.rd.lib.utils.CoreUtils;
@@ -21,8 +22,8 @@ import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.veuisdk.model.SplitItem;
 import com.rd.veuisdk.model.SplitThumbItemInfo;
+import com.rd.veuisdk.ui.AutoView;
 import com.rd.veuisdk.ui.DraggedView;
-import com.rd.veuisdk.ui.PopViewUtil;
 import com.rd.veuisdk.ui.PriviewLayout;
 import com.rd.veuisdk.ui.PriviewLinearLayout;
 import com.rd.veuisdk.ui.VideoThumbNailView;
@@ -49,11 +50,13 @@ class SplitHandler {
     private FrameLayout mDraggedLayout;
     private DraggedView mDraggedView;
     private PriviewLinearLayout mPriviewLinearLayout;
+    private AutoView mFirstDialog;
 
     private View mSplitLayout;
     private TextView mTvSplitProgress;
     private TextView mTvEndTime;
     private PriviewLayout mParentFrame;
+    private RelativeLayout mScreen;
     private int mThumbMargin = 0;
 
 
@@ -73,6 +76,7 @@ class SplitHandler {
         mScrollView.setHorizontalScrollBarEnabled(false);
         mSplitView = (VideoThumbNailView) mRoot
                 .findViewById(R.id.split_videoview);
+        mScreen = (RelativeLayout) mRoot.findViewById(R.id.rlSplitScreen);
 
         mDraggedLayout = (FrameLayout) mRoot
                 .findViewById(R.id.thelinearDraggedLayout);
@@ -87,6 +91,8 @@ class SplitHandler {
         mTvEndTime = (TextView) mRoot.findViewById(R.id.tvEnd);
         mTvSplitProgress = (TextView) mRoot
                 .findViewById(R.id.split_item_progress);
+        mFirstDialog = (AutoView) mRoot.findViewById(R.id.split_first_dialog);
+
 
         mRoot.findViewById(R.id.prepare_split).setOnClickListener(
                 mSplitLisenter);
@@ -259,9 +265,10 @@ class SplitHandler {
     private Bitmap getThumbBitmap(int moffset, SplitItem mLine) {
         int width = 0, height = ThumbNailUtils.THUMB_HEIGHT;
         ArrayList<SplitThumbItemInfo> thumblist = mLine.getList();
-        for (int i = 0; i < thumblist.size(); i++) {
-            width += thumblist.get(i).src.width();
-        }
+//        for (int i = 0; i < thumblist.size(); i++) {
+//            width += thumblist.get(i).src.width();
+//        }
+        width = mLine.getRect().width();
         int maxWidth = mDispMetrics.widthPixels / 3 * 2;
         final int mwidth = Math.min(maxWidth, width);
         Bitmap bmp = Bitmap.createBitmap(mwidth, height, Config.ARGB_8888);
@@ -419,7 +426,14 @@ class SplitHandler {
         @Override
         public void onScrollProgress(View view, int scrollX, int scrollY,
                                      boolean appScroll) {
-
+            int[] dialogTextLocal = new int[2];
+            mFirstDialog.getTextView().getLocationOnScreen(dialogTextLocal);
+            if (dialogTextLocal[0] > 0) {
+                mFirstDialog.setTranslationX(-scrollX);
+            }
+            if (scrollX == 0) {
+                mFirstDialog.setTranslationX(0);
+            }
             if (!appScroll && mIsSpliting) {
                 int progress = getProgressByPx(scrollX);
                 setProgressText(scrollX);
@@ -684,16 +698,26 @@ class SplitHandler {
                     mSplitView.setStartThumb();
                     if (AppConfiguration.isFirstShowDialogSplit()) {
                         AppConfiguration.setIsFirstDialogSplit();
-                        PopViewUtil.showPopupWindow(mSplitView, false,
-                                true, 80, true, -80,
-                                new PopViewUtil.CallBack() {
-
-                                    @Override
-                                    public void onClick() {
-                                        AppConfiguration
-                                                .setIsFirstDragSplit();
-                                    }
-                                }, R.string.drag_for_split, 0.5);
+                        mFirstDialog.setAutoViewMargin(0);
+                        mFirstDialog.setUpOrDown(false, 80, R.string.drag_for_split, true, 0.5);
+                        mScreen.setVisibility(View.VISIBLE);
+                        mScreen.setOnClickListener(new OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mScreen.setVisibility(View.GONE);
+                                mFirstDialog.setVisibility(View.GONE);
+                            }
+                        });
+//                        PopViewUtil.showPopupWindow(mSplitView, false,
+//                                true, 80, true, -80,
+//                                new PopViewUtil.CallBack() {
+//
+//                                    @Override
+//                                    public void onClick() {
+//                                        AppConfiguration
+//                                                .setIsFirstDragSplit();
+//                                    }
+//                                }, R.string.drag_for_split, 0.5);
 
 
                     }

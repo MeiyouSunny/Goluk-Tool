@@ -42,6 +42,7 @@ public class SpeedPreviewActivity extends BaseActivity {
     private int mLastPlayPostion;
     private MediaObject mMedia;
     private int mSpeedIndex;
+    private boolean mIsAutoRepeat = true;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,10 +149,12 @@ public class SpeedPreviewActivity extends BaseActivity {
     };
 
     private VirtualVideoView.VideoViewListener mPlayerListener = new VirtualVideoView.VideoViewListener() {
+        private float lastPosition;
 
         @Override
         public void onPlayerPrepared() {
             SysAlertDialog.cancelLoadingDialog();
+            lastPosition = -1;
             int ms = Utils.s2ms(mMediaPlayer.getDuration());
             mPbPreview.setMax(ms);
             mTvVideoDuration.setText(DateTimeUtils.stringForMillisecondTime(
@@ -174,7 +177,15 @@ public class SpeedPreviewActivity extends BaseActivity {
 
         @Override
         public void onGetCurrentPosition(float position) {
-            mPbPreview.setProgress(Utils.s2ms(position));
+            if (position < lastPosition && mIsAutoRepeat) {
+                lastPosition = -1;
+                mIsAutoRepeat = false;
+                pauseVideo();
+                onComplete();
+            } else {
+                lastPosition = position;
+                mPbPreview.setProgress(Utils.s2ms(position));
+            }
         }
     };
 
@@ -197,6 +208,7 @@ public class SpeedPreviewActivity extends BaseActivity {
 
         mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
         mMediaPlayer.setClearFirst(true);
+        mMediaPlayer.setAutoRepeat(mIsAutoRepeat);
         mMediaPlayer.setOnClickListener(mOnPlayerClickListener);
         mMediaPlayer.setOnPlaybackListener(mPlayerListener);
         mMediaPlayer.setOnInfoListener(new VirtualVideo.OnInfoListener() {
@@ -246,6 +258,7 @@ public class SpeedPreviewActivity extends BaseActivity {
         mIvVideoPlayState.setVisibility(View.VISIBLE);
         mMediaPlayer.seekTo(0);
         mPbPreview.setProgress(0);
+        mMediaPlayer.setAutoRepeat(mIsAutoRepeat);
     }
 
     /**
@@ -299,7 +312,6 @@ public class SpeedPreviewActivity extends BaseActivity {
             mLastPlayPostion = Utils.s2ms(mMediaPlayer.getCurrentPosition());
             pauseVideo();
         }
-
     }
 
     @Override

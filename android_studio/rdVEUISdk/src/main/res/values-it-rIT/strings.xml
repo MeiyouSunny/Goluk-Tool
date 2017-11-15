@@ -7,6 +7,8 @@
     <string name="music_soundtrack">Aggiungi audio</string>
     <string name="musicVoice">Aggiungi audio</string>
     <string name="videoVoice">Audio originale </string>
+    <string name="video_voice_p">Suoni</string>
+    <string name="video_voice_n">Suoni disattivati</string>
     <string name="music_none">Nessuno</string>
     <string name="music_no_song">Nessuno</string>
     <string name="sp_music_chaowan">Onda</string>
@@ -61,4 +63,20 @@
     <string name="quit_edit">Sicuro di non voler più modifica ?</string>
     <string name="priview_title">Anteprima</string>
     <string name="preview">Anteprima</string>
+    <string name="video_duration_too_short_to_trim">Impossibile acquisire video, il video è più corto di 1 secondo</string>
+    <string name="video_duration_too_short_to_split">Impossibile dividere il video, il video è più corto di 0,5 secondi.</string>
+    <string name="split_duration_too_low">Le sezioni video suddivise sono troppo brevi</string>
+    <string name="sp_filter_4">vuoto</string>
+    <string name="release_hand_for_del">Rilascia per cancellare</string>
+    <string name="quit_partedit">Annulla &quot;Modifica sezioni&quot;?</string>
+    <string name="please_open_wifi">Bitte schalte deine Internetverbindung an</string>
+    <string name="please_check_network">Bitte schalte deine Internetverbindung an</string>
+    <string name="last_split_cannt_del">Mantieni almeno un video</string>
+    <string name="dragged_into_trash">Trascina sul cestino per cancellare</string>
+    <string name="dragged_info_trash_del">Trascina sul cestino per cancellare</string>
+    <string name="drag_for_split">Trascina per selezionare l\'area di divisione</string>
+    <string name="canceling">Annullamento ...</string>
+    <string name="cancel_export_video">Export unvollständig, abbrechen?</string>
+    <string name="cancel_export">Export unvollständig, abbrechen?</string>
+    <string name="video_speed_duration_too_short_to_change">Impossibile acquisire video, il video è troppo corto.</string>
 </resources>

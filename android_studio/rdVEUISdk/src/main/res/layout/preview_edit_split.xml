@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:autoview="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/split_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -40,11 +41,13 @@
             </LinearLayout>
         </com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView>
 
+
         <TextView
             android:id="@+id/prepare_split"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:background="@null"
             android:drawablePadding="3dp"
             android:drawableTop="@drawable/edit_split_line"
@@ -99,7 +102,18 @@
                 android:textColor="@color/transparent_white"
                 android:textSize="@dimen/text_size_14"/>
         </RelativeLayout>
+
+        <com.rd.veuisdk.ui.AutoView
+            android:id="@+id/split_first_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_above="@+id/priview_edit_split"
+            android:gravity="center_horizontal"
+            android:layout_centerHorizontal="true"
+            android:paddingLeft="80dp"
+            autoview:sText="@string/drag_for_listview"/>
     </RelativeLayout>
+
 
     <RelativeLayout
         android:id="@+id/rlBottom"
