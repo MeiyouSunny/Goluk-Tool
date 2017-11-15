@@ -403,7 +403,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
                 });
                 mPopMenu.show();
             } else {
-                PhotoAlbumActivity activity = (PhotoAlbumActivity) getActivity();
+                PhotoAlbumT1SPActivity activity = (PhotoAlbumT1SPActivity) getActivity();
                 activity.onBackPressed();
             }
         } else if (id == R.id.mDeleteBtn) {

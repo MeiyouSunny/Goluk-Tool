@@ -4,6 +4,10 @@
     <!-- String -->
     <string name="capture_time_5_7">精彩抓拍(5+7)</string>
     <string name="storage_left">剩余空间</string>
+    <string name="enter_album_mode_hint">进入相册模式，记录仪将停止录像</string>
+    <string name="cancel_downloading_videos_hint">有视频正在下载，退出相册将取消下载</string>
+    <string name="enter_setting_mode_hint">进入设置模式，记录仪将停止录像</string>
+    <string name="recovery_to_record">记录仪已恢复录像</string>
 
     <!-- Array -->
     <!-- 视频清晰度 -->

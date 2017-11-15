@@ -1,6 +1,7 @@
 package com.mobnote.t1sp.ui.setting;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 import android.view.Gravity;
@@ -12,11 +13,16 @@ import com.kyleduo.switchbutton.SwitchButton;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.base.control.BindTitle;
 import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.bean.SettingValue;
+import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.service.HeartbeatTask;
+import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
 import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
@@ -27,6 +33,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -61,7 +68,11 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @BindView(R2.id.switch_mtd)
     SwitchButton switchMTD;
 
+    // 忽略首次由程序修改设置的check状态
+    private boolean mIgnoreSwtich = true;
+
     private CustomDialog mCustomDialog;
+    private CustomLoadingDialog mDialog;
 
     private HeartbeatTask mHeartbeatTask;
 
@@ -76,9 +87,23 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     public void onViewCreated() {
         super.onViewCreated();
 
-        getPresenter().enterOrExitSettingMode(true);
-        mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
-        mHeartbeatTask.start();
+        getSettingInfo();
+
+    }
+
+    private void getSettingInfo() {
+        mDialog = new CustomLoadingDialog(this, getString(R.string.enter_setting_mode_hint));
+        mDialog.show();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPresenter().enterOrExitSettingMode(true);
+                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
+                mHeartbeatTask.start();
+                if (mDialog.isShowing())
+                    mDialog.close();
+            }
+        }, 2000);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
@@ -105,6 +130,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @OnCheckedChanged({R2.id.switch_record_sound, R2.id.switch_power_sound, R2.id.switch_capture_sound, R2.id.switch_auto_rotate,
             R2.id.switch_watermark, R2.id.switch_parking_guard, R2.id.switch_mtd})
     public void onChecked(CompoundButton button, boolean isChecked) {
+        if (mIgnoreSwtich)
+            return;
         final int viewId = button.getId();
         if (viewId == R.id.switch_record_sound) {
             getPresenter().setSoundRecord(isChecked);
@@ -153,6 +180,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchParkingGuard.setChecked(settingInfo.parkingGuard);
         switchMTD.setChecked(false);
         switchMTD.setEnabled(settingInfo.parkingGuard);
+
+        mIgnoreSwtich = false;
     }
 
     @Override
@@ -204,6 +233,38 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         super.onDestroy();
         if (mHeartbeatTask != null)
             mHeartbeatTask.stop();
+    }
+
+    @Override
+    public void onBackPressed() {
+        enterVideoMode();
+    }
+
+    public void enterVideoMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+            @Override
+            public void onStart() {
+                mDialog = new CustomLoadingDialog(DeviceSettingsActivity.this, null);
+                mDialog.show();
+            }
+
+            @Override
+            protected void onSuccess() {
+                $.toast().text(R.string.recovery_to_record).show();
+                finish();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(errorMessage).show();
+            }
+
+            @Override
+            public void onFinish() {
+                if (mDialog.isShowing())
+                    mDialog.close();
+            }
+        });
     }
 
 }

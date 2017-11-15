@@ -1,10 +1,16 @@
 package com.mobnote.t1sp.util;
 
 import android.os.Environment;
+import android.text.TextUtils;
 
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.SortByDate;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +27,8 @@ public class FileUtil {
     public static final String URGENT_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/urgent/";
     /* 循环视频路径 */
     public static final String LOOP_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/loop/";
+    /* 视频缩略图缓存路径 */
+    public static final String THUMB_CACHE_DIR = EXTERNAL_SD_PATH + "/goluk/goluk_carrecorder/image/";
 
     /* 精彩视频文件前缀 */
     public static final String WONDERFUL_VIDEO_PREFIX = "SHARE";
@@ -95,6 +103,76 @@ public class FileUtil {
      */
     public static String getWonderfulVideoPathByName(String videoName) {
         return WONDERFUL_VIDEO_PATH + videoName;
+    }
+
+    /**
+     * 从文件路径获取文件名
+     *
+     * @param path 文件路径
+     */
+    public static String getFileNameFromPath(String path) {
+        if (TextUtils.isEmpty(path) || !path.contains("/"))
+            return "";
+
+        return path.substring(path.lastIndexOf("/") + 1);
+    }
+
+    public static String getThumbCacheByVideoName(String videoName) {
+        String fileName = videoName.replace("MP4", "jpg");
+        fileName = FileUtil.THUMB_CACHE_DIR + fileName;
+        return fileName;
+    }
+
+    /**
+     * 拷贝文件
+     *
+     * @param srcFileName 源文件
+     * @param newFileName 目标文件
+     */
+    public static void copyFile(String srcFileName, String newFileName) {
+        if (TextUtils.isEmpty(srcFileName) || TextUtils.isEmpty(newFileName))
+            return;
+        copyFile(new File(srcFileName), new File(newFileName));
+    }
+
+    /**
+     * 拷贝文件
+     *
+     * @param srcFile 源文件
+     * @param newFile 目标文件
+     */
+    public static void copyFile(File srcFile, File newFile) {
+        if (newFile.exists() && newFile.length() == srcFile.length())
+            return;
+        InputStream inStream = null;
+        FileOutputStream fs = null;
+        try {
+            int bytesum = 0;
+            int byteread = 0;
+            if (srcFile.exists()) { // 文件存在时
+                inStream = new FileInputStream(srcFile); // 读入原文件
+                fs = new FileOutputStream(newFile);
+                byte[] buffer = new byte[1024 * 4];
+                int length;
+                while ((byteread = inStream.read(buffer)) != -1) {
+                    bytesum += byteread; // 字节数 文件大小
+                    fs.write(buffer, 0, byteread);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (null != inStream) {
+                    inStream.close();
+                }
+                if (null != fs) {
+                    fs.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

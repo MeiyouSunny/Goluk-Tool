@@ -262,6 +262,7 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
 
     @Override
     public void onError(OkDownloadError error) {
+        mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
         Log.e("download", "error");
     }
 
