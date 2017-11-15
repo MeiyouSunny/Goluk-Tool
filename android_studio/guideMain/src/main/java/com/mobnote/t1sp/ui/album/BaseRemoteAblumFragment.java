@@ -21,7 +21,6 @@ import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.photoalbum.CloudWonderfulVideoAdapter;
 import com.mobnote.golukmain.photoalbum.LocalWonderfulVideoAdapter;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
@@ -34,6 +33,7 @@ import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.FileListCallback;
 import com.mobnote.t1sp.ui.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.ui.download.Task;
+import com.mobnote.t1sp.ui.download.ThumbDownloader;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
@@ -47,7 +47,7 @@ import java.util.Map;
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
  */
-public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn {
+public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener {
 
     private View mWonderfulVideoView;
 
@@ -59,7 +59,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private CustomLoadingDialog mCustomProgressDialog = null;
 
     private StickyListHeadersListView mStickyListHeadersListView = null;
-    private CloudWonderfulVideoAdapter mCloudWonderfulVideoAdapter = null;
+    private RemoteVideoAdapter mRemoteVideoAdapter = null;
+    private ThumbDownloader mThumbDownloader;
 
     // 是否下载了一次数据(刚进入页面时)
     private boolean isInitLoadData;
@@ -127,6 +128,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mThumbDownloader != null)
+            mThumbDownloader.stop();
     }
 
     private void initView() {
@@ -134,10 +137,14 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         this.mCustomProgressDialog = new CustomLoadingDialog(getActivity(), null);
         mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
                 .findViewById(R.id.mStickyListHeadersListView);
-        mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(),
+        mRemoteVideoAdapter = new RemoteVideoAdapter(getActivity(), getVideoType(),
                 (FragmentAlbumT1SP) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
         //loadData(true);
+        if (getVideoType() != PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            mThumbDownloader = new ThumbDownloader(getActivity());
+            mThumbDownloader.setListener(this);
+        }
     }
 
     @Override
@@ -164,7 +171,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 updateNewState(filename);
 
                 videoInfo.getVideoInfo1().isNew = false;
-                mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+                mRemoteVideoAdapter.notifyDataSetChanged();
             } else {
                 // 点击列表右边项,跳转到视频播放页面
                 VideoInfo info2 = d.getVideoInfo2();
@@ -176,7 +183,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 updateNewState(filename);
 
                 videoInfo.getVideoInfo2().isNew = false;
-                mCloudWonderfulVideoAdapter.notifyDataSetChanged();
+                mRemoteVideoAdapter.notifyDataSetChanged();
             }
         }
     }
@@ -187,10 +194,10 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             public void onScrollStateChanged(AbsListView arg0, int scrollState) {
                 switch (scrollState) {
                     case OnScrollListener.SCROLL_STATE_FLING:
-                        // mCloudWonderfulVideoAdapter.lock();
+                        // mRemoteVideoAdapter.lock();
                         break;
                     case OnScrollListener.SCROLL_STATE_IDLE:
-                        // mCloudWonderfulVideoAdapter.unlock();
+                        // mRemoteVideoAdapter.unlock();
                         if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
                             final int size = mDataList.size();
                             if (size > 0 && isHasData) {
@@ -203,7 +210,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                         }
                         break;
                     case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-                        // mCloudWonderfulVideoAdapter.lock();
+                        // mRemoteVideoAdapter.lock();
                         break;
 
                     default:
@@ -411,7 +418,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private void updateData(List<VideoInfo> fileList) {
         addFooterView();
         if (mDataList.size() == 0) {
-            mStickyListHeadersListView.setAdapter(mCloudWonderfulVideoAdapter);
+            mStickyListHeadersListView.setAdapter(mRemoteVideoAdapter);
         }
         mDataList.addAll(fileList);
         if (fileList.size() < FILE_COUNT_ONE_TIME) {
@@ -422,6 +429,23 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         }
 
         parseDataAndShow();
+
+        addThumbDownload(fileList);
+    }
+
+    private void addThumbDownload(List<VideoInfo> fileList) {
+        if (CollectionUtils.isEmpty(fileList))
+            return;
+
+        List<String> thumbUrls = new ArrayList<>(fileList.size());
+        for (VideoInfo videoInfo : fileList) {
+            if (videoInfo.videoPath.contains("/SD/")) {
+                thumbUrls.add(videoInfo.videoPath.replace("/SD/", "/thumb/"));
+            }
+        }
+
+        if (mThumbDownloader != null)
+            mThumbDownloader.addUrls(thumbUrls);
     }
 
     private void parseDataAndShow() {
@@ -429,7 +453,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         mDoubleDataList.clear();
         mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
         mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
-        mCloudWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+        mRemoteVideoAdapter.setData(mGroupListName, mDoubleDataList);
     }
 
     private void checkListState() {
@@ -574,5 +598,12 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
      * 返回视频类型: 精彩/紧急/循环
      */
     protected abstract int getVideoType();
+
+    @Override
+    public void onThumbDownload(String thumbUrl) {
+        // 视频缩略图下载成功
+        if (mRemoteVideoAdapter != null)
+            mRemoteVideoAdapter.notifyDataSetChanged();
+    }
 
 }

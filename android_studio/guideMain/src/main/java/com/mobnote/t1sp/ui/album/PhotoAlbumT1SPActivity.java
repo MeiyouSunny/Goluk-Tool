@@ -4,17 +4,21 @@ import android.content.Context;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.service.HeartbeatTask;
+
+import likly.dollar.$;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -24,6 +28,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     private boolean mSelectMode;
     private boolean mFromCloud;
     private FragmentAlbumT1SP mFragmentAlubm;
+    private CustomLoadingDialog mDialog;
 
     private HeartbeatTask mHeartbeatTask;
 
@@ -46,36 +51,73 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         fragmentTransaction.add(R.id.photo_album_fragment, mFragmentAlubm);
         fragmentTransaction.commitAllowingStateLoss();
 
+        mDialog = new CustomLoadingDialog(this, getString(R.string.enter_album_mode_hint));
+        mDialog.show();
+
         enterPlaybackMode();
     }
 
     private void enterPlaybackMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(true), new CommonCallback() {
+        new Handler().postDelayed(new Runnable() {
             @Override
-            protected void onSuccess() {
-                // 开始加载数据
-                mFragmentAlubm.loadData();
-                // 发送心跳
-                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_PLAYBACK);
-                mHeartbeatTask.start();
-            }
+            public void run() {
+                ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(true), new CommonCallback() {
+                    @Override
+                    protected void onSuccess() {
+                        if (mDialog.isShowing())
+                            mDialog.close();
+                        // 开始加载数据
+                        mFragmentAlubm.loadData();
+                        // 发送心跳
+                        mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_PLAYBACK);
+                        mHeartbeatTask.start();
+                    }
 
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                Log.e("mode", errorMessage);
+                    @Override
+                    protected void onServerError(int errorCode, String errorMessage) {
+                        Log.e("mode", errorMessage);
+                    }
+                });
             }
-        });
+        }, 2000);
     }
 
     @Override
     public void onBackPressed() {
         if (mFragmentAlubm != null && mShouldClose) {
             mFragmentAlubm.checkDowningExit();
-        }else {
-            super.onBackPressed();
+        } else {
+            //super.onBackPressed();
+            enterVideoMode();
         }
     }
 
+    public void enterVideoMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+            @Override
+            public void onStart() {
+                mDialog = new CustomLoadingDialog(PhotoAlbumT1SPActivity.this, null);
+                mDialog.show();
+            }
+
+            @Override
+            protected void onSuccess() {
+                $.toast().text(R.string.recovery_to_record).show();
+                finish();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(errorMessage).show();
+            }
+
+            @Override
+            public void onFinish() {
+                if (mDialog.isShowing())
+                    mDialog.close();
+            }
+        });
+    }
 
     @Override
     protected void onDestroy() {

@@ -21,11 +21,6 @@ public interface DeviceSettingsPresenter extends Presenter<DeviceSettingsModel, 
      */
     void getAllInfo();
 
-    /**
-     * 统一接口获取设置参数
-     */
-    void getOtherSettingInfos();
-
     //////
 
     /**

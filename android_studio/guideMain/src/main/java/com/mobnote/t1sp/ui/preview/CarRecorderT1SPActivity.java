@@ -424,9 +424,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             return;
 
         mLatestTwoVideos = videos;
-        image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
-        new2.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
-        if (videos.size() >= 2) {
+        if (videos.size() == 1) {
+            image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
+            new1.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
+        } else if (videos.size() == 2) {
+            image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(0)));
+            new2.setVisibility(isNewByName(videos.get(0)) ? View.VISIBLE : View.GONE);
             image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(videos.get(1)));
             new1.setVisibility(isNewByName(videos.get(1)) ? View.VISIBLE : View.GONE);
         }
@@ -989,8 +992,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image2) {
-            if (mLatestTwoVideos.size() > 0) {
-                new2.setVisibility(View.GONE);
+            new2.setVisibility(View.GONE);
+            if (mLatestTwoVideos.size() == 2) {
                 String videoName = mLatestTwoVideos.get(0);
                 videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
                 gotoPlayVideo(videoName);

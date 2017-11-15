@@ -37,33 +37,6 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
     @Override
     public void getAllInfo() {
-        getOtherSettingInfos();
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getMTDParam(), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-
-            }
-        });
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getCaptureTimeParam(), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-
-            }
-        });
-    }
-
-    @Override
-    public void getOtherSettingInfos() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
@@ -71,8 +44,17 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onStart() {
+                getView().showLoadingDialog();
+            }
 
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+            }
+
+            @Override
+            public void onFinish() {
+                getView().hideLoadingDialog();
             }
         });
     }
