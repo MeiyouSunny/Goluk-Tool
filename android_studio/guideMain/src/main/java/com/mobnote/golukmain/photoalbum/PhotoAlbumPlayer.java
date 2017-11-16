@@ -64,6 +64,8 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
+import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.http.UrlHostManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.OrientationManager.IOrientationFn;
 import com.mobnote.golukmain.player.ConfigData;
@@ -1554,6 +1556,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             nickName = getString(R.string.str_default_video_edit_user_name);
         }
         configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
+        configData.musicUrl = HttpManager.getInstance().getWebDirectHost() + "/navidog4MeetTrans/videoCommon.htm?method=musicResources&commlocale="+GolukUtils.getLanguageAndCountry();
         return configData;
     }
 
@@ -1624,7 +1627,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.TRANSITION, false)
                 .enableLocalMusic(configData.enableLocalMusic)
                 // 设置自定义的网络音乐
-                .setMusicUrl(ConfigData.MUSIC_URL)
+                .setMusicUrl(configData.musicUrl)
                 // 设置云音乐
                 .setCloudMusicUrl("")
                 // 字幕、特效在mv的上面
@@ -1640,6 +1643,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 .setTrailerPath(configData.videoTrailerPath)
                 // 设置片尾时长 单位s 默认2s
                 .setTrailerDuration(2)
+                .setImportVideoDuration(90)
                 // 设置导出视频时长 单位ms 传0或者不设置 将导出完整视频
                 .setVideoDuration(configData.exportVideoDuration)
                 // 设置水印路径

@@ -72,6 +72,10 @@ public class ExportConfiguration implements Parcelable {
      * 视频分辨率
      */
     private int exportVideoMaxWH = 640;
+    /**
+     * 添加媒体时长限制
+     */
+    public float importVideoDuration;
 
     /**
      * 获取导出视频的最大边
@@ -108,6 +112,7 @@ public class ExportConfiguration implements Parcelable {
         this.exportVideoBitRate = builder.mExportVideoBitRate;
         this.exportVideoDuration = builder.mExportVideoDuration;
         this.exportVideoFrameRate = builder.mExportVideoFrameRate;
+        this.importVideoDuration = builder.mImportVideoDuration;
     }
 
     /**
@@ -130,6 +135,7 @@ public class ExportConfiguration implements Parcelable {
         private int mTextWatermarkColor = 0;
         private int mTextWatermarkShadowColor = 0;
         private RectF mWatermarkShowRectF = null;
+        private float mImportVideoDuration = 0;
 
         /**
          * 设置导出视频路径
@@ -173,10 +179,10 @@ public class ExportConfiguration implements Parcelable {
          * @param exportVideoDuration 导出视频时长，单位为秒(s)
          */
         public Builder setVideoDuration(float exportVideoDuration) {
+            this.mExportVideoDuration = exportVideoDuration;
             if (exportVideoDuration <= 0) {
                 this.mExportVideoDuration = 0;
             }
-            this.mExportVideoDuration = exportVideoDuration;
             return this;
         }
 
@@ -294,6 +300,20 @@ public class ExportConfiguration implements Parcelable {
             return this;
         }
 
+        /**
+         * 设置添加媒体时长限制
+         *
+         * @param importDuration 媒体时长（单位秒）
+         * @return
+         */
+        public Builder setImportVideoDuration(float importDuration) {
+            mImportVideoDuration = importDuration;
+            if (importDuration <= 0) {
+                mImportVideoDuration = 0;
+            }
+            return this;
+        }
+
         public ExportConfiguration get() {
             return new ExportConfiguration(this);
         }
@@ -321,6 +341,7 @@ public class ExportConfiguration implements Parcelable {
         dest.writeInt(this.exportVideoFrameRate);
         dest.writeDouble(this.exportVideoBitRate);
         dest.writeInt(this.exportVideoMaxWH);
+        dest.writeFloat(this.importVideoDuration);
     }
 
     protected ExportConfiguration(Parcel in) {
@@ -339,6 +360,7 @@ public class ExportConfiguration implements Parcelable {
         this.exportVideoFrameRate = in.readInt();
         this.exportVideoBitRate = in.readDouble();
         this.exportVideoMaxWH = in.readInt();
+        this.importVideoDuration = in.readFloat();
     }
 
     public static final Creator<ExportConfiguration> CREATOR = new Creator<ExportConfiguration>() {

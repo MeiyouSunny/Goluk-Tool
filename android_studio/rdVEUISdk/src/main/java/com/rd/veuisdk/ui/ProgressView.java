@@ -36,7 +36,7 @@ public class ProgressView extends View {
     private Rect mTitleBackRect = new Rect();
     private boolean bThemeTitleBackShowing;
     private TextPaint mTitleEditPaint;
-    private static final String TITLE_EDIT_HITE_TEXT = "点击虚线框编辑";
+    private final String TITLE_EDIT_HITE_TEXT = getResources().getString(R.string.click_dash_line_to_edit);
     private String TAG = ProgressView.class.getName();
     private int mTitleEditHiteTextWidth;
     private int mCenterX = 0, mCenterY = 0;

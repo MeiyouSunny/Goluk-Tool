@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fitler_fu_beauity_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical" >
+              android:id="@+id/fitler_fu_beauity_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center"
+              android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="2dp"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -23,7 +23,7 @@
             android:minWidth="50dp"
             android:text="@string/fu_blue"
             android:textColor="@color/color1"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/text_size_16"/>
 
         <RadioGroup
             android:id="@+id/fu_blue_level"
@@ -32,7 +32,7 @@
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:paddingLeft="@dimen/fu_paddingLeft"
-            android:paddingRight="@dimen/fu_paddingLeft" >
+            android:paddingRight="@dimen/fu_paddingLeft">
 
             <RadioButton
                 android:id="@+id/fu_blue_1"
@@ -42,14 +42,14 @@
                 android:background="@color/edit_menu_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="1"
+                android:text="@string/level_1"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transparent" />
+                android:background="@color/transparent"/>
 
             <RadioButton
                 android:id="@+id/fu_blue_2"
@@ -60,14 +60,14 @@
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
-                android:text="2"
+                android:text="@string/level_2"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transparent" />
+                android:background="@color/transparent"/>
 
             <RadioButton
                 android:id="@+id/fu_blue_3"
@@ -77,14 +77,14 @@
                 android:background="@color/edit_menu_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="3"
+                android:text="@string/level_3"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
 
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transparent" />
+                android:background="@color/transparent"/>
 
             <RadioButton
                 android:id="@+id/fu_blue_4"
@@ -94,13 +94,14 @@
                 android:background="@color/edit_menu_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="4"
+                android:text="@string/level_4"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transparent" />
+                android:background="@color/transparent"/>
 
             <RadioButton
                 android:id="@+id/fu_blue_5"
@@ -110,13 +111,14 @@
                 android:background="@color/edit_menu_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="5"
+                android:text="@string/level_5"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
+
             <View
                 android:layout_width="1dp"
                 android:layout_height="match_parent"
-                android:background="@color/transparent" />
+                android:background="@color/transparent"/>
 
             <RadioButton
                 android:id="@+id/fu_blue_6"
@@ -126,9 +128,9 @@
                 android:background="@color/edit_menu_bg"
                 android:button="@null"
                 android:gravity="center"
-                android:text="6"
+                android:text="@string/level_6"
                 android:textColor="@drawable/fu_blue_rb__color"
-                android:textSize="@dimen/text_size_12" />
+                android:textSize="@dimen/text_size_12"/>
         </RadioGroup>
     </LinearLayout>
 
@@ -139,7 +141,7 @@
         android:layout_marginRight="5dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -148,7 +150,7 @@
             android:minWidth="50dp"
             android:text="@string/fu_color"
             android:textColor="@color/color1"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/text_size_16"/>
 
         <SeekBar
             android:id="@+id/sbFuColorbar"
@@ -161,7 +163,7 @@
             android:paddingRight="@dimen/fu_paddingLeft"
             android:progressDrawable="@drawable/video_editor_progress"
             android:thumb="@drawable/seekbar_thumb"
-            android:thumbOffset="20dp" />
+            android:thumbOffset="20dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -171,7 +173,7 @@
         android:layout_marginRight="5dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -180,7 +182,7 @@
             android:minWidth="50dp"
             android:text="@string/fu_thin"
             android:textColor="@color/color1"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/text_size_16"/>
 
         <SeekBar
             android:id="@+id/sbFuThinbar"
@@ -193,7 +195,7 @@
             android:paddingRight="@dimen/fu_paddingLeft"
             android:progressDrawable="@drawable/video_editor_progress"
             android:thumb="@drawable/seekbar_thumb"
-            android:thumbOffset="20dp" />
+            android:thumbOffset="20dp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -203,7 +205,7 @@
         android:layout_marginRight="5dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -212,7 +214,7 @@
             android:minWidth="50dp"
             android:text="@string/fu_eye"
             android:textColor="@color/color1"
-            android:textSize="@dimen/text_size_16" />
+            android:textSize="@dimen/text_size_16"/>
 
         <SeekBar
             android:id="@+id/sbFuEyebar"
@@ -225,7 +227,7 @@
             android:paddingRight="@dimen/fu_paddingLeft"
             android:progressDrawable="@drawable/video_editor_progress"
             android:thumb="@drawable/seekbar_thumb"
-            android:thumbOffset="20dp" />
+            android:thumbOffset="20dp"/>
     </LinearLayout>
 
 </LinearLayout>

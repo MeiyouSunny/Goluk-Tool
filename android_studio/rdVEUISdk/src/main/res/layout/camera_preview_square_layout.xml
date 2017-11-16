@@ -144,7 +144,7 @@
                                 android:paddingLeft="4dp"
                                 android:paddingTop="5dp"
                                 android:scrollHorizontally="false"
-                                android:text="添加音乐"
+                                android:text="@string/add_music"
                                 android:textColor="#b3ffffff"
                                 android:textSize="@dimen/text_size_12"/>
 

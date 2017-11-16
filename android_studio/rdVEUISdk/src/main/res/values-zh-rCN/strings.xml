@@ -92,4 +92,5 @@
     <string name="cancel_export_video">正在导出，是否取消？</string>
     <string name="cancel_export">正在导出，是否取消？</string>
     <string name="video_speed_duration_too_short_to_change">视频时长过短，无法截取视频</string>
+    <string name="import_duration_limit">导出视频长度不能大于90秒</string>
 </resources>

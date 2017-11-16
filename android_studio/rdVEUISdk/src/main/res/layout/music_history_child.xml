@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_marginLeft="10dp"
-        android:text="00:00"
+        android:text="@string/music_default_time"
         android:textColor="@color/transparent_white"
         android:textSize="@dimen/text_size_15" />
 

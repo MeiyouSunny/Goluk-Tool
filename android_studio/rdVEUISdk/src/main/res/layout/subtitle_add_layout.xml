@@ -26,7 +26,7 @@
                 android:gravity="center"
                 android:minHeight="23dp"
                 android:maxLines="1"
-                android:text="0:0"
+                android:text="@string/subtitle_progress_default"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_16"/>
 

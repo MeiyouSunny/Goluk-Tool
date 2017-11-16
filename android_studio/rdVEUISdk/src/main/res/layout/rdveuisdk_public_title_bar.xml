@@ -47,7 +47,7 @@
 		android:shadowDy="0"
 		android:shadowRadius="0"
 		android:singleLine="true"
-		android:text="test"
+		android:text="@string/title_test"
 		android:textColor="@color/white"
 		android:textSize="@dimen/text_size_18" />
 

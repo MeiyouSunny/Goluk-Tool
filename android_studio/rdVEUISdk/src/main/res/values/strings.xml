@@ -78,6 +78,10 @@
     <string name="musicVoice">配乐</string>
     <string name="videoVoice">原音</string>
     <string name="edit_click_split">单击分割</string>
+    <string name="title_test">test</string>
+    <string name="subtitle_progress_default">0.0</string>
+    <string name="click_dash_line_to_edit">点击虚线框编辑</string>
+    <string name="import_duration_limit">视频长度不能大于%d秒</string>
 
     <string name="not_support_cup_arch">当前功能暂不可用</string>
 
@@ -186,6 +190,8 @@
     <string name="show_style_item_wind">百叶窗</string>
     <string name="show_style_item_watch">时针</string>
     <string name="show_style_item_mosaic">马赛克</string>
+    <string name="transition_default_duration">1.00秒</string>
+    <string name="transition_default_info">info</string>
 
     <!-- 配音 -->
     <string name="audio_tip">按住持续配音，松开后配音结束</string>
@@ -441,6 +447,12 @@
     <string name="fu_eye">大眼</string>
     <string name="camare_filter">滤镜</string>
     <string name="camare_face_filter">贴纸</string>
+    <string name="level_1">1</string>
+    <string name="level_2">2</string>
+    <string name="level_3">3</string>
+    <string name="level_4">4</string>
+    <string name="level_5">5</string>
+    <string name="level_6">6</string>
 
     <!-- 压缩 -->
 
@@ -496,6 +508,7 @@
     <string name="allvideo">全部视频</string>
     <string name="allphoto">全部图片</string>
     <string name="ablum">相册</string>
+    <string name="record_default_time">00:00.0</string>
 
     <!-- 配音 -->
     <string name="error_record_audio_retry">录音失败，请重试!</string>
@@ -520,6 +533,8 @@
     <string name="paint_with_5">当前画笔宽度为: 5</string>
     <string name="isdeveloping_p_look">正在开发，敬请期待</string>
     <string name="test">测试\n丹药</string>
+    <string name="add_music">添加音乐</string>
+    <string name="music_default_time">00:00</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

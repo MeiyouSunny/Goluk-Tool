@@ -227,7 +227,7 @@ public class SinglePointRotate extends View {
     /**
      * 字符串
      */
-    private String mText = "添加字幕";
+    private String mText = getResources().getString(R.string.add_subtitle);
     private DisplayMetrics display;
     /**
      * 字符串画刷

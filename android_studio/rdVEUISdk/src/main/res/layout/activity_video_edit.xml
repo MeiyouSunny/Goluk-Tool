@@ -181,7 +181,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dp"
-                            android:text="00:00.0"
+                            android:text="@string/record_default_time"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_12"/>
 
@@ -200,7 +200,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@id/ivFullScreen"
-                            android:text="00:00.0"
+                            android:text="@string/record_default_time"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_12"/>
 

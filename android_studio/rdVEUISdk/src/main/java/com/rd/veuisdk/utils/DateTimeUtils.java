@@ -1,7 +1,5 @@
 package com.rd.veuisdk.utils;
 
-import android.text.format.DateFormat;
-
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -131,36 +129,6 @@ public class DateTimeUtils {
         return (int) diff;
     }
 
-
-    /**
-     * 返回发布时间格式
-     *
-     * @param millis 时间
-     * @return
-     */
-    public static String getDateStr(long millis) {
-        long time = (System.currentTimeMillis() - millis);
-        time /= 1000;
-        long minute = time / 60;
-        long hour = minute / 60;
-        long day = hour / 24;
-
-        String stime;
-        if (day > 7) {
-            stime = DateFormat.format("yyyy-MM-dd", new Date(millis))
-                    .toString();
-        } else if (day > 0) {
-            stime = day + "天前";
-        } else if (hour > 0) {
-            stime = hour + "小时前";
-        } else if (minute > 0) {
-            stime = minute + "分钟前";
-        } else {
-            stime = "刚刚";
-        }
-        return stime;
-
-    }
 
     /**
      * 获取时间

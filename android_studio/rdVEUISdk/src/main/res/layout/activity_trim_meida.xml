@@ -376,7 +376,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="截取"
+            android:text="@string/preview_intercept"
             android:textSize="@dimen/text_size_18"/>
 
     </RelativeLayout>

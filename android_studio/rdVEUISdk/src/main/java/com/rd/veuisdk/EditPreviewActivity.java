@@ -946,6 +946,11 @@ public class EditPreviewActivity extends BaseActivity {
     };
 
     private void onContinue() {
+        int importDurationLimit = (int) SdkEntry.getSdkService().getExportConfig().importVideoDuration;
+        if (importDurationLimit != 0 && mMediaPlayer.getDuration() >= importDurationLimit) {
+            SysAlertDialog.showAutoHideDialog(this, "", getString(R.string.import_duration_limit, importDurationLimit), 2500);
+            return;
+        }
         Intent i = new Intent();
         i.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mSceneList);
         i.putExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, mCurProportion);

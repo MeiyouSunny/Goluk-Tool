@@ -23,7 +23,7 @@
         android:layout_margin="2dp"
         android:background="@null"
         android:layout_gravity="center"
-        android:text="info"
+        android:text="@string/transition_default_info"
         android:textColor="@drawable/edit_text_color"
         android:textSize="@dimen/text_size_14"/>
 

@@ -1,42 +1,42 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:verseekbar="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/roottreeview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+             xmlns:verseekbar="http://schemas.android.com/apk/res-auto"
+             android:id="@+id/roottreeview"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
 
     <com.rd.veuisdk.ui.NoneMultiTouchLinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/public_background_color"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
-        <include layout="@layout/rdveuisdk_public_title_bar" />
+        <include layout="@layout/rdveuisdk_public_title_bar"/>
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
                 <com.rd.lib.ui.PreviewFrameLayout
                     android:id="@+id/rlPreviewLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/black" >
+                    android:background="@color/black">
 
                     <com.rd.lib.ui.PreviewFrameLayout
                         android:id="@+id/rlPreview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerInParent="true" >
+                        android:layout_centerInParent="true">
 
-                        <com.rd.xpk.editor.EnhancePlaybackView
+                        <com.rd.vecore.VirtualVideoView
                             android:id="@+id/epvPreview"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="match_parent"/>
 
                         <ImageView
                             android:id="@+id/ivPlayerState"
@@ -45,19 +45,19 @@
                             android:layout_centerInParent="true"
                             android:contentDescription="@string/empty"
                             android:scaleType="center"
-                            android:src="@drawable/btn_play" />
+                            android:src="@drawable/btn_play"/>
 
                         <com.rd.veuisdk.ui.ProgressView
                             android:id="@+id/progressView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_alignParentBottom="true" />
+                            android:layout_alignParentBottom="true"/>
 
                         <com.rd.veuisdk.ui.DrawingView
                             android:id="@+id/pv_video_edit_drawing_view"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="gone" />
+                            android:visibility="gone"/>
                     </com.rd.lib.ui.PreviewFrameLayout>
 
                     <TextView
@@ -68,7 +68,7 @@
                         android:layout_alignParentBottom="true"
                         android:layout_alignParentRight="true"
                         android:paddingBottom="5dp"
-                        android:visibility="gone" />
+                        android:visibility="gone"/>
 
                     <com.rd.lib.ui.RotateRelativeLayout
                         android:id="@+id/rlPlayerBottomMenu"
@@ -76,7 +76,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
                         android:background="@color/transparent_black"
-                        android:visibility="invisible" >
+                        android:visibility="invisible">
 
                         <TextView
                             android:id="@+id/tvCurTime"
@@ -84,9 +84,9 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_marginLeft="10dp"
-                            android:text="00:00"
+                            android:text="@string/record_default_time"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/text_size_14"/>
 
                         <ImageView
                             android:id="@+id/ivFullScreen"
@@ -95,7 +95,7 @@
                             android:layout_alignParentRight="true"
                             android:layout_centerVertical="true"
                             android:layout_marginRight="7dp"
-                            android:background="@drawable/edit_intercept_fullscreen" />
+                            android:background="@drawable/edit_intercept_fullscreen"/>
 
                         <TextView
                             android:id="@+id/tvTotalTime"
@@ -103,9 +103,9 @@
                             android:layout_height="wrap_content"
                             android:layout_centerVertical="true"
                             android:layout_toLeftOf="@id/ivFullScreen"
-                            android:text="00:00"
+                            android:text="@string/record_default_time"
                             android:textColor="@color/white"
-                            android:textSize="@dimen/text_size_14" />
+                            android:textSize="@dimen/text_size_14"/>
 
                         <com.rd.veuisdk.ui.RdSeekBar
                             android:id="@+id/sbEditor"
@@ -120,18 +120,18 @@
                             android:paddingRight="15dp"
                             android:progressDrawable="@drawable/video_editor_progress"
                             android:thumb="@drawable/seekbar_thumb"
-                            android:thumbOffset="23dp" />
+                            android:thumbOffset="23dp"/>
                     </com.rd.lib.ui.RotateRelativeLayout>
                 </com.rd.lib.ui.PreviewFrameLayout>
 
-                <include layout="@layout/activity_short_video_edit_menu" />
+                <include layout="@layout/activity_short_video_edit_menu"/>
             </LinearLayout>
 
             <FrameLayout
                 android:id="@+id/flTopLevelContainer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone" />
+                android:visibility="gone"/>
         </FrameLayout>
     </com.rd.veuisdk.ui.NoneMultiTouchLinearLayout>
 
