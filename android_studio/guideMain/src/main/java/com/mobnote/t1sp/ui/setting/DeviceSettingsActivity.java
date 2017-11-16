@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
+import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.t1sp.api.ApiUtil;
@@ -22,7 +23,6 @@ import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.bean.SettingValue;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.service.HeartbeatTask;
-import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
 import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
@@ -124,6 +124,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             showRestFactoryConfirmDialog();
         } else if (viewId == R.id.version_info) {
             ViewUtil.goActivity(this, VersionInfoActivity.class, "info", mSettingInfo);
+        } else if (viewId == R.id.time_setting) {
+            ViewUtil.goActivity(this, TimeSettingActivity.class);
         }
     }
 

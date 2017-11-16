@@ -42,13 +42,15 @@ import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.bean.SettingInfo;
+import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
@@ -543,13 +545,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
      * T1SP连接
      */
     private void connect() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new CommonCallback() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
-            protected void onSuccess() {
+            public void onGetSettingInfos(SettingInfo settingInfo) {
                 // T1SP连接成功
                 GolukApplication.getInstance().setIpcLoginState(true);
                 // 保存WIFI信息
                 saveT1SPInfo();
+                // 保存设备ID和版本
+                SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
+                SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
+                SharedPrefUtil.saveIpcModel(IPCControlManager.T1SP_SIGN);
                 // 开启UDP监听
                 ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
                 ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
@@ -558,7 +564,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                System.out.print("");
+            }
+
+            @Override
+            public void onFinish() {
+                super.onFinish();
             }
         });
     }
@@ -582,7 +592,27 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return;
 
         saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
-        //setIpcMode(mWillConnName);
+
+        // 保存绑定历史记录
+        WifiRsBean beans = new WifiRsBean();
+        beans.setIpc_mac(WiFiInfo.IPC_MAC);
+        beans.setIpc_ssid(WiFiInfo.IPC_SSID);
+        //beans.setIpc_ip(CONNECT_IPC_IP);
+        beans.setIpc_pass(WiFiInfo.IPC_PWD);
+        //beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
+        //beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+        mWac.saveConfiguration(beans);
+
+        WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+        historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
+        historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
+        historyBean.ipc_mac = WiFiInfo.IPC_MAC;
+        historyBean.ipc_ip = CONNECT_IPC_IP;
+        historyBean.ipcSign = WiFiInfo.IPC_MODEL;
+        historyBean.mobile_ssid = WiFiInfo.IPC_SSID;
+        historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
+        historyBean.state = WifiBindHistoryBean.CONN_USE;
+        WifiBindDataCenter.getInstance().saveBindData(historyBean);
     }
 
     @Override
