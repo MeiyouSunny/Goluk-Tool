@@ -688,19 +688,19 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             } else {
                 //相册详情页面-下载到本地
                 ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
-                EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
+                EventBus.getDefault().post(new EventDownloadIpcVid(mPath, getType()));
             }
         } else if (id == R.id.btn_delete) {
-            String tempPath = "";
-
-            if (!TextUtils.isEmpty(mVideoFrom)) {
-                if ("local".equals(mVideoFrom)) {
-                    tempPath = mPath;
-                } else {
-                    tempPath = mFileName;
-                }
-            }
-            showConfimDeleteDialog(tempPath);
+//            String tempPath = "";
+//
+//            if (!TextUtils.isEmpty(mVideoFrom)) {
+//                if ("local".equals(mVideoFrom)) {
+//                    tempPath = mPath;
+//                } else {
+//                    tempPath = mFileName;
+//                }
+//            }
+            showConfimDeleteDialog(mPath);
         } else {
             Log.e(TAG, "id = " + id);
         }

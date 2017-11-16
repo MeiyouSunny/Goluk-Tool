@@ -31,6 +31,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -178,7 +179,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             deleteListData(list);
         }
     }
@@ -218,7 +219,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             downloadVideoFlush(list);
         }
     }

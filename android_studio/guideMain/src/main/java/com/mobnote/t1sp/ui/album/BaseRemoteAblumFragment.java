@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -38,11 +40,12 @@ import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
@@ -89,6 +92,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -128,6 +132,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (mThumbDownloader != null)
             mThumbDownloader.stop();
     }
@@ -261,9 +266,6 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private void gotoVideoPlayPage(int from, String path, String filename, String createTime, String videoHP, String size) {
         if (!isShowPlayer) {
             isShowPlayer = true;
-            ZhugeUtils.eventAlbumPlayer(getActivity(),
-                    getString(R.string.str_zhuge_video_player_wonderful),
-                    getString(R.string.str_zhuge_video_player_wonderful));
             GolukUtils.startPhotoAlbumPlayerActivity(BaseRemoteAblumFragment.this.getContext(), getVideoType(), "ipc", path,
                     filename, createTime, videoHP, size, (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
         }
@@ -461,6 +463,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
         mGroupListName = VideoDataManagerUtils.getGroupName(mDataList);
         mRemoteVideoAdapter.setData(mGroupListName, mDoubleDataList);
+
+        checkListState();
     }
 
     private void checkListState() {
@@ -535,6 +539,28 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     }
 
     /**
+     * 从远程下载视频
+     */
+    public void onEventMainThread(EventDownloadIpcVid event) {
+        if (event != null && event.getType() == getVideoType()) {
+            List<String> list = new ArrayList<String>();
+            list.add(event.getVidPath());
+            downloadVideoFlush(list);
+        }
+    }
+
+    /**
+     * 从PhotoAlbumPlayer发送的删除视频请求
+     */
+    public void onEventMainThread(EventDeletePhotoAlbumVid event) {
+        if (event != null && event.getType() == getVideoType()) {
+            List<String> selectedListData = getFragmentAlbum().getSelectedList();
+            selectedListData.add(event.getVidPath());
+            deleteListData(selectedListData);
+        }
+    }
+
+    /**
      * 删除选中的远程文件
      */
     public void deleteListData(List<String> selectedList) {
@@ -580,6 +606,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
         @Override
         public void onFinish() {
+            closeLoading();
         }
     };
 
@@ -598,7 +625,6 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 return;
             }
         }
-
     }
 
     /**

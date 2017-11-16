@@ -885,7 +885,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void start() {
         WifiRsBean wrb = ReadWifiConfig.readConfig();
         if (wrb != null && GolukApplication.getInstance().getIpcIsLogin()) {
-            mConnectTip.setText(wrb.getIpc_ssid());
+            mConnectTip.setText(WiFiInfo.IPC_SSID);
         }
         if (null != mRtspPlayerView) {
             mRtspPlayerView.setVisibility(View.VISIBLE);
