@@ -196,6 +196,8 @@
                 android:id="@+id/unbind_layout_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingTop="@dimen/sizeSmall"
+                android:paddingBottom="@dimen/sizeSmall"
                 android:background="#f4f4f4">
 
                 <TextView
@@ -214,6 +216,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/sizeSmall"
+
                     android:layout_toRightOf="@id/unbind_update_text"
                     android:gravity="right">
 
@@ -223,6 +226,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:textColor="#999999"
+                        android:text="asdfasdfasdfasdfasdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdff"
                         android:textSize="16sp" />
 
                     <ImageView
