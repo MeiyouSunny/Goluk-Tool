@@ -1,0 +1,101 @@
+package com.mobnote.t1sp.upgrade;
+
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
+
+import java.io.File;
+
+/**
+ * T1SP 固件升级Manager
+ */
+public class UpgradeManager {
+
+    private File mBinFile;
+    private UploadTask mUploadTask;
+    private UpgradeListener mListener;
+
+    public UpgradeManager(File binFile) {
+        mBinFile = binFile;
+    }
+
+    /**
+     * 开始升级流程
+     */
+    public void start() {
+        enterUpgradeMode();
+    }
+
+    public void stop() {
+        mBinFile = null;
+        mListener = null;
+        if (mUploadTask != null && !mUploadTask.isCancelled())
+            mUploadTask.cancel(true);
+        mUploadTask = null;
+    }
+
+    /**
+     * 进入固件升级模式
+     */
+    private void enterUpgradeMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterUpdaetModeParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                if (mListener != null)
+                    mListener.onEnterUpgradeMode(true);
+                // 进入固件升级模式,开始上传固件
+                uploadUpgradeFile(mBinFile);
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                if (mListener != null)
+                    mListener.onEnterUpgradeMode(false);
+            }
+        });
+    }
+
+    /**
+     * 上传固件到设备
+     */
+    private void uploadUpgradeFile(File binFile) {
+        mUploadTask = new UploadTask();
+        mUploadTask.setListener(new UploadTask.UploadListener() {
+            @Override
+            public void onUploaded(boolean success) {
+                if (mListener != null)
+                    mListener.onUploadUpgradeFileResult(success);
+                // 固件上传完成,开始升级固件
+                if (success)
+                    startUpgrade();
+            }
+        });
+        mUploadTask.execute(binFile);
+        if (mListener != null)
+            mListener.onUploadUpgradeFileStart();
+    }
+
+    /**
+     * 开始升级固件
+     */
+    private void startUpgrade() {
+        ApiUtil.apiServiceAit().updateFirmware(new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                if (mListener != null)
+                    mListener.onUpgradeStart(true);
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                if (mListener != null)
+                    mListener.onUpgradeStart(false);
+            }
+        });
+    }
+
+    public void setListener(UpgradeListener listener) {
+        this.mListener = listener;
+    }
+
+}

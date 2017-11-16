@@ -35,8 +35,8 @@ public interface ApiServiceAit {
     /**
      * 升级固件
      */
-    @GET("/FWupload.cgi")
-    Call<String> updateFirmware(@QueryMap Map<String, String> params, Callback<String> callback);
+    @GET("/FWupload.cgi?action=flash")
+    Call<String> updateFirmware(Callback<String> callback);
 
     @GET("/Config.cgi?action=get&property=Camera.Menu.DeviceID")
     Call<String> request(Callback<String> callback);
