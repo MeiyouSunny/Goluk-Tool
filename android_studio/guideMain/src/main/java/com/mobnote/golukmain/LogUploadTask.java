@@ -63,11 +63,7 @@ public class LogUploadTask extends AsyncTask<String, Integer, String> {
         } else {
             requestParams.put("commappversion", "");
         }
-        if (app.mIPCControlManager != null) {
-            requestParams.put("commhdtype", GolukApplication.getInstance().mIPCControlManager.mProduceName);
-        } else {
-            requestParams.put("commhdtype", "");
-        }
+        requestParams.put("commhdtype", SharedPrefUtil.getIpcModel());
         requestParams.put("commipcversion", SharedPrefUtil.getIPCVersion());
         requestParams.put("commdevmodel", android.os.Build.MODEL);
         requestParams.put("commlat", "" + LngLat.lat);

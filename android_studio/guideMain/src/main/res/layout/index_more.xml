@@ -247,7 +247,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_toRightOf="@id/tv_my_message"
                     android:background="@drawable/shape_ring"
-                    android:gravity="center_vertical"
+                    android:gravity="center"
                     android:paddingLeft="6dp"
                     android:paddingRight="6dp"
                     android:textColor="#ffffff"

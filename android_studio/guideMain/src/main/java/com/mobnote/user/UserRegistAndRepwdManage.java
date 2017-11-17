@@ -270,6 +270,7 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
                 int code = Integer.valueOf(dataBean.result);
                 switch (code) {
                     case BIND_PHONE_SUCCESS:
+                    	mApp.mCurrentPhoneNum = dataBean.phone;
                         registAndRepwdStatusChange(2);
                         break;
                     case BIND_PHONE_PARAM_ERROR:
