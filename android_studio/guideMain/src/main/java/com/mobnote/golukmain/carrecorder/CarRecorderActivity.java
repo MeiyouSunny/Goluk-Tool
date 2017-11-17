@@ -955,6 +955,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (null != mRtspPlayerView) {
             mRtspPlayerView.setVisibility(View.VISIBLE);
             String url = PlayUrlManager.getRtspUrl();
+            collectLog("url=" + url);
+            collectLog("IPCVERSION=" + mBaseApp.mIpcVersion);
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
             if (TextUtils.isEmpty(url)) {
