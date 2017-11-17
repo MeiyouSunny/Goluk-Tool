@@ -239,8 +239,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     };
 
     private ConfigData configData;
-    private boolean tryMicroVideo;
-    private Runnable mSwitchTo1080PRunable;
 
 
     @Override
@@ -449,7 +447,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
-        mHandler.removeCallbacks(mSwitchTo1080PRunable);
         mVideoView.stopPlayback();
         GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onDestroy----");
         if (mHandler != null) {
@@ -887,7 +884,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 // 仅远程循环视频支持微码流播放
                 if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                     mMicroVideoUrl = "http://" + ip + "/api/mini_mp4?id=" + fileName;
-                    tryMicroVideo = true;
                 }
             } else {
                 String fileName = mFileName;
@@ -971,18 +967,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     @Override
     public boolean onError(GolukPlayer mp, int what, int extra) {
-        if(tryMicroVideo){
-            tryMicroVideo = false;
-            mMicroVideoUrl = "";
-            mSwitchTo1080PRunable = new Runnable() {
-                @Override
-                public void run() {
-                    startPlay();
-                }
-            };
-            mHandler.postDelayed(mSwitchTo1080PRunable,1000);
-            return true;
-        }
         String msg = this.getString(R.string.str_play_error);
         switch (what) {
             case 1:
