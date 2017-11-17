@@ -38,7 +38,13 @@ public interface ApiServiceAit {
     @GET("/FWupload.cgi?action=flash")
     Call<String> updateFirmware(Callback<String> callback);
 
-    @GET("/Config.cgi?action=get&property=Camera.Menu.DeviceID")
-    Call<String> request(Callback<String> callback);
+    /**
+     * 重启网络
+     *
+     * @param callback 回调接口
+     * @return
+     */
+    @GET("/Config.cgi?action=set&property=Net.Dev.1.Type&value=AP&property=Net&value=reset")
+    Call<String> resetNet(Callback<String> callback);
 
 }

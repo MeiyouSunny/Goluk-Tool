@@ -1,26 +1,31 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONObject;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukUtils;
+
+import org.json.JSONObject;
+
 import cn.com.tiros.debug.GolukDebugUtils;
+import likly.dollar.$;
 
 /**
  * 功能：设置页中修改极路客WIFI密码
@@ -167,6 +172,13 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			mEditText.requestFocus();
 			return;
 		}
+
+		// T1SP
+		if (mApp.getIPCControlManager().isT1SP()) {
+			updateWifiPwd(newPwd);
+			return;
+		}
+		// Other
 		String json = getSetIPCJson();
 		mApp.stopDownloadList();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
@@ -203,6 +215,57 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 
 		}
 		return json;
+	}
+
+	/**
+	 * T1SP修改WIFI密码
+	 *
+	 * @param pwd
+	 */
+	private void updateWifiPwd(String pwd) {
+		if (TextUtils.isEmpty(pwd))
+			return;
+		ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiPwdParam(pwd), new CommonCallback() {
+			@Override
+			public void onStart() {
+				LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupChangeWifiActivity.this, getString(R.string.str_wait));
+			}
+
+			@Override
+			public void onSuccess() {
+				// 必须重启网络才会生效
+				resetT1SPNet();
+			}
+
+			@Override
+			protected void onServerError(int errorCode, String errorMessage) {
+				$.toast().text(R.string.str_wifi_change_fail).show();
+			}
+		});
+	}
+
+	/**
+	 * 重启T1SP网络
+	 */
+	private void resetT1SPNet() {
+		ApiUtil.apiServiceAit().resetNet(new CommonCallback() {
+			@Override
+			protected void onSuccess() {
+				$.toast().text(R.string.str_wifi_change_success).show();
+				setResult(10);
+				finish();
+			}
+
+			@Override
+			protected void onServerError(int errorCode, String errorMessage) {
+				$.toast().text(R.string.str_wifi_change_fail).show();
+			}
+
+			@Override
+			public void onFinish() {
+				LiveDialogManager.getManagerInstance().dissmissCustomDialog();
+			}
+		});
 	}
 
 }

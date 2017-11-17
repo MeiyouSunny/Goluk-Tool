@@ -18,12 +18,16 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
 import org.json.JSONObject;
 
 import cn.com.tiros.debug.GolukDebugUtils;
+import likly.dollar.$;
 
 /**
  * 功能：设置页中修改极路客WIFI密码
@@ -191,6 +195,13 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             mEditText2.requestFocus();
             return;
         }
+
+        // T1SP
+        if (mApp.getIPCControlManager().isT1SP()) {
+            enterSettingMode(newPwd);
+            return;
+        }
+        // Other
         String json = getSetIPCJson();
         mApp.stopDownloadList();
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
@@ -217,6 +228,79 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
 
         }
         return json;
+    }
+
+    private void enterSettingMode(final String wifiName) {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(true), new CommonCallback() {
+            @Override
+            public void onStart() {
+                LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
+            }
+            @Override
+            protected void onSuccess() {
+                updateWifiName(wifiName);
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+
+            }
+        });
+    }
+
+    /**
+     * T1SP修改WIFI名称
+     *
+     * @param wifiName WIFI名称
+     */
+    private void updateWifiName(String wifiName) {
+        if (TextUtils.isEmpty(wifiName))
+            return;
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiNameParam(wifiName), new CommonCallback() {
+            @Override
+            public void onStart() {
+                LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
+            }
+
+            @Override
+            public void onSuccess() {
+                // 必须重启网络才会生效
+                resetT1SPNet();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(R.string.str_wifi_name_fail).show();
+            }
+        });
+    }
+
+    /**
+     * 重启T1SP网络
+     */
+    private void resetT1SPNet() {
+        ApiUtil.apiServiceAit().resetNet(new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                $.toast().text(R.string.str_wifi_success).show();
+                WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+                if (null != bean) {
+                    WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+                }
+                setResult(11);
+                finish();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(R.string.str_wifi_name_fail).show();
+            }
+
+            @Override
+            public void onFinish() {
+                LiveDialogManager.getManagerInstance().dissmissCustomDialog();
+            }
+        });
     }
 
 }

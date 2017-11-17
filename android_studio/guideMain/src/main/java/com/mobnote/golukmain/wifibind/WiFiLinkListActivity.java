@@ -558,8 +558,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 SharedPrefUtil.saveIpcModel(IPCControlManager.T1SP_SIGN);
                 // 开启UDP监听
                 ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
-                if (!mIsFromManagerToUpgrade)
-                    ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
+
+                if (mIsFromUpgrade) {
+                    finish();
+                    return;
+                }
+                if (mIsFromManagerToUpgrade) {
+                    finish();
+                    return;
+                }
+
+                ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
                 finish();
             }
 

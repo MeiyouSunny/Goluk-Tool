@@ -1348,50 +1348,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     }
 
-    private void open_shareVideo(String vname) {
-        String path = Environment.getExternalStorageDirectory().getPath();
-        int type;
-        if (vname.indexOf("URG") >= 0) {
-            path = path + "/goluk/video/urgent/" + vname;
-            type = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (vname.indexOf("WND") >= 0) {
-            type = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-            path = path + "/goluk/video/wonderful/" + vname;
-        } else {
-            type = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
-            path = path + "/goluk/video/loop/" + vname;
-        }
-
-        SettingUtils.getInstance().putBoolean("Local_" + vname, false);
-
-        VideoInfo mVideoInfo = GolukVideoUtils.getVideoInfo(vname);
-        if (mVideoInfo != null) {
-            switch (type) {
-                case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
-                    ZhugeUtils.eventAlbumPlayer(this,
-                            getString(R.string.str_zhuge_video_player_ipc),
-                            getString(R.string.str_zhuge_video_player_recycle));
-                    break;
-                case PhotoAlbumConfig.PHOTO_BUM_IPC_URG:
-                    ZhugeUtils.eventAlbumPlayer(this,
-                            getString(R.string.str_zhuge_video_player_ipc),
-                            getString(R.string.str_zhuge_video_player_urgent));
-                    break;
-                case PhotoAlbumConfig.PHOTO_BUM_IPC_WND:
-                    ZhugeUtils.eventAlbumPlayer(this,
-                            getString(R.string.str_zhuge_video_player_ipc),
-                            getString(R.string.str_zhuge_video_player_wonderful));
-                    break;
-                default:
-                    break;
-            }
-
-            GolukUtils.startPhotoAlbumPlayerActivity(this, type, "local", mVideoInfo.videoPath,
-                    mVideoInfo.filename, mVideoInfo.videoCreateDate, mVideoInfo.videoHP, mVideoInfo.videoSize, null);
-        }
-        overridePendingTransition(R.anim.shortshare_start, 0);
-    }
-
     /**
      * 精彩视频下载显示
      *

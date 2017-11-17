@@ -274,9 +274,34 @@ public class ParamsBuilder {
     }
 
     /**
-     * 设置WIFI名称&密码
+     * 设置WIFI名称
+     *
+     * @param value WIFI名称
+     * @return
      */
-    //TODO
+    public static Map<String, String> setWifiNameParam(String value) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "Net.WIFI_AP.SSID");
+        params.put(KEY_VALUE, value);
+
+        return params;
+    }
+
+    /**
+     * 设置WIFI密码
+     *
+     * @param value WIFI密码
+     * @return
+     */
+    public static Map<String, String> setWifiPwdParam(String value) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "Net.WIFI_AP.CryptoKey");
+        params.put(KEY_VALUE, value);
+
+        return params;
+    }
 
     /**
      * 设置停车保护
@@ -424,11 +449,6 @@ public class ParamsBuilder {
 
         return params;
     }
-
-    /**
-     * 上传固件到记录仪
-     */
-    // TODO
 
     /**
      * 删除记录仪文件
