@@ -42,13 +42,13 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
         try {
             URL url = new URL(UPLOAD_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(TIME_OUT);
+            //conn.setReadTimeout(TIME_OUT);
             conn.setConnectTimeout(TIME_OUT);
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Charset", "utf-8");
+            conn.setRequestProperty("Charset", "UTF-8");
             conn.setRequestProperty("connection", "keep-alive");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
             // 文件包装上传
@@ -63,14 +63,15 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
             //        + file.getName() + "\"" + LINE_END);
             sb.append("Content-Disposition: form-data; name=\"fileupload\";filename=\""
                     + DEFAULT_BIN_FILE_NAME + "\"" + LINE_END);
-            sb.append("Content-Type: application/octet-stream; charset=" + "utf-8" + LINE_END);
+            sb.append("Content-Type: application/octet-stream; charset=" + "UTF-8" + LINE_END);
             sb.append(LINE_END);
             dataOutputStream.write(sb.toString().getBytes());
             inputStream = new FileInputStream(binFile);
-            byte[] bytes = new byte[1024 * 8];
+            byte[] bytes = new byte[1024];
             int len = 0;
             while ((len = inputStream.read(bytes)) != -1) {
                 dataOutputStream.write(bytes, 0, len);
+                //dataOutputStream.flush();
             }
 
             dataOutputStream.write(LINE_END.getBytes());
@@ -78,6 +79,7 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
             dataOutputStream.write(end_data);
             dataOutputStream.flush();
 
+            conn.getInputStream();
             int responseCode = conn.getResponseCode();
             return (responseCode == 200);
         } catch (Exception e) {
@@ -85,7 +87,7 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
         } finally {
             try {
                 inputStream.close();
-                dataOutputStream.close();
+                //dataOutputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }

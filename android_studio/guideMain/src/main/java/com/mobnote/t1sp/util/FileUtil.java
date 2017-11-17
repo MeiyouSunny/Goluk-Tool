@@ -24,6 +24,8 @@ import java.util.List;
 public class FileUtil {
     /* SD卡路径 */
     public static final String EXTERNAL_SD_PATH = Environment.getExternalStorageDirectory().getPath();
+    /* Goluk目录 */
+    public static final String GOLUK_DIR = EXTERNAL_SD_PATH + "/goluk/";
     /* 精彩视频路径 */
     public static final String WONDERFUL_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/wonderful/";
     /* 紧急视频路径 */
@@ -183,7 +185,7 @@ public class FileUtil {
      *
      * @param bitmap   Bitmap
      * @param savePath 保存路径
-     * @param percent 压缩百分比
+     * @param percent  压缩百分比
      */
     public static void saveBitmap(Bitmap bitmap, File savePath, int percent) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -202,6 +204,20 @@ public class FileUtil {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * 把fs1:/路径转换位真实路径
+     */
+    public static String convertFs1ToRealPath(String path) {
+        if (TextUtils.isEmpty(path))
+            return "";
+        if (path.contains("fs1:/")) {
+            path = path.substring("fs1:/".length());
+            path = GOLUK_DIR + path;
+        }
+
+        return path;
     }
 
 }

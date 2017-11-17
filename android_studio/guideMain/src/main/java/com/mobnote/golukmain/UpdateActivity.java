@@ -24,6 +24,9 @@ import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.t1sp.upgrade.UpgradeListener;
+import com.mobnote.t1sp.upgrade.UpgradeManager;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.user.DataCleanManage;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.IpcUpdateManage;
@@ -34,6 +37,7 @@ import com.mobnote.util.ZhugeUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,7 +50,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author mobnote
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
+public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, UpgradeListener {
     /**
      * 下载 / 安装按钮
      **/
@@ -223,6 +227,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      **/
     private AlertDialog mCheckSDCard = null;
     private boolean mIsUpgrading;
+
+    private UpgradeManager mT1SPUpgradeManager;
 
     @SuppressLint("HandlerLeak")
     @Override
@@ -647,14 +653,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         // version + "，当前已是最新版本");
                         isNewVersion();
                     } else {
-                        String file = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
-                        boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
-                        if (b) {
-                            mIsUpgrading = true;
-                            mtfCardImage.setVisibility(View.GONE);
-                            mtfCardText.setVisibility(View.GONE);
-                            mNoBreakImage.setVisibility(View.VISIBLE);
-                            mNoBreakText.setVisibility(View.VISIBLE);
+                        String filePath = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
+                        if (mApp.getIPCControlManager().isT1SP()) {
+                            // T1SP设备
+                            File binFile = new File(FileUtil.convertFs1ToRealPath(filePath));
+                            mT1SPUpgradeManager = new UpgradeManager(binFile);
+                            mT1SPUpgradeManager.setListener(this);
+                            mT1SPUpgradeManager.start();
+                        } else {
+                            // 传统设备
+                            boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
+                            if (b) {
+                                mIsUpgrading = true;
+                                mtfCardImage.setVisibility(View.GONE);
+                                mtfCardText.setVisibility(View.GONE);
+                                mNoBreakImage.setVisibility(View.VISIBLE);
+                                mNoBreakText.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -947,6 +962,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
         }
         EventBus.getDefault().unregister(this);
+
+        if (mT1SPUpgradeManager != null)
+            mT1SPUpgradeManager.stop();
     }
 
     /**
@@ -1066,4 +1084,37 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         }
         super.onBackPressed();
     }
+
+    @Override
+    public void onEnterUpgradeMode(boolean success) {
+        if (!success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUploadUpgradeFileStart() {
+        mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
+    }
+
+    @Override
+    public void onUploadUpgradeFileResult(boolean success) {
+        if (success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
+        else
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUpgradeStart(boolean success) {
+        if (success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
+        else
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUpgradeFinish(boolean success) {
+        mUpdateHandler.sendEmptyMessage(success ? UPDATE_UPGRADE_OK : UPDATE_UPGRADE_FAIL);
+    }
+
 }

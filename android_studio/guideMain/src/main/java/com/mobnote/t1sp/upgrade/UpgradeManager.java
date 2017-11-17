@@ -3,6 +3,8 @@ package com.mobnote.t1sp.upgrade;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.listener.OnSettingsListener;
+import com.mobnote.t1sp.service.T1SPUdpService;
 
 import java.io.File;
 
@@ -82,8 +84,11 @@ public class UpgradeManager {
         ApiUtil.apiServiceAit().updateFirmware(new CommonCallback() {
             @Override
             protected void onSuccess() {
-                if (mListener != null)
+                if (mListener != null) {
                     mListener.onUpgradeStart(true);
+                    // UDP监听固件升级回调
+                    T1SPUdpService.setSetListener(mUdpListener);
+                }
             }
 
             @Override
@@ -97,5 +102,18 @@ public class UpgradeManager {
     public void setListener(UpgradeListener listener) {
         this.mListener = listener;
     }
+
+    // UDP监听
+    private OnSettingsListener mUdpListener = new OnSettingsListener() {
+        @Override
+        public void onSdFormat(boolean isFormat) {
+        }
+
+        @Override
+        public void onUpdateFw(boolean isUpdate) {
+            if (mListener != null)
+                mListener.onUpgradeFinish(isUpdate);
+        }
+    };
 
 }
