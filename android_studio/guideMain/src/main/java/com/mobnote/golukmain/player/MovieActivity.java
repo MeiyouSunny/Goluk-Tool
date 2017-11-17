@@ -42,6 +42,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioManager;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -191,10 +192,19 @@ public class MovieActivity extends Activity {
 		GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==filePath=" + filePath);
 		if (from.equals("local")) {
 			mVideoUrl = getIntent().getStringExtra("path");
+			MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+			retriever.setDataSource(mVideoUrl);
+			int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+			int height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
+			retriever.release();
+			if(height>width){
+				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+			}
 			String fileName = mVideoUrl.substring(mVideoUrl.lastIndexOf("/") + 1);
 			fileName = fileName.replace(".mp4", ".jpg");
 			mImageAddress = filePath + File.separator + fileName;
 			GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==image=" + mImageAddress);
+
 		} else if (from.equals("suqare")) {
 			mVideoUrl = getIntent().getStringExtra("vurl");
 		} else if (from.equals("ipc")) {
