@@ -3,5 +3,6 @@
 
     <color name="white_press">#E5E5E5</color>
     <color name="font_blue">#0587FF</color>
+    <color name="gray_f4">#F4F4F4</color>
 
 </resources>

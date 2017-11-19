@@ -20,6 +20,13 @@ public class ViewUtil {
         context.startActivity(intent);
     }
 
+    public static void goActivityAndClearTop(Context context, Class<? extends Activity> activity) {
+        Intent intent = new Intent(context, activity);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        context.startActivity(intent);
+    }
+
     public static void startService(Context context, Class<? extends Service> service) {
         Intent intent = new Intent(context, service);
         context.startService(intent);

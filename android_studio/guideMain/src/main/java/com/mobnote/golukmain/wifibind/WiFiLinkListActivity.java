@@ -45,6 +45,7 @@ import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.service.T1SPUdpService;
+import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
@@ -332,7 +333,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             connFailed();
             return false;
         }
-        if (!mWillConnName.startsWith("Goluk")) {
+        if (!mWillConnName.startsWith("Goluk") || !mWillConnName.startsWith("Car")) {
             showToast(getString(R.string.not_goluk_device));
             collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
             // 连接失败
@@ -559,28 +560,50 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 // 开启UDP监听
                 ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
 
-                if (mIsFromUpgrade) {
-                    finish();
-                    return;
-                }
-                if (mIsFromManagerToUpgrade) {
-                    finish();
-                    return;
-                }
-
-                ViewUtil.goActivity(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
-                finish();
+                goNextAfterT1SPConnected();
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
             }
-
-            @Override
-            public void onFinish() {
-                super.onFinish();
-            }
         });
+    }
+
+    /**
+     * T1SP连接成功后跳转
+     */
+    private void goNextAfterT1SPConnected() {
+        if (mIsFromUpgrade) {
+            finish();
+            return;
+        }
+        if (mIsFromManagerToUpgrade) {
+            finish();
+            return;
+        }
+        if (mGotoAlbum) {
+            Intent photoalbum = new Intent(WiFiLinkListActivity.this, PhotoAlbumT1SPActivity.class);
+            photoalbum.putExtra(PhotoAlbumT1SPActivity.CLOSE_WHEN_EXIT, true);
+            photoalbum.putExtra("from", "cloud");
+            startActivity(photoalbum);
+            finish();
+            return;
+        }
+        if (mIsFromRemoteAlbum) {
+            EventBus.getDefault().post(new EventSingleConnSuccess());
+            finish();
+            return;
+        }
+        if (mReturnToMainAlbum) {
+            Intent mainIntent = new Intent(WiFiLinkListActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+            EventBus.getDefault().post(new EventFinishWifiActivity());
+            EventBus.getDefault().post(new EventSingleConnSuccess());
+            return;
+        } else {
+            ViewUtil.goActivityAndClearTop(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
+            finish();
+        }
     }
 
     /**

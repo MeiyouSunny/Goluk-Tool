@@ -43,7 +43,7 @@
                 android:id="@+id/user_center_item"
                 android:layout_width="match_parent"
                 android:layout_height="82dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:gravity="center"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp">
@@ -116,6 +116,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:background="@drawable/selector_gray"
                     android:id="@+id/user_share"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -140,6 +141,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:background="@drawable/selector_gray"
                     android:id="@+id/user_follow"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -164,6 +166,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:background="@drawable/selector_gray"
                     android:id="@+id/user_fans"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -223,7 +226,7 @@
                 android:id="@+id/rl_my_message"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:paddingLeft="14dp"
                 android:paddingRight="14dp">
 
@@ -275,7 +278,7 @@
                 android:id="@+id/profit_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/profit_icon_profit"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -305,7 +308,7 @@
                 android:id="@+id/video_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_video_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -327,7 +330,7 @@
                 android:id="@+id/tv_praise_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_message_like_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -356,7 +359,7 @@
                 android:id="@+id/camera_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_camera_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -378,7 +381,7 @@
                 android:id="@+id/set_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_set_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -406,7 +409,7 @@
                     android:id="@+id/txt_advanced_setting"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:background="#f4f4f4"
+                    android:background="@drawable/selector_gray"
                     android:drawableLeft="@drawable/advance"
                     android:drawablePadding="10dp"
                     android:drawableRight="@drawable/editor_arrow"
@@ -438,7 +441,7 @@
                 android:id="@+id/skill_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_skill_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -460,7 +463,7 @@
                 android:id="@+id/install_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_futou_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -480,7 +483,7 @@
                 android:id="@+id/opinion_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/user_feed_back"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
@@ -503,7 +506,7 @@
                 android:id="@+id/about_item"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:background="#f4f4f4"
+                android:background="@drawable/selector_gray"
                 android:drawableLeft="@drawable/my_question_icon"
                 android:drawablePadding="10dp"
                 android:drawableRight="@drawable/editor_arrow"
