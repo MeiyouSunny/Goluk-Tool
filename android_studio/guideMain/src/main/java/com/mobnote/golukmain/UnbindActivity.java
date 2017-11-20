@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -178,6 +179,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             }
             boolean canCheckServer = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
             if (canCheckServer) {
+                return;
+            }
+            if(TextUtils.isEmpty(SharedPrefUtil.getIPCNumber())){
                 return;
             }
             isNewest();

@@ -196,9 +196,9 @@
                 android:id="@+id/unbind_layout_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/sizeSmall"
+                android:background="#f4f4f4"
                 android:paddingBottom="@dimen/sizeSmall"
-                android:background="#f4f4f4">
+                android:paddingTop="@dimen/sizeSmall">
 
                 <TextView
                     android:id="@+id/unbind_update_text"
@@ -210,34 +210,35 @@
                     android:textColor="#3f3f3f"
                     android:textSize="16sp" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/sizeSmall"
+                    android:layout_toRightOf="@id/unbind_update_text">
 
-                    android:layout_toRightOf="@id/unbind_update_text"
-                    android:gravity="right">
+                    <ImageView
+                        android:id="@+id/arrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="14dp"
+                        android:contentDescription="@string/imgdes"
+                        android:src="@drawable/editor_arrow" />
 
                     <TextView
                         android:id="@+id/unbind_update_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
+                        android:layout_toLeftOf="@+id/arrow"
                         android:textColor="#999999"
-                        android:text="asdfasdfasdfasdfasdasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdfasdff"
                         android:textSize="16sp" />
-
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="14dp"
-                        android:contentDescription="@string/imgdes"
-                        android:src="@drawable/editor_arrow" />
-                </LinearLayout>
+                </RelativeLayout>
             </RelativeLayout>
 
             <View

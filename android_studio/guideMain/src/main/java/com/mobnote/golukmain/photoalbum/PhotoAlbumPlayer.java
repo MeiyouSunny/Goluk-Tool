@@ -146,6 +146,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     private CustomDialog mCustomDialog;
     private CustomDialog mConfirmDeleteDialog;
     private int mScreenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
+    private boolean mPlayVideoWhenForegrounded;
     /**
      * 视频播放时间
      */
