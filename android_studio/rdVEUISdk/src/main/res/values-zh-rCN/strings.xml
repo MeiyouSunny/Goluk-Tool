@@ -79,12 +79,11 @@
     <string name="remove_item">确认删除此视频？</string>
     <string name="release_hand_for_del">松开手删除</string>
     <string name="quit_partedit">您确定要放弃片段编辑吗？</string>
-    <string name="please_open_wifi">Please turn on the Internet connection</string>
-    <string name="please_check_network">Please turn on the Internet connection</string>
+    <string name="please_open_wifi"> 没有可用的网络</string>
+    <string name="please_check_network"> 没有可用的网络</string>
     <string name="no">否</string>
     <string name="last_split_cannt_del">至少保留一段视频</string>
     <string name="just_only_one_video">至少保留一段视频</string>
-    <string name="isdelete">确认删除此视频？</string>
     <string name="dragged_into_trash">拖进垃圾桶删除</string>
     <string name="dragged_info_trash_del">拖进垃圾桶删除</string>
     <string name="drag_for_split">拖动选择分割位置</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">正在导出，是否取消？</string>
     <string name="cancel_export">正在导出，是否取消？</string>
     <string name="video_speed_duration_too_short_to_change">视频时长过短，无法截取视频</string>
-    <string name="import_duration_limit">导出视频长度不能大于90秒</string>
 </resources>

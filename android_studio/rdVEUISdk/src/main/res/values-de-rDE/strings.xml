@@ -79,12 +79,11 @@
     <string name="remove_item">Confermi la cancellazione di questo video?</string>
     <string name="release_hand_for_del">Zum Löschen loslassen</string>
     <string name="quit_partedit">Abbrechen \'Abschnitte bearbeiten\'?</string>
-    <string name="please_open_wifi">Veuillez activer la connexion Internet</string>
-    <string name="please_check_network">Veuillez activer la connexion Internet</string>
+    <string name="please_open_wifi">Bitte schalte deine Internetverbindung an</string>
+    <string name="please_check_network">Bitte schalte deine Internetverbindung an</string>
     <string name="no">Nein</string>
     <string name="last_split_cannt_del">Mindestens ein Video behalten</string>
     <string name="just_only_one_video">Mindestens ein Video behalten</string>
-    <string name="isdelete">Confermi la cancellazione di questo video?</string>
     <string name="dragged_into_trash">Ziehe sie in den Papierkorb, um sie zu löschen</string>
     <string name="dragged_info_trash_del">Ziehe sie in den Papierkorb, um sie zu löschen</string>
     <string name="drag_for_split">Ziehen, um den Teilungsbereich auszuwählen</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">Export unvollständig, abbrechen?</string>
     <string name="cancel_export">Export unvollständig, abbrechen?</string>
     <string name="video_speed_duration_too_short_to_change">Videos können nicht aufgenommen werden. Das Video ist zu kurz.</string>
-    <string name="import_duration_limit">Videolänge übersteigt 90 Sekunden</string>
 </resources>

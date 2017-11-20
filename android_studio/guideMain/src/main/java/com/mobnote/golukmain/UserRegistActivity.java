@@ -411,6 +411,8 @@ public class UserRegistActivity extends BaseActivity implements OnClickListener,
 										mEditor = mSharedPreferences.edit();
 										mEditor.putString("setupPhone", phone);
 										mEditor.putBoolean("noPwd", true);
+										GolukApplication.getInstance().setMyPhone(phone);
+										mApplication.mCurrentPhoneNum = phone;
 										mEditor.commit();
 									}
 									finish();

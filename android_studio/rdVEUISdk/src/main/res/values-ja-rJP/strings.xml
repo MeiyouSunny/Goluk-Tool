@@ -68,7 +68,7 @@
     <string name="crop_video_trim_failed">ビデオをクロップできませんでした！</string>
     <string name="trim_video_trim_failed">ビデオをクロップできませんでした！</string>
     <string name="trim_video_trim_cancel">ビデオのキャプチャがキャンセルされました！</string>
-    <string name="quit_edit">Действительно отменить pедактиредактировать?</string>
+    <string name="quit_edit">本当に編集をキャンセルしてよろしいですか？</string>
     <string name="priview_title">プレビュー</string>
     <string name="preview">プレビュー</string>
     <string name="yes">はい</string>
@@ -79,12 +79,11 @@
     <string name="remove_item">このビデオの削除を確定しますか？</string>
     <string name="release_hand_for_del">リリースして削除します</string>
     <string name="quit_partedit">「セクションの編集」をキャンセルしますか？</string>
-    <string name="please_open_wifi">Accendi la connessione a internet</string>
-    <string name="please_check_network">Accendi la connessione a internet</string>
+    <string name="please_open_wifi">インターネット接続を有効にしてください</string>
+    <string name="please_check_network">インターネット接続を有効にしてください</string>
     <string name="no">いいえ</string>
     <string name="last_split_cannt_del">ビデオを少なくとも1つ残します</string>
     <string name="just_only_one_video">ビデオを少なくとも1つ残します</string>
-    <string name="isdelete">このビデオの削除を確定しますか？</string>
     <string name="dragged_into_trash">ゴミ箱にドラッグして削除します</string>
     <string name="dragged_info_trash_del">ゴミ箱にドラッグして削除します</string>
     <string name="drag_for_split">ドラッグして分割領域を選択します</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">不完全な輸出、キャンセル？</string>
     <string name="cancel_export">不完全な輸出、キャンセル？</string>
     <string name="video_speed_duration_too_short_to_change">ビデオをキャプチャできません、ビデオが短すぎます。</string>
-    <string name="import_duration_limit">ビデオが90秒を超えています</string>
 </resources>

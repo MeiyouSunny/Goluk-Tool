@@ -271,6 +271,7 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
                 switch (code) {
                     case BIND_PHONE_SUCCESS:
                     	mApp.mCurrentPhoneNum = dataBean.phone;
+						GolukApplication.getInstance().setMyPhone(dataBean.phone);
                         registAndRepwdStatusChange(2);
                         break;
                     case BIND_PHONE_PARAM_ERROR:

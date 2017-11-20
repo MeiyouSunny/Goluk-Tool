@@ -199,6 +199,9 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 	public void onClick(View view) {
 		int id = view.getId();
 		if (id == R.id.saveBtn) {
+			if(GolukUtils.isFastDoubleClick()){
+				return;
+			}
 			updUserHeadBeanRequest = new UpdUserHeadBeanRequest(IPageNotifyFn.PageType_ModifyHeadPic, this);
 			if (isSave) {
 				isSave = false;

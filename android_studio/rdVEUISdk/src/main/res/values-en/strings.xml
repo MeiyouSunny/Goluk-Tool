@@ -5,8 +5,8 @@
     <string name="partedit">Edit sections</string>
     <string name="export">Export</string>
     <string name="music_soundtrack">Add sound</string>
-    <string name="musicVoice">Add sound</string>
-    <string name="videoVoice">Orginal audio </string>
+    <string name="musicVoice">Music</string>
+    <string name="videoVoice">Audio </string>
     <string name="video_voice_p">Sounds On</string>
     <string name="video_voice_n">Sounds Off</string>
     <string name="music_none">None</string>
@@ -27,7 +27,7 @@
     <string name="music_2_1">Discover</string>
     <string name="music_2_0">Wave</string>
     <string name="sp_music_saye">Wild</string>
-    <string name="sp_filter_1">Original video</string>
+    <string name="sp_filter_1">Original </string>
     <string name="sp_filter_2">Fade</string>
     <string name="sp_filter_3">Brightness</string>
     <string name="sp_filter_5">Lightyear</string>
@@ -79,12 +79,11 @@
     <string name="remove_item">Confirm delete this video?</string>
     <string name="release_hand_for_del">Release to delete</string>
     <string name="quit_partedit">Cancel ‘Edit sections’?      </string>
-    <string name="please_open_wifi"> 没有可用的网络</string>
-    <string name="please_check_network"> 没有可用的网络</string>
+    <string name="please_open_wifi">Please turn on the Internet connection</string>
+    <string name="please_check_network">Please turn on the Internet connection</string>
     <string name="no">No</string>
     <string name="last_split_cannt_del">Keep at least one video</string>
     <string name="just_only_one_video">Keep at least one video</string>
-    <string name="isdelete">Confirm delete this video?</string>
     <string name="dragged_into_trash">Drag into the trash can to delete</string>
     <string name="dragged_info_trash_del">Drag into the trash can to delete</string>
     <string name="drag_for_split">Drag to select split area</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">Export incomplete, cancel?  </string>
     <string name="cancel_export">Export incomplete, cancel?  </string>
     <string name="video_speed_duration_too_short_to_change">Unable to capture video, video is too short.    </string>
-    <string name="import_duration_limit">Can not export video with length more than 90s</string>
 </resources>

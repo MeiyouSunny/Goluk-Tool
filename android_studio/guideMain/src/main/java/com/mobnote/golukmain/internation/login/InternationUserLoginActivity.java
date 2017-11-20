@@ -102,7 +102,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
     private Editor mEditor = null;
 
     /**
-     * 判断登录
+     *                    判断登录
      **/
     private String justLogin = "";
     private CustomLoadingDialog mCustomProgressDialog = null;

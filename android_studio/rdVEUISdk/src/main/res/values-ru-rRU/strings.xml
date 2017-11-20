@@ -2,11 +2,11 @@
 <resources>
     <string name="music">Музыка</string>
     <string name="filter">Фильтры</string>
-    <string name="partedit">Редактировать разделы</string>
+    <string name="partedit">Ред. секции</string>
     <string name="export">Экспорт</string>
     <string name="music_soundtrack">Добавить звук</string>
-    <string name="musicVoice">Добавить звук</string>
-    <string name="videoVoice">Исходный звук</string>
+    <string name="musicVoice">Звук</string>
+    <string name="videoVoice">Исx. звук</string>
     <string name="video_voice_p">Звуки вкл.</string>
     <string name="video_voice_n">Звуки выкл</string>
     <string name="music_none">Нет</string>
@@ -27,14 +27,14 @@
     <string name="music_2_1">Открытие</string>
     <string name="music_2_0">Волна</string>
     <string name="sp_music_saye">Дикая природа</string>
-    <string name="sp_filter_1">Исходное видео</string>
+    <string name="sp_filter_1">Исх. видео</string>
     <string name="sp_filter_2">Затухание</string>
     <string name="sp_filter_3">Яркость</string>
-    <string name="sp_filter_5">Световой год</string>
+    <string name="sp_filter_5">Световой</string>
     <string name="sp_filter_6">Знак</string>
     <string name="sp_filter_7">Искра</string>
     <string name="sp_filter_8">Облака</string>
-    <string name="sp_filter_9">Спокойствие</string>
+    <string name="sp_filter_9">Цин Хуан</string>
     <string name="sp_filter_10">Эскиз</string>
     <string name="trim_title">Захват</string>
     <string name="preview_intercept">Захват</string>
@@ -44,7 +44,7 @@
     <string name="preview_edit_pic">Редактировать</string>
     <string name="mixEdit">Редактировать</string>
     <string name="edit">Редактировать</string>
-    <string name="preview_speed">Сменить скорость</string>
+    <string name="preview_speed"> Скорость</string>
     <string name="preview_copy">Копировать</string>
     <string name="edit_click_split">Коснитесь один раз, чтобы разделить</string>
     <string name="crop_free_title">Свободная обрезка</string>
@@ -68,23 +68,22 @@
     <string name="crop_video_trim_failed">Не удалось обрезать видео!</string>
     <string name="trim_video_trim_failed">Не удалось обрезать видео!</string>
     <string name="trim_video_trim_cancel">Захват видео отменен!</string>
-    <string name="quit_edit">정말 팔로우를 수정 하시겠습니까?</string>
+    <string name="quit_edit">Действительно отменить pедактиредактировать?</string>
     <string name="priview_title">Просмотр</string>
     <string name="preview">Просмотр</string>
     <string name="yes">Да</string>
     <string name="video_duration_too_short_to_trim">Видео короче 1 сек, не удалось захватить видео.</string>
     <string name="video_duration_too_short_to_split">Видео короче 0.5 сек, не удалось разделить видео</string>
     <string name="split_duration_too_low">Слишком короткие разделы видео</string>
-    <string name="sp_filter_4">пустой</string>
+    <string name="sp_filter_4">Пустой</string>
     <string name="remove_item">Действительно удалить это видео?</string>
     <string name="release_hand_for_del">Отпустите, чтобы удалить</string>
     <string name="quit_partedit">Отменить редактирование?</string>
-    <string name="please_open_wifi">인터넷 연결을 켜세요</string>
-    <string name="please_check_network">인터넷 연결을 켜세요</string>
+    <string name="please_open_wifi">Подключитесь к Интернету</string>
+    <string name="please_check_network">Подключитесь к Интернету</string>
     <string name="no">Нет</string>
     <string name="last_split_cannt_del">Сохраните как минимум одно видео</string>
     <string name="just_only_one_video">Сохраните как минимум одно видео</string>
-    <string name="isdelete">Действительно удалить это видео?</string>
     <string name="dragged_into_trash">Чтобы удалить, перетащите в корзину</string>
     <string name="dragged_info_trash_del">Чтобы удалить, перетащите в корзину</string>
     <string name="drag_for_split">Перетащите, чтобы выбрать область разделения</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">Экспорт видео не завершён, отменить?</string>
     <string name="cancel_export">Экспорт видео не завершён, отменить?</string>
     <string name="video_speed_duration_too_short_to_change">Видео слишком короткое, не удалось захватить видео.</string>
-    <string name="import_duration_limit">Видео превышает 90 сек.</string>
 </resources>

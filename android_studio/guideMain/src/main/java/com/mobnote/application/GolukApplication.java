@@ -2028,6 +2028,20 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     }
 
+    public void setMyPhone(String phone) {
+        String user = SharedPrefUtil.getUserInfo();
+        try {
+            if (user != null && !"".equals(user)) {
+                UserInfo myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
+                if (!TextUtils.isEmpty(phone)) {
+                    myInfo.phone = phone;
+                }
+                SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
+            }
+        } catch (JSONException e) {
+        }
+    }
+
     /**
      * 获取下载列表
      *

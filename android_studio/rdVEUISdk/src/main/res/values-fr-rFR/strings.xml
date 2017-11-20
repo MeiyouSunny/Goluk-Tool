@@ -79,12 +79,11 @@
     <string name="remove_item">Confirmer la suppression de cette vidéo ?</string>
     <string name="release_hand_for_del">Relâchez pour supprimer</string>
     <string name="quit_partedit">Annuler \'Modifier les sections\'?</string>
-    <string name="please_open_wifi">請開啟網絡連接</string>
-    <string name="please_check_network">請開啟網絡連接</string>
+    <string name="please_open_wifi">Veuillez activer la connexion Internet</string>
+    <string name="please_check_network">Veuillez activer la connexion Internet</string>
     <string name="no">Non</string>
     <string name="last_split_cannt_del">Gardez au moins une vidéo</string>
     <string name="just_only_one_video">Gardez au moins une vidéo</string>
-    <string name="isdelete">Confirmer la suppression de cette vidéo ?</string>
     <string name="dragged_into_trash">Glissez dans la corbeille pour supprimer</string>
     <string name="dragged_info_trash_del">Glissez dans la corbeille pour supprimer</string>
     <string name="drag_for_split">Glissez pour sélectionner la zone de découpe</string>
@@ -92,5 +91,4 @@
     <string name="cancel_export_video">Exporter incomplet, annuler?</string>
     <string name="cancel_export">Exporter incomplet, annuler?</string>
     <string name="video_speed_duration_too_short_to_change">Impossible de capturer la vidéo, la vidéo est trop courte.</string>
-    <string name="import_duration_limit">La durée de la vidéo dépasse 90 secondes</string>
 </resources>
