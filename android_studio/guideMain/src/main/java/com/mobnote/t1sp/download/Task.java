@@ -1,4 +1,4 @@
-package com.mobnote.t1sp.ui.download;
+package com.mobnote.t1sp.download;
 
 /**
  * 下载任务信息

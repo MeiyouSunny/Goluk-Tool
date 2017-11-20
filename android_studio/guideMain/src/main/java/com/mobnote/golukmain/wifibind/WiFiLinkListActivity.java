@@ -333,7 +333,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             connFailed();
             return false;
         }
-        if (!mWillConnName.startsWith("Goluk") || !mWillConnName.startsWith("Car")) {
+        if (!mWillConnName.startsWith("Goluk") && !mWillConnName.startsWith("Car")) {
             showToast(getString(R.string.not_goluk_device));
             collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
             // 连接失败

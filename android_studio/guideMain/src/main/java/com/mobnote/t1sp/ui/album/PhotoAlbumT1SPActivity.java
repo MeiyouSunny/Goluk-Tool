@@ -87,8 +87,8 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         if (mFragmentAlubm != null && mShouldClose) {
             mFragmentAlubm.checkDowningExit();
         } else {
-            //super.onBackPressed();
-            enterVideoMode();
+            super.onBackPressed();
+            //enterVideoMode();
         }
     }
 

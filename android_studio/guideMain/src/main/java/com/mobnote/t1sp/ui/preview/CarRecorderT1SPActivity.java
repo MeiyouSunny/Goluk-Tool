@@ -46,8 +46,11 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
+import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.listener.OnCaptureListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
@@ -80,6 +83,7 @@ import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 /**
@@ -305,6 +309,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private int mCaptureTime;
     // 最新2视频(精彩视频和紧急视频)
     private List<String> mLatestTwoVideos;
+    // 是否处于其他模式(录像模式意外的模式)
+    private boolean isInOtherMode;
 
     @Override
     public int initLayoutResId() {
@@ -898,30 +904,30 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     }
 
-    public void onEventMainThread(EventWifiConnect event) {
-        if (null == event) {
-            return;
-        }
-
-        switch (event.getOpCode()) {
-            case EventConfig.WIFI_STATE_FAILED:
-                if (canReceiveFailed) {
-                    mApp.setIpcDisconnect();
-                    canReceiveFailed = false;
-                }
-                ipcConnFailed();
-                break;
-            case EventConfig.WIFI_STATE_CONNING:
-                ipcConnecting();
-
-                break;
-            case EventConfig.WIFI_STATE_SUCCESS:
-                ipcConnSucess();
-                break;
-            default:
-                break;
-        }
-    }
+//    public void onEventMainThread(EventWifiConnect event) {
+//        if (null == event) {
+//            return;
+//        }
+//
+//        switch (event.getOpCode()) {
+//            case EventConfig.WIFI_STATE_FAILED:
+//                if (canReceiveFailed) {
+//                    mApp.setIpcDisconnect();
+//                    canReceiveFailed = false;
+//                }
+//                ipcConnFailed();
+//                break;
+//            case EventConfig.WIFI_STATE_CONNING:
+//                ipcConnecting();
+//
+//                break;
+//            case EventConfig.WIFI_STATE_SUCCESS:
+//                ipcConnSucess();
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
     public void onEventMainThread(EventUpdateAddr event) {
         if (null == event) {
@@ -956,6 +962,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             }
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
+            // 更新flag
+            isInOtherMode = true;
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
         } else if (id == R.id.video_off) {
@@ -999,12 +1007,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
-            //相册页面访问统计
-            ZhugeUtils.eventCallAlbum(this, this.getString(R.string.str_zhuge_call_album_source_ipc));
-
             Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
+            // 更新flag
+            isInOtherMode = true;
         } else if (id == R.id.mRtmpPlayerView) {
             if (m_bIsFullScreen) {
                 setFullScreen(false);
@@ -1124,10 +1131,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         if (isShowPlayer) {
             if (!isConnecting) {
-                showLoading();
-                hidePlayer();
-                isConnecting = true;
-                start();
+                if (isInOtherMode) {
+                    enterRecordMode();
+                } else {
+                    showLoading();
+                    hidePlayer();
+                    isConnecting = true;
+                    start();
+                }
             }
         }
 
@@ -1372,7 +1383,29 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 mHandler.sendEmptyMessageDelayed(DOWNLOADWONDERFULVIDEO, 600);
             }
         }
+    }
 
+    /**
+     * 进入录像模式
+     */
+    private void enterRecordMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                isInOtherMode = false;
+                showLoading();
+                hidePlayer();
+                isConnecting = true;
+                start();
+
+                $.toast().text(R.string.recovery_to_record).show();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(errorMessage).show();
+            }
+        });
     }
 
 }

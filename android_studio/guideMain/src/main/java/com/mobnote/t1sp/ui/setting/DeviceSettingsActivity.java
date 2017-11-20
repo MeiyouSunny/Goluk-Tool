@@ -237,10 +237,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             mHeartbeatTask.stop();
     }
 
-    @Override
-    public void onBackPressed() {
-        enterVideoMode();
-    }
+//    @Override
+//    public void onBackPressed() {
+//        enterVideoMode();
+//    }
 
     public void enterVideoMode() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {

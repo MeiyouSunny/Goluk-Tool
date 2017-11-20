@@ -1,20 +1,5 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.carrecorder.IpcDataParser;
-import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
-
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
@@ -32,8 +17,29 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.carrecorder.IpcDataParser;
+import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.t1sp.api.ApiUtil;
+import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.JsonUtil;
+import com.rd.veuisdk.utils.DateTimeUtils;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import likly.dollar.$;
 
 /**
  *
@@ -90,6 +96,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		density = SoundUtils.getInstance().getDisplayMetrics().density;
 		loadRes();
 		initView();
+		initTimes();
 		getSystemTime();
 		readPreState();
 		switchUIState();
@@ -180,16 +187,9 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		line.setLayoutParams(lineParams);
 	}
 
-	/**
-	 * 获取当前系统时间
-	 * 
-	 * @author xuhw
-	 * @date 2015年4月6日
-	 */
-	private void getSystemTime() {
+	private void initTimes() {
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTimeInMillis(System.currentTimeMillis());
-
 		year = calendar.get(Calendar.YEAR);
 		month = calendar.get(Calendar.MONTH) + 1;
 		day = calendar.get(Calendar.DAY_OF_MONTH);
@@ -202,6 +202,19 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		} else {
 			mTimeText.setText(hour + ":" + minute);
 		}
+	}
+
+	/**
+	 * 获取当前系统时间
+	 * 
+	 * @author xuhw
+	 * @date 2015年4月6日
+	 */
+	private void getSystemTime() {
+		// T1SP 无法获取当前时间
+		if(GolukApplication.getInstance().getIPCControlManager().isT1SP())
+			return;
+
 		boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
 		GolukApplication.getInstance().getIPCControlManager().getTimeSyncCfg();
 		GolukDebugUtils.e("xuhw", "YYY========getIPCSystemTime=======a=" + a);
@@ -277,11 +290,34 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		switchNextState(STATE_AUTO);
 		this.switchUIState();
 		if (STATE_AUTO == mCurrentState) {
-			long time = System.currentTimeMillis() / 1000;
-			boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
-			GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a=" + a);
+			// T1SP
+			if (GolukApplication.getInstance().getIPCControlManager().isT1SP()) {
+				final String nowTime = DateTimeUtils.getNowTimeStringSplitWith$();
+				setT1SPSystemTime(nowTime);
+			} else {
+				// Other
+				long time = System.currentTimeMillis() / 1000;
+				boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
+				GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a=" + a);
+			}
 		}
 		saveCurrentState();
+	}
+
+	/**
+	 * 同步T1SP系统时间
+	 */
+	private void setT1SPSystemTime(String time) {
+		ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setTimeParam(time), new CommonCallback() {
+			@Override
+			protected void onSuccess() {
+				$.toast().text(R.string.str_set_ok);
+			}
+
+			@Override
+			protected void onServerError(int errorCode, String errorMessage) {
+			}
+		});
 	}
 
 	private void saveCurrentState() {
@@ -414,8 +450,15 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				long time = getMountTime();
 				GolukDebugUtils.e("xuhw", "YYY=============time==" + time);
 				if (0 != time) {
-					boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
-					GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a=" + a);
+					// T1SP
+					if (GolukApplication.getInstance().getIPCControlManager().isT1SP()) {
+						final String timeStr = DateTimeUtils.getTimeStringSplitWith$(time);
+						setT1SPSystemTime(timeStr);
+					} else {
+						// Other
+						boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);
+						GolukDebugUtils.e("xuhw", "YYY============setIPCSystemTime===============a=" + a);
+					}
 				}
 			}
 		}

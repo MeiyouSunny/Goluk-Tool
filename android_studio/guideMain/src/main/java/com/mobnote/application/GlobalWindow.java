@@ -20,7 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.golukmain.R;
-import com.mobnote.t1sp.ui.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.download.DownloaderT1spImpl;
 
 import java.lang.reflect.Method;
 

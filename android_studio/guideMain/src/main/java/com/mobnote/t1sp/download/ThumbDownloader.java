@@ -1,4 +1,4 @@
-package com.mobnote.t1sp.ui.download;
+package com.mobnote.t1sp.download;
 
 import android.content.Context;
 import android.graphics.Bitmap;
