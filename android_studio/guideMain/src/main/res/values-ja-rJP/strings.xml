@@ -1077,4 +1077,6 @@
     <string name="str_wifi_name_fail">Wi-Fi の名前が設定できません</string>
     <string name="not_goluk_device">あなたは、現在非GOLUK Wi-Fi接続され、スイッチGOLUK Wi-Fiをやり直してください。</string>
     <string name="no_wifi_selected">GOLUK Wi-Fiをつないでください。あなたが接続している場合は、ブルートゥースとvpnをオフにして、もう一度ためしてください</string>
+    <string name="export_error">エクスポートできませんでした...</string>
+    <string name="exporting">ビデオをエクスポート中です。お待ちください...</string>
 </resources>

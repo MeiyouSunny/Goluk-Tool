@@ -347,9 +347,9 @@ public class WonderfulSelectedListView implements VideoSuqareManagerFn {
 						int refreshcount = json.getInt("refreshcount");
 						if(refreshcount > 0){
 							if(json.getInt("isfirst") == 1){
-								startAnimation(mContext.getResources().getString(R.string.str_frist_refresh_begen_txt)+refreshcount+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
+								startAnimation(mContext.getResources().getString(R.string.str_frist_refresh_begen_txt)+" "+ refreshcount+" "+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
 							}else{
-								startAnimation(mContext.getResources().getString(R.string.str_more_refresh_begen_txt)+refreshcount+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
+								startAnimation(mContext.getResources().getString(R.string.str_more_refresh_begen_txt)+" "+refreshcount+" "+mContext.getResources().getString(R.string.str_frist_refresh_end_txt));
 							}
 						}
 						

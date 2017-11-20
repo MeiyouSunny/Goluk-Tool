@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.WindowManager;
@@ -135,8 +136,11 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 				UserUtils.showDialog(this, this.getResources().getString(R.string.str_sign_limit));
 			} else {
 				String body = mEditBody.getText().toString();
+				if(TextUtils.isEmpty(body)){
+					UserUtils.showDialog(this, this.getResources().getString(R.string.signature_is_empty));
+					return;
+				}
 				if (body.equalsIgnoreCase(mSignText)) {
-
 					Intent it = new Intent(UserPersonalSignActivity.this, UserPersonalInfoActivity.class);
 					it.putExtra("itSign", mSignNewText);
 					this.setResult(2, it);

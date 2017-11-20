@@ -90,5 +90,6 @@
     <string name="canceling">취소 중 ...</string>
     <string name="cancel_export_video">불완전 내보내기, 취소 하시겠습니까?</string>
     <string name="cancel_export">불완전 내보내기, 취소 하시겠습니까?</string>
-    <string name="video_speed_duration_too_short_to_change">비디오를 캡처 할 수 없습니다. 비디오가 너무 짧습니다.</string>
+    <string name="video_speed_duration_too_short_to_change">변경할 수 없는 속도, 비디오 너무 짧다.</string>
+    <string name="import_duration_limit">동영상 길이가 90초를 초과합니다</string>
 </resources>

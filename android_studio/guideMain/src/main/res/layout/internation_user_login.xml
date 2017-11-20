@@ -247,7 +247,7 @@
                 android:layout_marginTop="13dp"
                 android:background="@drawable/bg_rounded_rectangle"
                 android:digits="1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                android:hint="@string/input_pwd"
+                android:hint="@string/user_insert_pwd_hint"
                 android:inputType="textPassword"
                 android:lines="1"
                 android:maxLength="16"

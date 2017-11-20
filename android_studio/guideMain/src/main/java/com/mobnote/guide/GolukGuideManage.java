@@ -22,6 +22,7 @@ import android.widget.LinearLayout.LayoutParams;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
@@ -92,11 +93,18 @@ public class GolukGuideManage {
 		mListViews = new ArrayList<View>();
 		mBGBitmap2 = ImageManager.getBitmapFromResource(R.drawable.guide_2);
 		mBGBitmap3 = ImageManager.getBitmapFromResource(R.drawable.guide_3);
-		mBGBitmap4 = ImageManager.getBitmapFromResource(R.drawable.guide_4);
+		if(GolukApplication.getInstance().isMainland()) {
+			mBGBitmap4 = ImageManager.getBitmapFromResource(R.drawable.guide_4);
+		}
 		mBGBitmap5 = ImageManager.getBitmapFromResource(R.drawable.guide_5);
-
-		Bitmap[] imgId = { mBGBitmap2, mBGBitmap3, mBGBitmap4, mBGBitmap5 };
-		for (int i = 0, len = imgId.length; i < len; i++) {
+		ArrayList<Bitmap> imgId = new ArrayList<>();
+		imgId.add(mBGBitmap2);
+		imgId.add(mBGBitmap3);
+		if(GolukApplication.getInstance().isMainland()) {
+			imgId.add(mBGBitmap4);
+		}
+		imgId.add(mBGBitmap5);
+		for (int i = 0, len = imgId.size(); i < len; i++) {
 			// 最后一个,采用最后一个布局,
 			RelativeLayout view = null;
 			if (i == (len - 1)) {
@@ -123,7 +131,7 @@ public class GolukGuideManage {
 			mListViews.add(view);
 			ImageView img = (ImageView) view.findViewById(R.id.guide_img);
 			img.setScaleType(ScaleType.FIT_XY);
-			img.setImageBitmap(imgId[i]);
+			img.setImageBitmap(imgId.get(i));
 			
 			// 添加圆点图标
 			addImageCursor();

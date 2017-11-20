@@ -1078,4 +1078,6 @@
     <string name="not_goluk_device">你正在連接到非GOLUK Wi-Fi，請切換到GOLUK Wi-Fi後再試一次</string>
     <string name="no_wifi_selected">請連接到GOLUK Wi-Fi。如果您已連接，請關閉藍牙和VPN，然後再試一次</string>
     <string name="no_log_file">暫無日誌數據</string>
+    <string name="export_error">匯出失敗…</string>
+    <string name="exporting">正在匯出影片，請耐心等待…</string>
 </resources>

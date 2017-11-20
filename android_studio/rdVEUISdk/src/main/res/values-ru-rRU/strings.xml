@@ -90,5 +90,6 @@
     <string name="canceling">Отмена ...</string>
     <string name="cancel_export_video">Экспорт видео не завершён, отменить?</string>
     <string name="cancel_export">Экспорт видео не завершён, отменить?</string>
-    <string name="video_speed_duration_too_short_to_change">Видео слишком короткое, не удалось захватить видео.</string>
+    <string name="video_speed_duration_too_short_to_change">Не в состоянии изменить скорость, видео - слишком короткий.</string>
+    <string name="import_duration_limit">Видео превышает 90 сек.</string>
 </resources>

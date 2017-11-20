@@ -90,5 +90,6 @@
     <string name="canceling">キャンセル中...</string>
     <string name="cancel_export_video">不完全な輸出、キャンセル？</string>
     <string name="cancel_export">不完全な輸出、キャンセル？</string>
-    <string name="video_speed_duration_too_short_to_change">ビデオをキャプチャできません、ビデオが短すぎます。</string>
+    <string name="video_speed_duration_too_short_to_change">速度を変更することができなくて、ビデオは短すぎます。</string>
+    <string name="import_duration_limit">ビデオが90秒を超えています</string>
 </resources>

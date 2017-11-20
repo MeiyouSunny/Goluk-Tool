@@ -1075,4 +1075,6 @@
     <string name="str_wifi_name_fail">Wi-Fi 이름 설정 할 수 없습니다</string>
     <string name="not_goluk_device">당신은 현재 비 GOLUK 연결 무선, 전화 좀 주세요 GOLUK 무선, 다시 한번.</string>
     <string name="no_wifi_selected">좀 연결 GOLUK 무선.만약 네가 연결 좀 꺼, 다시 블루투스 기술;</string>
+    <string name="export_error">내보내기 실패...</string>
+    <string name="exporting">동영상 내보내는 중. 잠시만 기다리세요...</string>
 </resources>

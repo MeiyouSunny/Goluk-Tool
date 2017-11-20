@@ -529,7 +529,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             mPhoneLL.setVisibility(View.GONE);
             mEmailEt.setVisibility(View.VISIBLE);
             resetRegisterBtnState();
-
+            mEmailEt.requestFocus();
         } else if (view.getId() == R.id.tab_phone) {
             if (mIsPhoneSelected) {
                 return;
@@ -542,6 +542,7 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
             mPhoneLL.setVisibility(View.VISIBLE);
             mEmailEt.setVisibility(View.GONE);
             resetRegisterBtnState();
+            mEditTextPhoneNumber.requestFocus();
         } else if (view.getId() == R.id.insert_user_btn) {
             mApplication.mLoginManage.setUserLoginInterface(null);
             UserUtils.hideSoftMethod(this);

@@ -13,6 +13,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 
+import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.HttpManager;
@@ -449,13 +450,20 @@ public class ImageClipActivity extends BaseActivity implements OnClickListener,I
 					
 					GolukApplication.getInstance().setMyinfo("", "", "",urlhead);
 					GolukUtils.showToast(ImageClipActivity.this, this.getResources().getString(R.string.str_save_success));
-
 					GolukUtils.showToast(ImageClipActivity.this,ImageClipActivity.this.getResources().getString(R.string.str_save_photo_success));
-
+					//修改头像之后，清除缓存 。 这里会让界面延迟销毁
+					//https://stackoverflow.com/questions/32406489/glide-how-to-find-if-the-image-is-already-cached-and-use-the-cached-version
+					new Thread(new Runnable() {
+						@Override
+						public void run() {
+							Glide.get(ImageClipActivity.this).clearDiskCache();
+						}
+					}).start();
 					Intent it = new Intent(ImageClipActivity.this, UserPersonalInfoActivity.class);
 					it.putExtra("imagepath", urlhead);
 					ImageClipActivity.this.setResult(RESULT_OK, it);
 					ImageClipActivity.this.finish();
+
 				} else {
 					GolukUtils.showToast(ImageClipActivity.this,this.getResources().getString(R.string.str_save_network_error));
 				}

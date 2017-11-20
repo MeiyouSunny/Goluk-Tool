@@ -1077,4 +1077,6 @@
     <string name="str_wifi_name_fail">Impossible de définir Wi-Fi nom</string>
     <string name="not_goluk_device">Vous êtes actuellement connectés au Wi-Fi non GOLUK , veuillez passer à GOLUK  Wi-Fi et essayer de nouveau.</string>
     <string name="no_wifi_selected">Bitte verbinden sie mich mit GOLUK Wi-Fi.wenn sie verbunden sind, wenden sie sich bitte an bluetooth - und versuchen sie es erneut.</string>
+    <string name="export_error">Échec de l\'exportation...</string>
+    <string name="exporting">Exportation de la vidéo, veuillez patienter...</string>
 </resources>

@@ -90,5 +90,6 @@
     <string name="canceling">Annulation ...</string>
     <string name="cancel_export_video">Exporter incomplet, annuler?</string>
     <string name="cancel_export">Exporter incomplet, annuler?</string>
-    <string name="video_speed_duration_too_short_to_change">Impossible de capturer la vidéo, la vidéo est trop courte.</string>
+    <string name="video_speed_duration_too_short_to_change">Incapables de changer la vitesse, la vidéo est trop court.</string>
+    <string name="import_duration_limit">La durée de la vidéo dépasse 90 secondes</string>
 </resources>
