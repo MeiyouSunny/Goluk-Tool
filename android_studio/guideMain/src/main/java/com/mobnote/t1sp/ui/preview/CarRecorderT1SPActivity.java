@@ -51,6 +51,8 @@ import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.listener.OnCaptureListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
@@ -94,7 +96,7 @@ import likly.mvp.MvpBinder;
         model = CarRecorderT1SPModelImpl.class
 )
 @SuppressLint("NewApi")
-public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener {
+public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener {
     private Handler mHandler = null;
     /**
      * 保存当前录制的视频类型
@@ -244,7 +246,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private boolean m_bIsFullScreen = false;
     private ViewGroup m_vgNormalParent;
     private ImageButton mFullScreen = null;
-    private ImageButton mVideoOff = null;
     private RelativeLayout mPlayerLayout = null;
     private Button mNormalScreen = null;
     private final int BTN_NORMALSCREEN = 231;
@@ -321,6 +322,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onViewCreated() {
         super.onViewCreated();
         EventBus.getDefault().register(this);
+        T1SPConnecter.instance().addListener(this);
+        T1SPConnecter.instance().mRecordActivity = this;
 
         mApp = (GolukApplication) getApplication();
 
@@ -405,15 +408,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (settingInfo == null)
             return;
         mSettingInfo = settingInfo;
-        mVideoOff.setBackgroundResource(settingInfo.soundRecord ? R.drawable.recorder_btn_sound : R.drawable.recorder_btn_nosound);
         mVideoResolutions.setBackgroundResource(settingInfo.is1080P() ? R.drawable.icon_hd1080 : R.drawable.icon_hd720);
-    }
-
-    @Override
-    public void onSetRecordSoundSuccess(boolean onOff) {
-        mVideoOff.setBackgroundResource(onOff ? R.drawable.recorder_btn_sound : R.drawable.recorder_btn_nosound);
-        if (mSettingInfo != null)
-            mSettingInfo.soundRecord = onOff;
     }
 
     @Override
@@ -648,7 +643,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private void initView() {
         mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
         mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
-        mVideoOff = (ImageButton) findViewById(R.id.video_off);
         mFullScreen.setVisibility(View.GONE);
         mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
         mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
@@ -717,7 +711,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         findViewById(R.id.mPlayBtn).setOnClickListener(this);
         mPalyerLayout.setOnClickListener(this);
         mFullScreen.setOnClickListener(this);
-        mVideoOff.setOnClickListener(this);
         mBtnCapture.setOnClickListener(this);
         mNotconnected.setOnClickListener(this);
         image1.setOnClickListener(this);
@@ -956,6 +949,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             preExit();
         } else if (id == R.id.m8sBtn) {
             // 视频抓拍
+            if (!GolukApplication.getInstance().getIpcIsLogin())
+                return;
             getPresenter().captureVideo();
         } else if (id == R.id.mSettingBtn) {
             if (m_bIsFullScreen) {
@@ -966,11 +961,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             isInOtherMode = true;
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
-        } else if (id == R.id.video_off) {
-            // 设置声音录制开关
-            if (mSettingInfo == null)
-                return;
-            getPresenter().setRecordSound(!mSettingInfo.soundRecord);
         } else if (id == BTN_NORMALSCREEN) {
             setFullScreen(false);
         } else if (id == R.id.mPlayBtn) {
@@ -987,6 +977,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.image1) {
+            if (mLatestTwoVideos == null)
+                return;
             new1.setVisibility(View.GONE);
             String videoName = "";
             if (mLatestTwoVideos.size() == 1) {
@@ -1001,7 +993,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             }
         } else if (id == R.id.image2) {
             new2.setVisibility(View.GONE);
-            if (mLatestTwoVideos.size() == 2) {
+            if (mLatestTwoVideos != null && mLatestTwoVideos.size() == 2) {
                 String videoName = mLatestTwoVideos.get(0);
                 videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
                 gotoPlayVideo(videoName);
@@ -1119,7 +1111,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
         mNotconnected.setVisibility(View.GONE);
         mConncetLayout.setVisibility(View.GONE);
-//        mChangeBtn.setVisibility(View.VISIBLE);
+        mConnectTip.setText(WiFiInfo.IPC_SSID);
         mSettingBtn.setVisibility(View.VISIBLE);
         mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
 
@@ -1171,7 +1163,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onDestroy() {
         //disable wifi if ipcConnected
-        if (mApp.isIpcLoginSuccess && !mIsLive) {
+        if (mApp.isIpcLoginSuccess && !mIsLive && T1SPConnecter.instance().needDisconnectWIFI()) {
             mApp.mIPCControlManager.setVdcpDisconnect();
             mApp.setIpcLoginOut();
             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -1208,6 +1200,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             mExitAlertDialog = null;
         }
         super.onDestroy();
+        T1SPConnecter.instance().removeListener(this);
+        T1SPConnecter.instance().needDisconnectWIFI(true);
     }
 
     /**
@@ -1406,6 +1400,21 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 $.toast().text(errorMessage).show();
             }
         });
+    }
+
+    @Override
+    public void onT1SPDisconnected() {
+        ipcConnFailed();
+    }
+
+    @Override
+    public void onT1SPConnectStart() {
+        ipcConnecting();
+    }
+
+    @Override
+    public void onT1SPConnectResult(boolean success) {
+        ipcConnSucess();
     }
 
 }

@@ -68,6 +68,7 @@ import com.mobnote.golukmain.wifimanage.WifiApAdmin;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.map.LngLat;
 import com.mobnote.t1sp.base.ui.BaseOnViewBindListener;
+import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
@@ -396,6 +397,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             com.mobnote.t1sp.api.HttpManager.initHttp();
             // Downloader
             DownloaderT1spImpl.init(this);
+            // Connecter
+            T1SPConnecter.instance().init(this);
         }
 
         // TODO 此处不要做初始化相关的工作
@@ -1622,10 +1625,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (this.isExit()) {
             return;
         }
-        if (ENetTransEvent_IPC_VDCP_ConnectState == event && !mIPCControlManager.isT1SP()) {
+        if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
             IPC_VDCP_Connect_CallBack(msg, param1, param2);
         }
-        if (ENetTransEvent_IPC_VDCP_CommandResp == event && !mIPCControlManager.isT1SP()) {
+        if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
             IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
         }
         // IPC下载连接状态 event = 2

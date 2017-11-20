@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.drawable.AnimationDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
@@ -36,6 +34,7 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -44,6 +43,8 @@ import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
@@ -68,7 +69,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Wifi扫描列表
  */
-public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack, IPCManagerFn {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack, IPCManagerFn, T1SPConntectListener {
 
     private static final String TAG = "WiFiLinkList";
     public static final String CONNECT_IPC_IP = "192.168.62.1";
@@ -199,6 +200,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.setBinding(true);
         // 断开前面的所有连接
         mApp.setIpcDisconnect();
+
+        // T1SP
+        T1SPConnecter.instance().addListener(this);
     }
 
     private void getIntentData() {
@@ -369,6 +373,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("dealAutoConn", "-----2");
         // 去连接IPC
         // isAutoConn = true;
+
+        // T1SP连接
+        connectT1SP();
+        // Other
         sendLogicLinkIpc();
     }
 
@@ -528,7 +536,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         super.onResume();
         // T1SP
         if (mAutoConn)
-            connect();
+            connectT1SP();
 
         if (!mAutoConn) {
             mStartSystemWifi = true;
@@ -545,28 +553,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     /**
      * T1SP连接
      */
-    private void connect() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
-            @Override
-            public void onGetSettingInfos(SettingInfo settingInfo) {
-                // T1SP连接成功
-                GolukApplication.getInstance().setIpcLoginState(true);
-                // 保存WIFI信息
-                saveT1SPInfo();
-                // 保存设备ID和版本
-                SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
-                SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
-                SharedPrefUtil.saveIpcModel(IPCControlManager.T1SP_SIGN);
-                // 开启UDP监听
-                ViewUtil.startService(WiFiLinkListActivity.this, T1SPUdpService.class);
-
-                goNextAfterT1SPConnected();
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-            }
-        });
+    private void connectT1SP() {
+        T1SPConnecter.instance().connectToDevice();
     }
 
     /**
@@ -601,6 +589,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             EventBus.getDefault().post(new EventSingleConnSuccess());
             return;
         } else {
+            T1SPConnecter.instance().finishRecordActivity(CarRecorderActivity.class);
             ViewUtil.goActivityAndClearTop(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
             finish();
         }
@@ -684,22 +673,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
         if (EventConfig.WIFI_STATE == event.getOpCode() && event.getMsg()) {
             // 连接网络成功
-            if (isWifiConnected(this)) {
+            if (NetUtil.isWifiConnected(this)) {
                 GolukDebugUtils.e("", "WifiLinkList------------wifi Change wifi");
                 collectLog("onEventMainThread", "wifi-----222");
-                this.autoConnWifi();
+                autoConnWifi();
             }
         }
-    }
-
-    public static boolean isWifiConnected(Context context) {
-        ConnectivityManager connectivityManager = (ConnectivityManager) context
-                .getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo wifiNetworkInfo = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (null != wifiNetworkInfo && wifiNetworkInfo.isConnected()) {
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -803,6 +782,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 EventBus.getDefault().post(new EventSingleConnSuccess());
                 return;
             }
+            T1SPConnecter.instance().finishRecordActivity(CarRecorderT1SPActivity.class);
             Intent mainIntent = new Intent(WiFiLinkListActivity.this, CarRecorderActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -869,6 +849,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
         LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
         this.dimissLoadingDialog();
+        // T1SP
+        T1SPConnecter.instance().removeListener(this);
     }
 
     @Override
@@ -926,6 +908,25 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             finish();
         } else if (SHOW_TOAST == msg.what) {
             GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+        }
+    }
+
+    @Override
+    public void onT1SPConnectStart() {
+    }
+
+    @Override
+    public void onT1SPDisconnected() {
+    }
+
+    @Override
+    public void onT1SPConnectResult(boolean success) {
+        if (success) {
+            // T1SP 连接结果回调
+            // 保存WIFI信息
+            saveT1SPInfo();
+            // 页面跳转
+            goNextAfterT1SPConnected();
         }
     }
 

@@ -10,13 +10,6 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
     void getVideoSettingInfo();
 
     /**
-     * 设置录制声音开关
-     *
-     * @param onOff 开/关
-     */
-    void setRecordSound(boolean onOff);
-
-    /**
      * 抓拍精彩视频
      */
     void captureVideo();

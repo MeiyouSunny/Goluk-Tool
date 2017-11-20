@@ -73,6 +73,7 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -112,9 +113,6 @@ import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-
-import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.ACTION_GO_To_ALBUM;
-import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.isWifiConnected;
 
 /**
  * 行车记录仪处理类
@@ -172,6 +170,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     public enum VideoType {
         mounts, emergency, idle, classic
     }
+
     /**
      * 8s视频定时器
      */
@@ -396,6 +395,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        T1SPConnecter.instance().mRecordActivity = this;
         mLayoutFlater = LayoutInflater.from(this);
         mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.carrecorder_main, null);
 
@@ -462,7 +462,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void firstShowHint() {
-        if(!SharedPrefUtil.isShowChangeIpc()){
+        if (!SharedPrefUtil.isShowChangeIpc()) {
             SharedPrefUtil.setShowChangeIpc(true);
             final ViewStub stub = (ViewStub) findViewById(R.id.stub_change);
             View view = stub.inflate();
@@ -681,7 +681,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mTime = (TextView) findViewById(R.id
                 .mTime);
         mAddr = (TextView) findViewById(R.id.mAddr);
-        if(GolukApplication.getInstance().isMainland()) {
+        if (GolukApplication.getInstance().isMainland()) {
             //mAddr.setVisibility(View.VISIBLE);
         } else {
             mAddr.setVisibility(View.GONE);
@@ -689,8 +689,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mConnectTip = (TextView) findViewById(R.id.mConnectTip);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
         mLoading = (ProgressBar) findViewById(R.id.mLoading);
-      //  mLoading.setBackgroundResource(R.anim.video_loading);
-    //    mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
+        //  mLoading.setBackgroundResource(R.anim.video_loading);
+        //    mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
         mLoadingText = (TextView) findViewById(R.id.mLoadingText);
         mllStartLive = (LinearLayout) findViewById(R.id.ll_car_recorder_start_live);
         mLiveBtn = (ImageButton) findViewById(R.id.btn_carrecorder_live);
@@ -769,7 +769,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 hidePlayer();
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
-                collectLog("RD Rtsp Player Error, what id["+String.valueOf(what)+"],extra id["+String.valueOf(extra)+"],Errorinfo is:["+strErrorInfo+"]");
+                collectLog("RD Rtsp Player Error, what id[" + String.valueOf(what) + "],extra id[" + String.valueOf(extra) + "],Errorinfo is:[" + strErrorInfo + "]");
                 rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
@@ -814,7 +814,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
 
-
                 mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
                 if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
                         || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {//T1
@@ -830,7 +829,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         isRecVideo = false;
                     }
                 }
-
 
                 if (isRecVideo == false) {
                     mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
@@ -854,7 +852,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_RTSP_REVIEW)
                 .addLogData(JsonUtil.getReportData("CarRecorderActivity", "rtsp", msg));
     }
-
 
     /**
      * 隐藏播放器
@@ -956,7 +953,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             String url = PlayUrlManager.getRtspUrl();
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
-            if(TextUtils.isEmpty(url)){
+            if (TextUtils.isEmpty(url)) {
                 return;
             }
             mRtspPlayerView.setDataSource(url);
@@ -1014,9 +1011,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private void setVideoBtnState(Boolean flog) {
 
         if (flog) {
-           //jcqp.setTextColor(getResources().getColor(R.color.text_select_color));
+            //jcqp.setTextColor(getResources().getColor(R.color.text_select_color));
         } else {
-           //jcqp.setTextColor(getResources().getColor(R.color.text_diff_color));
+            //jcqp.setTextColor(getResources().getColor(R.color.text_diff_color));
         }
     }
 
@@ -1125,7 +1122,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 hidePlayer();
                 mPalyerLayout.setVisibility(View.GONE);
             }
-        }else if (id == R.id.mNotconnected) {
+        } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.btn_carrecorder_live) {
             //发起直播进需要移动网络和热点，此时IPC断开不影响判断热点和移动网络
@@ -1159,9 +1156,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         dialog.dismiss();
                         Intent intent = new Intent(CarRecorderActivity.this, WiFiLinkCompleteActivity.class);
                         intent.putExtra(WiFiLinkCompleteActivity.INTENT_ACTION_RETURN_LIVE, true);
-                        intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
-                        intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
-                        intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
+                        intent.putExtra(StartLiveActivity.SHORT_LOCATION, mShortLocation);
+                        intent.putExtra(StartLiveActivity.CURR_LON, mLocationLon);
+                        intent.putExtra(StartLiveActivity.CURR_LAT, mLocationLat);
                         startActivity(intent);
                     }
                 });
@@ -1221,7 +1218,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             startActivity(intent);
         } else if (id == R.id.changeBtn) {
             Intent intent = new Intent(this, WiFiLinkListActivity.class);
-            intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM,false);
+            intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM, false);
             startActivity(intent);
         } else {
         }
@@ -1446,7 +1443,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onDestroy() {
         //disable wifi if ipcConnected
-        if (mApp.isIpcLoginSuccess && !mIsLive) {
+        if (mApp.isIpcLoginSuccess && !mIsLive && T1SPConnecter.instance().needDisconnectWIFI()) {
             mApp.mIPCControlManager.setVdcpDisconnect();
             mApp.setIpcLoginOut();
             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
@@ -1478,13 +1475,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
         mWonderfulTime = 0;
         EventBus.getDefault().unregister(this);
-        if(mExitAlertDialog != null) {
+        if (mExitAlertDialog != null) {
             if (mExitAlertDialog.isShowing()) {
                 mExitAlertDialog.dismiss();
             }
             mExitAlertDialog = null;
         }
         super.onDestroy();
+        T1SPConnecter.instance().needDisconnectWIFI(true);
     }
 
     /**
@@ -2172,7 +2170,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
                             imagename = mNowDownloadName.replace("mp4", "jpg");
 
-
                             if (filename.equals(imagename)) {
                                 VideoShareInfo vsi = new VideoShareInfo();
                                 vsi.setName(filename.replace("jpg", "mp4"));
@@ -2544,8 +2541,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
     }
 
-    public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish){
-        if(null == eventShortLocationFinish){
+    public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish) {
+        if (null == eventShortLocationFinish) {
             return;
         }
         mShortLocation = eventShortLocationFinish.getShortAddress();
@@ -2553,9 +2550,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mLocationLat = eventShortLocationFinish.getLat();
     }
 
-
-
-    public void onEventMainThread(EventHotSpotSuccess eventShortLocationFinish){
+    public void onEventMainThread(EventHotSpotSuccess eventShortLocationFinish) {
         mIsLive = true;
         this.finish();
     }

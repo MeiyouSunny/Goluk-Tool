@@ -15,8 +15,6 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     void onGetVideoSettingInfo(SettingInfo settingInfo);
 
-    void onSetRecordSoundSuccess(boolean onOff);
-
     void onCaptureStart();
 
     void onGetLatestTwoVideos(List<String> videos);

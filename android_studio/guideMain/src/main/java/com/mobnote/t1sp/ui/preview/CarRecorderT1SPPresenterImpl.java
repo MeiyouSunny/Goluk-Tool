@@ -30,21 +30,6 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
     }
 
     @Override
-    public void setRecordSound(final boolean onOff) {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setRecordSoundParam(onOff), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-                getView().onSetRecordSoundSuccess(onOff);
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
-            }
-        });
-    }
-
-    @Override
     public void captureVideo() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.captureParam(false), new CommonCallback() {
             @Override

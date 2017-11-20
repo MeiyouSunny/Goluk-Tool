@@ -106,7 +106,7 @@ public abstract class SettingInfosCallback extends DataCallback {
             if (storageInfo.contains("\\")) {
                 String[] sizeData = storageInfo.split("\\\\");
                 if (sizeData != null && sizeData.length >= 2) {
-                    String formatResult = StringUtil.formatFileSize(Long.parseLong(sizeData[0]))
+                    String formatResult = StringUtil.formatFileSize(Long.parseLong(sizeData[1]) - Long.parseLong(sizeData[0]))
                             + "/"
                             + StringUtil.formatFileSize(Long.parseLong(sizeData[1]));
 
