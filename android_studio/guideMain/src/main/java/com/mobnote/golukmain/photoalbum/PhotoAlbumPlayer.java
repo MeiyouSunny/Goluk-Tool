@@ -1656,7 +1656,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 // 设置片尾时长 单位s 默认2s
                 .setTrailerDuration(2)
                 .setVideoMaxWH(width)
-                .setVideoBitRate(bitRate)
+//                .setVideoBitRate(bitRate)
                 .setImportVideoDuration(90)
                 // 设置导出视频时长 单位ms 传0或者不设置 将导出完整视频
                 .setVideoDuration(configData.exportVideoDuration)
