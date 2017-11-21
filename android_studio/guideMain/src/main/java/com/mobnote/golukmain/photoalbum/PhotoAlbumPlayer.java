@@ -751,8 +751,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            params.width = metrics.widthPixels;
-            params.height = metrics.heightPixels;
+            if(metrics.widthPixels < metrics.heightPixels) {
+                params.height = metrics.widthPixels;
+                params.width = metrics.heightPixels;
+            }else{
+                params.width = metrics.widthPixels;
+                params.height = metrics.heightPixels;
+            }
             params.leftMargin = 0;
             if (Build.VERSION.SDK_INT > 16) {
                 params.removeRule(RelativeLayout.BELOW);
