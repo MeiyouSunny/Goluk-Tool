@@ -12,6 +12,7 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
+import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -1564,6 +1565,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private void initEditorUIAndExportConfig() {
         initAndGetConfigData();
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        retriever.setDataSource(mVideoUrl);
+        int bitRate = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE));
+        int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+        retriever.release();
         // 视频编辑UI配置
         UIConfiguration uiConfig = new UIConfiguration.Builder()
                 // 设置是否使用自定义相册
@@ -1644,6 +1650,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 .setTrailerPath(configData.videoTrailerPath)
                 // 设置片尾时长 单位s 默认2s
                 .setTrailerDuration(2)
+                .setVideoMaxWH(width)
+                .setVideoBitRate(bitRate)
                 .setImportVideoDuration(90)
                 // 设置导出视频时长 单位ms 传0或者不设置 将导出完整视频
                 .setVideoDuration(configData.exportVideoDuration)
