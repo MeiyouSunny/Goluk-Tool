@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Клуб молодых путешественников (туристическая типография)</string>
     <string name="watch_live_text">Слегка коснитесь и подождите еще</string>
     <string name="video_live_5s_tip">Подождите немного, трансляция скоро начнется</string>
-    <string name="set_ipc_item_hint_text">Автоматическая синхронизация последних замечательных и аварийных видеозаписей после подключения телефона к Goluk</string>
+    <string name="set_ipc_item_hint_text">Синхронизация последних замечательных видео автоматически после подключения телефона с Goluk</string>
     <string name="my_install_title_text">Инструкции по установке</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Отпустив, отправить</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Загрузка...</string>
@@ -1079,4 +1079,5 @@
     <string name="no_wifi_selected">Пожалуйста, подключитесь к GOLUK Wi-Fi. Если вы подключены, отключите Bluetooth и VPN и повторите попытку;</string>
     <string name="export_error">Экспортировать не удалось...</string>
     <string name="exporting">Идет экспорт видео, подождите...</string>
+    <string name="signature_is_empty">Необходимо указать подпись</string>
 </resources>

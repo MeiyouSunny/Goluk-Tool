@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Young Wanderers Club (photographie de voyage)</string>
     <string name="watch_live_text">Touchez légèrement et continuez à regarder</string>
     <string name="video_live_5s_tip">Attendez quelques instants, le direct va commencer tout de suite</string>
-    <string name="set_ipc_item_hint_text">Synchroniser automatiquement les dernières vidéos magnifiques et d\'urgence après avoir connecté votre téléphone à Goluk</string>
+    <string name="set_ipc_item_hint_text">Synchroniser les dernières vidéos merveilleuses automatiquement une fois la connexion de votre téléphone avec Goluk</string>
     <string name="my_install_title_text">Instructions d\'installation</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Transférer après avoir relâché</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Chargement...</string>
@@ -1079,4 +1079,5 @@
     <string name="no_wifi_selected">Bitte verbinden sie mich mit GOLUK Wi-Fi.wenn sie verbunden sind, wenden sie sich bitte an bluetooth - und versuchen sie es erneut.</string>
     <string name="export_error">Échec de l\'exportation...</string>
     <string name="exporting">Exportation de la vidéo, veuillez patienter...</string>
+    <string name="signature_is_empty">Signature ne peuvent pas être vides</string>
 </resources>

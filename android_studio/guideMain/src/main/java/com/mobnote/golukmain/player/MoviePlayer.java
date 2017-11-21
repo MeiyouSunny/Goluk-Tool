@@ -97,6 +97,7 @@ public class MoviePlayer implements
 
     // If the time bar is visible.
     private boolean mShowing;
+    private GolukPlayer.OnPreparedListener onGolukPreparedListener;
 
     private Virtualizer mVirtualizer;
     private ImageView mCoverImg = null;
@@ -166,6 +167,9 @@ public class MoviePlayer implements
                     mController.setSeekable(true);
                 }
                 setProgress();
+                if(onGolukPreparedListener!=null){
+                    onGolukPreparedListener.onPrepared(player);
+                }
             }
         });
 
@@ -481,6 +485,10 @@ public class MoviePlayer implements
                 || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE;
     }
 
+    public void setOnGolukPreparedListener(GolukPlayer.OnPreparedListener onGolukPreparedListener) {
+        this.onGolukPreparedListener = onGolukPreparedListener;
+    }
+
     // We want to pause when the headset is unplugged.
     private class AudioBecomingNoisyReceiver extends BroadcastReceiver {
 
@@ -518,6 +526,7 @@ public class MoviePlayer implements
 		}
 		return false;
 	}
+
 }
 
 //class Bookmarker {

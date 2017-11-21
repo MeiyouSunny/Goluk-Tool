@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Young Wanderers Club (Travel Typography)</string>
     <string name="watch_live_text">輕觸並觀看</string>
     <string name="video_live_5s_tip">請稍等，直播會馬上開始</string>
-    <string name="set_ipc_item_hint_text">當手機連接至極路客時，自動同步最近的精彩和危急情況紀錄影片</string>
+    <string name="set_ipc_item_hint_text">當手機連接至極路客時，自動同步最近的精彩紀錄影片</string>
     <string name="my_install_title_text">安裝指引</string>
     <string name="goluk_pull_to_refresh_footer_release_label">放手後上載</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">載入中…</string>
@@ -1080,4 +1080,5 @@
     <string name="no_log_file">暫無日誌數據</string>
     <string name="export_error">匯出失敗…</string>
     <string name="exporting">正在匯出影片，請耐心等待…</string>
+    <string name="signature_is_empty">個性簽名不能為空</string>
 </resources>

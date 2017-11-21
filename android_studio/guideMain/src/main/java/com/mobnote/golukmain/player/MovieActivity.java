@@ -25,6 +25,7 @@ import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
+import com.mobnote.golukmain.player.factory.GolukPlayer;
 import com.mobnote.util.GlideUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -90,6 +91,7 @@ public class MovieActivity extends Activity {
 	private String mVideoUrl = "";
 	private ImageView mCoverImg = null;
 	private CustomDialog mCustomDialog;
+	private boolean mRotated = false;
 
 	@TargetApi(Build.VERSION_CODES.JELLY_BEAN)
 	private void setSystemUiVisibility(View rootView) {
@@ -150,6 +152,17 @@ public class MovieActivity extends Activity {
 				return true;
 			}
 		};
+		if(from.equals("suqare")){
+			mPlayer.setOnGolukPreparedListener(new GolukPlayer.OnPreparedListener() {
+				@Override
+				public void onPrepared(GolukPlayer mp) {
+					if(!mRotated && mp!=null) {
+						rotateScreenByWidthAndHeight(mp.getVideoWidth(), mp.getVideoHeight());
+					}
+					mRotated = true;
+				}
+			});
+		}
 		if (intent.hasExtra(MediaStore.EXTRA_SCREEN_ORIENTATION)) {
 			int orientation = intent.getIntExtra(MediaStore.EXTRA_SCREEN_ORIENTATION,
 					ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -197,9 +210,7 @@ public class MovieActivity extends Activity {
 			int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
 			int height = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_HEIGHT));
 			retriever.release();
-			if(height>width){
-				setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-			}
+			rotateScreenByWidthAndHeight(width, height);
 			String fileName = mVideoUrl.substring(mVideoUrl.lastIndexOf("/") + 1);
 			fileName = fileName.replace(".mp4", ".jpg");
 			mImageAddress = filePath + File.separator + fileName;
@@ -237,6 +248,12 @@ public class MovieActivity extends Activity {
 		}
 
 		GolukDebugUtils.e(TAG, "YYYYYY==VideoPlayerActivity==vurl=" + mVideoUrl);
+	}
+
+	private void rotateScreenByWidthAndHeight(int width, int height) {
+		if(height>width){
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
 	}
 
 	@Override
