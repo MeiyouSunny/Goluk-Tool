@@ -18,6 +18,4 @@ public interface OnCaptureListener {
      */
     void onCaptureVideo(String path);
 
-    void onLockVideo(String path, boolean isLock);
-
 }

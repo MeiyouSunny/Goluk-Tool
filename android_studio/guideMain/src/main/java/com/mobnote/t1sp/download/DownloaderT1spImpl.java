@@ -37,6 +37,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
     public List<Task> mListDownloaded;
     /* 是否正在下载 */
     private boolean isRunning;
+    // 当前正在下载的本地文件
+    private File mCurrentFile;
 
     private SoundPool mSoundPool;
     private int mSoundId;
@@ -93,11 +95,11 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
     private void startNextTask() {
         Task task = mListTotal.get(mListDownloaded.size());
         // 如果文件已经存在
-        File videoFile = new File(task.savePath);
-        if (videoFile.exists()) {
+        mCurrentFile = new File(task.savePath);
+        if (mCurrentFile.exists()) {
             checkDownloadListProgress();
         } else {
-            videoFile.getParentFile().mkdirs();
+            mCurrentFile.getParentFile().mkdirs();
             // 新建下载任务
             OkDownloadRequest request = new OkDownloadRequest.Builder()
                     .url(task.downloadPath)
@@ -111,6 +113,9 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
 
     @Override
     public void cancelAllDownloadTask(boolean showCancelMsg) {
+        // 删除当前正在下载的文件
+        if (mCurrentFile != null && mCurrentFile.exists())
+            mCurrentFile.delete();
         if (showCancelMsg) {
             GlobalWindow.getInstance().reset();
             GlobalWindow.getInstance().toFailed(getString(R.string.str_video_transfer_cancle));

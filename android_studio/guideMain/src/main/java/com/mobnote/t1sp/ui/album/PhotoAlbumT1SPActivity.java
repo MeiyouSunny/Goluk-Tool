@@ -88,35 +88,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
             mFragmentAlubm.checkDowningExit();
         } else {
             super.onBackPressed();
-            //enterVideoMode();
         }
-    }
-
-    public void enterVideoMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-            @Override
-            public void onStart() {
-                mDialog = new CustomLoadingDialog(PhotoAlbumT1SPActivity.this, null);
-                mDialog.show();
-            }
-
-            @Override
-            protected void onSuccess() {
-                $.toast().text(R.string.recovery_to_record).show();
-                finish();
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
-            }
-
-            @Override
-            public void onFinish() {
-                if (mDialog.isShowing())
-                    mDialog.close();
-            }
-        });
     }
 
     @Override

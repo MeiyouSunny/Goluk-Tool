@@ -1248,6 +1248,13 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         }
     }
 
+    /**
+     * 当前是否是T1SP处于连接状态
+     */
+    private boolean isT1SPAndConnected() {
+        return mIPCControlManager.isT1SP() && isIpcConnSuccess;
+    }
+
     // VDCP 连接状态 回调
     private void IPC_VDCP_Connect_CallBack(int msg, int param1, Object param2) {
 
@@ -1625,10 +1632,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (this.isExit()) {
             return;
         }
-        if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
+        // T1SP忽略
+        if (ENetTransEvent_IPC_VDCP_ConnectState == event && !isT1SPAndConnected()) {
             IPC_VDCP_Connect_CallBack(msg, param1, param2);
         }
-        if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
+        // T1SP忽略
+        if (ENetTransEvent_IPC_VDCP_CommandResp == event && !isT1SPAndConnected()) {
             IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
         }
         // IPC下载连接状态 event = 2

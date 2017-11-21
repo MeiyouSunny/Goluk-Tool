@@ -371,7 +371,7 @@
         android:layout_below="@+id/jcqp_info">
 
         <Button
-            android:id="@+id/m8sBtn"
+            android:id="@+id/btn_capture"
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:layout_centerHorizontal="true"
@@ -382,22 +382,6 @@
             android:textStyle="bold"/>
 
     </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/adas_status"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#cc000000"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/adas_status_img"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"/>
-
-    </RelativeLayout>
-
 
     <ViewStub
         android:id="@+id/stub_change"

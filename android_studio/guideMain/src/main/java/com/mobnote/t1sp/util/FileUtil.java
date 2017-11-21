@@ -47,6 +47,18 @@ public class FileUtil {
     /* 紧急视频 */
     public static final int VIDEO_TYPE_URGENT = 2;
 
+    static {
+        // 创建目录
+        File dir = new File(WONDERFUL_VIDEO_PATH);
+        dir.mkdirs();
+        dir = new File(URGENT_VIDEO_PATH);
+        dir.mkdirs();
+        dir = new File(LOOP_VIDEO_PATH);
+        dir.mkdirs();
+        dir = new File(THUMB_CACHE_DIR);
+        dir.mkdirs();
+    }
+
     /**
      * 根据类型获取本地最新2个视频
      *

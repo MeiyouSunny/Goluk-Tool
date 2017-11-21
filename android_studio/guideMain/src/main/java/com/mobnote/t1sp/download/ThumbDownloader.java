@@ -51,6 +51,8 @@ public class ThumbDownloader implements Runnable {
 
     @Override
     public void run() {
+        if(CollectionUtils.isEmpty(mUrls))
+            return;
         for (int i = 0; i < mUrls.size(); i++) {
             String url = mUrls.get(i);
             if (!isRunning)

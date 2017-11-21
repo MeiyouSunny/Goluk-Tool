@@ -250,8 +250,8 @@ public class T1SPUdpService extends Service {
                 path = "\\" + path; // 返回的路径前面缺少\
                 if (path.contains(".MP4") && path.contains("SD")) {
                     String status = data.split(ACTION_STUTAS)[1].split("\n")[0];
-                    if (mListener != null)
-                        mListener.onLockVideo(path, status.contains(STATIC_SUCCESS));
+                    //if (mListener != null)
+                        //mListener.onLockVideo(path, status.contains(STATIC_SUCCESS));
                 }
                 return;
             } else if (info.length > 1 && info[1].contains(ACTION_SD_FORMAT)) {

@@ -8,6 +8,7 @@
     <string name="cancel_downloading_videos_hint">有视频正在下载，退出相册将取消下载</string>
     <string name="enter_setting_mode_hint">进入设置模式，记录仪将停止录像</string>
     <string name="recovery_to_record">记录仪已恢复录像</string>
+    <string name="capture_success_hint">精彩抓拍成功，视频地址：\n%s</string>
 
     <!-- Array -->
     <!-- 视频清晰度 -->

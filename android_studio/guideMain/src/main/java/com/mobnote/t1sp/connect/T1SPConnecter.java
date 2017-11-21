@@ -72,9 +72,11 @@ public class T1SPConnecter {
                     mIsConnecing = false;
                 }
             } else {
-                setConnected(false);
-                GolukApplication.getInstance().setIpcLoginState(false);
-                stateCallback(-1);
+                if (!NetUtil.isWifiConnected(mContext)) {
+                    setConnected(false);
+                    GolukApplication.getInstance().setIpcLoginState(false);
+                    stateCallback(-1);
+                }
             }
         }
     }

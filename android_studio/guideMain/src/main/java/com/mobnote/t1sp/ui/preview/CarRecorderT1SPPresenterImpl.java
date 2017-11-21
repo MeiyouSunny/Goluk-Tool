@@ -47,8 +47,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
     @Override
     public void getLatestTwoVideos() {
         List<String> videos = FileUtil.getLatestTwoVideosWithWonfulAndUrgent();
-        if (videos != null && !videos.isEmpty())
-            getView().onGetLatestTwoVideos(videos);
+        getView().onGetLatestTwoVideos(videos);
     }
 
 }

@@ -15,13 +15,10 @@ import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.base.control.BindTitle;
 import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.bean.SettingValue;
-import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.service.HeartbeatTask;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
@@ -33,7 +30,6 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
-import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -235,38 +231,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         super.onDestroy();
         if (mHeartbeatTask != null)
             mHeartbeatTask.stop();
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        enterVideoMode();
-//    }
-
-    public void enterVideoMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-            @Override
-            public void onStart() {
-                mDialog = new CustomLoadingDialog(DeviceSettingsActivity.this, null);
-                mDialog.show();
-            }
-
-            @Override
-            protected void onSuccess() {
-                $.toast().text(R.string.recovery_to_record).show();
-                finish();
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
-            }
-
-            @Override
-            public void onFinish() {
-                if (mDialog.isShowing())
-                    mDialog.close();
-            }
-        });
     }
 
 }
