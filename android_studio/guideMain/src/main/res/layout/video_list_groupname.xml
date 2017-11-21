@@ -35,7 +35,6 @@
             android:layout_height="match_parent"
             android:layout_above="@+id/point"
             android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@+id/date"
             android:background="#eeeeee" />
 
         <ImageView
@@ -43,7 +42,6 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/point"
             android:layout_marginLeft="7dp"
-            android:layout_toRightOf="@+id/date"
             android:background="#eeeeee" />
 
     </RelativeLayout>
