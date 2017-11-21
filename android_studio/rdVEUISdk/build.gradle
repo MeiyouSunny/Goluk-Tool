@@ -45,7 +45,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-	compile 'com.rd:base:0.3.8'
+	compile 'com.rd:base:0.3.9'
     compile 'com.rd:recorderbase:0.4.8'
     compile project(':rdVECore')
 
