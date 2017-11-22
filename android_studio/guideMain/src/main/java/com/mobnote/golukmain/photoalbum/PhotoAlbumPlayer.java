@@ -573,6 +573,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     /**
      * use RD player , supported JELLY_BEAN_MR2
+     *
      * @return
      */
     private boolean videoEditSupport() {
@@ -751,10 +752,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            if(metrics.widthPixels < metrics.heightPixels) {
+            if (metrics.widthPixels < metrics.heightPixels) {
                 params.height = metrics.widthPixels;
                 params.width = metrics.heightPixels;
-            }else{
+            } else {
                 params.width = metrics.widthPixels;
                 params.height = metrics.heightPixels;
             }
@@ -1563,18 +1564,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             nickName = getString(R.string.str_default_video_edit_user_name);
         }
         configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
-        configData.musicUrl = HttpManager.getInstance().getWebDirectHost() + "/navidog4MeetTrans/videoCommon.htm?method=musicResources&commlocale="+GolukUtils.getLanguageAndCountry();
+        configData.musicUrl = HttpManager.getInstance().getWebDirectHost() + "/navidog4MeetTrans/videoCommon.htm?method=musicResources&commlocale=" + GolukUtils.getLanguageAndCountry();
         return configData;
     }
 
 
     private void initEditorUIAndExportConfig() {
         initAndGetConfigData();
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        retriever.setDataSource(mVideoUrl);
-        int bitRate = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_BITRATE));
-        int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
-        retriever.release();
         // 视频编辑UI配置
         UIConfiguration uiConfig = new UIConfiguration.Builder()
                 // 设置是否使用自定义相册
@@ -1647,7 +1643,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 .get();
 
         // 导出视频参数配置
-        ExportConfiguration exportConfig = new ExportConfiguration.Builder()
+        ExportConfiguration.Builder builder =  new ExportConfiguration.Builder();
+        if (mVideoFrom.equals("local")) {
+            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+            retriever.setDataSource(mVideoUrl);
+            int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            builder.setVideoMaxWH(width);
+            retriever.release();
+        }
+        ExportConfiguration exportConfig =builder
                 // 设置保存路径，传null或不设置
                 // 将保存至默认路径(即调用SdkEntry.initialize初始时自定义路径）
                 //.setSavePath(null)
@@ -1655,7 +1659,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 .setTrailerPath(configData.videoTrailerPath)
                 // 设置片尾时长 单位s 默认2s
                 .setTrailerDuration(2)
-                .setVideoMaxWH(width)
 //                .setVideoBitRate(bitRate)
                 .setImportVideoDuration(90)
                 // 设置导出视频时长 单位ms 传0或者不设置 将导出完整视频
@@ -1664,7 +1667,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 //.setWatermarkPath(configData.enableWatermark ? EDIT_WATERMARK_PATH : null)
                 // 设置水印位置
                 .setWatermarkPosition(configData.watermarkShowRectF).get();
-
         // 获取秀拍客配置服务器
         SdkService sdkService = SdkEntry.getSdkService();
         if (null != sdkService) {
