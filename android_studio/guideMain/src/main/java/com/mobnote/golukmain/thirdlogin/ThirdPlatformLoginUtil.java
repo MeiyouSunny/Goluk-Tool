@@ -50,6 +50,11 @@ public class ThirdPlatformLoginUtil {
 
 	private UMAuthListener umAuthListener = new UMAuthListener() {
 		@Override
+		public void onStart(SHARE_MEDIA share_media) {
+
+		}
+
+		@Override
 		public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
 			GolukDebugUtils.e("", "three login------umAuthListener--onComplete  platform:" + platform + "  action:"
 					+ action + "  data: " + data);

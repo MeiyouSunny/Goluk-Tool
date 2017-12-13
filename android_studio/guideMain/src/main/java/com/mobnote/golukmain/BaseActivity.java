@@ -15,8 +15,6 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
-import com.facebook.internal.CallbackManagerImpl;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
@@ -152,12 +150,6 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (!FacebookSdk.isInitialized()) {
-            return;
-        }
-        if (requestCode == CallbackManagerImpl.RequestCodeOffset.Share.toRequestCode()) {
-            FacebookShareHelper.getInstance().mCallbackManager.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     protected void showToast(String hint) {

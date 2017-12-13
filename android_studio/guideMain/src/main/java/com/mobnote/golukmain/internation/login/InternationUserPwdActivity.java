@@ -34,7 +34,7 @@ import com.mobnote.user.UserLoginInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
-import com.sina.weibo.sdk.utils.MD5;
+import com.umeng.socialize.sina.helper.MD5;
 
 import org.json.JSONObject;
 

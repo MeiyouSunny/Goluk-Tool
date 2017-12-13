@@ -202,6 +202,11 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
      **/
     private UMAuthListener umAuthListener = new UMAuthListener() {
         @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
             GolukDebugUtils.e("", "youmeng----goluk----SharePlatformUtil----umAuthListener----onComplete");
             GolukDebugUtils.e("facebooklogin1", "facebooklogin data = " + data.toString() + "action = " + action);

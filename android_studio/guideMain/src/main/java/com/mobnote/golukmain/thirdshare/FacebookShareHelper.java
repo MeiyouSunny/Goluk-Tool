@@ -1,10 +1,10 @@
 package com.mobnote.golukmain.thirdshare;
 
-import com.facebook.CallbackManager;
-import com.facebook.FacebookSdk;
-import com.facebook.share.widget.ShareDialog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.util.GolukConfig;
+import com.umeng.facebook.CallbackManager;
+import com.umeng.facebook.FacebookSdk;
+import com.umeng.facebook.share.widget.ShareDialog;
 
 public class FacebookShareHelper {
 	public CallbackManager mCallbackManager;
@@ -14,7 +14,7 @@ public class FacebookShareHelper {
 
 	private FacebookShareHelper() {
 		if(FacebookSdk.isInitialized() == false) {
-			FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
+			FacebookSdk.sdkInitialize(GolukApplication.getInstance());
 		}
 		mCallbackManager = CallbackManager.Factory.create();
 	}

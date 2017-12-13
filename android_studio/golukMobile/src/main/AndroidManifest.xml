@@ -16,8 +16,8 @@
         <activity
             android:name="com.mobnote.golukmobile.GuideActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.AppStartLoad"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppStartLoad">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -147,28 +147,6 @@
             android:name="com.mobnote.golukmain.fan.FanListActivity"
             android:screenOrientation="portrait" />
 
-        <!-- 网络变化广播监听 -->
-        <receiver android:name="com.mobnote.receiver.NetworkStateReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-        <receiver
-            android:name="com.mobnote.golukmain.xdpush.GolukClickNotificationReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="cn.com.goluk.broadcast.clicknotification" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
-
-        <service
-            android:name="com.baidu.location.f"
-            android:enabled="true"
-            android:process=":remote"></service>
 
         <activity
             android:name="com.mobnote.golukmain.videosuqare.VideoCategoryActivity"
@@ -227,12 +205,12 @@
             android:name="com.mobnote.golukmain.livevideo.LiveActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"/>
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name="com.mobnote.golukmain.livevideo.StartLiveActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
-            android:theme="@android:style/Theme.NoTitleBar"/>
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
         <activity
             android:name="com.mobnote.golukmain.player.VitamioPlayerActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -288,6 +266,62 @@
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
         <activity
+            android:name="com.mobnote.golukmain.msg.MessageCenterActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.msg.MsgCenterCommentActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.msg.SystemMsgActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.msg.MsgCenterPraiseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.msg.OfficialMessageActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.VideoSyncSettingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.search.SearchUserAcivity"
+            android:configChanges="screenSize|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
+            android:configChanges="screenSize|keyboardHidden|orientation"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"
+            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.praised.MyPraisedActivity"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:name="com.mobnote.golukmain.watermark.CarBrandsListActivity"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.usercenter.UserLargeHeadActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"></activity>
+        <activity
+            android:name="com.mobnote.golukmain.cluster.RankingActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
             android:name="com.mobnote.golukmain.special.SpecialListActivity"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
@@ -308,30 +342,7 @@
             android:name="com.mobnote.golukmain.promotion.PromotionActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
-        <activity
-            android:name="com.tencent.tauth.AuthActivity"
-            android:launchMode="singleTask"
-            android:noHistory="true">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
-                <data android:scheme="tencent1104418156" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name="com.tencent.connect.common.AssistActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
-        <activity
-            android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.mobnote.golukmain.newest.RecomVideoActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
@@ -378,40 +389,6 @@
             android:configChanges="screenSize|keyboardHidden|orientation"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar" />
-        <!-- ###################Glide使用volley传输###################### -->
-        <meta-data
-            android:name="com.mobnote.util.GlideConfiguration"
-            android:value="GlideModule" />
-        <!-- ###################添加UmengAppkey###################### -->
-        <meta-data
-            android:name="UMENG_APPKEY"
-            android:value="546341d6fd98c59a41003371" />
-        <meta-data
-            android:name="UMENG_CHANNEL"
-            android:value="mobnote" />
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBnDOLOTn6fQhDmMrvW_lInJRQB3In4XDE" />
-        <!--
-             <meta-data
-            android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
-        -->
-
-        <!-- ###################添加Zhuge统计###################### -->
-        <meta-data
-            android:name="ZHUGE_APPKEY"
-            android:value="@string/ZhugeAppkey" />
-        <meta-data
-            android:name="ZHUGE_CHANNEL"
-            android:value="@string/ZhugeChannel" />
-
-        <activity
-            android:name="com.umeng.socialize.view.ShareActivity"
-            android:configChanges="orientation|keyboard"
-            android:launchMode="singleTask"
-            android:noHistory="true"
-            android:windowSoftInputMode="stateVisible|adjustResize" />
         <activity
             android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -439,8 +416,127 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
-        <!-- 信鸽 -->
+        <!-- 网络变化广播监听 -->
+        <receiver android:name="com.mobnote.receiver.NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
 
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.mobnote.golukmain.xdpush.GolukClickNotificationReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.com.goluk.broadcast.clicknotification" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote"></service>
+
+
+        <!-- ###################Glide使用volley传输###################### -->
+        <meta-data
+            android:name="com.mobnote.util.GlideConfiguration"
+            android:value="GlideModule" />
+
+
+        <!-- ###################添加Umeng分享和统计###################### -->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="546341d6fd98c59a41003371" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBnDOLOTn6fQhDmMrvW_lInJRQB3In4XDE" />
+        <!-- ###################添加Zhuge统计-没有续费已经废弃###################### -->
+        <meta-data
+            android:name="ZHUGE_APPKEY"
+            android:value="@string/ZhugeAppkey" />
+        <meta-data
+            android:name="ZHUGE_CHANNEL"
+            android:value="@string/ZhugeChannel" />
+
+        <activity
+            android:name="com.umeng.socialize.view.ShareActivity"
+            android:configChanges="orientation|keyboard"
+            android:launchMode="singleTask"
+            android:noHistory="true"
+            android:windowSoftInputMode="stateVisible|adjustResize" />
+
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity
+            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- ############ QQ空间和QQ SSO授权的Activity注册 ############ -->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- 100424468，如果你使用的公用账号，则不需要修改；否则修改成你在QQ开放平台申请的 APP ID -->
+                <data android:scheme="tencent1104418156" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"></activity>
+        <activity
+            android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <activity
+            android:name="com.umeng.socialize.editorpage.ShareActivity"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.UMDefault" />
+
+        <!-- facebook 相关 -->
+        <activity
+            android:name="com.umeng.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/FacebookID" />
+
+        <!-- twitter -->
+        <activity
+            android:name="com.umeng.socialize.handler.TwitterWebActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <!-- 信鸽 -->
 
         <!-- 【必须】 信鸽receiver广播接收 -->
         <receiver
@@ -495,7 +591,6 @@
         </service>
 
         <!-- 添加百度地图key -->
-        <!-- <meta-data android:name="com.baidu.lbsapi.API_KEY" android:value="gORgbYR7qwYFbzTko5qgOhRn" /> -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="63che8lBbcckvH0IEgeBjrdA" />
@@ -519,101 +614,6 @@
             </intent-filter>
         </receiver>
 
-        <!-- 注册新浪微博 -->
-
-        <service
-            android:name="com.sina.weibo.sdk.net.DownloadService"
-            android:exported="false"></service>
-
-        <!-- 必须注册在微博授权，分享微博时候用到 -->
-        <activity
-            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
-            android:configChanges="keyboardHidden|orientation"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.msg.MessageCenterActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.msg.MsgCenterCommentActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.msg.SystemMsgActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.msg.MsgCenterPraiseActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.msg.OfficialMessageActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.VideoSyncSettingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.search.SearchUserAcivity"
-            android:configChanges="screenSize|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustPan"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.startshare.VideoShareActivity"
-            android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.praised.MyPraisedActivity"
-            android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity
-            android:name="com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
-        <activity android:name="com.mobnote.golukmain.watermark.CarBrandsListActivity">
-        </activity>
-        <activity
-            android:name="com.mobnote.golukmain.usercenter.UserLargeHeadActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:hardwareAccelerated="true">
-
-        </activity>
-
-        <activity
-            android:name="com.mobnote.golukmain.cluster.RankingActivity"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.NoTitleBar" />
-
-        <!-- facebook 相关 -->
-        <activity
-            android:name="com.facebook.FacebookActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
-        <provider
-            android:name="com.facebook.FacebookContentProvider"
-            android:authorities="${FacebookAuth}"
-            android:exported="true" />
-
-        <meta-data
-            android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/FacebookID" />
-
-        <!-- twitter -->
-        <activity
-            android:name="com.umeng.socialize.handler.TwitterWebActivity"
-            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
     </application>
 

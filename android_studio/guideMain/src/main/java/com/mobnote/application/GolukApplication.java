@@ -388,7 +388,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukUmConfig.UmInit();
             initXLog();
             vkAccessTokenTracker.startTracking();
-            VKSdk.initialize(this);
             GolukMobUtils.initMob(this);
 
             //初始化诸葛io

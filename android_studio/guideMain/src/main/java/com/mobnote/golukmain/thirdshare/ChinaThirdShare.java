@@ -199,38 +199,33 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 	}
 
 	public void click_sina() {
-		GolukDebugUtils.e("", "sina-------click----11111");
-		if (TextUtils.isEmpty(mImageUrl)) {
-			Glide.with(mActivity).load(R.drawable.ic_launcher).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
-				@Override
-				public void onLoadFailed(Exception e, Drawable errorDrawable) {
-					close();
-				}
-
-				@Override
-				public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-					close();
-					doSinaShare(arg0, arg1);
-				}
-			});
-		} else {
-			Glide.with(mActivity).load(mImageUrl).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
-				@Override
-				public void onLoadFailed(Exception e, Drawable errorDrawable) {
-					close();
-				}
-
-				@Override
-				public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-					close();
-					doSinaShare(arg0, arg1);
-				}
-			});
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)) {
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+			return;
 		}
-
+		if (!isCanClick()) {
+			return;
+		}
+		final ShareContent sc = getShareContent(TYPE_WEIBO_XINLANG);
+		if (null == sc) {
+			setCanJump();
+			return;
+		}
+		if (TextUtils.isEmpty(sc.mText)) {
+			sc.mText = mActivity.getResources().getString(R.string.app_name);
+		}
+		new ShareAction(mActivity).setPlatform(SHARE_MEDIA.SINA).setCallback(umShareListener).setShareContent(sc)
+				.share();
+		mCurrentShareType = TYPE_WEIBO_XINLANG;
+		this.shareUp();// 上报分享统计
 	}
 
 	private UMShareListener umShareListener = new UMShareListener() {
+		@Override
+		public void onStart(SHARE_MEDIA share_media) {
+
+		}
+
 		@Override
 		public void onResult(SHARE_MEDIA platform) {
 			mHander.sendEmptyMessage(100);
@@ -256,52 +251,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 	};
 
 	private void doSinaShare(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-		if (null == sharePlatform) {
-			return;
-		}
 
-		if (null != mActivity && mActivity instanceof BaseActivity) {
-			if (!((BaseActivity) mActivity).isAllowedClicked()) {
-				return;
-			}
-			((BaseActivity) mActivity).setJumpToNext();
-		}
-
-		GolukDebugUtils.e("", "sina-------click----2222");
-		if (!sharePlatform.isSinaWBValid()) {
-			GolukDebugUtils.e("", "sina-------click----3333");
-			// 去授权
-			sharePlatform.mSinaWBUtils.authorize();
-			return;
-		}
-		mCurrentShareType = TYPE_WEIBO_XINLANG;
-		shareUp();// 上报分享统计
-		printStr();
-		final String t_des = mDescribe;
-		final String inputDefaultContent = mSinaTxt;
-		final String title = mTitle;
-		final String dataUrl = shareurl;
-		final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
-		final Bitmap t_bitmap = arg0;
-		GolukDebugUtils.e("", "sina-------click----44444" + actionUrl);
-		if (sharePlatform.mSinaWBUtils.isInstallClient()) {
-			GolukDebugUtils.e("", "sina-------click----55555");
-			final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
-			GolukDebugUtils.e("", "sina-------click----6666:  " + supportApi);
-			if (supportApi >= SUPPORT_MUTI_MSG) {
-				GolukDebugUtils.e("", "sina-------click----77777:  ");
-				sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-						true);
-			} else {
-				GolukDebugUtils.e("", "sina-------click----88888:  ");
-				sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl,
-						t_bitmap);
-			}
-		} else {
-			sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap,
-					false);
-			GolukDebugUtils.e("", "sina-------click----999999:  ");
-		}
 	}
 
 	@Override

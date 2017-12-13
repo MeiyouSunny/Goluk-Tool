@@ -16,13 +16,11 @@ import com.umeng.socialize.handler.UMSSOHandler;
 
 public class SharePlatformUtil {
     public Context mContext;
-    public SinaWeiBoUtils mSinaWBUtils = null;
     public VideoSquareInfo mData = null;
     private UMShareAPI mShareAPI = null;
 
     public SharePlatformUtil(Context context) {
         mContext = context;
-        mSinaWBUtils = new SinaWeiBoUtils((Activity) mContext);
         mShareAPI = UMShareAPI.get(mContext);
     }
 
@@ -32,9 +30,6 @@ public class SharePlatformUtil {
         mShareAPI.onActivityResult(requestCode, resultCode, data);
         // SSO 授权回调
         // 重要：发起 SSO 登陆的 Activity 必须重写 onActivityResults
-        if (mSinaWBUtils != null) {
-            mSinaWBUtils.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     public void setShareData(VideoSquareInfo data) {
@@ -47,14 +42,14 @@ public class SharePlatformUtil {
         }
         try {
             UMSSOHandler handler = mShareAPI.getHandler(platform);
-            return null == handler || handler.isInstall(mContext);
+            return null == handler || handler.isInstall();
         }catch (Exception ex) {
             return false;
         }
     }
 
     public boolean isSinaWBValid() {
-        return mSinaWBUtils.isAccessValid();
+        return true;
     }
 
     public static boolean checkShareableWhenNotHotspot(Context context) {

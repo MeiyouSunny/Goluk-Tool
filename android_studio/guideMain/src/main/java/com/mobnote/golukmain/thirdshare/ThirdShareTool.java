@@ -4,39 +4,21 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
-import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.umeng.facebook.FacebookCallback;
+import com.umeng.facebook.FacebookException;
+import com.umeng.facebook.share.Sharer;
+import com.umeng.facebook.share.widget.ShareDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKCallback;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.model.VKApiPhoto;
-import com.vk.sdk.api.model.VKPhotoArray;
-import com.vk.sdk.api.photo.VKImageParameters;
-import com.vk.sdk.api.photo.VKUploadImage;
-import com.vk.sdk.dialogs.VKShareDialog;
-import com.vk.sdk.dialogs.VKShareDialogBuilder;
 
 import java.io.File;
 
@@ -108,6 +90,11 @@ public class ThirdShareTool extends AbsThirdShare {
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
         public void onResult(SHARE_MEDIA platform) {
             mHander.sendEmptyMessage(100);
         }
@@ -142,9 +129,6 @@ public class ThirdShareTool extends AbsThirdShare {
             setCanJump();
             return;
         }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.LINE).setCallback(umShareListener)
-                .withText(sc.mTitle + "\n" + sc.mText + "\n" + sc.mTargetUrl).withMedia((UMImage) sc.mMedia).share();
-        mCurrentShareType = TYPE_LINE;
         shareUp();// 上报分享统计
     }
 
@@ -163,7 +147,7 @@ public class ThirdShareTool extends AbsThirdShare {
             return;
         }
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WHATSAPP).setCallback(umShareListener)
-                .withText(sc.mTitle + "\n" + sc.mText + "\n" + sc.mTargetUrl).share();
+                .setShareContent(sc).share();
         mCurrentShareType = TYPE_WHATSAPP;
         shareUp();// 上报分享统计
     }
@@ -183,9 +167,7 @@ public class ThirdShareTool extends AbsThirdShare {
             setCanJump();
             return;
         }
-        final String shareTxt = sc.mText + "   " + sc.mTargetUrl;
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).withText(shareTxt)
-                .withTitle(sc.mTitle).share();
+        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).setShareContent(sc).share();
         mCurrentShareType = TYPE_TWITTER;
         shareUp();// 上报分享统计
     }
@@ -226,7 +208,7 @@ public class ThirdShareTool extends AbsThirdShare {
 
     // 点击 "facebook"
     public void click_facebook() {
-        if (sharePlatform.isInstallPlatform(SHARE_MEDIA.FACEBOOK) == false) {
+        if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.FACEBOOK)) {
             notifyShareState(false);
             GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_facebook_no_install));
             return;
@@ -239,20 +221,11 @@ public class ThirdShareTool extends AbsThirdShare {
             setCanJump();
             return;
         }
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent.Builder linkBuilder = new ShareLinkContent.Builder().setContentTitle(sc.mTitle)
-                    .setContentDescription(sc.mText);
-            if (!TextUtils.isEmpty(sc.mTargetUrl)
-                    && (sc.mTargetUrl.startsWith("http://") || sc.mTargetUrl.startsWith("https://"))) {
-                linkBuilder.setContentUrl(Uri.parse(sc.mTargetUrl));
-            }
-            if (!TextUtils.isEmpty(mImageUrl) && (mImageUrl.startsWith("http://") || mImageUrl.startsWith("https://"))) {
-                linkBuilder.setImageUrl(Uri.parse(mImageUrl));
-            }
-            ShareLinkContent linkContent = linkBuilder.build();
-            FacebookShareHelper.getInstance().mShareDialog.show(linkContent);
+        if (TextUtils.isEmpty(sc.mText)) {
+            sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
-
+        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.FACEBOOK).setCallback(umShareListener).setShareContent(sc)
+                .share();
         mCurrentShareType = TYPE_FACEBOOK;
         shareUp();// 上报分享统计
     }
@@ -350,95 +323,25 @@ public class ThirdShareTool extends AbsThirdShare {
     }
 
     public void click_sina() {
-        if (TextUtils.isEmpty(mImageUrl)) {
-            Glide.with(mActivity).load(R.drawable.ic_launcher).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
-                @Override
-                public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                    close();
-                }
-
-                @Override
-                public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                    close();
-                    doSinaShare(arg0, arg1);
-                }
-            });
-        } else {
-            Glide.with(mActivity).load(mImageUrl).asBitmap().into(new SimpleTarget<Bitmap>(50, 50) {
-                @Override
-                public void onLoadFailed(Exception e, Drawable errorDrawable) {
-                    close();
-                }
-
-                @Override
-                public void onResourceReady(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-                    close();
-                    doSinaShare(arg0, arg1);
-                }
-            });
-        }
-    }
-
-    /**
-     * 接受第三方界面分享的返回结果, (参数同Activity中的onActivityResult方法参数一样)
-     *
-     * @author jyf
-     */
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (mCurrentShareType == TYPE_VK) {
-            if (!VKSdk.onActivityResult(requestCode, resultCode, data, new VKCallback<VKAccessToken>() {
-                @Override
-                public void onResult(VKAccessToken res) {
-                    // User passed Authorization
-                    shareVK();
-                }
-
-                @Override
-                public void onError(VKError error) {
-                    // User didn't pass Authorization
-                }
-            }))
-                return;
-        }
-        sharePlatform.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void doSinaShare(Bitmap arg0, GlideAnimation<? super Bitmap> arg1) {
-        if (null == sharePlatform) {
+        if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)) {
+            GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
             return;
         }
-
-        if (null != mActivity && mActivity instanceof BaseActivity) {
-            if (!((BaseActivity) mActivity).isAllowedClicked()) {
-                return;
-            }
-            ((BaseActivity) mActivity).setJumpToNext();
-        }
-
-        if (!sharePlatform.isSinaWBValid()) {
-            // 去授权
-            sharePlatform.mSinaWBUtils.authorize();
+        if (!isCanClick()) {
             return;
         }
+        final ShareContent sc = getShareContent(TYPE_WEIBO_XINLANG);
+        if (null == sc) {
+            setCanJump();
+            return;
+        }
+        if (TextUtils.isEmpty(sc.mText)) {
+            sc.mText = mActivity.getResources().getString(R.string.app_name);
+        }
+        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.SINA).setCallback(umShareListener).setShareContent(sc)
+                .share();
         mCurrentShareType = TYPE_WEIBO_XINLANG;
-        shareUp();// 上报分享统计
-        printStr();
-        final String t_des = mDescribe;
-        final String inputDefaultContent = mSinaTxt;
-        final String title = mTitle;
-        final String dataUrl = shareurl;
-        final String actionUrl = shareurl + "&type=" + TYPE_WEIBO_XINLANG;
-        final Bitmap t_bitmap = arg0;
-        if (sharePlatform.mSinaWBUtils.isInstallClient()) {
-            final int supportApi = sharePlatform.mSinaWBUtils.getSupportAPI();
-            if (supportApi >= SUPPORT_MUTI_MSG) {
-                sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap, true);
-            } else {
-                sharePlatform.mSinaWBUtils.sendSingleMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap);
-            }
-        } else {
-            sharePlatform.mSinaWBUtils.sendMessage(inputDefaultContent, title, t_des, actionUrl, dataUrl, t_bitmap, false);
-        }
+        this.shareUp();// 上报分享统计
     }
 
     public void click_VK() {
@@ -453,39 +356,8 @@ public class ThirdShareTool extends AbsThirdShare {
         if (TextUtils.isEmpty(sc.mText)) {
             sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
-        if (VKSdk.isLoggedIn()) {
-            shareVK();
-        } else {
-            VKSdk.login(mActivity, VKScope.WALL, VKScope.PHOTOS);
-        }
-
+        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.VKONTAKTE).setCallback(umShareListener).setShareContent(sc).share();
         mCurrentShareType = TYPE_VK;
         this.shareUp();// 上报分享统计
-    }
-
-    private void shareVK() {
-        VKShareDialogBuilder vkShareDialogBuilder = new VKShareDialogBuilder();
-        if (mThumbBitmap != null) {
-            vkShareDialogBuilder.setAttachmentImages(new VKUploadImage[]{
-                    new VKUploadImage(mThumbBitmap, VKImageParameters.pngImage())
-            });
-        }
-        vkShareDialogBuilder.setText(mDescribe)
-                .setAttachmentLink(mTitle, shareurl)
-                .setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
-                    public void onVkShareComplete(int postId) {
-                        mHander.sendEmptyMessage(100);
-                    }
-
-                    public void onVkShareCancel() {
-                        mHander.sendEmptyMessage(101);
-                    }
-
-                    @Override
-                    public void onVkShareError(VKError error) {
-                        mHander.sendEmptyMessage(102);
-                    }
-                })
-                .show(mActivity.getFragmentManager(), "VK_SHARE_DIALOG");
     }
 }

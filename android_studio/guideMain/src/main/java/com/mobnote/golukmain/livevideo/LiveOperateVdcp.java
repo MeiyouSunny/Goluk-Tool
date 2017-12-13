@@ -13,7 +13,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.livevideo.bean.StartLiveBean;
 import com.mobnote.util.GolukFastJsonUtil;
-import com.umeng.socialize.net.utils.Base64;
+import com.umeng.socialize.sina.helper.Base64;
 
 public class LiveOperateVdcp implements ILiveOperateFn {
 
@@ -75,7 +75,7 @@ public class LiveOperateVdcp implements ILiveOperateFn {
             return false;
         }
         GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive  " + bean.url);
-        bean.url = Base64.encodeBase64String(bean.url.getBytes());
+        bean.url = String.valueOf(Base64.encode(bean.url.getBytes()));
         String jsonData = GolukFastJsonUtil.setParseObj(bean);
         GolukDebugUtils.e("", "newlive-----LiveOperateVdcp-----startLive  jsonData" + jsonData);
         boolean is = GolukApplication.getInstance().mIPCControlManager.startLive(jsonData);

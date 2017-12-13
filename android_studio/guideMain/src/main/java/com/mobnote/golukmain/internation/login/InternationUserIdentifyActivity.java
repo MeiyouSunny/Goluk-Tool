@@ -49,12 +49,11 @@ import com.mobnote.user.UserRegistAndRepwdInterface;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
-import com.sina.weibo.sdk.utils.MD5;
-
+import com.umeng.socialize.sina.helper.MD5;
+import de.greenrobot.event.EventBus;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.greenrobot.event.EventBus;
 
 /**
  * 获取验证码

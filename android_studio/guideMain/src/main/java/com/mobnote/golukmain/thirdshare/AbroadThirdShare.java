@@ -20,20 +20,21 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.share.Sharer;
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareDialog;
 import com.mobnote.golukmain.R;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
+import com.umeng.facebook.FacebookCallback;
+import com.umeng.facebook.FacebookException;
+import com.umeng.facebook.share.Sharer;
+import com.umeng.facebook.share.model.ShareLinkContent;
+import com.umeng.facebook.share.widget.ShareDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
@@ -175,6 +176,11 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 
     private UMShareListener umShareListener = new UMShareListener() {
         @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
         public void onResult(SHARE_MEDIA platform) {
             mHander.sendEmptyMessage(100);
             GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onResult");
@@ -208,12 +214,13 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             return;
         }
         final ShareContent sc = getShareContent(TYPE_LINE);
+        UMWeb web = (UMWeb) sc.mMedia;
         if (null == sc) {
             setCanJump();
             return;
         }
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.LINE).setCallback(umShareListener)
-                .withText(sc.mTitle + "\n" + sc.mText + "\n" + sc.mTargetUrl).withMedia((UMImage) sc.mMedia).share();
+                .withText(mTitle+ "\n" + sc.mText + "\n" + web.toUrl()).withMedia((UMImage) sc.mMedia).share();
         mCurrentShareType = TYPE_LINE;
         shareUp();// 上报分享统计
     }
@@ -232,8 +239,9 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
+        UMWeb web = (UMWeb) sc.mMedia;
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WHATSAPP).setCallback(umShareListener)
-                .withText(sc.mTitle + "\n" + sc.mText + "\n" + sc.mTargetUrl).share();
+                .withText(mTitle + "\n" + sc.mText + "\n" + web.toUrl()).share();
         mCurrentShareType = TYPE_WHATSAPP;
         shareUp();// 上报分享统计
     }
@@ -255,9 +263,10 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        final String shareTxt = sc.mText + "   " + sc.mTargetUrl;
+        UMWeb web = (UMWeb) sc.mMedia;
+        final String shareTxt = sc.mText + "   " + web.toUrl();
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).withText(shareTxt)
-                .withTitle(sc.mTitle).share();
+                .withMedia(web).share();
         GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----3 ");
         mCurrentShareType = TYPE_TWITTER;
         shareUp();// 上报分享统计
@@ -314,12 +323,13 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
+        UMWeb web = (UMWeb) sc.mMedia;
         if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent.Builder linkBuilder = new ShareLinkContent.Builder().setContentTitle(sc.mTitle)
+            ShareLinkContent.Builder linkBuilder = new ShareLinkContent.Builder().setContentTitle(mTitle)
                     .setContentDescription(sc.mText);
-            if (!TextUtils.isEmpty(sc.mTargetUrl)
-                    && (sc.mTargetUrl.startsWith("http://") || sc.mTargetUrl.startsWith("https://"))) {
-                linkBuilder.setContentUrl(Uri.parse(sc.mTargetUrl));
+            if (!TextUtils.isEmpty(web.toUrl())
+                    && (web.toUrl().startsWith("http://") || web.toUrl().startsWith("https://"))) {
+                linkBuilder.setContentUrl(Uri.parse(web.toUrl()));
             }
             if (!TextUtils.isEmpty(mImageUrl) && (mImageUrl.startsWith("http://") || mImageUrl.startsWith("https://"))) {
                 linkBuilder.setImageUrl(Uri.parse(mImageUrl));

@@ -27,7 +27,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.FacebookSdk;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.eventbus.EventShareCompleted;
@@ -154,9 +153,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(FacebookSdk.isInitialized() == false){
-            FacebookSdk.sdkInitialize(GolukApplication.getInstance(), GolukConfig.REQUEST_CODE_FACEBOOK_SHARE);
-        }
         setContentView(R.layout.activity_video_share);
         EventBus.getDefault().register(this);
 
@@ -886,13 +882,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        /**
-         * 友盟分享后的回调
-         */
-        if (this.mThirdShareTool != null) {
-            this.mThirdShareTool.onActivityResult(requestCode, resultCode, data);
-        }
     }
+
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

@@ -22,7 +22,7 @@ import com.mobnote.user.CountDownButtonHelper.OnFinishListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.sina.weibo.sdk.utils.MD5;
+import com.umeng.socialize.sina.helper.MD5;
 
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.page.IPageNotifyFn;

@@ -28,7 +28,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.sina.weibo.sdk.utils.MD5;
+import com.umeng.socialize.sina.helper.MD5;
 
 /**
  * 登录管理类
