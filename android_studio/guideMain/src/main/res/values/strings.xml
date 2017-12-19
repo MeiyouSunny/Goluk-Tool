@@ -1131,4 +1131,5 @@
     <string name="export_error">导出失败</string>
     <string name="exporting">正在导出...</string>
     <string name="signature_is_empty">Signature cannot be empty</string>
+    <string name="facebook_app_id">Signature cannot be empty</string>
 </resources>

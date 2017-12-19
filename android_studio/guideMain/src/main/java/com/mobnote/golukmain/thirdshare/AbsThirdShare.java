@@ -182,6 +182,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
             final UMImage image = new UMImage(mActivity, mImageUrl);
             web.setThumb(image);
         }
+        sc.mMedia = web;
         return sc;
     }
 

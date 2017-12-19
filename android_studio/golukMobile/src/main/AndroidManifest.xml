@@ -517,17 +517,23 @@
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.UMDefault" />
-
+        <activity
+            android:name="com.vk.sdk.VKServiceActivity"
+            android:label="ServiceActivity"
+            android:theme="@style/VK.Transparent" />
         <!-- facebook 相关 -->
         <activity
             android:name="com.umeng.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
+        <provider
+            android:name="com.umeng.facebook.FacebookContentProvider"
+            android:authorities="${FacebookAuth}"
+            android:exported="true" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/FacebookID" />
+            android:value="@string/facebook_app_id" />
 
         <!-- twitter -->
         <activity

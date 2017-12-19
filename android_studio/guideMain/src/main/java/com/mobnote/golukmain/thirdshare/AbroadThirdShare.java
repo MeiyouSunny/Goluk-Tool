@@ -51,7 +51,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
                             Bitmap bitmap, String realDesc, String videoId, String shareType, String filepath, String from) {
         super(activity, spf, surl, curl, db, tl, bitmap, realDesc, videoId, shareType, filepath, from);
         initView();
-        modifyUMDialog();
+        //modifyUMDialog();
         initFacebook();
     }
 
@@ -199,7 +199,6 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         @Override
         public void onCancel(SHARE_MEDIA platform) {
             mHander.sendEmptyMessage(102);
-
             GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----umShareListener----onCancel");
         }
     };
@@ -219,8 +218,12 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.LINE).setCallback(umShareListener)
-                .withText(mTitle+ "\n" + sc.mText + "\n" + web.toUrl()).withMedia((UMImage) sc.mMedia).share();
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.LINE)
+                .setCallback(umShareListener)
+                .withText(mTitle + "\n" + sc.mText + "\n" + web.toUrl())
+                .withMedia(web)
+                .share();
         mCurrentShareType = TYPE_LINE;
         shareUp();// 上报分享统计
     }
@@ -265,8 +268,12 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         }
         UMWeb web = (UMWeb) sc.mMedia;
         final String shareTxt = sc.mText + "   " + web.toUrl();
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).withText(shareTxt)
-                .withMedia(web).share();
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.TWITTER)
+                .setCallback(umShareListener)
+                .withText(shareTxt)
+                .setShareContent(sc)
+                .share();
         GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----3 ");
         mCurrentShareType = TYPE_TWITTER;
         shareUp();// 上报分享统计
@@ -324,20 +331,13 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             return;
         }
         UMWeb web = (UMWeb) sc.mMedia;
-        if (ShareDialog.canShow(ShareLinkContent.class)) {
-            ShareLinkContent.Builder linkBuilder = new ShareLinkContent.Builder().setContentTitle(mTitle)
-                    .setContentDescription(sc.mText);
-            if (!TextUtils.isEmpty(web.toUrl())
-                    && (web.toUrl().startsWith("http://") || web.toUrl().startsWith("https://"))) {
-                linkBuilder.setContentUrl(Uri.parse(web.toUrl()));
-            }
-            if (!TextUtils.isEmpty(mImageUrl) && (mImageUrl.startsWith("http://") || mImageUrl.startsWith("https://"))) {
-                linkBuilder.setImageUrl(Uri.parse(mImageUrl));
-            }
-            ShareLinkContent linkContent = linkBuilder.build();
-            FacebookShareHelper.getInstance().mShareDialog.show(linkContent);
-        }
-
+        final String shareTxt = sc.mText + "   " + web.toUrl();
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.FACEBOOK)
+                .setCallback(umShareListener)
+                .setShareContent(sc)
+                .withText(shareTxt)
+                .share();
         mCurrentShareType = TYPE_FACEBOOK;
         shareUp();// 上报分享统计
     }
@@ -354,52 +354,12 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         if (TextUtils.isEmpty(sc.mText)) {
             sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
-        if (VKSdk.isLoggedIn()) {
-            shareVK();
-        } else {
-            VKSdk.login(mActivity, VKScope.WALL, VKScope.PHOTOS);
-        }
-
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.VKONTAKTE)
+                .setCallback(umShareListener)
+                .setShareContent(sc)
+                .share();
         mCurrentShareType = TYPE_VK;
         this.shareUp();// 上报分享统计
-    }
-
-    /**
-     *  1. use glide download the picture and convert 2 bitmap
-     *  2. show share vk dialog
-     */
-    private void shareVK() {
-        SimpleTarget target = new SimpleTarget<Bitmap>() {
-            @Override
-            public void onResourceReady(Bitmap bitmap, GlideAnimation glideAnimation) {
-                VKShareDialogBuilder vkShareDialogBuilder = new VKShareDialogBuilder();
-                if (bitmap != null) {
-                    vkShareDialogBuilder.setAttachmentLink(mTitle, shareurl)
-                            .setAttachmentImages(new VKUploadImage[]{
-                                    new VKUploadImage(bitmap, VKImageParameters.pngImage())
-                            });
-                }
-                vkShareDialogBuilder.setShareDialogListener(new VKShareDialog.VKShareDialogListener() {
-                            public void onVkShareComplete(int postId) {
-                                mHander.sendEmptyMessage(100);
-                            }
-
-                            public void onVkShareCancel() {
-                                mHander.sendEmptyMessage(101);
-                            }
-
-                            @Override
-                            public void onVkShareError(VKError error) {
-                                mHander.sendEmptyMessage(102);
-                            }
-                        })
-                        .show(mActivity.getFragmentManager(), "VK_SHARE_DIALOG");
-            }
-        };
-        Glide.with( mActivity ) // could be an issue!
-                .load(mImageUrl)
-                .asBitmap()
-                .into( target );
-
     }
 }

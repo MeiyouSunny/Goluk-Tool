@@ -79,7 +79,6 @@ dependencies {
     compile files('libs/umeng_social_api.jar')
     compile files('libs/umeng_social_net.jar')
     compile files('libs/umeng_social_tool.jar')
-    compile files('libs/umeng-analytics-7.4.0.jar')
     compile files('libs/umeng-common-1.4.0.jar')
     compile files('libs/SocialSDK_instagram.jar')
     compile files('libs/SocialSDK_QQ_Simplify.jar')

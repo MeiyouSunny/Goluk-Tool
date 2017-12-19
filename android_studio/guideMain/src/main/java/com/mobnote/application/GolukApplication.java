@@ -113,9 +113,6 @@ import de.greenrobot.event.EventBus;
 import android.support.multidex.MultiDexApplication;
 
 import com.mobnote.golukmain.userlogin.UserResult;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKAccessTokenTracker;
-import com.vk.sdk.VKSdk;
 import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -361,15 +358,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         return mIsExit;
     }
 
-    VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
-        @Override
-        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
-            if (newToken == null) {
-                // VKAccessToken is invalid
-            }
-        }
-    };
-
     @Override
     public void onCreate() {
         super.onCreate();
@@ -387,11 +375,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
             GolukUmConfig.UmInit();
             initXLog();
-            vkAccessTokenTracker.startTracking();
             GolukMobUtils.initMob(this);
-
-            //初始化诸葛io
-//            ZhugeSDK.getInstance().openDebug();
             ZhugeSDK.getInstance().init(getApplicationContext());
             initializeSDK();
         }

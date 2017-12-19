@@ -23,7 +23,7 @@ android {
         internal {
 	    dimension "default"
             applicationId "cn.com.mobnote.golukmobile"
-            resValue 'string', 'FacebookID', '"1693308594241132"'
+            resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"wandoujia"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
@@ -33,7 +33,7 @@ android {
         international {
             dimension "default"
             applicationId "com.mobnote.golukmobile"
-            resValue 'string', 'FacebookID', '"1693308594241132"'
+            resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"googleplay"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,

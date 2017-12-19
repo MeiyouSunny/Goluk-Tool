@@ -143,11 +143,11 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
     }
 
     private void initData() {
-        mShareAPI = UMShareAPI.get(mContext);
 
         mContext = this;
         // 获得GolukApplication对象
         mApplication = (GolukApplication) getApplication();
+        mShareAPI = UMShareAPI.get(mApplication);
         mIsPhoneEmpty = true;
         mIsEmailEmpty = true;
         mIsPwdEmpty = true;
