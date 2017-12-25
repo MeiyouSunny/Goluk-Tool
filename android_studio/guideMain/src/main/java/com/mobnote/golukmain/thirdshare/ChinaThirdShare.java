@@ -177,7 +177,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
-		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QZONE)) {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
 			return;
 		}
@@ -200,7 +200,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	public void click_sina() {
 		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)) {
-			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+			//GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
 			return;
 		}
 		if (!isCanClick()) {

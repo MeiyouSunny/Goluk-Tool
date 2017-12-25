@@ -1,4 +1,4 @@
-package com.umeng.soexample;
+package cn.com.mobnote.golukmobile;
 
 //import com.umeng.socialize.media.WBShareCallBackActivity;
 

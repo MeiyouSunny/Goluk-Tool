@@ -44,7 +44,7 @@ public class SharePlatformUtil {
             UMSSOHandler handler = mShareAPI.getHandler(platform);
             return null == handler || handler.isInstall();
         }catch (Exception ex) {
-            return false;
+            return true;
         }
     }
 
