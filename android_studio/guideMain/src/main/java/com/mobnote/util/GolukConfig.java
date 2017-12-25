@@ -26,7 +26,7 @@ public class GolukConfig {
      * 微信国内版 appid secret
      **/
     public static final String WX_APPID_MAINLAND = "wxd437f1e0f67dfac1";
-    public static final String WX_APPSECRET_MAINLAND = "90d4bc4ae1b3dba372dd72d03cc8e82d";
+    public static final String WX_APPSECRET_MAINLAND = "1badfa5951ca39788aeb58eddfc0db71";
 
     /**
      * 微信国际版 appid secret

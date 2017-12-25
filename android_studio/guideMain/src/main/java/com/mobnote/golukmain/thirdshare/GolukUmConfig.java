@@ -5,6 +5,7 @@ import com.mobnote.util.GolukConfig;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
+import com.umeng.socialize.UMShareConfig;
 
 public class GolukUmConfig {
 
@@ -25,7 +26,6 @@ public class GolukUmConfig {
 			PlatformConfig.setSinaWeibo(GolukConfig.SINA_APP_KEY_MAINLAND, GolukConfig.SINA_APP_KEY_INTERNATIONAL,GolukConfig.REDIRECT_URL);
             PlatformConfig.setWeixin(GolukConfig.WX_APPID_MAINLAND, GolukConfig.WX_APPSECRET_MAINLAND);
             PlatformConfig.setQQZone(GolukConfig.QQ_APPID_MAINLAND, GolukConfig.QQ_APPKEY_MAINLAND);
-			PlatformConfig.setWeixin(GolukConfig.WX_APPID_INTERNATIONAL, GolukConfig.WX_APPSECRET_INTERNATIONAL);
             PlatformConfig.setTwitter(TWITTER_APPID_MAINLAND, TWITTER_APPSECRET_MAINLAND);
         }else{
             PlatformConfig.setWeixin(GolukConfig.WX_APPID_INTERNATIONAL, GolukConfig.WX_APPSECRET_INTERNATIONAL);
