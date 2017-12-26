@@ -57,6 +57,7 @@ import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.t1sp.ui.album.PhotoAlbumPlayerT1SP;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.UserUtils;
 import com.mobnote.videoedit.AfterEffectActivity;
@@ -1096,7 +1097,7 @@ public class GolukUtils {
 
     public static void startPhotoAlbumPlayerActivity(Context context, int type, String vidFrom, String path, String filename, String createTime,
                                                      String videoHP, String size, PromotionSelectItem promotionItem) {
-        Intent intent = new Intent(context, PhotoAlbumPlayer.class);
+        Intent intent = new Intent(context, PhotoAlbumPlayerT1SP.class);
         intent.putExtra(PhotoAlbumPlayer.TYPE, type);
         intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
         intent.putExtra(PhotoAlbumPlayer.PATH, path);

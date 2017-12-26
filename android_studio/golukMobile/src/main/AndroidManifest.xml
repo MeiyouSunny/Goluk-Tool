@@ -613,6 +613,12 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity
+            android:name="com.mobnote.t1sp.ui.album.PhotoAlbumPlayerT1SP"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
         <activity android:name="com.mobnote.golukmain.watermark.CarBrandsListActivity">
         </activity>
         <activity
