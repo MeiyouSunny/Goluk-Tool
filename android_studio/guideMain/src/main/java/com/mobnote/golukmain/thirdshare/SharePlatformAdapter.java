@@ -122,9 +122,9 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
         if(mSharePlatform.isInstallPlatform(SHARE_MEDIA.WHATSAPP)){
             mSharePlatformBeanList.add(ThirdSharePlatformFactory.createSharePlatformBean(mContext, SharePlatform.SHARE_PLATFORM_WHATSAPP));
         }
-        if(GolukUtils.isAppInstalled(mContext, GolukConfig.LINE_PACKAGE)){
-            mSharePlatformBeanList.add(ThirdSharePlatformFactory.createSharePlatformBean(mContext, SharePlatform.SHARE_PLATFORM_LINE));
-        }
+//        if(GolukUtils.isAppInstalled(mContext, GolukConfig.LINE_PACKAGE)){
+//            mSharePlatformBeanList.add(ThirdSharePlatformFactory.createSharePlatformBean(mContext, SharePlatform.SHARE_PLATFORM_LINE));
+//        }
         if(GolukUtils.isAppInstalled(mContext, GolukConfig.VK_PACKAGE)) {
             mSharePlatformBeanList.add(ThirdSharePlatformFactory.createSharePlatformBean(mContext, SharePlatform.SHARE_PLATFORM_VK));
         }
