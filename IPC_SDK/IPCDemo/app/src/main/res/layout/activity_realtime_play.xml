@@ -18,7 +18,7 @@
         android:layout_height="wrap_content"
         android:background="#a0a0a0">
 
-        <com.rd.car.player.RtspPlayerView
+        <VideoView
             android:id="@+id/mRtspPlayerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

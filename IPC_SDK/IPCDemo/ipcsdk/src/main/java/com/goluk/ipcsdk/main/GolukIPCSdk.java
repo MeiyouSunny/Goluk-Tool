@@ -54,7 +54,7 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     private GolukIPCSdk() {
         System.loadLibrary("golukmobile");
-        System.loadLibrary("LiveCarRecorder");
+        //System.loadLibrary("LiveCarRecorder");
         initCachePath();
     }
 
