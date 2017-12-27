@@ -3,7 +3,7 @@
 
     <FrameLayout
         android:id="@+id/fl_inner"
-        android:layout_width="match_parent"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/header_footer_top_bottom_padding"
         android:paddingLeft="@dimen/header_footer_left_right_padding"
@@ -42,17 +42,17 @@
                 android:id="@+id/pull_to_refresh_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="#bbbbbb"
-                android:textSize="16sp" />
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearance"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/pull_to_refresh_sub_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="#bbbbbb"
-                android:textSize="13sp" />
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:visibility="gone" />
         </LinearLayout>
     </FrameLayout>
 

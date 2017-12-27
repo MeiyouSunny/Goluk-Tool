@@ -118,18 +118,21 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         if (TextUtils.isEmpty(type)) {
             return;
         }
-        if (TYPE_FACEBOOK.equals(type)) {
-            click_facebook();
-        } else if (TYPE_INSTAGRAM.equals(type)) {
-            click_instagram(filepath);
-        } else if (TYPE_TWITTER.equals(type)) {
-            click_twitter();
-        } else if (TYPE_WHATSAPP.equals(type)) {
-            click_whatsapp();
-        } else if (TYPE_LINE.equals(type)) {
-            click_line();
-        } else if (TYPE_VK.equals(type)) {
-            click_VK();
+        try {
+            if (TYPE_FACEBOOK.equals(type)) {
+                click_facebook();
+            } else if (TYPE_INSTAGRAM.equals(type)) {
+                click_instagram(filepath);
+            } else if (TYPE_TWITTER.equals(type)) {
+                click_twitter();
+            } else if (TYPE_WHATSAPP.equals(type)) {
+                click_whatsapp();
+            } else if (TYPE_LINE.equals(type)) {
+                click_line();
+            } else if (TYPE_VK.equals(type)) {
+                click_VK();
+            }
+        } catch (Exception ex) {
         }
     }
 
@@ -330,13 +333,10 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        UMWeb web = (UMWeb) sc.mMedia;
-        final String shareTxt = sc.mText + "   " + web.toUrl();
         new ShareAction(mActivity)
                 .setPlatform(SHARE_MEDIA.FACEBOOK)
                 .setCallback(umShareListener)
                 .setShareContent(sc)
-                .withText(shareTxt)
                 .share();
         mCurrentShareType = TYPE_FACEBOOK;
         shareUp();// 上报分享统计
