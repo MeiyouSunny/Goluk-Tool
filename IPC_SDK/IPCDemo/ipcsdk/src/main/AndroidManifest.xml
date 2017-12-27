@@ -1,10 +1,21 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.goluk.ipcsdk">
+<manifest package="com.goluk.ipcsdk"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
         android:label="@string/app_name"
         android:supportsRtl="true">
+
+        <!-- 网络变化广播监听 -->
+        <receiver android:name="com.goluk.ipcsdk.utils.NetworkStateReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </receiver>
 
     </application>
 

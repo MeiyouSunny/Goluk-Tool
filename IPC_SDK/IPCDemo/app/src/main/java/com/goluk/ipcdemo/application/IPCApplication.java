@@ -15,7 +15,7 @@ public class IPCApplication extends Application{
     public void onCreate() {
         super.onCreate();
 
-        GolukIPCSdk.getInstance().initSDK(this, "10000003", new IPCInitListener() {
+        GolukIPCSdk.getInstance().initSDK(this, "10000005", new IPCInitListener() {
             @Override
             public void initCallback(boolean isSuccess, String msg) {
                 Log.i("IPCApplication","isSuccess: " + isSuccess + "    msg: " + msg);

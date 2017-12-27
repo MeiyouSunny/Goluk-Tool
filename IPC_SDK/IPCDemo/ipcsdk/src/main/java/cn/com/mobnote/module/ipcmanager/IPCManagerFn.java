@@ -98,8 +98,8 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCP_Msg_GetTime = 1012;
 //	/** 设置IPC系统WIFI配置 */
 //	public static final int IPC_VDCP_Msg_SetWifiCfg = 1013;
-//	/** 获取IPC系统音视频编码配置 */
-//	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1014;
+	/** 获取IPC系统音视频编码配置 */
+	public static final int IPC_VDCP_Msg_GetVedioEncodeCfg = 1014;
 //	/** 设置IPC系统音视频编码配置 */
 //	public static final int IPC_VDCP_Msg_SetVedioEncodeCfg = 1015;
 //	/** 设置IPC行车影像开始录制 */
@@ -284,10 +284,10 @@ public interface IPCManagerFn extends IGolukCommFn {
 	public static final int IPC_VDCPCmd_GetTime = 1012;
 //	/** 设置IPC系统WIFI配置 */
 //	public static final int IPC_VDCPCmd_SetWifiCfg = 1013;
-//	/** 获取IPC系统音视频编码配置 */
-//	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1014;
-//	/** 设置IPC系统音视频编码配置 */
-//	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1015;
+	/** 获取IPC系统音视频编码配置 */
+	public static final int IPC_VDCPCmd_GetVideoEncodeCfg = 1014;
+	/** 设置IPC系统音视频编码配置 */
+	public static final int IPC_VDCPCmd_SetVideoEncodeCfg = 1015;
 //	/** 设置IPC行车影像开始录制 */
 //	public static final int IPC_VDCPCmd_StartRecord = 1016;
 //	/** 设置IPC行车影像停止录制 */
