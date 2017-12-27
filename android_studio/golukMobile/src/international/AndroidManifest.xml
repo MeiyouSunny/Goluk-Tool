@@ -67,7 +67,6 @@
             android:configChanges="orientation|keyboard"
             android:launchMode="singleTask"
             android:noHistory="true"
-            android:theme="@style/Theme.UMDialog"
             android:windowSoftInputMode="stateVisible|adjustResize" />
 
         <!-- 【必须】 信鸽receiver广播接收 -->

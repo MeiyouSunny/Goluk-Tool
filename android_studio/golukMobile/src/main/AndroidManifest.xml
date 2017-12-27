@@ -47,6 +47,7 @@
         <activity
             android:name="com.mobnote.golukmain.usercenter.NewUserCenterActivity"
             android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait" />
 
         <!-- 个人中心模块 -->
@@ -501,8 +502,7 @@
         </activity>
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault" />
+            android:excludeFromRecents="true" />
         <activity
             android:name="com.umeng.socialize.view.ShareActivity"
             android:configChanges="orientation|keyboard"
