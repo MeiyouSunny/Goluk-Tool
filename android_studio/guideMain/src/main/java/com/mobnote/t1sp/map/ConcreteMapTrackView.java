@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.AttributeSet;
@@ -39,24 +38,9 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 import com.baidu.mapapi.utils.CoordinateConverter;
-import com.goluk.a6.control.CarControlApplication;
-import com.goluk.a6.control.R;
-import com.goluk.a6.control.dvr.RemoteCameraConnectManager;
-import com.goluk.a6.control.util.GPSFile;
-import com.media.tool.GPSData;
-import com.media.tool.MediaPlayer;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,7 +145,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         if (mMapView != null)
             mMapView.getMap().clear();
         mTrackCarMar = null;
-        setTimeText(Long.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+        //setTimeText(Long.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
         findViewById(R.id.baidumap_tarck_follow_button).performClick();
     }
 
@@ -172,7 +156,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         if (list == null) {
             if (mMapView != null)
                 mMapView.getMap().clear();
-            setTimeText(Long.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
+            //setTimeText(Long.MIN_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE);
             mTrackCarMar = null;
             mHandler.post(new Runnable() {
 
@@ -190,7 +174,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
     //画远程视频的GPS轨迹，数据从记录仪获取
     @Override
     public void drawRemoteTrackLine(String url) {
-        new DrawRemoteTrackTask().execute(url);
+        //new DrawRemoteTrackTask().execute(url);
     }
 
     @Override
@@ -233,7 +217,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         if (mBaiduMap != null)
             mTrackCarMar.setRotate((360 - data.angle + mBaiduMap.getMapStatus().rotate) % 360 - 90);
 
-        setTimeText(((long) data.time) * 1000, data.altitude, data.speed);
+        //setTimeText(((long) data.time) * 1000, data.altitude, data.speed);
         /*
         LatLngBounds bound = mBaiduMap.getMapStatus().bound;
 		if(!bound.contains(ll)){
@@ -628,148 +612,6 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         }
     }
 
-    class DrawRemoteTrackTask extends AsyncTask<String, Void, List<GPSData>> {
-
-        @Override
-        protected List<GPSData> doInBackground(String... params) {
-            if (TraceCacheManager.instance() == null) return null;
-            String path = params[0];
-            byte[] cache = TraceCacheManager.instance().getTraceByKey(path);
-            if (cache != null) {
-                List<GPSData> result = null;
-                byte original[] = null;
-                if (gpsType == GPS_REMOTE_MP4) {
-                    try {
-                        File tempFile = new File(Environment.getExternalStorageDirectory().getPath() + "/temp");
-                        if (tempFile.exists()) {
-                            tempFile.delete();
-                        }
-                        tempFile.createNewFile();
-                        FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
-                        fileOutputStream.write(cache);
-                        original = MediaPlayer.findMP4GPSData(tempFile.getAbsolutePath());
-                        fileOutputStream.close();
-                        tempFile.delete();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    original = cache;
-                }
-                List<GPSData> list = GPSFile.parseGPSList(original, false, true, false);
-                if (list != null)
-                    result = list;
-                return result;
-            } else {
-                String strUrl = null;
-                HttpURLConnection urlConnection = null;
-                URL url = null;
-                InputStream input = null;
-                List<GPSData> result = null;
-                ByteArrayOutputStream output = new ByteArrayOutputStream();
-                if (RemoteCameraConnectManager.HTTP_SERVER_IP == null || RemoteCameraConnectManager.HTTP_SERVER_IP.length() <= 0)
-                    return null;
-                try {
-                    strUrl = "http://" + RemoteCameraConnectManager.HTTP_SERVER_IP + ":" + RemoteCameraConnectManager.HTTP_SERVER_PORT +
-                            "/cgi-bin/Config.cgi?action=download&property=path&value=" + URLEncoder.encode(path, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-
-                try {
-                    url = new URL(strUrl);
-                    urlConnection = (HttpURLConnection) url.openConnection();
-                    if (gpsType == GPS_REMOTE_MP4) {
-                        urlConnection.setRequestProperty("Range", "bytes=0-819199");
-                    }
-                    int code = urlConnection.getResponseCode();
-                    Log.i(TAG, "code = " + code);
-                    if (code < 200 || code > 206)
-                        return null;
-                    input = urlConnection.getInputStream();
-                    int total = urlConnection.getContentLength();
-                    int count = 0;
-                    byte[] buffer = new byte[1024];
-                    int len = input.read(buffer);
-                    while (len != -1) {
-                        output.write(buffer, 0, len);
-                        count += len;
-                        len = input.read(buffer);
-                    }
-                    output.flush();
-                    Log.i(TAG, "total = " + total);
-                    Log.i(TAG, "count = " + count);
-                    if (total == count) {
-                        TraceCacheManager.instance().putTraceToCache(path,
-                                output.toByteArray());
-                        byte original[] = null;
-                        if (gpsType == GPS_REMOTE_MP4) {
-                            File tempFile = new File(Environment.getExternalStorageDirectory().getPath() + "/temp");
-                            if (tempFile.exists()) {
-                                tempFile.delete();
-                            }
-                            tempFile.createNewFile();
-                            FileOutputStream fileOutputStream = new FileOutputStream(tempFile);
-                            output.writeTo(fileOutputStream);
-                            original = MediaPlayer.findMP4GPSData(tempFile.getAbsolutePath());
-                            fileOutputStream.close();
-                            tempFile.delete();
-                        } else {
-                            original = output.toByteArray();
-                        }
-                        List<GPSData> list = GPSFile.parseGPSList(original, false, true, false);
-                        if (list != null)
-                            result = list;
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null)
-                        urlConnection.disconnect();
-
-                    if (input != null) {
-                        try {
-                            input.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    if (output != null) {
-                        try {
-                            output.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-
-                return result;
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            if (mMapListener != null)
-                mMapListener.onPreDrawLineTrack();
-        }
-
-        @Override
-        protected void onPostExecute(List<GPSData> result) {
-            super.onPostExecute(result);
-            try {
-                doDrawTrackLine(result);
-                if (mMapListener != null)
-                    mMapListener.onAfterDrawLineTrack(result);
-            } catch (Exception ex) {
-            }
-        }
-    }
-
     @Override
     public void onGetGeoCodeResult(GeoCodeResult result) {
 
@@ -790,40 +632,6 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
             ed.commit();
         }
 
-    }
-
-    private void setTimeText(final long time, final int altitude, final int speed) {
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                if (!mShowCarInfo)
-//                    return;
-//
-//                if (time == Long.MIN_VALUE && altitude == Integer.MIN_VALUE && speed == Integer.MIN_VALUE) {
-//                    if (mTimeView.getVisibility() == VISIBLE) {
-//                        mTimeView.setAnimation(AnimationUtils.loadAnimation(getContext(),
-//                                R.anim.alpha_dismiss));
-//                        mTimeView.setVisibility(INVISIBLE);
-//                    }
-//                } else {
-//                    if (mTimeView.getVisibility() != VISIBLE) {
-//                        mTimeView.setAnimation(AnimationUtils.loadAnimation(getContext(),
-//                                R.anim.alpha_show));
-//                        mTimeView.setVisibility(View.VISIBLE);
-//                    }
-//                }
-//
-//                String text = "";
-//                if (mShowCarInfoTime) {
-//                    text += DateFormat.format("yyyy-MM-dd HH:mm", new Date(time)).toString();
-//                }
-//                DecimalFormat df = new DecimalFormat();
-//                df.applyPattern("0.0");
-//                mTimeView.setText(text + "   " + getContext().getString(R.string.altitude) + ":" +
-//                        altitude + "m   " + getContext().getString(R.string.speed) + ":"
-//                        + df.format(speed * 3.6f) + "km/h");
-//            }
-//        });
     }
 
 }

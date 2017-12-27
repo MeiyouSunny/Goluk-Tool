@@ -75,6 +75,8 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.t1sp.map.GPSData;
+import com.mobnote.t1sp.map.MapTrackView;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -111,6 +113,8 @@ import cn.npnt.ae.core.MediaUtils;
 import cn.npnt.ae.model.VideoEncoderCapability;
 import cn.npnt.ae.model.VideoFile;
 import de.greenrobot.event.EventBus;
+import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
+import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
 
 import static com.rd.veuisdk.SdkEntry.editMedia;
 
@@ -244,6 +248,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
     private ConfigData configData;
 
+    /////////////////
+    private MapTrackView mMapTrackView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -254,6 +261,26 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         initData(savedInstanceState);
 
         loadMedia();
+
+        /////////////////////
+        mMapTrackView = MapTrackView.create(this);
+        mMapTrackView.onCreate(savedInstanceState);
+        //mMapTrackView.setMapListener(this);
+        RelativeLayout mapParent = (RelativeLayout) findViewById(R.id.tarck_map_parent_view);
+        mapParent.addView(mMapTrackView);
+
+        gpsDataTest();
+    }
+
+    private void gpsDataTest() {
+        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "FILE161103-141644F.MP4";
+        File gpsFile = new File(path);
+        if (gpsFile.exists()) {
+            VideoInfo videoInfo = new VideoInfo();
+            List<GpsInfo> gpsData = videoInfo.getAllInfo(path);
+            //GpsInfo gpsInfo = videoInfo.getOnePointGpsInfo(path);
+            System.out.print("");
+        }
     }
 
     private void loadMedia() {
@@ -741,24 +768,23 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             return;
         }
         if (bFull) {
-
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
-            LayoutParams params = (LayoutParams) mVideoViewLayout.getLayoutParams();
+            FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
             params.width = metrics.widthPixels;
             params.height = metrics.heightPixels;
             params.leftMargin = 0;
-            if (Build.VERSION.SDK_INT > 16) {
-                params.removeRule(RelativeLayout.BELOW);
-            } else {
-                params.addRule(RelativeLayout.BELOW, 0);
-            }
+//            if (Build.VERSION.SDK_INT > 16) {
+//                params.removeRule(RelativeLayout.BELOW);
+//            } else {
+//                params.addRule(RelativeLayout.BELOW, 0);
+//            }
 
             mVideoViewLayout.setLayoutParams(params);
-            LayoutParams norParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
-                    LayoutParams.WRAP_CONTENT);
-            norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-            norParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
+//            LayoutParams norParams = new LayoutParams(LayoutParams.WRAP_CONTENT,
+//                    LayoutParams.WRAP_CONTENT);
+//            norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+//            norParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             mStartVideoeditLl.setVisibility(View.GONE);
             mVideoView.setOnTouchListener(mTouchListener);
 
@@ -771,11 +797,11 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             }
 
             hideOperator();
-            LayoutParams lp = (LayoutParams) mVideoViewLayout.getLayoutParams();
+            FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
             lp.width = mScreenWidth;
             lp.height = (int) (lp.width / 1.777);
             lp.leftMargin = 0;
-            lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
+            //lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
             if (!mVideoFrom.equals("local")) {
                 mStartVideoeditLl.setVisibility(View.GONE);
