@@ -111,6 +111,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mDataList);
         mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
         checkListState();
+        loadData(false);
     }
 
     private void initView() {

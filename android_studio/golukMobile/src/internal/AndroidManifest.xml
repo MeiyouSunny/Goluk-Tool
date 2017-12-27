@@ -74,5 +74,4 @@
     <meta-data
         android:name="UMENG_CHANNEL"
         android:value="Goluk Official Website" />
-
 </manifest>

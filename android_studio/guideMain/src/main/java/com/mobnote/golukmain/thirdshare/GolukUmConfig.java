@@ -23,12 +23,13 @@ public class GolukUmConfig {
 		Config.DEBUG = true;
 		UMConfigure.init(GolukApplication.getInstance(),UMConfigure.DEVICE_TYPE_PHONE,"");
 		if(GolukApplication.getInstance().isMainland()){
-			PlatformConfig.setSinaWeibo(GolukConfig.SINA_APP_KEY_MAINLAND, GolukConfig.SINA_APP_KEY_INTERNATIONAL,GolukConfig.REDIRECT_URL);
+			PlatformConfig.setSinaWeibo(GolukConfig.SINA_APP_KEY_MAINLAND, GolukConfig.SINA_APP_SECRET_MAINLAND,GolukConfig.REDIRECT_URL);
             PlatformConfig.setWeixin(GolukConfig.WX_APPID_MAINLAND, GolukConfig.WX_APPSECRET_MAINLAND);
             PlatformConfig.setQQZone(GolukConfig.QQ_APPID_MAINLAND, GolukConfig.QQ_APPKEY_MAINLAND);
             PlatformConfig.setTwitter(TWITTER_APPID_MAINLAND, TWITTER_APPSECRET_MAINLAND);
         }else{
-            PlatformConfig.setWeixin(GolukConfig.WX_APPID_INTERNATIONAL, GolukConfig.WX_APPSECRET_INTERNATIONAL);
+			PlatformConfig.setSinaWeibo(GolukConfig.SINA_APP_KEY_INTERNATIONAL, GolukConfig.SINA_APP_SECRET_INTERNATIONAL,GolukConfig.REDIRECT_URL);
+			PlatformConfig.setWeixin(GolukConfig.WX_APPID_INTERNATIONAL, GolukConfig.WX_APPSECRET_INTERNATIONAL);
             PlatformConfig.setQQZone(GolukConfig.QQ_APPID_INTERNATIONAL, GolukConfig.QQ_APPKEY_INTERNATIONAL);
             PlatformConfig.setTwitter(TWITTER_APPID_INTERNATIONAL, TWITTER_APPSECRET_INTERNATIONAL);
 			PlatformConfig.setVKontakte(VK_APPID_INTERNATIONAL,VK_APPSECRET_INTERNATIONAL);

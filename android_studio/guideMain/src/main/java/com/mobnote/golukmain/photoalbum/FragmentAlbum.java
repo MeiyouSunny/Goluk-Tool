@@ -48,7 +48,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     public static final String ACTIVITY_INFO = "activityinfo";
     private static final String TAG = "FragmentAlbum";
     public static final String PARENT_VIEW = "MainActivity";
-    public static final String SELECT_MODE  = "select_item";
+    public static final String SELECT_MODE = "select_item";
 
     private CustomViewPager mViewPager;
     private LocalFragment mLocalFragment;
@@ -107,9 +107,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW,true);
-            selectMode = bundle.getBoolean(SELECT_MODE,false);
-            fromCloud = bundle.getBoolean("from",false);
+            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW, true);
+            selectMode = bundle.getBoolean(SELECT_MODE, false);
+            fromCloud = bundle.getBoolean("from", false);
         }
 
         if (savedInstanceState == null) {
@@ -132,7 +132,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         selectedListData = new ArrayList<>();
 
         fragmentList = new ArrayList<>();
-        if(parentViewIsMainActivity) {
+        if (parentViewIsMainActivity) {
             fragmentList.add(mLocalFragment);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
         } else {
@@ -157,12 +157,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     mLoopFragment.removeFooterView();
                 }
 
-                if(parentViewIsMainActivity) {
+                if (parentViewIsMainActivity) {
                     mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
                 } else {
-                    if(position == 0) {
+                    if (position == 0) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-                    } else if(position == 1) {
+                    } else if (position == 1) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
                     } else {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
@@ -202,10 +202,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
             mBackBtn.setVisibility(View.VISIBLE);
-            if(selectMode) {
+            if (selectMode) {
                 mTabLocal.setText(R.string.str_ae_add_video_title);
             }
-            if(!selectMode && !fromCloud){
+            if (!selectMode && !fromCloud) {
                 mBackBtn.setImageResource(R.drawable.remote_album_sd);
                 mBackBtn.setBackgroundResource(0);
             }
@@ -262,7 +262,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     if (!mLoopFragment.isShowPlayer) {
                         mLoopFragment.loadData(true);
                     }
-
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
+                    mLocalFragment.loadData(true);
                 }
             }
         }
@@ -370,24 +371,24 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 return;
             }
             downloadVideoFlush();
-        }else if(id == R.id.ll_select_all){
+        } else if (id == R.id.ll_select_all) {
             if (selectedListData.size() <= 0) {
                 return;
             }
             mCBAll.setChecked(!mCBAll.isChecked());
-        }else if (id == R.id.cancel_btn) {
+        } else if (id == R.id.cancel_btn) {
             resetEditState();
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
-            if(parentViewIsMainActivity && !selectMode && !fromCloud){
+            if (parentViewIsMainActivity && !selectMode && !fromCloud) {
                 final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
                 mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
                 mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         mPopMenu.dismiss();
-                        if(item.getItemId() == R.id.action_sd){
+                        if (item.getItemId() == R.id.action_sd) {
                             if (GolukApplication.getInstance().getIpcIsLogin()) {
                                 Intent photoalbum = new Intent(FragmentAlbum.this.getActivity(), PhotoAlbumActivity.class);
                                 photoalbum.putExtra("from", "cloud");
@@ -402,7 +403,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                     }
                 });
                 mPopMenu.show();
-            }else{
+            } else {
                 PhotoAlbumActivity activity = (PhotoAlbumActivity) getActivity();
                 activity.onBackPressed();
             }
@@ -451,7 +452,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 || GolukApplication.getInstance().getDownLoadList().size() == 0
                 || !GolukApplication.getInstance().isDownloading()) {
             getActivity().finish();
-        }else{
+        } else {
             preExit();
         }
     }
@@ -562,8 +563,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         }
     }
 
-    public void adaptCbAllText(boolean all){
-       mCBAll.setText(all?R.string.select_all:R.string.un_select_all);
+    public void adaptCbAllText(boolean all) {
+        mCBAll.setText(all ? R.string.select_all : R.string.un_select_all);
     }
 
     public void updateTitleName(String titlename) {

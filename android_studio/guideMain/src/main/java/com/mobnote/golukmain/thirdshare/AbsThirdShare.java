@@ -6,10 +6,9 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
-import com.umeng.socialize.Config;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
+import com.umeng.socialize.media.UMVideo;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -175,14 +174,14 @@ public abstract class AbsThirdShare implements IThirdShareFn {
         }
         final String videoUrl = shareurl + "&type=" + shareType;
         ShareContent sc = new ShareContent();
-        UMWeb web = new UMWeb(videoUrl);
-        web.setTitle(mTitle);
-        web.setDescription(mDescribe);
+        UMVideo umVideo = new UMVideo(videoUrl);
+        umVideo.setTitle(mTitle);
+        umVideo.setDescription(mDescribe);
         if (!TextUtils.isEmpty(mImageUrl)) {
             final UMImage image = new UMImage(mActivity, mImageUrl);
-            web.setThumb(image);
+            umVideo.setThumb(image);
         }
-        sc.mMedia = web;
+        sc.mMedia = umVideo;
         return sc;
     }
 

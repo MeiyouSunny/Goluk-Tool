@@ -154,7 +154,7 @@ public class ThirdShareTool extends AbsThirdShare {
 
     // 点击 "twitter"
     public void click_twitter() {
-        if (sharePlatform.isInstallPlatform(SHARE_MEDIA.TWITTER) == false) {
+        if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.TWITTER)) {
             GolukUtils.showToast(mActivity, mActivity.getResources().getString(R.string.str_twitter_no_install));
             notifyShareState(false);
             return;

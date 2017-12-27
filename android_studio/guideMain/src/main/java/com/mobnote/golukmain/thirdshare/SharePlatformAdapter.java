@@ -32,7 +32,7 @@ public class SharePlatformAdapter extends RecyclerView.Adapter{
 
     /** 当前选中的平台 */
     private int mCurrSelectedPlatform;
-    SharePlatformUtil mSharePlatform;
+    public SharePlatformUtil mSharePlatform;
 
     public SharePlatformAdapter(Context context){
 

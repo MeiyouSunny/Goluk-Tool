@@ -34,7 +34,7 @@ import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
+import com.umeng.socialize.media.UMVideo;
 import com.vk.sdk.VKScope;
 import com.vk.sdk.VKSdk;
 import com.vk.sdk.api.VKError;
@@ -216,7 +216,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             return;
         }
         final ShareContent sc = getShareContent(TYPE_LINE);
-        UMWeb web = (UMWeb) sc.mMedia;
+        UMVideo web = (UMVideo) sc.mMedia;
         if (null == sc) {
             setCanJump();
             return;
@@ -245,7 +245,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        UMWeb web = (UMWeb) sc.mMedia;
+        UMVideo web = (UMVideo) sc.mMedia;
         new ShareAction(mActivity).setPlatform(SHARE_MEDIA.WHATSAPP).setCallback(umShareListener)
                 .withText(mTitle + "\n" + sc.mText + "\n" + web.toUrl()).share();
         mCurrentShareType = TYPE_WHATSAPP;
@@ -269,7 +269,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        UMWeb web = (UMWeb) sc.mMedia;
+        UMVideo web = (UMVideo) sc.mMedia;
         final String shareTxt = sc.mText + "   " + web.toUrl();
         new ShareAction(mActivity)
                 .setPlatform(SHARE_MEDIA.TWITTER)

@@ -62,9 +62,11 @@ public class GolukConfig {
 
     /** 国内版sina微博APP_KEY */
     public static final String SINA_APP_KEY_MAINLAND = "3570996032";
+    public static final String SINA_APP_SECRET_MAINLAND = "79cd95f1da313901d743de78469861c4";
 
     /** 国际版sina微博APP_KEY */
     public static final String SINA_APP_KEY_INTERNATIONAL = "3481905571";
+    public static final String SINA_APP_SECRET_INTERNATIONAL = "c67e90430b9d8baa581d794431811329";
 
     /**
      * 当前 DEMO 应用的回调页，第三方应用可以使用自己的回调页。
