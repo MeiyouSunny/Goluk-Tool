@@ -326,6 +326,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             return;
         }
         if (!isCanClick()) {
+            notifyShareState(false);
             return;
         }
         final ShareContent sc = getShareContent(TYPE_FACEBOOK);
@@ -350,9 +351,6 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         if (null == sc) {
             setCanJump();
             return;
-        }
-        if (TextUtils.isEmpty(sc.mText)) {
-            sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
         new ShareAction(mActivity)
                 .setPlatform(SHARE_MEDIA.VKONTAKTE)

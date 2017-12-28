@@ -89,6 +89,7 @@ public abstract class AbsThirdShare implements IThirdShareFn {
                     callBack_ShareFailed();
                     break;
                 case 102:
+                    setCanJump();
                     GolukUtils.showToast(mActivity, mActivity.getString(R.string.um_share_cancel));
                     break;
                 default:
