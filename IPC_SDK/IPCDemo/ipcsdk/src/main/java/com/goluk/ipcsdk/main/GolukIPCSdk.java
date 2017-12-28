@@ -134,7 +134,7 @@ public class GolukIPCSdk implements IPCManagerFn {
         DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         try {
             date = sdf.parse(dateStr);
-            System.out.println(date.toString());
+            //System.out.println(date.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

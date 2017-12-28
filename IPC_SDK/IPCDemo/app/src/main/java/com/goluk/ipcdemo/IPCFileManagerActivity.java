@@ -3,7 +3,6 @@ package com.goluk.ipcdemo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -136,7 +135,7 @@ public class IPCFileManagerActivity extends FragmentActivity implements View.OnC
     @Override
     public void callback_download_file(DownloadInfo downloadinfo) {
         if(downloadinfo != null){
-            Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
+            //Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
                // Toast.makeText(this, "callback_download_file success", Toast.LENGTH_SHORT).show();
             }

@@ -1,7 +1,6 @@
 package com.goluk.ipcdemo.application;
 
 import android.app.Application;
-import android.util.Log;
 
 import com.goluk.ipcsdk.listener.IPCInitListener;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
@@ -18,7 +17,7 @@ public class IPCApplication extends Application{
         GolukIPCSdk.getInstance().initSDK(this, "10000005", new IPCInitListener() {
             @Override
             public void initCallback(boolean isSuccess, String msg) {
-                Log.i("IPCApplication","isSuccess: " + isSuccess + "    msg: " + msg);
+                //Log.i("IPCApplication","isSuccess: " + isSuccess + "    msg: " + msg);
             }
         });
     }

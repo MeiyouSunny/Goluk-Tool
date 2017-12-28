@@ -1,7 +1,5 @@
 package cn.com.mobnote.module.ipcmanager;
 
-import android.util.Log;
-
 public class IPCManagerAdapter {
 
 	/** 回调接口实例 */
@@ -21,9 +19,9 @@ public class IPCManagerAdapter {
 
 	public static void IPCManage_CallBack(int event, int msg, int param1, Object param2) {
 		if(param2 != null){
-			Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: " + param2.toString());
+			//Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: " + param2.toString());
 		}else{
-			Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: null");
+			//Log.i("ipc_callback", "event: " + event + " msg: " + msg + " param1: " + param1 + " param2: null");
 		}
 		if (null == fn) {
 			return;
