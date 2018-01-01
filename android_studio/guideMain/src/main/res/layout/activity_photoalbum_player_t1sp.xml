@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/gray_f4">
+                android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/video_main_layout"
@@ -14,7 +13,8 @@
         <RelativeLayout
             android:id="@+id/relativelayout_title"
             android:layout_width="match_parent"
-            android:layout_height="46dp">
+            android:layout_height="46dp"
+            android:background="@color/photoalbum_title_bg_color">
 
             <ImageButton
                 android:id="@+id/imagebutton_back"
@@ -102,15 +102,14 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="3"
+            android:layout_weight="2"
             android:orientation="vertical">
 
             <!-- 视频播放 -->
             <RelativeLayout
                 android:id="@+id/rv_video_player"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="30dp">
+                android:layout_height="match_parent">
 
                 <com.mobnote.golukmain.player.FullScreenVideoView
                     android:id="@+id/fullscreen_video_view"
@@ -122,7 +121,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/tacitly_pic"/>
+                    android:src="@drawable/tacitly_pic"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/btn_play"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/player_play_btn"
+                    android:visibility="gone"/>
 
                 <LinearLayout
                     android:id="@+id/mLoadingLayout"
@@ -150,7 +158,6 @@
                         android:textColor="#ffffff"
                         android:textSize="10sp"/>
                 </LinearLayout>
-
 
                 <RelativeLayout
                     android:id="@+id/upper_layout"
@@ -251,7 +258,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:layout_marginTop="30dp">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/vt_play_time"
@@ -297,11 +304,10 @@
 
         <!-- 时间/速度/里程 -->
         <LinearLayout
-            android:id="@+id/ll_info"
+            android:id="@+id/layout_gps_info"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:background="@color/gray_f4">
+            android:layout_height="80dp"
+            android:background="@color/white">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -314,7 +320,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_mileage"
-                    android:text="里程"/>
+                    android:text="里程"
+                    android:textColor="#646464"
+                    android:textSize="14sp"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -323,15 +331,18 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tv_km"
+                        android:id="@+id/tv_total_mails"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="km"
-                        android:textSize="8dp"/>
+                        android:textColor="#646464"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -346,7 +357,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_abnormalparking"
-                    android:text="用时"/>
+                    android:text="用时"
+                    android:textColor="#646464"
+                    android:textSize="14sp"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -355,20 +368,21 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tv_time"
+                        android:id="@+id/tv_total_time"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"/>
 
                     <TextView
                         android:id="@+id/time_unit"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="分钟"
-                        android:textSize="8dp"
-                        android:visibility="gone"/>
+                        android:textColor="#646464"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
-
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -381,7 +395,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawableLeft="@drawable/icon_averagespeed"
-                    android:text="平均速度"/>
+                    android:text="平均速度"
+                    android:textColor="#646464"
+                    android:textSize="14sp"/>
 
 
                 <LinearLayout
@@ -391,15 +407,18 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tv_speed"
+                        android:id="@+id/tv_average_speed"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"/>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="km/h"
-                        android:textSize="8dp"/>
+                        android:textColor="#646464"
+                        android:textSize="14sp"/>
                 </LinearLayout>
             </LinearLayout>
 
@@ -428,42 +447,49 @@
         </RelativeLayout>
 
         <!-- 操作 -->
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/rl_operation"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginLeft="51dp"
-            android:layout_marginRight="51dp"
-            android:layout_marginTop="40dp"
-            android:layout_weight="1">
+            android:layout_height="58dp"
+            android:background="@color/photoalbum_title_bg_color"
+            android:gravity="center">
 
-            <Button
-                android:id="@+id/btn_download"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_photoalbum_download"/>
-
-            <Button
+            <ImageView
                 android:id="@+id/btn_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:background="@drawable/btn_photoalum_delete"/>
+        </LinearLayout>
 
-            <Button
-                android:id="@+id/btn_vt_play"
+        <!-- 编辑视频 -->
+        <LinearLayout
+            android:id="@+id/ll_start_videoedit"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_alignParentBottom="true"
+            android:background="@drawable/btn_start_ae_bg"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_vt_pause"/>
-        </RelativeLayout>
+                android:src="@drawable/icon_edit"/>
+
+            <TextView
+                android:id="@+id/tv_start_videoedit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:gravity="center"
+                android:text="@string/str_edit_short_video"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+        </LinearLayout>
 
     </LinearLayout>
-
 
     <TextView
         android:id="@+id/tv_t3_hint"
@@ -475,32 +501,6 @@
         android:gravity="center"
         android:text="@string/stop_play_remote"
         android:visibility="gone"/>
-
-    <LinearLayout
-        android:id="@+id/ll_start_videoedit"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/btn_start_ae_bg"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/icon_edit"/>
-
-        <TextView
-            android:id="@+id/tv_start_videoedit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:gravity="center"
-            android:text="@string/str_edit_short_video"
-            android:textColor="#ffffff"
-            android:textSize="16sp"/>
-    </LinearLayout>
 
     <ViewStub
         android:id="@+id/stub_resolution_hud"

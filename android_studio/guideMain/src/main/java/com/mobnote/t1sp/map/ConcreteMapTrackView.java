@@ -41,6 +41,8 @@ import com.baidu.mapapi.utils.CoordinateConverter;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 
+import net.sf.marineapi.bean.GPSData;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -229,11 +231,11 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
             mBaiduMap.animateMapStatus(u);
         }
 
-        if (isFirstCarLoc) {
-            isFirstCarLoc = false;
-            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-            mBaiduMap.animateMapStatus(u);
-        }
+//        if (isFirstCarLoc) {
+//            isFirstCarLoc = false;
+//            MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
+//            mBaiduMap.animateMapStatus(u);
+//        }
 
         if (connectLine && prell != null) {
             if ((Math.abs(ll.latitude - prell.latitude) < THRESHOLD_VALUE

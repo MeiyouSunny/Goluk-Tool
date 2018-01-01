@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import net.sf.marineapi.bean.GPSData;
+
 import java.util.List;
 
 public abstract class MapTrackView extends RelativeLayout {
