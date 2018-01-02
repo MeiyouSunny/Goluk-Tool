@@ -1,14 +1,14 @@
 package cn.com.tiros.location;
 
-import cn.com.tiros.api.Const;
-import cn.com.tiros.baidu.BaiduLocation;
-import cn.com.tiros.baidu.BaiduLocationInfo;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+
+import cn.com.tiros.api.Const;
+import cn.com.tiros.baidu.BaiduLocation;
+import cn.com.tiros.baidu.BaiduLocationInfo;
 
 public class UseBaidu implements BDLocationListener {
 
@@ -72,11 +72,6 @@ public class UseBaidu implements BDLocationListener {
 		final String province = location.getProvince();
 		final String street = location.getStreet();
 		final String district = location.getDistrict();
-
-		if (lat <= 0 || lon <= 0) {
-			lat = BaiduLocation.TIANANMEN_LAT;
-			lon = BaiduLocation.TIANANMEN_LON;
-		}
 
 		if (lat == BaiduLocation.INVALID || lon == BaiduLocation.INVALID) {
 			lat = BaiduLocation.TIANANMEN_LAT;

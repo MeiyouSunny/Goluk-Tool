@@ -15,7 +15,7 @@ public class BaiduLocation implements PostMessageInterface {
 	public static final double TIANANMEN_LON = 116.403918;
 
 	/** 定位时间间隔 */
-	public static final int LOCATION_TIMER = 30000;
+	public static final int LOCATION_TIMER = 3000;
 	/** 定位距离间隔 */
 	public static final int LOCATION_DISTANCE = 0;
 

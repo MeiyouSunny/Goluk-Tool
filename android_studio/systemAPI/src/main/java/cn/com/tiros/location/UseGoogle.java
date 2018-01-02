@@ -75,11 +75,6 @@ public class UseGoogle implements LocationListener {
 		final float direction = location.getBearing();// 获取方向
 		float radius = location.getAccuracy();// 获取半径
 
-		if (lat <= 0 || lng <= 0) {
-			lat = BaiduLocation.TIANANMEN_LAT;
-			lng = BaiduLocation.TIANANMEN_LON;
-		}
-
 		if (lat == BaiduLocation.INVALID || lng == BaiduLocation.INVALID) {
 			lat = BaiduLocation.TIANANMEN_LAT;
 			lng = BaiduLocation.TIANANMEN_LON;
