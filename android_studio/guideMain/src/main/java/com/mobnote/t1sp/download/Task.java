@@ -15,6 +15,20 @@ public class Task {
         this.savePath = savePath;
     }
 
+    public String getGpsDownloadPath() {
+        if (downloadPath != null)
+            return downloadPath.replace("MP4", "NMEA");
+
+        return "";
+    }
+
+    public String getGpsSavePath() {
+        if (savePath != null)
+            return savePath.replace("MP4", "NMEA");
+
+        return "";
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -9,7 +9,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -21,7 +20,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.ViewStub;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -30,14 +28,12 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
@@ -67,8 +63,6 @@ import com.mobnote.t1sp.util.GpsUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
-import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
 import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.veuisdk.SdkEntry;
 import com.rd.veuisdk.SdkService;
@@ -87,7 +81,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 import static com.rd.veuisdk.SdkEntry.editMedia;
@@ -155,12 +148,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private TextView mTvT3Hint;
     private LinearLayout mStartVideoeditLl;
 
-    private ViewStub mResolutionHUDViewStub;
-
     private TextView mResolutionTV;
-    private PopupWindow mResolutionPopupWindow;
-    private TextView mOriginResolutionTV; //原始码流的分辨率
-    private TextView mMicroResolutionTV; //微码流的分辨率
 
     /**
      * 加载中布局
@@ -181,24 +169,12 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     // 轨迹数据
     private List<GPSData> mGpsList;
 
-    /**
-     * 加载中动画对象
-     */
-    //private AnimationDrawable mAnimationDrawable = null;
-    /**
-     * 自动隐藏顶部和底部View的时间
-     */
+    /* 自动隐藏顶部和底部View的时间 */
     private static final int HIDE_TIME = 3000;
     private boolean mDragging;
     private OrientationManager mOrignManager = null;
     private AddTailerDialogFragment mAddTailerDialog;
 
-    /**
-     * 是否正在使用微码流
-     */
-    private boolean mIsUsingMicro;
-
-    private boolean isExporting;
     private String mExportedFilename;
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
@@ -252,15 +228,15 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         RelativeLayout mapParent = (RelativeLayout) findViewById(R.id.tarck_map_parent_view);
         mapParent.addView(mMapTrackView);
 
-        gpsDataTest();
+        loadGpsData();
     }
 
-    private void gpsDataTest() {
-        String path = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "EMER161031-162633F.NMEA";
-        File gpsFile = new File(path);
+    private void loadGpsData() {
+        String gpsPath = mPath.replace("MP4", "NMEA");
+        File gpsFile = new File(gpsPath);
         if (gpsFile.exists()) {
             T1spGpsTask gpsTask = new T1spGpsTask(this);
-            gpsTask.execute(path);
+            gpsTask.execute(gpsPath);
         }
     }
 
@@ -285,50 +261,17 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         registerAllResultHandlers();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        initData(intent.getExtras());
-        loadMedia();
-    }
-
     private void startPlay() {
         if (!TextUtils.isEmpty(mMicroVideoUrl)) {
             mVideoView.setVideoPath(mMicroVideoUrl);
-            mIsUsingMicro = true;
             mResolutionTV.setText(MICRO_RESOLUTION);
-            XLog.i("start with microSolution");
         } else {
             mVideoView.setVideoPath(mVideoUrl);
-            mIsUsingMicro = false;
             mResolutionTV.setText(mHP);
-            XLog.i("start with originSolution");
         }
         showLoading();
         mVideoView.requestFocus();
         mVideoView.start();
-    }
-
-    private void changeResolution(boolean playMicro) {
-        if (mIsUsingMicro == playMicro) {
-            // if curr resolution equals changeTo resolution， do nothing
-            return;
-        }
-        if (playMicro) {
-            mVideoView.setVideoPath(mMicroVideoUrl);
-            mIsUsingMicro = true;
-            mResolutionTV.setText(MICRO_RESOLUTION);
-            XLog.i("change 2 microSolution");
-        } else {
-            mVideoView.setVideoPath(mVideoUrl);
-            mIsUsingMicro = false;
-            mResolutionTV.setText(mHP);
-            XLog.i("change 2 originSolution");
-        }
-        mVideoView.requestFocus();
-        if (mVideoView.isPlaying()) {
-            mVideoView.start();
-        }
     }
 
     private void initData(Bundle savedInstanceState) {
@@ -339,7 +282,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mHP = intent.getStringExtra(HP);
             mPath = intent.getStringExtra(PATH);
             mVideoUrl = mPath;
-            Log.i("path", "path:" + mPath);
             mVideoFrom = intent.getStringExtra(VIDEO_FROM);
             mSize = intent.getStringExtra(SIZE);
             mFileName = intent.getStringExtra(FILENAME);
@@ -371,26 +313,18 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
             } else if (event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FINISH) {
 
-                isExporting = false;
-                //竖屏播放页访问即刻分享页面统计
-                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-
                 GolukUtils.startVideoShareActivity(this, mType, event.getExportPath(), mExportedFilename,
                         true, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if (mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
                     mAddTailerDialog.dismissAllowingStateLoss();
                 }
             } else if (event.getExportStatus() == EventAddTailer.EXPORT_STATUS_FAILED) {
-                //竖屏播放页访问即刻分享页面统计
-                ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
-
                 //导出失败，则直接分享原视频
                 GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
                         false, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if (mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
                     mAddTailerDialog.dismissAllowingStateLoss();
                 }
-                isExporting = false;
             }
         }
     }
@@ -431,21 +365,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         }
         mHandler.post(mProgressChecker);
         mHandler.post(mPlayingChecker);
-
-        /**
-         * if it`is the first time show the page, show the resolution HUD
-         */
-        if (!SharedPrefUtil.getIsShowedResolutionHud() && !TextUtils.isEmpty(mMicroVideoUrl)) {
-            mResolutionHUDViewStub = (ViewStub) findViewById(R.id.stub_resolution_hud);
-            View view = mResolutionHUDViewStub.inflate();
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    mResolutionHUDViewStub.setVisibility(View.GONE);
-                }
-            });
-            SharedPrefUtil.setIsShowedResolutionHud(true);
-        }
     }
 
     private boolean mResume = false;
@@ -464,7 +383,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         mVideoView.stopPlayback();
-        GolukDebugUtils.e("", "jyf----VideoPlayerActivity--------onDestroy----");
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
@@ -484,6 +402,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mAddTailerDialog.dismissAllowingStateLoss();
         }
         mAddTailerDialog = null;
+
+        if (mGpsList != null)
+            mGpsList.clear();
 
         super.onDestroy();
     }
@@ -532,7 +453,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
 
-        mResolutionTV.setOnClickListener(this);
         mBtnDelete.setOnClickListener(this);
         mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
@@ -542,12 +462,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mStartVideoeditLl.setVisibility(View.GONE);
         }
 
-        if (mVideoFrom.equals("local")) {
-            if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG || mType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-            } else {
-            }
-        } else {
-        }
         mVideoViewLayout = (RelativeLayout) findViewById(R.id.rv_video_player);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
         lp.width = mScreenWidth;
@@ -560,16 +474,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         mVideoView.setOnCompletionListener(this);
         mVideoView.setOnTouchListener(mVideoTouchListener);
 
-        if (mVideoFrom.equals("local")) {
-            /** 如果是本地循环视频，不显示分享按钮，但要显示编辑按钮 */
-            if (!TextUtils.isEmpty(mFileName) && mFileName.startsWith("NRM")) {
-                mTvShareRightnow.setVisibility(View.GONE);
-                mStartVideoeditLl.setVisibility(View.VISIBLE);
-            }
-        } else {
-            mStartVideoeditLl.setVisibility(View.GONE);
-            mTvShareRightnow.setVisibility(View.GONE);
-        }
+        mStartVideoeditLl.setVisibility(View.VISIBLE);
         mTvT3Hint = (TextView) findViewById(R.id.tv_t3_hint);
         if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && mVideoFrom.equals("ipc") && GolukApplication.getInstance().getIPCControlManager().needShowT3Hint()) {
             mTvT3Hint.setVisibility(View.VISIBLE);
@@ -663,14 +568,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
      * @param bFull true:全屏　false:普通
      */
     public void setFullScreen(boolean isAuto, boolean bFull) {
-        if (mResolutionHUDViewStub != null) {
-            mResolutionHUDViewStub.setVisibility(View.GONE);
-        }
-        if (mResolutionPopupWindow != null && mResolutionPopupWindow.isShowing()) {
-            mResolutionPopupWindow.dismiss();
-        }
         if (bFull == mIsFullScreen) {
-            // GolukUtils.showToast(this, "已处于全屏状态.");
             return;
         }
         if (bFull) {
@@ -708,11 +606,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             lp.leftMargin = 0;
             //lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
-            if (!mVideoFrom.equals("local")) {
-                mStartVideoeditLl.setVisibility(View.GONE);
-            } else {
-                mStartVideoeditLl.setVisibility(View.VISIBLE);
-            }
+            mStartVideoeditLl.setVisibility(View.VISIBLE);
             mLayoutTitle.setVisibility(View.VISIBLE);
             mLayoutGpsInfo.setVisibility(View.VISIBLE);
             mLayoutMap.setVisibility(View.VISIBLE);
@@ -749,8 +643,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
                         if (!GolukApplication.getInstance().getIpcIsLogin()) {
                             GolukUtils.showToast(PhotoAlbumPlayerT1SP.this, PhotoAlbumPlayerT1SP.this.getResources().getString(R.string.str_photo_check_ipc_state));
                         } else {
-                            //相册详情页面-删除视频
-                            ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayerT1SP.this);
                             EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
                             GolukUtils.showToast(PhotoAlbumPlayerT1SP.this, PhotoAlbumPlayerT1SP.this.getResources().getString(R.string.str_photo_delete_ok));
                         }
@@ -760,8 +652,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
                         GolukUtils.showToast(PhotoAlbumPlayerT1SP.this, PhotoAlbumPlayerT1SP.this.getResources().getString(R.string.str_photo_downing));
                     }
                 } else {
-                    //相册详情页面-删除视频
-                    ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayerT1SP.this);
                     EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
                     GolukUtils.showToast(PhotoAlbumPlayerT1SP.this, PhotoAlbumPlayerT1SP.this.getResources().getString(R.string.str_photo_delete_ok));
                     PhotoAlbumPlayerT1SP.this.finish();

@@ -338,7 +338,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     }
 
     private int getVideoType(String name) {
-        if (name.contains("WND") || name.contains(FileUtil.LOOP_VIDEO_PREFIX)) {
+        if (name.contains("WND") || name.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
             return 1;
         } else if (name.contains("URG") || name.contains(FileUtil.URGENT_VIDEO_PREFIX)) {
             return 2;

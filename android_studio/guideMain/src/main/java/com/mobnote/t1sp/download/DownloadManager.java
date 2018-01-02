@@ -13,7 +13,6 @@ import org.succlz123.okdownload.OkDownloadCancelListener;
 import org.succlz123.okdownload.OkDownloadEnqueueListener;
 import org.succlz123.okdownload.OkDownloadError;
 import org.succlz123.okdownload.OkDownloadRequest;
-import org.succlz123.okdownload.OkDownloadTask;
 
 import java.io.File;
 import java.util.List;
@@ -54,6 +53,10 @@ public class DownloadManager {
         return sInstance;
     }
 
+    public void enqueue(OkDownloadRequest okDownloadRequest) {
+        enqueue(okDownloadRequest, null);
+    }
+
     public void enqueue(OkDownloadRequest okDownloadRequest, OkDownloadEnqueueListener okDownloadEnqueueListener) {
         if (okDownloadRequest.getOkHttpClient() != null) {
             mOkHttpClient = okDownloadRequest.getOkHttpClient();
@@ -71,28 +74,6 @@ public class DownloadManager {
         }
 
         onStart(mOkDownloadRequest, mOkDownloadEnqueueListener);
-
-//        List<OkDownloadRequest> requestList = mDatabaseHelp.execQuery("url", mOkDownloadRequest.getUrl());
-//
-//        if (requestList.size() > 0) {
-//            OkDownloadRequest queryRequest = requestList.get(0);
-//
-//            switch (queryRequest.getStatus()) {
-//                case OkDownloadStatus.START:
-//                    onPause(queryRequest, mOkDownloadEnqueueListener);
-//                    break;
-//                case OkDownloadStatus.PAUSE:
-//                    onStart(queryRequest, mOkDownloadEnqueueListener);
-//                    break;
-//                case OkDownloadStatus.FINISH:
-//                    mOkDownloadEnqueueListener.onError(new OkDownloadError(OkDownloadError.DOWNLOAD_REQUEST_IS_COMPLETE));
-//                    break;
-//                default:
-//                    break;
-//            }
-//        } else {
-//            onStart(mOkDownloadRequest, mOkDownloadEnqueueListener);
-//        }
     }
 
     public void onStart(OkDownloadRequest okDownloadRequest, OkDownloadEnqueueListener listener) {

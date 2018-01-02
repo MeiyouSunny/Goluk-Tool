@@ -94,8 +94,11 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
      */
     private void startNextTask() {
         Task task = mListTotal.get(mListDownloaded.size());
-        // 如果文件已经存在
         mCurrentFile = new File(task.savePath);
+
+        // 下载对应的GPS文件
+        downloadGpsFile(task);
+        // 如果文件已经存在
         if (mCurrentFile.exists()) {
             checkDownloadListProgress();
         } else {
@@ -109,6 +112,18 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
         }
 
         //updateUiDownloadCount();
+    }
+
+    private void downloadGpsFile(Task task) {
+        File gpsFile = new File(task.getGpsSavePath());
+        if (!gpsFile.exists()) {
+            gpsFile.getParentFile().mkdirs();
+            OkDownloadRequest request = new OkDownloadRequest.Builder()
+                    .url(task.getGpsDownloadPath())
+                    .filePath(task.getGpsSavePath())
+                    .build();
+            mDownloadManager.enqueue(request);
+        }
     }
 
     @Override

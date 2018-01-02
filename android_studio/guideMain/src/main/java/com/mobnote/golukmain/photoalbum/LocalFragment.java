@@ -268,9 +268,31 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                     return;
                 }
             }
+
+            // T1SP的紧急视频或循环视频,跳转到PhotoAlbumPlayerT1SP(需要播放轨迹)
+            if(isT1spVideoAndHaveGpsFile(path)) {
+                GolukUtils.startPhotoAlbumPlayerT1spActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
+                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
+                return;
+            }
+            // 其他视频文件
             GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
                     (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
         }
+    }
+
+    /**
+     * T1SP的紧急视频或循环视频并且包含GPS文件
+     */
+    private boolean isT1spVideoAndHaveGpsFile(String path) {
+        int type = getVideoType(path);
+        if(path.contains(FileUtil.URGENT_VIDEO_PREFIX) ||
+                path.contains(FileUtil.LOOP_VIDEO_PREFIX)) {
+            String gpsPath = path.replace("MP4", "NMEA");
+            File gpsFile = new File(gpsPath);
+            return gpsFile.exists();
+        }
+        return false;
     }
 
     public int getVideoType(String name) {
