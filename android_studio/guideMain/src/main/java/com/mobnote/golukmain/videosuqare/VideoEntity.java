@@ -1,10 +1,10 @@
 package com.mobnote.golukmain.videosuqare;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 import com.mobnote.golukmain.newest.CommentDataInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -23,6 +23,8 @@ public class VideoEntity {
 	public String type;
 	/** 视频上传时间 视频分享时间 */
 	public String sharingtime;
+	/* 标准时间戳 */
+	public long sharingts;
 	/** 视频描述 */
 	public String describe;
 	/** 视频图片 */

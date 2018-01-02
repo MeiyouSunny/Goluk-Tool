@@ -1,12 +1,5 @@
 package com.mobnote.golukmain.newest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 import com.mobnote.golukmain.cluster.bean.UserLabelBean;
 import com.mobnote.golukmain.videosuqare.LiveVideoData;
@@ -14,6 +7,13 @@ import com.mobnote.golukmain.videosuqare.UserEntity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoExtra;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JsonParserUtils {
 
@@ -179,6 +179,7 @@ public class JsonParserUtils {
 					mVideoEntity.videoid = video.optString("videoid");
 					mVideoEntity.type = video.optString("type");
 					mVideoEntity.sharingtime = video.optString("sharingtime");
+					mVideoEntity.sharingts = video.optLong("sharingts");
 					mVideoEntity.describe = video.optString("describe");
 					mVideoEntity.picture = video.optString("picture");
 					mVideoEntity.clicknumber = video.optString("clicknumber");

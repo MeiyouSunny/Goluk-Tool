@@ -1,19 +1,6 @@
 package com.mobnote.golukmain.videodetail;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.comment.CommentBean;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -22,6 +9,17 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.comment.CommentBean;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoDetailAdapter extends BaseAdapter {
@@ -188,7 +186,7 @@ public class VideoDetailAdapter extends BaseAdapter {
 			commentHolder.mCommentConennt.setText(temp.mCommentTxt);
 		}
 
-		commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTime));
+		commentHolder.mCommentTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTs));
 		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			commentHolder.nTextCommentFloor.setVisibility(View.VISIBLE);
 			commentHolder.nTextCommentFloor.setText(mContext.getString(R.string.str_floor_text, temp.mSeq));

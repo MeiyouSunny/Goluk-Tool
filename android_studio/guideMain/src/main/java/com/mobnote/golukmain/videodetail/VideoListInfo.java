@@ -11,6 +11,8 @@ public class VideoListInfo {
 	public String text;
 	@JSONField(name="time")
 	public String time;
+	@JSONField(name="ts")
+	public long ts;
 	@JSONField(name="authorid")
 	public String authorid;
 	@JSONField(name="commentid")

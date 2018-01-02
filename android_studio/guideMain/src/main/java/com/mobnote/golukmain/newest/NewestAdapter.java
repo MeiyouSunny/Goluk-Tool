@@ -1,18 +1,5 @@
 package com.mobnote.golukmain.newest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.videosuqare.CategoryListView;
-import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.view.FlowLayout;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -29,6 +16,19 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.live.ILive;
+import com.mobnote.golukmain.videosuqare.CategoryListView;
+import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.view.FlowLayout;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NewestAdapter extends BaseAdapter {
     private Context mContext = null;
@@ -283,7 +283,7 @@ public class NewestAdapter extends BaseAdapter {
         holder.nikename.setText(mVideoSquareInfo.mUserEntity.nickname);
 
         holder.timeLocation.setText(GolukUtils.getCommentShowFormatTime(mContext,
-                mVideoSquareInfo.mVideoEntity.sharingtime) + " " + mVideoSquareInfo.mVideoEntity.location);
+                mVideoSquareInfo.mVideoEntity.sharingts) + " " + mVideoSquareInfo.mVideoEntity.location);
 
         if (null != mVideoSquareInfo.mVideoEntity.videoExtra) {
             String recommend = mVideoSquareInfo.mVideoEntity.videoExtra.isrecommend;
@@ -496,7 +496,7 @@ public class NewestAdapter extends BaseAdapter {
                 TextView mUpdateTime = (TextView) item.findViewById(R.id.mUpdateTime);
                 ImageView mImageView = (ImageView) item.findViewById(R.id.mImageView);
                 mTitleName.setText(mCategoryDataInfo.name);
-                mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mContext, mCategoryDataInfo.time));
+                mUpdateTime.setText(GolukUtils.getNewCategoryShowTime(mContext, mCategoryDataInfo.ts));
                 RelativeLayout.LayoutParams dvParams = new RelativeLayout.LayoutParams(imagewidth, imageheight);
                 mImageView.setLayoutParams(dvParams);
                 loadHeadImage(mImageView, mCategoryDataInfo.coverurl, imagewidth, imageheight);

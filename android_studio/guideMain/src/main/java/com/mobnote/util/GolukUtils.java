@@ -566,6 +566,10 @@ public class GolukUtils {
         return time;
     }
 
+    public static String getCommentShowFormatTime(Context context, long time) {
+        return getCommentShowFormatTime(context, parseMillesToTimeStr(time));
+    }
+
     /**
      * 获取评论列表显示时间规则()
      *
@@ -575,6 +579,9 @@ public class GolukUtils {
      * @date 2015年8月7日
      */
     public static String getCommentShowFormatTime(Context context, String time) {
+        if(TextUtils.isEmpty(time))
+            return "";
+
         try {
             String result = formatTimeYMDHMS(time);
             SimpleDateFormat formatter = new SimpleDateFormat(
@@ -675,6 +682,12 @@ public class GolukUtils {
             number = "" + fmtnumber;
         }
         return number;
+    }
+
+    public static String getNewCategoryShowTime(Context context, long timeMilles) {
+        Date date = new Date(timeMilles);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return getNewCategoryShowTime(context, formatter.format(date));
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -1143,21 +1156,22 @@ public class GolukUtils {
 
     /**
      * 判断用户是否是当前登录用户
+     *
      * @param userId
      * @return
      */
-    public static boolean isLoginUser(String userId){
-        if(!GolukApplication.getInstance().isUserLoginToServerSuccess() || GolukApplication.getInstance().getMyInfo() == null){
+    public static boolean isLoginUser(String userId) {
+        if (!GolukApplication.getInstance().isUserLoginToServerSuccess() || GolukApplication.getInstance().getMyInfo() == null) {
             return false;
         }
-        if(TextUtils.isEmpty(userId)){
+        if (TextUtils.isEmpty(userId)) {
             return false;
         }
         String currLoginUserId = GolukApplication.getInstance().getMyInfo().uid;
-        if(TextUtils.isEmpty(currLoginUserId)){
+        if (TextUtils.isEmpty(currLoginUserId)) {
             return false;
         }
-        if(!userId.equals(currLoginUserId)){
+        if (!userId.equals(currLoginUserId)) {
             return false;
         }
         return true;
@@ -1292,7 +1306,7 @@ public class GolukUtils {
      * @param mSettingData
      * @param userInfo
      */
-    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue,String mVid , LiveSettingBean mSettingData, UserInfo userInfo) {
+    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue, String mVid, LiveSettingBean mSettingData, UserInfo userInfo) {
         Intent intent = null;
         String activityNameStr = "";
         activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
@@ -1315,7 +1329,7 @@ public class GolukUtils {
             intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
             intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
             mContext.startActivity(intent);
-            ((Activity)mContext).finish();
+            ((Activity) mContext).finish();
         }
     }
 
@@ -1479,7 +1493,7 @@ public class GolukUtils {
     }
 
     public static void startTagActivity(Context context, String topicId, String topicName, int topicType) {
-        if(TextUtils.isEmpty(topicId)) {
+        if (TextUtils.isEmpty(topicId)) {
             return;
         }
         Intent intent = new Intent(context, ClusterActivity.class);
@@ -1490,20 +1504,20 @@ public class GolukUtils {
     }
 
     public static void addTagsViews(final Context context, List<TagTagsBean> tagsList, FlowLayout flowLayout) {
-        if(null == flowLayout) {
+        if (null == flowLayout) {
             return;
         }
 
-        if(null == context || null == tagsList) {
+        if (null == context || null == tagsList) {
             flowLayout.setVisibility(View.GONE);
             return;
         }
 
-        if(tagsList.size() > 0) {
+        if (tagsList.size() > 0) {
             flowLayout.removeAllViews();
-            for(int i = 0; i < tagsList.size(); i++) {
+            for (int i = 0; i < tagsList.size(); i++) {
                 final TagTagsBean tagsBean = tagsList.get(i);
-                if(null == tagsBean) {
+                if (null == tagsBean) {
                     continue;
                 }
                 TextView tagTV = new TextView(context);
@@ -1536,7 +1550,7 @@ public class GolukUtils {
         if (wifiInfo != null && !TextUtils.isEmpty(wifiInfo.getSSID())) {
             String currSSID = wifiInfo.getSSID().toLowerCase();
             if (!TextUtils.isEmpty(currSSID) && currSSID.contains("\"")) {
-                currSSID = currSSID.replaceAll("\"","");
+                currSSID = currSSID.replaceAll("\"", "");
             }
             if (currSSID.startsWith("goluk_t")) {
                 return true;
@@ -1544,4 +1558,17 @@ public class GolukUtils {
         }
         return false;
     }
+
+    /**
+     * 时间戳转换为 yyyyMMddHHmmssSSS
+     */
+    public static String parseMillesToTimeStr(long timeMilles) {
+        if(timeMilles <= 0)
+            return "";
+
+        Date date = new Date(timeMilles);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+        return formatter.format(date);
+    }
+
 }

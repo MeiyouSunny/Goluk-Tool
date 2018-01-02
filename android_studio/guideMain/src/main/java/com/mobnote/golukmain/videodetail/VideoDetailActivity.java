@@ -78,7 +78,6 @@ import com.mobnote.util.ZhugeUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
-import com.umeng.socialize.utils.Log;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONArray;
@@ -1164,6 +1163,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                         bean.mSeq = item.seq;
                         bean.mCommentId = item.commentId;
                         bean.mCommentTime = item.time;
+                        bean.mCommentTs = item.ts;
                         bean.mCommentTxt = item.text;
                         if (item.reply != null) {
                             bean.mReplyId = item.reply.id;

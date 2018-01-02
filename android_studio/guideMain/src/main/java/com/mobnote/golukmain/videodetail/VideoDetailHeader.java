@@ -214,7 +214,7 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
 		}
 
 		mTextName.setText(videoDetailDataBean.avideo.user.nickname);
-		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, videoDetailDataBean.avideo.video.sharingtime));
+		mTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, videoDetailDataBean.avideo.video.sharingts));
 		// 点赞数、评论数、观看数
 		mTextLook.setText(GolukUtils.getFormatNumber(videoDetailDataBean.avideo.video.clicknumber)
 				+ mContext.getString(R.string.cluster_weiguan));

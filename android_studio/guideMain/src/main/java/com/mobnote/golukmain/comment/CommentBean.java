@@ -7,6 +7,8 @@ public class CommentBean {
 	public String mCommentTxt;
 	/** 评论时间 */
 	public String mCommentTime;
+	/** 标准时区时间戳 */
+	public long mCommentTs;
 
 	/** 评论人uid */
 	public String mUserId;

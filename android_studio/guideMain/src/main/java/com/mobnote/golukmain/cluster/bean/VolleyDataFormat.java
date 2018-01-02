@@ -1,14 +1,14 @@
 package com.mobnote.golukmain.cluster.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.mobnote.golukmain.newest.CommentDataInfo;
 import com.mobnote.golukmain.videosuqare.LiveVideoData;
 import com.mobnote.golukmain.videosuqare.UserEntity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoExtra;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class VolleyDataFormat {
 
@@ -50,6 +50,7 @@ public class VolleyDataFormat {
                     mVideoEntity.videoid = video.videoid;
                     mVideoEntity.type = video.type;
                     mVideoEntity.sharingtime = video.sharingtime;
+
                     mVideoEntity.describe = video.describe;
                     mVideoEntity.picture = video.picture;
                     mVideoEntity.clicknumber = video.clicknumber;
