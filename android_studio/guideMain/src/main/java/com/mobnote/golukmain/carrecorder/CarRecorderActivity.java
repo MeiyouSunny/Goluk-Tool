@@ -2,17 +2,12 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.AnimationDrawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -34,15 +29,11 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
-import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.BuildConfig;
-import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.entity.VideoFileInfo;
@@ -57,21 +48,17 @@ import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.livevideo.StartLiveActivity;
-import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.videosuqare.RingView;
-import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
-import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
@@ -96,7 +83,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -110,11 +96,9 @@ import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-
-import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.ACTION_GO_To_ALBUM;
-import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.isWifiConnected;
 
 /**
  * 行车记录仪处理类
@@ -415,6 +399,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mLocationAddress = com.mobnote.util.GolukFileUtils.loadString("loactionAddress", "");
 
         EventBus.getDefault().register(this);
+        // 获取位置信息
+        BaiduLocation.getInstance().getLastKnowLocation();
 
         mHandler = new Handler() {
             public void handleMessage(final android.os.Message msg) {
@@ -481,6 +467,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         super.onNewIntent(intent);
         ipcState = mApp.mWiFiStatus;
         initIpcState(ipcState);// 初始化ipc的连接状态
+        // 获取位置信息
+        BaiduLocation.getInstance().getLastKnowLocation();
     }
 
     /**
@@ -815,7 +803,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
 
-
                 mVideoConfigState = GolukApplication.getInstance().getVideoConfigState();
                 if (IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
                         || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {//T1
@@ -831,7 +818,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         isRecVideo = false;
                     }
                 }
-
 
                 if (isRecVideo == false) {
                     mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
@@ -855,7 +841,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_RTSP_REVIEW)
                 .addLogData(JsonUtil.getReportData("CarRecorderActivity", "rtsp", msg));
     }
-
 
     /**
      * 隐藏播放器
@@ -1483,6 +1468,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             mExitAlertDialog = null;
         }
         super.onDestroy();
+
+        // 停止定位
+        BaiduLocation.getInstance().stopLocation();
     }
 
     /**
@@ -2170,7 +2158,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
                             imagename = mNowDownloadName.replace("mp4", "jpg");
 
-
                             if (filename.equals(imagename)) {
                                 VideoShareInfo vsi = new VideoShareInfo();
                                 vsi.setName(filename.replace("jpg", "mp4"));
@@ -2550,7 +2537,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mLocationLon = eventShortLocationFinish.getLon();
         mLocationLat = eventShortLocationFinish.getLat();
     }
-
 
     public void onEventMainThread(EventHotSpotSuccess eventShortLocationFinish) {
         mIsLive = true;

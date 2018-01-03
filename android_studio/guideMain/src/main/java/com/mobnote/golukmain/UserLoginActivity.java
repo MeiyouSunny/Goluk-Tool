@@ -1,29 +1,5 @@
 package com.mobnote.golukmain;
 
-import java.util.HashMap;
-import java.util.List;
-
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventLoginSuccess;
-import com.mobnote.eventbus.EventMessageUpdate;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.profit.MyProfitActivity;
-import com.mobnote.golukmain.thirdlogin.ThirdPlatformLoginUtil;
-import com.mobnote.golukmain.thirdlogin.ThirdUserInfoGet;
-import com.mobnote.user.ThirdLoginInfo;
-import com.mobnote.user.UserLoginInterface;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukFileUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
-import com.umeng.socialize.UMShareAPI;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -49,10 +25,27 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import cn.com.mobnote.eventbus.EventShortLocationFinish;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventLoginSuccess;
+import com.mobnote.eventbus.EventMessageUpdate;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.thirdlogin.ThirdPlatformLoginUtil;
+import com.mobnote.golukmain.thirdlogin.ThirdUserInfoGet;
+import com.mobnote.user.UserLoginInterface;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukFileUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.HashMap;
+import java.util.List;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
