@@ -507,7 +507,7 @@ public class ClusterAdapter extends BaseAdapter implements OnTouchListener, IReq
             });
             holder.nikename.setText(clusterInfo.mUserEntity.nickname);
             final String sharingTime = GolukUtils.getCommentShowFormatTime(mContext,
-                    clusterInfo.mVideoEntity.sharingtime);
+                    clusterInfo.mVideoEntity.sharingts);
             final String location = clusterInfo.mVideoEntity.location;
             String showTimeLocation = sharingTime;
             if (null != location) {

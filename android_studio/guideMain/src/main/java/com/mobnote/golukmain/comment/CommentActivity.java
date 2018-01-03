@@ -668,6 +668,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 					bean.mSeq = item.seq;
 					bean.mCommentId = item.commentId;
 					bean.mCommentTime = item.time;
+					bean.mCommentTs = item.ts;
 					bean.mCommentTxt = String.valueOf(item.text);
 					if (item.reply != null) {
 						bean.mReplyId = item.reply.id;
@@ -744,6 +745,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 				}
 
 				bean.mCommentTime = GolukUtils.getCurrentCommentTime();
+				bean.mCommentTs = System.currentTimeMillis();
 				if (!"".equals(bean.result)) {
 					if ("0".equals(bean.result)) {// 成功
 						//评论视频

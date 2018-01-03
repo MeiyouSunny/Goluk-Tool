@@ -1,24 +1,20 @@
 package com.mobnote.golukmain.comment;
 
-import java.util.ArrayList;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+
+import java.util.ArrayList;
 
 public class CommentListViewAdapter extends BaseAdapter {
 	private LayoutInflater mLayoutFlater = null;
@@ -145,7 +141,7 @@ public class CommentListViewAdapter extends BaseAdapter {
 			holder.mContent.setText(temp.mCommentTxt);
 		}
 		// 设置显示时间
-		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTime));
+		holder.mTime.setText(GolukUtils.getCommentShowFormatTime(mContext, temp.mCommentTs));
 		if (null != temp.mSeq && !"".equals(temp.mSeq)) {
 			holder.nTextCommentFloor.setVisibility(View.VISIBLE);
 			holder.nTextCommentFloor.setText(mContext.getString(R.string.str_floor_text, temp.mSeq));

@@ -204,7 +204,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         }
     }
 
-    private void updateView(List<String> selectedListData){
+    private void updateView(List<String> selectedListData) {
         if (selectedListData.size() == 0) {
             mFragmentAlbum.updateTitleName(getActivity().getResources()
                     .getString(R.string.local_video_title_text));
@@ -217,11 +217,10 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         mFragmentAlbum.adaptCbAllText(selectedListData.size() != mDataList.size());
     }
 
-
-    public void allSelect(boolean selected){
+    public void allSelect(boolean selected) {
         List<String> selectedListData = mFragmentAlbum.getSelectedList();
         selectedListData.clear();
-        if(selected) {
+        if (selected) {
             for (DoubleVideoInfo doubleVideoInfo : mDoubleDataList) {
                 if (doubleVideoInfo.getVideoInfo1() != null) {
                     selectedListData.add(doubleVideoInfo.getVideoInfo1().videoPath);
@@ -234,7 +233,6 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         updateView(selectedListData);
         mWonderfulVideoAdapter.notifyDataSetChanged();
     }
-
 
     /**
      * 跳转到本地视频播放页面
@@ -296,7 +294,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             } else {
                 tempList.add(tag2);
             }
-            SdkEntry.onCustomizeAlbum(getContext(),tempList);
+            SdkEntry.onCustomizeAlbum(getContext(), tempList);
             getActivity().finish();
         } else if (mFragmentAlbum.getEditState()) {
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
@@ -351,6 +349,11 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         }
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        loadData(false);
+    }
 
     @Override
     public void onDestroy() {

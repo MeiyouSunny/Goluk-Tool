@@ -1,5 +1,10 @@
 package com.goluk.ipcsdk.utils;
 
+import com.goluk.ipcsdk.bean.VideoConfigState;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 
@@ -122,4 +127,24 @@ public class GolukUtils {
 
         return type;
     }
+
+	public static String getVideoConfig(VideoConfigState mVideoConfigState) {
+		try {
+			JSONArray array = new JSONArray();
+			JSONObject obj = new JSONObject();
+			obj.put("bitstreams", mVideoConfigState.bitstreams);
+			obj.put("frameRate", mVideoConfigState.frameRate);
+			obj.put("audioEnabled", mVideoConfigState.AudioEnabled);
+			obj.put("resolution", mVideoConfigState.resolution);
+			obj.put("bitrate", mVideoConfigState.bitrate);
+
+			array.put(obj);
+
+			return array.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
 }

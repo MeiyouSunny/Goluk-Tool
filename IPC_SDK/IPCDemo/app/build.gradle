@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 26
+    buildToolsVersion '27.0.0'
 
     defaultConfig {
         applicationId "com.goluk.ipcdemo"
         minSdkVersion 14
-        targetSdkVersion 22
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -29,9 +29,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
     compile 'joda-time:joda-time:2.9.4'
-//    compile project(':ipcsdk')
-    compile(name:'IPCSdk', ext:'aar')
-    compile files('libs/rebound-0.3.7.jar')
+//  compile project(':ipcsdk')
+    compile(name:'ipcsdk', ext:'aar')
+//  compile files('libs/rebound-0.3.7.jar')
     compile 'com.android.support:support-v4:22.0.0'
     compile 'com.android.support:appcompat-v7:22.0.0'
 }

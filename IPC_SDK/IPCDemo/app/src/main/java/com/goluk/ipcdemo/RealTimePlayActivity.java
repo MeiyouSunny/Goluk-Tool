@@ -1,5 +1,6 @@
 package com.goluk.ipcdemo;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
@@ -8,15 +9,15 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.VideoView;
 
 import com.goluk.ipcsdk.utils.GolukIPCUtils;
-import com.rd.car.player.RtspPlayerView;
 
 /**
  * Created by leege100 on 16/6/2.
  */
 public class RealTimePlayActivity extends FragmentActivity implements View.OnClickListener{
-    private RtspPlayerView mRtmpPlayerView;
+    private VideoView mRtmpPlayerView;
     private Button mPlayBt;
     private Button mStopBt;
     @Override
@@ -31,23 +32,23 @@ public class RealTimePlayActivity extends FragmentActivity implements View.OnCli
     @Override
     protected void onDestroy() {
         if(mRtmpPlayerView != null){
-            mRtmpPlayerView.cleanUp();
+            //mRtmpPlayerView.cleanUp();
             mRtmpPlayerView = null;
         }
         super.onDestroy();
     }
 
     private void initView() {
-        mRtmpPlayerView = (RtspPlayerView) findViewById(R.id.mRtspPlayerView);
+        mRtmpPlayerView = (VideoView) findViewById(R.id.mRtspPlayerView);
         mPlayBt = (Button) findViewById(R.id.bt_play);
         mStopBt = (Button) findViewById(R.id.bt_stop);
     }
 
     private void setupView() {
-        mRtmpPlayerView.setAudioMute(true);
+        //mRtmpPlayerView.setAudioMute(true);
         mRtmpPlayerView.setZOrderMediaOverlay(true);
-        mRtmpPlayerView.setBufferTime(1000);
-        mRtmpPlayerView.setConnectionTimeout(30000);
+        //mRtmpPlayerView.setBufferTime(1000);
+        //mRtmpPlayerView.setConnectionTimeout(30000);
         mRtmpPlayerView.setVisibility(View.VISIBLE);
         mRtmpPlayerView.setVisibility(View.VISIBLE);
 
@@ -67,7 +68,8 @@ public class RealTimePlayActivity extends FragmentActivity implements View.OnCli
         if (null != mRtmpPlayerView) {
             String url = GolukIPCUtils.getRtmpPreviewUrl();
             if(!TextUtils.isEmpty(url)){
-                mRtmpPlayerView.setDataSource(url);
+                //mRtmpPlayerView.setDataSource(url);
+                mRtmpPlayerView.setVideoURI(Uri.parse(url));
                 mRtmpPlayerView.start();
             }
         }

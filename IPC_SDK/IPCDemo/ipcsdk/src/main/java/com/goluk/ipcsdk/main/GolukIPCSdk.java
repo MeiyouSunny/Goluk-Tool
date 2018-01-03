@@ -33,6 +33,7 @@ import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.api.Const;
+import cn.com.tiros.api.IpcWifiManager;
 
 /**
  * Created by leege100 on 16/5/30.
@@ -46,13 +47,14 @@ public class GolukIPCSdk implements IPCManagerFn {
 
     private static GolukIPCSdk instance;
     private String mAppId;
+    private int mIpcMode;
 
     private boolean isIPCLogicInited;
     public static Context mAPPContext;
 
     private GolukIPCSdk() {
         System.loadLibrary("golukmobile");
-        System.loadLibrary("LiveCarRecorder");
+        //System.loadLibrary("LiveCarRecorder");
         initCachePath();
     }
 
@@ -63,16 +65,16 @@ public class GolukIPCSdk implements IPCManagerFn {
         return instance;
     }
 
-    public boolean isSdkValid(){
-        if(isIPCLogicInited && isAppAuthValid()){
+    public boolean isSdkValid() {
+        if (isIPCLogicInited && isAppAuthValid()) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
     public void addCommand(BaseIPCCommand command) {
-        if(isSdkValid()){
+        if (isSdkValid()) {
             this.mCommandList.add(command);
         }
     }
@@ -87,7 +89,7 @@ public class GolukIPCSdk implements IPCManagerFn {
         }
     }
 
-    public void initSDK(Context cxt, String appId,IPCInitListener listener) {
+    public void initSDK(Context cxt, String appId, IPCInitListener listener) {
 
         this.mAPPContext = cxt;
         this.mAppId = appId;
@@ -96,6 +98,9 @@ public class GolukIPCSdk implements IPCManagerFn {
         if (mCommandList == null) {
             mCommandList = new CopyOnWriteArrayList<BaseIPCCommand>();
         }
+
+        // Init WIfiManager
+        IpcWifiManager.init(cxt.getApplicationContext());
 
         initIPCLogic();
         new GetAuthAsyncTask(mAppId).execute();
@@ -106,13 +111,13 @@ public class GolukIPCSdk implements IPCManagerFn {
 
         SharedPreferences sharedPreferences = mAPPContext.getSharedPreferences("golukIPCSdk", Context.MODE_PRIVATE);
 
-        String startTime = sharedPreferences.getString("startTime","");
-        String endTime = sharedPreferences.getString("endTime","");
-        if(!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)){
+        String startTime = sharedPreferences.getString("startTime", "");
+        String endTime = sharedPreferences.getString("endTime", "");
+        if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
             Date startDate = getDate(startTime);
             Date endDate = getDate(endTime);
             Date currDate = new Date();
-            if(startDate.before(currDate) && endDate.after(currDate)){
+            if (startDate.before(currDate) && endDate.after(currDate)) {
                 return true;
             }
         }
@@ -121,16 +126,15 @@ public class GolukIPCSdk implements IPCManagerFn {
     }
 
     /**
-     *
      * @param dateStr
      * @return
      */
-    private Date getDate(String dateStr){
+    private Date getDate(String dateStr) {
         Date date = new Date();
         DateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmssSSS");
         try {
             date = sdf.parse(dateStr);
-            System.out.println(date.toString());
+            //System.out.println(date.toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,12 +152,12 @@ public class GolukIPCSdk implements IPCManagerFn {
         Const.setAppContext(mAPPContext);
 
         mGoluk = new GolukLogic();
-        setIpcMode(2);
+        setIpcMode(0);
 
         mGoluk.GolukLogicRegisterNotify(GolukModule.Goluk_Module_IPCManager, this);
 
-        if(mIPCInitListener != null){
-            mIPCInitListener.initCallback(true,"success");
+        if (mIPCInitListener != null) {
+            mIPCInitListener.initCallback(true, "success");
             mIPCInitListener = null;
         }
         isIPCLogicInited = true;
@@ -182,25 +186,24 @@ public class GolukIPCSdk implements IPCManagerFn {
         return this.carrecorderCachePath;
     }
 
-
-    private class GetAuthAsyncTask extends AsyncTask<Integer, Integer, String>{
+    private class GetAuthAsyncTask extends AsyncTask<Integer, Integer, String> {
 
         private String appId;
 
         /**
-         *
          * @param id
          */
-        public GetAuthAsyncTask(String id){
+        public GetAuthAsyncTask(String id) {
             this.appId = id;
         }
+
         @Override
         protected String doInBackground(Integer... params) {
             String postUrl = "https://s.goluk.cn/cdcGraph/open.htm";
-            Map<String,String> map = new HashMap<>();
-            map.put("method","appConfig");
-            map.put("xieyi","200");
-            map.put("appid",appId);
+            Map<String, String> map = new HashMap<>();
+            map.put("method", "appConfig");
+            map.put("xieyi", "200");
+            map.put("appid", appId);
 
             HttpURLConnection connection = null;
             URL url;
@@ -256,12 +259,13 @@ public class GolukIPCSdk implements IPCManagerFn {
             }
             return null;
         }
+
         @Override
         protected void onPostExecute(String result) {
             // TODO Auto-generated method stub
-            if(TextUtils.isEmpty(result)){
-                if(mIPCInitListener != null){
-                    mIPCInitListener.initCallback(isAppAuthValid(),result);
+            if (TextUtils.isEmpty(result)) {
+                if (mIPCInitListener != null) {
+                    mIPCInitListener.initCallback(isAppAuthValid(), result);
                     mIPCInitListener = null;
                 }
                 return;
@@ -274,7 +278,7 @@ public class GolukIPCSdk implements IPCManagerFn {
                 JSONObject dataObject = jsonObject.getJSONObject("data");
                 String startTime = dataObject.getString("starttime");
                 String endTime = dataObject.getString("endtime");
-                if(!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)){
+                if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime)) {
                     SharedPreferences sharedPreferences = mAPPContext.getSharedPreferences("golukIPCSdk", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();//获取编辑器
                     editor.putString("startTime", startTime);
@@ -294,10 +298,14 @@ public class GolukIPCSdk implements IPCManagerFn {
      * @param mode 0/1/2
      * @author jyf
      */
-    private void setIpcMode(int mode) {
+    public boolean setIpcMode(int mode) {
         if (mode < 0) {
-            return;
+            return false;
         }
+
+        if (mIpcMode == mode)
+            return true;
+
         String json = "";
         try {
             JSONObject obj = new JSONObject();
@@ -306,7 +314,19 @@ public class GolukIPCSdk implements IPCManagerFn {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
+
+        return mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_CommCmd_SetMode, json);
+    }
+
+    /**
+     * IPC changed
+     */
+    public boolean changeIpcMode() {
+        int ipcModeValue = IpcWifiManager.getIpcModeValue();
+        if (ipcModeValue != -1)
+            return setIpcMode(ipcModeValue);
+
+        return false;
     }
 
     @Override

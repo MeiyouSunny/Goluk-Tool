@@ -1,6 +1,5 @@
 package com.goluk.ipcsdk.command;
 import android.content.Context;
-import android.util.Log;
 
 import com.goluk.ipcsdk.bean.DownloadInfo;
 import com.goluk.ipcsdk.bean.FileInfo;
@@ -102,8 +101,8 @@ public class IPCFileCommand extends BaseIPCCommand{
         }
         String json = IPCDataParser.getDownFileJson(filename, tag, savepath, filetime);
         if (filename.contains(".mp4")) {
-            Log.e("","==downloadFile==json=" + json);
-            Log.e("xuhw", "YYYYYY====downloadFile=====json=" + json);
+            //Log.e("","==downloadFile==json=" + json);
+            //Log.e("xuhw", "YYYYYY====downloadFile=====json=" + json);
         }
         return GolukIPCSdk.getInstance().mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPC_VDTPCmd_AddDownloadFile, json);

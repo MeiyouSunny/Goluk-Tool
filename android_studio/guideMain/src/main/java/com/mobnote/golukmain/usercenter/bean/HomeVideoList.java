@@ -20,6 +20,10 @@ public class HomeVideoList {
 	@JSONField(name = "videourl")
 	public String videourl;
 
+	/** 标准时区时间戳 **/
+	@JSONField(name = "addts")
+	public long addts;
+
 	/** 视频添加时间 **/
 	@JSONField(name = "addtime")
 	public String addtime;

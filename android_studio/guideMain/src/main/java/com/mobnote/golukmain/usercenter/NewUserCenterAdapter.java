@@ -1,12 +1,5 @@
 package com.mobnote.golukmain.usercenter;
 
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.usercenter.bean.HomeVideoList;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -15,6 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.usercenter.bean.HomeVideoList;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+
+import java.util.List;
 
 public class NewUserCenterAdapter extends BaseAdapter {
 
@@ -91,7 +91,7 @@ public class NewUserCenterAdapter extends BaseAdapter {
 		HomeVideoList videos = mList.get(arg0);
 		if(null != videos) {
 			GlideUtils.loadImage(mContext, viewHolder.mThumbImage, videos.pictureurl, R.drawable.tacitly_pic);
-			viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addtime));
+			viewHolder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, videos.addts));
 			viewHolder.mDescribeText.setText(videos.description);
 			viewHolder.mCommentCountText.setText(GolukUtils.getFormatNumber(videos.commentcount));
 			viewHolder.mLookCountText.setText(GolukUtils.getFormatNumber(videos.clickcount));

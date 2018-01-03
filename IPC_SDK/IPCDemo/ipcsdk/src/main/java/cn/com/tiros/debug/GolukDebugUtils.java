@@ -1,11 +1,9 @@
 package cn.com.tiros.debug;
 
-import android.util.Log;
-
 public class GolukDebugUtils {
 
 	public static void e(String tag, String msg) {
-		Log.e(tag, msg);
+		//Log.e(tag, msg);
 	}
 
 	public static void i(String tag, String msg) {

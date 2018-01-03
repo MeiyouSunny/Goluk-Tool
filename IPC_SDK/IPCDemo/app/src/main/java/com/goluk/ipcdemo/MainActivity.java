@@ -69,11 +69,10 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
         this.startActivity(intent);
     }
 
-    private void startRealtimePlay(){
-        Intent intent = new Intent(this,RealTimePlayActivity.class);
+    private void startRealtimePlay() {
+        Intent intent = new Intent(this, RealTimePlayActivity.class);
         this.startActivity(intent);
     }
-
 
     private void startConnectIPC() {
 
@@ -96,7 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener, IPCC
                 startIPCConfigActivity();
                 break;
             case R.id.btIPCFileManage:
-                Intent intent = new Intent(this,VideoListActivity.class);
+                Intent intent = new Intent(this, VideoListActivity.class);
                 startActivity(intent);
                 break;
             default:

@@ -1,22 +1,5 @@
 package com.mobnote.golukmain;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventDeleteVideo;
-import com.mobnote.eventbus.EventLoginSuccess;
-import com.mobnote.eventbus.EventPraiseStatusChanged;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.newest.NewestListView;
-import com.mobnote.golukmain.newest.WonderfulSelectedListView;
-import com.mobnote.golukmain.search.SearchUserAcivity;
-import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
-import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
-
-import cn.com.mobnote.eventbus.EventLocationFinish;
-import cn.com.tiros.debug.GolukDebugUtils;
-import de.greenrobot.event.EventBus;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -32,6 +15,23 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDeleteVideo;
+import com.mobnote.eventbus.EventPraiseStatusChanged;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.newest.NewestListView;
+import com.mobnote.golukmain.newest.WonderfulSelectedListView;
+import com.mobnote.golukmain.search.SearchUserAcivity;
+import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
+import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
+
+import cn.com.mobnote.eventbus.EventLocationFinish;
+import cn.com.tiros.baidu.BaiduLocation;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
+
 public class FragmentDiscover extends Fragment implements OnClickListener {
     private static final String TAG = "FragmentDiscover";
 
@@ -44,7 +44,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
     private float density;
     RelativeLayout.LayoutParams lineParams = null;
     private int lineTop = 0;
-//    private int textColorSelect = 0;
+    //    private int textColorSelect = 0;
 //    private int textcolorQx = 0;
     View mSquareRootView;
     private String mCityCode;
@@ -246,6 +246,9 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
             return;
         }
 
+        // 停止定位
+        BaiduLocation.getInstance().stopLocation();
+
         switch (event.getOpCode()) {
             case EventConfig.LOCATION_FINISH:
                 Log.d(TAG, "Location Finished: " + event.getCityCode());
@@ -369,7 +372,8 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         }
         mBannerLoaded = false;
         EventBus.getDefault().unregister(this);
+        // 停止定位
+        BaiduLocation.getInstance().stopLocation();
     }
-
 
 }

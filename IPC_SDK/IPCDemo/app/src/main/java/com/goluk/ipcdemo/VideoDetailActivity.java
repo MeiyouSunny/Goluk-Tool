@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,7 +23,6 @@ import com.goluk.ipcsdk.utils.GolukIPCUtils;
 import com.goluk.ipcsdk.utils.GolukUtils;
 
 import java.io.File;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -159,7 +157,7 @@ public class VideoDetailActivity extends Activity implements View.OnClickListene
                 dialog.setProgress(100);
             }
 
-            Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
+            //Log.e("","zh filesize: " + downloadinfo.filesize + "  filerecvsize: " + downloadinfo.filerecvsize + "  status:" + downloadinfo.status);
             if(downloadinfo.status == 0){
                 if (downloadinfo.filename.contains(".jpg")||downloadinfo.filename.contains(".png")){
                     Toast.makeText(this, "/sdcard/goluk/video/"+downloadinfo.filename+" download success", Toast.LENGTH_SHORT).show();

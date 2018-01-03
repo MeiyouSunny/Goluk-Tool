@@ -4,6 +4,7 @@ import android.text.TextUtils;
 
 import com.goluk.ipcsdk.bean.FileInfo;
 import com.goluk.ipcsdk.bean.RecordStorageState;
+import com.goluk.ipcsdk.bean.VideoConfigState;
 import com.goluk.ipcsdk.bean.VideoInfo;
 import com.goluk.ipcsdk.main.GolukIPCSdk;
 
@@ -62,12 +63,9 @@ public class IPCDataParser {
     /**
      * 组织下载文件的json串
      *
-     * @param filename
-     *            文件名称
-     * @param tag
-     *            此文件的唯一标识
-     * @param savepath
-     *            文件的保存路径
+     * @param filename 文件名称
+     * @param tag      此文件的唯一标识
+     * @param savepath 文件的保存路径
      * @return JSON串
      * @author jiayf
      * @date Mar 27, 2015
@@ -206,12 +204,10 @@ public class IPCDataParser {
         return list;
     }
 
-
     /**
      * IPC视频文件信息转列表显示视频信息
      *
-     * @param mVideoFileInfo
-     *            IPC视频文件信息
+     * @param mVideoFileInfo IPC视频文件信息
      * @return 列表显示视频信息
      * @author xuhw
      * @date 2015年3月25日
@@ -255,6 +251,7 @@ public class IPCDataParser {
 
     /**
      * 根据文件名计算日期
+     *
      * @param date
      * @return
      */
@@ -289,7 +286,6 @@ public class IPCDataParser {
 
     }
 
-
     /**
      * 获取文件列表总个数
      *
@@ -310,7 +306,7 @@ public class IPCDataParser {
         return total;
     }
 
-  public static FileInfo parseSingleFileResult(String json) {
+    public static FileInfo parseSingleFileResult(String json) {
 
         try {
             JSONObject obj = new JSONObject(json);
@@ -384,7 +380,6 @@ public class IPCDataParser {
         return null;
     }*/
 
-
     /**
      * 解析录制存储状态json
      *
@@ -434,15 +429,9 @@ public class IPCDataParser {
         return null;
     }
 
-   /* *//**
-     * 解析视频配置信息json
-     *
-     * @param json
-     * @return
-     * @author xuhw
-     * @date 2015年4月7日
-     *//*
-
+     /*
+      * Parse video config info
+      */
     public static VideoConfigState parseVideoConfigState(String json) {
         try {
             VideoConfigState mVideoConfigState = new VideoConfigState();
@@ -471,7 +460,6 @@ public class IPCDataParser {
 
         return null;
     }
-*/
 
  /*   *//**
      * 获取自动循环录制状态
@@ -538,7 +526,6 @@ public class IPCDataParser {
 */
 
     /**
-     *
      * @param json
      * @return
      */

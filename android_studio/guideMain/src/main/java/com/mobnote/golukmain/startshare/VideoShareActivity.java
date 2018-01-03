@@ -44,9 +44,9 @@ import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 import com.mobnote.golukmain.startshare.bean.VideoSaveDataBean;
 import com.mobnote.golukmain.startshare.bean.VideoSaveRetBean;
-import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 import com.mobnote.golukmain.thirdshare.SharePlatformAdapter;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
@@ -73,6 +73,7 @@ import java.util.List;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -173,6 +174,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_share);
         EventBus.getDefault().register(this);
+        // 开始定位
+        BaiduLocation.getInstance().startLocation();
 
         initData(savedInstanceState);
 
@@ -210,6 +213,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+        // 停止定位
+        BaiduLocation.getInstance().stopLocation();
     }
 
     @Override
@@ -534,6 +539,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 mLocationState = LOCATION_STATE_ING;
                 refreshLocationUI();
                 GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
+                // 开始定位
+                BaiduLocation.getInstance().startLocation();
                 break;
         }
     }
@@ -607,6 +614,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mLocationState = LOCATION_STATE_ING;
             refreshLocationUI();
             GetBaiduAddress.getInstance().searchAddress(LngLat.lat, LngLat.lng);
+            // 开始定位
+            BaiduLocation.getInstance().startLocation();
         } else if (2 == event) {
             // 删除定位
             mLocationState = LOCATION_STATE_FORBID;

@@ -17,6 +17,9 @@ public class VideoInfo {
 	public String type;
 	@JSONField(name="sharingtime")
 	public String sharingtime;
+	// 标准时区时间戳
+	@JSONField(name="sharingts")
+	public long sharingts;
 	@JSONField(name="describe")
 	public String describe;
 	@JSONField(name="picture")

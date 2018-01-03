@@ -10,6 +10,10 @@ public class CommentItemBean {
 	/**评论时间**/
 	@JSONField(name="time")
 	public String time;
+
+	/**标准时区时间戳**/
+	@JSONField(name="ts")
+	public long ts;
 	
 	/**评论内容**/
 	@JSONField(name="text")
