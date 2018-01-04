@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+import com.mobnote.application.FloatWindowPermissionUtil;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
@@ -206,6 +207,8 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
     }
 
     public void downloadVideoFlush(List<String> selectedListData) {
+        FloatWindowPermissionUtil.judgePermission(getContext());
+
         exist.clear();
         SharedPrefUtil.setManualDownloadVideo(true);
         for (String filename : selectedListData) {
