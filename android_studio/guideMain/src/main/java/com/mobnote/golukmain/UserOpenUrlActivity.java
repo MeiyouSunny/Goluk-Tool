@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -22,9 +23,6 @@ import android.webkit.WebViewClient;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -38,6 +36,10 @@ import com.mobnote.user.MyProgressWebView;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JavaScriptInterface;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 程序内打开浏览器
@@ -94,7 +96,10 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
         String currUa = mWebView.getSettings().getUserAgentString();
         mWebView.getSettings().setUserAgentString(currUa + "/ goluk /"+ "golukAndroid /");
         mWebView.getSettings().setJavaScriptEnabled(true);
-        mWebView.setWebChromeClient(new WebChromeClient());
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+			mWebView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
+		}
+		mWebView.setWebChromeClient(new WebChromeClient());
         mWebView.addJavascriptInterface(new JavaScriptInterface(this), "mobile");
 
 		mTextRight = (TextView) findViewById(R.id.user_title_right);
