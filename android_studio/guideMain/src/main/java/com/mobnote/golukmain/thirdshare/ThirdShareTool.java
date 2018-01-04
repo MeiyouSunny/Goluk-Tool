@@ -165,12 +165,21 @@ public class ThirdShareTool extends AbsThirdShare {
         if (!isCanClick()) {
             return;
         }
-        final ShareContent sc = getShareContent(TYPE_TWITTER);
-        if (null == sc) {
-            setCanJump();
-            return;
-        }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).setShareContent(sc).share();
+//        final ShareContent sc = getShareContent(TYPE_TWITTER);
+//        if (null == sc) {
+//            setCanJump();
+//            return;
+//        }
+        //new ShareAction(mActivity).setPlatform(SHARE_MEDIA.TWITTER).setCallback(umShareListener).setShareContent(sc).share();
+
+        final String shareTxt = shareurl + "&type=" + TYPE_TWITTER;
+        UMImage shareImage = new UMImage(mActivity, mImageUrl);
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.TWITTER)
+                .withText(shareTxt)
+                .withMedia(shareImage)
+                .setCallback(umShareListener)
+                .share();
         mCurrentShareType = TYPE_TWITTER;
         shareUp();// 上报分享统计
     }

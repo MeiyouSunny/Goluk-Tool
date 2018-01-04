@@ -252,19 +252,19 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
         if (!isCanClick()) {
             return;
         }
-        GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----1 ");
-        final ShareContent sc = getShareContent(TYPE_TWITTER);
-        if (null == sc) {
-            setCanJump();
-            return;
-        }
-        UMVideo web = (UMVideo) sc.mMedia;
-        final String shareTxt = sc.mText + "   " + web.toUrl();
+//        GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----1 ");
+//        final ShareContent sc = getShareContent(TYPE_TWITTER);
+//        if (null == sc) {
+//            setCanJump();
+//            return;
+//        }
+        final String shareTxt = shareurl + "&type=" + TYPE_TWITTER;
+        UMImage shareImage = new UMImage(mActivity, mImageUrl);
         new ShareAction(mActivity)
                 .setPlatform(SHARE_MEDIA.TWITTER)
-                .setCallback(umShareListener)
                 .withText(shareTxt)
-                .setShareContent(sc)
+                .withMedia(shareImage)
+                .setCallback(umShareListener)
                 .share();
         GolukDebugUtils.e("", "youmeng----goluk----AbroadThirdShare----click_twitter----3 ");
         mCurrentShareType = TYPE_TWITTER;
