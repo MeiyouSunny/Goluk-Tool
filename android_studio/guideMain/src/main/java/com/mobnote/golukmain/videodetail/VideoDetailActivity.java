@@ -1256,6 +1256,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     bean.mSeq = addBean.seq;
                     bean.result = addBean.result;
                     bean.mCommentTime = addBean.time;
+                    bean.mCommentTs = addBean.ts;
                     bean.mCommentTxt = String.valueOf(addBean.text);
                     bean.mCommentId = addBean.commentid;
                     bean.mUserHead = addBean.authoravatar;
@@ -1270,6 +1271,7 @@ public class VideoDetailActivity extends BaseActivity implements OnClickListener
                     }
 
                     bean.mCommentTime = GolukUtils.getCurrentCommentTime();
+                    bean.mCommentTs = System.currentTimeMillis();
                     if (!"".equals(bean.result)) {
                         if ("0".equals(bean.result)) {// 成功
                             //评论视频
