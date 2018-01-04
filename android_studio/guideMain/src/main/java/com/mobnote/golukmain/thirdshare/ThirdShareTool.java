@@ -19,6 +19,8 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMVideo;
 
 import java.io.File;
 
@@ -31,7 +33,8 @@ public class ThirdShareTool extends AbsThirdShare {
         modifyUMDialog();
         initFacebook();
     }
-    public ThirdShareTool(Activity activity,SharePlatformUtil spf, ThirdShareBean shareBean) {
+
+    public ThirdShareTool(Activity activity, SharePlatformUtil spf, ThirdShareBean shareBean) {
         super(activity, spf, shareBean.surl, shareBean.curl, shareBean.db, shareBean.tl, shareBean.bitmap,
                 shareBean.realDesc, shareBean.videoId, shareBean.mShareType, shareBean.filePath, shareBean.from);
     }
@@ -356,8 +359,35 @@ public class ThirdShareTool extends AbsThirdShare {
         if (TextUtils.isEmpty(sc.mText)) {
             sc.mText = mActivity.getResources().getString(R.string.app_name);
         }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.VKONTAKTE).setCallback(umShareListener).setShareContent(sc).share();
-        mCurrentShareType = TYPE_VK;
+
+        if (sc.getShareType() == ShareContent.VIDEO_STYLE) {
+            final String url = sc.mMedia.toUrl();
+            new GetRealUrlTask(new GetRealUrlTask.OnRealUrlListener() {
+                @Override
+                public void onGetRealUrl(String realUrl) {
+                    UMVideo umVideo = new UMVideo(realUrl);
+                    umVideo.setTitle(mTitle);
+                    umVideo.setDescription(mDescribe);
+                    if (!TextUtils.isEmpty(mImageUrl)) {
+                        final UMImage image = new UMImage(mActivity, mImageUrl);
+                        umVideo.setThumb(image);
+                    }
+
+                    sc.mMedia = umVideo;
+
+                    new ShareAction(mActivity)
+                            .setPlatform(SHARE_MEDIA.VKONTAKTE)
+                            .setCallback(umShareListener)
+                            .setShareContent(sc)
+                            .share();
+                    mCurrentShareType = TYPE_VK;
+                }
+            }).execute(url);
+        } else {
+            new ShareAction(mActivity).setPlatform(SHARE_MEDIA.VKONTAKTE).setCallback(umShareListener).setShareContent(sc).share();
+            mCurrentShareType = TYPE_VK;
+        }
+
         this.shareUp();// 上报分享统计
     }
 }

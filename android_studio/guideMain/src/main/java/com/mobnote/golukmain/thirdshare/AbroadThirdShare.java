@@ -1,7 +1,5 @@
 package com.mobnote.golukmain.thirdshare;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -15,11 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
 import android.widget.PopupWindow;
 
-import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.mobnote.golukmain.R;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
@@ -27,7 +20,6 @@ import com.mobnote.util.GolukUtils;
 import com.umeng.facebook.FacebookCallback;
 import com.umeng.facebook.FacebookException;
 import com.umeng.facebook.share.Sharer;
-import com.umeng.facebook.share.model.ShareLinkContent;
 import com.umeng.facebook.share.widget.ShareDialog;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
@@ -35,13 +27,10 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
-import com.vk.sdk.VKScope;
-import com.vk.sdk.VKSdk;
-import com.vk.sdk.api.VKError;
-import com.vk.sdk.api.photo.VKImageParameters;
-import com.vk.sdk.api.photo.VKUploadImage;
-import com.vk.sdk.dialogs.VKShareDialog;
-import com.vk.sdk.dialogs.VKShareDialogBuilder;
+
+import java.io.File;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
 
@@ -334,6 +323,7 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
+
         new ShareAction(mActivity)
                 .setPlatform(SHARE_MEDIA.FACEBOOK)
                 .setCallback(umShareListener)
@@ -352,12 +342,41 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
             setCanJump();
             return;
         }
-        new ShareAction(mActivity)
-                .setPlatform(SHARE_MEDIA.VKONTAKTE)
-                .setCallback(umShareListener)
-                .setShareContent(sc)
-                .share();
-        mCurrentShareType = TYPE_VK;
-        this.shareUp();// 上报分享统计
+
+        if (sc.getShareType() == ShareContent.VIDEO_STYLE) {
+            final String url = sc.mMedia.toUrl();
+            new GetRealUrlTask(new GetRealUrlTask.OnRealUrlListener() {
+                @Override
+                public void onGetRealUrl(String realUrl) {
+                    UMVideo umVideo = new UMVideo(realUrl);
+                    umVideo.setTitle(mTitle);
+                    umVideo.setDescription(mDescribe);
+                    if (!TextUtils.isEmpty(mImageUrl)) {
+                        final UMImage image = new UMImage(mActivity, mImageUrl);
+                        umVideo.setThumb(image);
+                    }
+
+                    sc.mMedia = umVideo;
+
+                    new ShareAction(mActivity)
+                            .setPlatform(SHARE_MEDIA.VKONTAKTE)
+                            .setCallback(umShareListener)
+                            .setShareContent(sc)
+                            .share();
+                    mCurrentShareType = TYPE_VK;
+                }
+            }).execute(url);
+        } else {
+            new ShareAction(mActivity)
+                    .setPlatform(SHARE_MEDIA.VKONTAKTE)
+                    .setCallback(umShareListener)
+                    .setShareContent(sc)
+                    .share();
+            mCurrentShareType = TYPE_VK;
+        }
+
+        // 上报分享统计
+        shareUp();
     }
+
 }
