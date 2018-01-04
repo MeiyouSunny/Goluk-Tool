@@ -913,7 +913,7 @@
     <string name="str_live_default_describe">#Golukのライブビデオ#</string>
     <string name="str_inquiry_fail">クエリを送信できません</string>
     <string name="str_cannot_get_light">輝度を取得できません</string>
-    <string name="str_play_video_error">ビデオエラー。もう一度お試しください</string>
+    <string name="str_play_video_error">ビデオデータをビデオプレーヤーで読み取ることができません。もう一度お試しください。</string>
     <string name="str_play_video_network_error">ネットワーク例外。もう一度お試しください</string>
     <string name="str_ring">リング</string>
     <string name="str_third_share_fail">サードパーティーの共有失敗</string>
@@ -1040,7 +1040,7 @@
     <string name="install_new_firmware">インストール</string>
     <string name="newest_firmware">お使いのバージョンは最新です</string>
     <string name="str_fireware_is_downloading">ダウンロード中</string>
-    <string name="str_system_window_not_allowed">ポップアップが無効になっているため、システムウィンドウを開くことができません。アプリの管理セクションでアクセスを有効にしてください。</string>
+    <string name="str_system_window_not_allowed">ビデオがダウンロード中です。 動画のダウンロード状況を確認するには、アプリ管理の通知を有効にします。</string>
     <string name="str_notification_error_ssl_cert_invalid">安全ではないウェブページにリダイレクトされます。続行しますか？</string>
     <string name="settting_notify_friends">友達が新しいアップデートを投稿しました！</string>
     <string name="str_tag_tab_hot">おすすめ</string>

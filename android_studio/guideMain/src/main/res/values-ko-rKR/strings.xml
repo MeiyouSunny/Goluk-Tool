@@ -911,7 +911,7 @@
     <string name="str_live_default_describe">#Goluk 라이브 동영상#</string>
     <string name="str_inquiry_fail">문의 사항들을 전송 할 수 없습니다</string>
     <string name="str_cannot_get_light">명도를 가져 올 수 없습니다</string>
-    <string name="str_play_video_error">동영상 오류. 다시 시도하세요.</string>
+    <string name="str_play_video_error">동영상 플레이어에서 동영상 데이터를 읽을 수 없습니다. 다시 시도하십시오.</string>
     <string name="str_play_video_network_error">네트워크 예외. 다시 시도하세요.</string>
     <string name="str_ring">걸기</string>
     <string name="str_third_share_fail">제3자 공유 실패</string>
@@ -1038,7 +1038,7 @@
     <string name="install_new_firmware">설치</string>
     <string name="newest_firmware">현재 버전은 최신 버전입니다</string>
     <string name="str_fireware_is_downloading">다운로드 중</string>
-    <string name="str_system_window_not_allowed">팝업이 비활성화 되어 시스템 창을 열 수 없습니다.</string>
+    <string name="str_system_window_not_allowed">비디오를 다운로드 중입니다. 동영상 다운로드 상태를 확인하려면 앱 관리에서 알림을 사용하도록 설정합니다.</string>
     <string name="str_notification_error_ssl_cert_invalid">안전하지 않은 웹 페이지로 리디렉션됩니다. 계속 하시겠습니까?</string>
     <string name="settting_notify_friends">친구가 새 업데이트를 포스팅 했습니다!</string>
     <string name="str_tag_tab_hot">추천</string>

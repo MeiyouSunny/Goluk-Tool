@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding:utf-8 -*-
 
-#Android¹ú¼Ê»¯£º ½«excelÖÐµÄÄÚÈÝ×ª»¯µ½xmlÖÐ
+#Androidï¿½ï¿½ï¿½Ê»ï¿½ï¿½ï¿½ ï¿½ï¿½excelï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½xmlï¿½ï¿½
 
 from xml.dom import minidom
 from xlrd import open_workbook
@@ -11,45 +11,45 @@ import sys
 
 #######################################################
 def mkdir(path):
-    # ÒýÈëÄ£¿é
+    # ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½
     import os
 
-    # È¥³ýÊ×Î»¿Õ¸ñ
+    # È¥ï¿½ï¿½ï¿½ï¿½Î»ï¿½Õ¸ï¿½
     path=path.strip()
-    # È¥³ýÎ²²¿ \ ·ûºÅ
+    # È¥ï¿½ï¿½Î²ï¿½ï¿½ \ ï¿½ï¿½ï¿½ï¿½
     path=path.rstrip("\\")
 
-    # ÅÐ¶ÏÂ·¾¶ÊÇ·ñ´æÔÚ
-    # ´æÔÚ     True
-    # ²»´æÔÚ   False
+    # ï¿½Ð¶ï¿½Â·ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
+    # ï¿½ï¿½ï¿½ï¿½     True
+    # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½   False
     isExists=os.path.exists(path)
 
-    # ÅÐ¶Ï½á¹û
+    # ï¿½Ð¶Ï½ï¿½ï¿½
     if not isExists:
-        # Èç¹û²»´æÔÚÔò´´½¨Ä¿Â¼
-        # ´´½¨Ä¿Â¼²Ù×÷º¯Êý
+        # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ò´´½ï¿½Ä¿Â¼
+        # ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         os.makedirs(path)
         print (path +' created successfully')
         return True
     else:
-        # Èç¹ûÄ¿Â¼´æÔÚÔò²»´´½¨£¬²¢ÌáÊ¾Ä¿Â¼ÒÑ´æÔÚ
+        # ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½ï¿½ò²»´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾Ä¿Â¼ï¿½Ñ´ï¿½ï¿½ï¿½
         print (path +' dir existed')
         return False
 #######################################################
 
-reload(sys)
-sys.setdefaultencoding('utf-8')
+#reload(sys)
+#sys.setdefaultencoding('utf-8')
 
-#´ò¿ªexcel
+#ï¿½ï¿½excel
 workbook = open_workbook('goluk_strings.xlsx')
 sheet = workbook.sheet_by_index(0)
 
-#Ìí¼Ó×Ö·û´®
+#ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½
 for col_index in range(sheet.ncols):
 	if col_index > 1:
-		#ÐÂ½¨xmlÎÄµµ
+		#ï¿½Â½ï¿½xmlï¿½Äµï¿½
 		xml_doc = minidom.Document()
-		#Ìí¼Ó¸ùÔªËØ
+		#ï¿½ï¿½Ó¸ï¿½Ôªï¿½ï¿½
 		en_resources = xml_doc.createElement('resources')
 		language = sheet.cell(0, col_index).value
 		for row_index in range(sheet.nrows):
@@ -57,7 +57,7 @@ for col_index in range(sheet.ncols):
 				key = sheet.cell(row_index, 0).value
 				result_content = sheet.cell(row_index, col_index).value
 				if (key != '' and result_content != ''):
-					#ÐÂ½¨Ò»¸öÎÄ±¾ÔªËØ
+					#ï¿½Â½ï¿½Ò»ï¿½ï¿½ï¿½Ä±ï¿½Ôªï¿½ï¿½
 					print ("key = %s, content = %s" % (key,result_content))
 					text_element = xml_doc.createElement('string')
 					text_element.setAttribute('name', key)

@@ -913,7 +913,7 @@
     <string name="str_live_default_describe">#Goluk Live-Video#</string>
     <string name="str_inquiry_fail">Senden der Anfragen nicht möglich</string>
     <string name="str_cannot_get_light">Abfrage der Helligkeit nicht möglich.</string>
-    <string name="str_play_video_error">Videofehler. Bitte erneut versuchen.</string>
+    <string name="str_play_video_error">Videodaten können nicht vom Videoplayer gelesen werden. Bitte versuchen Sie es erneut.</string>
     <string name="str_play_video_network_error">Netzwerkausfall. Bitte erneut versuchen.</string>
     <string name="str_ring">Klingeln</string>
     <string name="str_third_share_fail">Teilen mit Dritten fehlgeschlagen</string>
@@ -1040,7 +1040,7 @@
     <string name="install_new_firmware">Installieren</string>
     <string name="newest_firmware">Die derzeitige Version ist aktuell.</string>
     <string name="str_fireware_is_downloading">Wird heruntergeladen</string>
-    <string name="str_system_window_not_allowed">Öffnen des Systemfensters nicht möglich, da Pop-ups deaktiviert sind. Bitte im Bereich App-Verwaltung den Zugriff einschalten.</string>
+    <string name="str_system_window_not_allowed">La vidéo est en cours de téléchargement. Pour vérifier l\'état du téléchargement de la vidéo, activez les notifications dans la gestion des applications.</string>
     <string name="str_notification_error_ssl_cert_invalid">Du wirst auf eine unsichere Webseite umgeleitet. Möchtest du fortsetzen?</string>
     <string name="settting_notify_friends">Dein Freund hat Neuigkeiten veröffentlicht!</string>
     <string name="str_tag_tab_hot">Empfehlen</string>
