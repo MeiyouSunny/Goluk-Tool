@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.view.View;
+import android.webkit.URLUtil;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.util.GolukConfig;
@@ -385,7 +386,11 @@ public class ThirdShareTool extends AbsThirdShare {
                     umVideo.setTitle(mTitle);
                     umVideo.setDescription(mDescribe);
                     if (!TextUtils.isEmpty(mImageUrl)) {
-                        final UMImage image = new UMImage(mActivity, mImageUrl);
+                        UMImage image = null;
+                        if (URLUtil.isValidUrl(mImageUrl))
+                            image = new UMImage(mActivity, mImageUrl);
+                        else
+                            image = new UMImage(mActivity, R.drawable.logo_copyright);
                         umVideo.setThumb(image);
                     }
 

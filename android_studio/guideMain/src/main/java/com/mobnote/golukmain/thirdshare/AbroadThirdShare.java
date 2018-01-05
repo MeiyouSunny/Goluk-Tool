@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager.LayoutParams;
+import android.webkit.URLUtil;
 import android.widget.PopupWindow;
 
 import com.mobnote.golukmain.R;
@@ -358,7 +359,11 @@ public class AbroadThirdShare extends AbsThirdShare implements OnClickListener {
                     umVideo.setTitle(mTitle);
                     umVideo.setDescription(mDescribe);
                     if (!TextUtils.isEmpty(mImageUrl)) {
-                        final UMImage image = new UMImage(mActivity, mImageUrl);
+                        UMImage image = null;
+                        if (URLUtil.isValidUrl(mImageUrl))
+                            image = new UMImage(mActivity, mImageUrl);
+                        else
+                            image = new UMImage(mActivity, R.drawable.logo_copyright);
                         umVideo.setThumb(image);
                     }
 
