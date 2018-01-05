@@ -1,15 +1,5 @@
 package com.mobnote.golukmain.thirdshare;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.startshare.VideoShareActivity;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-import com.umeng.socialize.ShareContent;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMVideo;
-
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
@@ -19,6 +9,16 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.widget.Toast;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.startshare.VideoShareActivity;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+import com.umeng.socialize.ShareContent;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMVideo;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 

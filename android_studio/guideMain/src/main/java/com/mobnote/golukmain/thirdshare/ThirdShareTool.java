@@ -21,6 +21,7 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMVideo;
+import com.umeng.socialize.media.UMWeb;
 
 import java.io.File;
 
@@ -228,15 +229,21 @@ public class ThirdShareTool extends AbsThirdShare {
         if (!isCanClick()) {
             return;
         }
-        final ShareContent sc = getShareContent(TYPE_FACEBOOK);
-        if (null == sc) {
-            setCanJump();
-            return;
-        }
-        if (TextUtils.isEmpty(sc.mText)) {
-            sc.mText = mActivity.getResources().getString(R.string.app_name);
-        }
-        new ShareAction(mActivity).setPlatform(SHARE_MEDIA.FACEBOOK).setCallback(umShareListener).setShareContent(sc)
+//        final ShareContent sc = getShareContent(TYPE_FACEBOOK);
+//        if (null == sc) {
+//            setCanJump();
+//            return;
+//        }
+
+        final String url = shareurl + "&type=" + SHARE_MEDIA.FACEBOOK;
+        UMWeb webMedia = new UMWeb(url);
+        webMedia.setTitle(mTitle);
+        webMedia.setThumb(new UMImage(mActivity, mImageUrl));
+        webMedia.setDescription(mDescribe);
+        new ShareAction(mActivity)
+                .setPlatform(SHARE_MEDIA.FACEBOOK)
+                .setCallback(umShareListener)
+                .withMedia(webMedia)
                 .share();
         mCurrentShareType = TYPE_FACEBOOK;
         shareUp();// 上报分享统计
