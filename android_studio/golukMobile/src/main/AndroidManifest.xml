@@ -478,7 +478,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="tencent1104418156" />
+                <data android:scheme="@string/qq_id" />
             </intent-filter>
         </activity>
         <activity
@@ -489,7 +489,13 @@
 
         <!-- ############ WEIXIN ############ -->
         <activity
-            android:name=".wxapi.WXEntryActivity"
+            android:name="cn.com.mobnote.golukmobile.wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.mobnote.golukmobile.wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:exported="true"
             android:screenOrientation="portrait"

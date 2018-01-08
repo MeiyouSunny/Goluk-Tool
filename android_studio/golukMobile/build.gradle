@@ -26,6 +26,7 @@ android {
             resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"wandoujia"'
+            resValue 'string', 'qq_id', '"tencent1104418156"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
                                   HTML_HOST : "goluk.app" ,
                                   FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]        }
@@ -36,6 +37,7 @@ android {
             resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"googleplay"'
+            resValue 'string', 'qq_id', '"tencent1105266664"'
             manifestPlaceholders=[HTML_SCHEME : "igolukapp" ,
                                   HTML_HOST : "goluk.app" ,
                                   FacebookAuth : "com.facebook.app.FacebookContentProvider1693308594241132"]
