@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.FloatWindowPermissionUtil;
@@ -207,7 +208,11 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
     }
 
     public void downloadVideoFlush(List<String> selectedListData) {
-        FloatWindowPermissionUtil.judgePermission(getContext());
+
+        boolean hasPermission = FloatWindowPermissionUtil.judgePermission(getContext());
+        if (!hasPermission) {
+            Toast.makeText(getContext(), getContext().getString(R.string.str_system_window_not_allowed), Toast.LENGTH_SHORT).show();
+        }
 
         exist.clear();
         SharedPrefUtil.setManualDownloadVideo(true);

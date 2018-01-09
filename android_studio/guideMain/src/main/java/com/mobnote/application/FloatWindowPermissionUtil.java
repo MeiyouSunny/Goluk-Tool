@@ -2,9 +2,6 @@ package com.mobnote.application;
 
 import android.content.Context;
 import android.os.Build;
-import android.widget.Toast;
-
-import com.mobnote.golukmain.R;
 
 import java.lang.reflect.Method;
 
@@ -27,9 +24,9 @@ public class FloatWindowPermissionUtil {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if (!allowDrawOverlays) {
-                Toast.makeText(context, context.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
-            }
+//            if (!allowDrawOverlays) {
+//                Toast.makeText(context, context.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
+//            }
         }
 
         return allowDrawOverlays;

@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.FloatWindowPermissionUtil;
@@ -115,6 +116,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
     List<Boolean> exist = new ArrayList<Boolean>();
 
     private boolean mIntent2WifiConn;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -151,7 +153,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         }
     }
 
-
     @Override
     public void onPause() {
         super.onPause();
@@ -181,7 +182,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         }
     }
 
-
     /**
      * 从设备上下载视频到本地
      *
@@ -203,7 +203,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
     }
 
     public void downloadVideoFlush(List<String> selectedListData) {
-        FloatWindowPermissionUtil.judgePermission(getContext());
+
+        boolean hasPermission = FloatWindowPermissionUtil.judgePermission(getContext());
+        if (!hasPermission) {
+            Toast.makeText(getContext(), getContext().getString(R.string.str_system_window_not_allowed), Toast.LENGTH_SHORT).show();
+        }
 
         exist.clear();
         for (String filename : selectedListData) {
@@ -428,11 +432,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
 
     @SuppressLint("NewApi")
     public void loadData(boolean flag) {
-        if (isGetFileListDataing || mFragmentAlbum==null || empty ==null) {
+        if (isGetFileListDataing || mFragmentAlbum == null || empty == null) {
             return;
         }
 
-        if(null == empty || null == mStickyListHeadersListView) {
+        if (null == empty || null == mStickyListHeadersListView) {
             return;
         }
 

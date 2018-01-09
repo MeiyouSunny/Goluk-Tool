@@ -15,6 +15,7 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.FloatWindowPermissionUtil;
@@ -118,6 +119,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
      *
      */
     private boolean mIntent2WifiConn;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -225,7 +227,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
     }
 
     public void downloadVideoFlush(List<String> selectedListData) {
-        FloatWindowPermissionUtil.judgePermission(getContext());
+
+        boolean hasPermission = FloatWindowPermissionUtil.judgePermission(getContext());
+        if (!hasPermission) {
+            Toast.makeText(getContext(), getContext().getString(R.string.str_system_window_not_allowed), Toast.LENGTH_SHORT).show();
+        }
 
         exist.clear();
         for (String filename : selectedListData) {
@@ -317,7 +323,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             loadData(false);
         }
     }
-
 
     @Override
     public void onItemClicked(View arg1, DoubleVideoInfo videoInfo, int columnIndex) {
@@ -437,7 +442,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         }
     }
 
-
     /**
      * 跳转到本地视频播放页面
      *
@@ -528,7 +532,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             return;
         }
 
-        if(null == empty || null == mStickyListHeadersListView) {
+        if (null == empty || null == mStickyListHeadersListView) {
             return;
         }
 

@@ -202,6 +202,8 @@ public class SharedPrefUtil {
     public static final String IS_CHNAGE_IPC_HUD = "is_change_ipc_hud";
 
     public static boolean isShowChangeIpc() {
+        if (GolukApplication.getInstance().getContext() == null)
+            return true;
         SharedPreferences preference = PreferenceManager.getDefaultSharedPreferences(GolukApplication.getInstance().getContext());
         return preference.getBoolean(IS_CHNAGE_IPC_HUD, false);
     }
