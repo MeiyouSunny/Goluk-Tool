@@ -1,8 +1,8 @@
 package com.mobnote.golukmain.followed.bean;
 
-import java.util.ArrayList;
-
 import com.alibaba.fastjson.annotation.JSONField;
+
+import java.util.ArrayList;
 
 public class FollowedDataBean {
 	// 0:成功；1:参数错误；2:未知异常

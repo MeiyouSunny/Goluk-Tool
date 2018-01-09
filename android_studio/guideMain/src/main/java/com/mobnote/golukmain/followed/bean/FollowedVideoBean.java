@@ -17,6 +17,8 @@ public class FollowedVideoBean {
 	public String type;
 	@JSONField(name="sharingtime")
 	public String sharingtime;
+	@JSONField(name="sharingts")
+	public long sharingts;
 	@JSONField(name="describe")
 	public String describe;
 	@JSONField(name="picture")

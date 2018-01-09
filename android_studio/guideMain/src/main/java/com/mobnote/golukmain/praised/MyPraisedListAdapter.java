@@ -1,17 +1,5 @@
 package com.mobnote.golukmain.praised;
 
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,7 +9,6 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +17,16 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.praised.bean.MyPraisedVideoBean;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+
+import java.util.List;
 
 public class MyPraisedListAdapter extends BaseAdapter {
 	private Context mContext;
@@ -109,7 +106,7 @@ public class MyPraisedListAdapter extends BaseAdapter {
 
 		if(!TextUtils.isEmpty(praisedVideo.time)) {
 			viewHolder.nTimeTV.setText(
-				GolukUtils.getCommentShowFormatTime(mContext, praisedVideo.time));
+				GolukUtils.getCommentShowFormatTime(mContext, praisedVideo.ts));
 		}
 
 		SpannableString spanttt = new SpannableString(praisedVideo.nickname + "  " + praisedVideo.describe);

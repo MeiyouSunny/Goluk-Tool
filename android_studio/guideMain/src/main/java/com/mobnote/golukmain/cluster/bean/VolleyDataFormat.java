@@ -50,7 +50,7 @@ public class VolleyDataFormat {
                     mVideoEntity.videoid = video.videoid;
                     mVideoEntity.type = video.type;
                     mVideoEntity.sharingtime = video.sharingtime;
-
+                    mVideoEntity.sharingts = video.sharingts;
                     mVideoEntity.describe = video.describe;
                     mVideoEntity.picture = video.picture;
                     mVideoEntity.clicknumber = video.clicknumber;

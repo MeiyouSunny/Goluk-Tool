@@ -1,6 +1,20 @@
 package com.mobnote.golukmain.followed;
 
-import java.util.List;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
@@ -14,21 +28,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.view.FlowLayout;
 
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
-import android.text.style.ForegroundColorSpan;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.View.OnClickListener;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import java.util.List;
 
 public class FollowedListAdapter extends BaseAdapter {
     private FragmentFollowed mFragment;
@@ -504,7 +504,7 @@ public class FollowedListAdapter extends BaseAdapter {
         if (videoObjectBean.video != null) {
             holderFollow.timeLocation.setText(
                     GolukUtils.getCommentShowFormatTime(mFragment.getActivity(),
-                            videoObjectBean.video.sharingtime) + " " + videoObjectBean.video.location);
+                            videoObjectBean.video.sharingts) + " " + videoObjectBean.video.location);
 
             if (null != videoObjectBean.video.gen) {
                 String recommend = videoObjectBean.video.gen.isrecommend;

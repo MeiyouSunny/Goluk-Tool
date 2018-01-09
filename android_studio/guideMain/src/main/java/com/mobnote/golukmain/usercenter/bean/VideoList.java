@@ -24,6 +24,10 @@ public class VideoList {
 	@JSONField(name = "addtime")
 	public String addtime;
 
+
+	@JSONField(name = "addts")
+	public long addts;
+
 	/** 评论次数 **/
 	@JSONField(name = "commentcount")
 	public int commentcount;

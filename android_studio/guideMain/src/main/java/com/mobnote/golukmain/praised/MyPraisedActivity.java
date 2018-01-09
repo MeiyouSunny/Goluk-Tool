@@ -233,7 +233,7 @@ public class MyPraisedActivity extends BaseActivity implements IRequestResultLis
 
 			MyPraisedVideoBean last = videoList.get(videoList.size() - 1);
 			if(null != last) {
-				mTimeStamp = last.time;
+				mTimeStamp = GolukUtils.parseMillesToTimeStr(last.ts);
 			} else {
 				return;
 			}

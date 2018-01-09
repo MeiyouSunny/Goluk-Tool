@@ -26,4 +26,7 @@ public class MyPraisedVideoBean {
 	/**点赞日期*/
 	@JSONField(name="time")
 	public String time;
+
+	@JSONField(name="ts")
+	public long ts;
 }

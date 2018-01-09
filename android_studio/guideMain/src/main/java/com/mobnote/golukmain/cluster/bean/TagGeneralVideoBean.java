@@ -17,6 +17,8 @@ public class TagGeneralVideoBean {
     /* 视频分享时间 */
     @JSONField(name="sharingtime")
     public String sharingtime;
+    @JSONField(name="sharingts")
+    public long sharingts;
     /* 视频描述 */
     @JSONField(name="describe")
     public String describe;

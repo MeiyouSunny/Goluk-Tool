@@ -1,12 +1,5 @@
 package com.mobnote.golukmain.usercenter;
 
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.usercenter.bean.VideoList;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +7,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.usercenter.bean.VideoList;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+
+import java.util.List;
 
 public class UserVideoCategoryAdapter extends BaseAdapter {
 
@@ -74,8 +74,8 @@ public class UserVideoCategoryAdapter extends BaseAdapter {
 		VideoList data = mListData.get(arg0);
 		if(null != data) {
 			GlideUtils.loadImage(mContext, holder.mThumbImage, data.pictureurl, R.drawable.tacitly_pic);
-			String sharingTime = GolukUtils.getCommentShowFormatTime(mContext, data.addtime);
-			holder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, sharingTime));
+			//String sharingTime = GolukUtils.getCommentShowFormatTime(mContext, data.addts);
+			holder.mTimeText.setText(GolukUtils.getCommentShowFormatTime(mContext, data.addts));
 			holder.mDescribeText.setText(data.description);
 			holder.mCommentCountText.setText(GolukUtils.getFormatNumber(data.commentcount));
 			holder.mLookCountText.setText(GolukUtils.getFormatNumber(data.clickcount));

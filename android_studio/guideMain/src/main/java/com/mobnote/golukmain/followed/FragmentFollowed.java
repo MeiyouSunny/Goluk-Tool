@@ -383,7 +383,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
             FollowedListBean last = followedBeanList.get(followedBeanList.size() - 1);
             if (null != last) {
                 if (null != last.followvideo && last.followvideo.video != null) {
-                    mTimeStamp = last.followvideo.video.sharingtime;
+                    mTimeStamp = GolukUtils.parseMillesToTimeStr(last.followvideo.video.sharingts);
                 }
             } else {
                 return;
