@@ -85,8 +85,10 @@ public class UseBaidu implements BDLocationListener {
         final String district = location.getDistrict();
 
         if (lat == BaiduLocation.INVALID || lon == BaiduLocation.INVALID) {
-            lat = BaiduLocation.TIANANMEN_LAT;
-            lon = BaiduLocation.TIANANMEN_LON;
+//            lat = BaiduLocation.TIANANMEN_LAT;
+//            lon = BaiduLocation.TIANANMEN_LON;
+            BaiduLocation.postLocationInfo("-1");
+            return;
         }
 
         BaiduLocationInfo locationInfo = new BaiduLocationInfo();

@@ -122,6 +122,7 @@ public class UseGoogle implements LocationListener {
         if (lat == BaiduLocation.INVALID || lng == BaiduLocation.INVALID) {
 //            lat = BaiduLocation.TIANANMEN_LAT;
 //            lng = BaiduLocation.TIANANMEN_LON;
+            BaiduLocation.postLocationInfo("-1");
             return;
         }
 
