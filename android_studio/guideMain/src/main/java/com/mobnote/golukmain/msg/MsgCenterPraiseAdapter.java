@@ -1,18 +1,5 @@
 package com.mobnote.golukmain.msg;
 
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
-import com.mobnote.golukmain.msg.bean.MessageSenderBean;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -22,6 +9,17 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
+import com.mobnote.golukmain.msg.bean.MessageSenderBean;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+
+import java.util.List;
 
 public class MsgCenterPraiseAdapter extends BaseAdapter {
 
@@ -92,7 +90,7 @@ public class MsgCenterPraiseAdapter extends BaseAdapter {
 		if (null != praiseBean && 102 == praiseBean.type && null != praiseBean.content && null != praiseBean.sender) {
 			convertView.setVisibility(View.VISIBLE);
 			viewHolder.nTextName.setText(praiseBean.sender.name);
-			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, praiseBean.content.time));
+			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, praiseBean.content.ts));
 			String netUrlHead = praiseBean.sender.customavatar;
 			if (null != netUrlHead && !"".equals(netUrlHead)) {
 				GlideUtils.loadNetHead(mContext, viewHolder.nImageHead, netUrlHead, R.drawable.my_head_moren7);

@@ -1,22 +1,5 @@
 package com.mobnote.golukmain.msg;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
-import com.mobnote.golukmain.msg.bean.MessageSenderBean;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,6 +14,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.cluster.ClusterActivity;
+import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
+import com.mobnote.golukmain.msg.bean.MessageSenderBean;
+import com.mobnote.golukmain.special.SpecialListActivity;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MsgCenterCommentAdapter extends BaseAdapter {
 
@@ -140,7 +138,7 @@ public class MsgCenterCommentAdapter extends BaseAdapter {
 			} else {
 				viewHolder.nTextContent.setText(messageBean.content.comment.text);
 			}
-			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, messageBean.content.time));
+			viewHolder.nTextTime.setText(GolukUtils.getCommentShowFormatTime(mContext, messageBean.content.ts));
 			GlideUtils.loadImage(mContext, viewHolder.nImageThumbnail, messageBean.content.picture,
 					R.drawable.tacitly_pic);
 			

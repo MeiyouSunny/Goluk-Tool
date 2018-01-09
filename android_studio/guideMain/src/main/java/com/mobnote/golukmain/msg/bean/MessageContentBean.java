@@ -23,6 +23,9 @@ public class MessageContentBean {
 	@JSONField(name="time")
 	public String time;
 
+	@JSONField(name="ts")
+	public long ts;
+
 	/**评论**/
 	@JSONField(name="comment")
 	public MessageCommentBean comment;

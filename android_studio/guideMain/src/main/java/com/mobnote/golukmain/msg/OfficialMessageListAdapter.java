@@ -102,7 +102,7 @@ public class OfficialMessageListAdapter extends BaseAdapter {
 			}
 			if(!TextUtils.isEmpty(bean.content.time)) {
 				viewHolder.nTextTime.setText(
-					GolukUtils.getCommentShowFormatTime(mContext, bean.content.time));
+					GolukUtils.getCommentShowFormatTime(mContext, bean.content.ts));
 			}
 		} else {
 			viewHolder.nTextContent.setText("");

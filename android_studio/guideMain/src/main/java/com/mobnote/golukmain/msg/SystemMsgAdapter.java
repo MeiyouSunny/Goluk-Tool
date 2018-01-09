@@ -1,28 +1,8 @@
 package com.mobnote.golukmain.msg;
 
-import java.util.List;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
-import com.mobnote.golukmain.profit.MyProfitActivity;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +11,24 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.msg.bean.MessageMsgsBean;
+import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.special.SpecialListActivity;
+import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+
+import java.util.List;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.serveraddress.IGetServerAddressType;
 
 @SuppressLint("CutPasteId")
 public class SystemMsgAdapter extends BaseAdapter {
@@ -175,7 +173,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 						+ mmbTxt.content.gaward.reason + mmbTxt.content.gaward.name;
             }
 
-			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, time));
+			txtHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, mmbTxt.content.ts));
 			txtHolder.msgTxt.setText(txt);
 			txtHolder.msgLayout.setOnClickListener(new OnClickListener() {
 				@Override
@@ -299,7 +297,7 @@ public class SystemMsgAdapter extends BaseAdapter {
 			});
 
 			GlideUtils.loadImage(mContext, imageHolder.msgImage, imgPath, 0);
-			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, imgTime));
+			imageHolder.msgTime.setText(GolukUtils.getCommentShowFormatTime(mContext, mmbImg.content.ts));
 			imageHolder.msgTxt.setText(imgTxt);
 			imageHolder.msgReasonTxt.setText(mContext.getResources().getString(R.string.msg_system_reason_began)
 					+ imgReason);
