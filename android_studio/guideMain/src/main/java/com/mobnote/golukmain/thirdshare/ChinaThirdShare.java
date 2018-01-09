@@ -3,19 +3,14 @@ package com.mobnote.golukmain.thirdshare;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.PopupWindow;
-import cn.com.tiros.debug.GolukDebugUtils;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
-import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
@@ -23,7 +18,8 @@ import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.ShareContent;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMVideo;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
@@ -177,7 +173,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	// 点击　“ＱＱ空间”
 	public void click_qqZone() {
-		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QZONE)) {
+		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.QQ)) {
 			GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
 			return;
 		}
@@ -200,7 +196,7 @@ public class ChinaThirdShare extends AbsThirdShare implements OnClickListener {
 
 	public void click_sina() {
 		if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)) {
-			//GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+			GolukUtils.showToast(mActivity, mActivity.getString(R.string.sina_weibo_low_version));
 			return;
 		}
 		if (!isCanClick()) {

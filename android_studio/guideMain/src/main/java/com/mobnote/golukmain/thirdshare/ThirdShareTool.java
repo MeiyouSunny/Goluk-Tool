@@ -344,7 +344,7 @@ public class ThirdShareTool extends AbsThirdShare {
 
     public void click_sina() {
         if (!sharePlatform.isInstallPlatform(SHARE_MEDIA.SINA)) {
-            GolukUtils.showToast(mActivity, mActivity.getString(R.string.str_qq_low_version));
+            GolukUtils.showToast(mActivity, mActivity.getString(R.string.sina_weibo_low_version));
             return;
         }
         if (!isCanClick()) {

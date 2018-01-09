@@ -4,15 +4,14 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.util.GolukUtils;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.handler.UMSSOHandler;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class SharePlatformUtil {
     public Context mContext;
@@ -37,15 +36,17 @@ public class SharePlatformUtil {
     }
 
     public boolean isInstallPlatform(SHARE_MEDIA platform) {
-        if (null == mShareAPI) {
-            return false;
-        }
-        try {
-            UMSSOHandler handler = mShareAPI.getHandler(platform);
-            return null == handler || handler.isInstall();
-        }catch (Exception ex) {
-            return true;
-        }
+        return mShareAPI != null && mShareAPI.isInstall((Activity) mContext, platform);
+//        if (null == mShareAPI) {
+//            return false;
+//        }
+//        try {
+//            UMSSOHandler handler = mShareAPI.getHandler(platform);
+//            boolean isinstall = handler.isInstall();
+//            return null == handler || handler.isInstall();
+//        }catch (Exception ex) {
+//            return true;
+//        }
     }
 
     public boolean isSinaWBValid() {
