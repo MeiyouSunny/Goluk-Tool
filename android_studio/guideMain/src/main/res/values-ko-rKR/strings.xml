@@ -1078,4 +1078,5 @@
     <string name="export_error">내보내기 실패...</string>
     <string name="exporting">동영상 내보내는 중. 잠시만 기다리세요...</string>
     <string name="signature_is_empty">서명드는 반드시 입력해야 합니다</string>
+    <string name="sina_weibo_low_version">Weibo을 설치하지 않았습니다</string>
 </resources>

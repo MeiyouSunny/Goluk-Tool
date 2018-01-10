@@ -1243,5 +1243,5 @@
     <string name="export_error">导出失败...</string>
     <string name="exporting">视频导出中，请耐心等待...</string>
     <string name="signature_is_empty">个性签名不能为空</string>
-    <string name="sina_weibo_low_version">你未安装新浪微博或版本太低</string>
+    <string name="sina_weibo_low_version">尚未安装新浪微博或版本太低</string>
 </resources>

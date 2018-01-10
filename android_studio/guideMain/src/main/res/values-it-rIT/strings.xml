@@ -1080,4 +1080,5 @@
     <string name="export_error">Esportazione non riuscita...</string>
     <string name="exporting">Esportazione video in corso. Attendi, prego...</string>
     <string name="signature_is_empty">Firma possono essere vuote</string>
+    <string name="sina_weibo_low_version">Non hai installato Weibo</string>
 </resources>

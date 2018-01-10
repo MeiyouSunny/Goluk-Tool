@@ -1080,4 +1080,5 @@
     <string name="export_error">エクスポートできませんでした...</string>
     <string name="exporting">ビデオをエクスポート中です。お待ちください...</string>
     <string name="signature_is_empty">署名は空白にできません</string>
+    <string name="sina_weibo_low_version">Weibo がインストールされていません</string>
 </resources>

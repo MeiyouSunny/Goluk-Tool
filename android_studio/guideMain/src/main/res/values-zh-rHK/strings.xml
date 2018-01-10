@@ -1081,4 +1081,5 @@
     <string name="export_error">匯出失敗…</string>
     <string name="exporting">正在匯出影片，請耐心等待…</string>
     <string name="signature_is_empty">個性簽名不能為空</string>
+    <string name="sina_weibo_low_version">尚未安裝新浪微博或版本太低</string>
 </resources>
