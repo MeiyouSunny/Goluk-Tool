@@ -1040,7 +1040,7 @@
     <string name="install_new_firmware">Installer</string>
     <string name="newest_firmware">La version actuelle est à jour</string>
     <string name="str_fireware_is_downloading">Téléchargement en cours</string>
-    <string name="str_system_window_not_allowed">La vidéo est en cours de téléchargement. Pour vérifier l'état du téléchargement de la vidéo, activez les notifications dans la gestion des applications.</string>
+    <string name="str_system_window_not_allowed">La vidéo est en cours de téléchargement. Pour vérifier l\'état du téléchargement de la vidéo, activez les notifications dans la gestion des applications.</string>
     <string name="str_notification_error_ssl_cert_invalid">Vous serez redirigé vers une page web non sécurisée. Voulez-vous continuer ?</string>
     <string name="settting_notify_friends">Votre ami a publié une nouvelle mise à jour !</string>
     <string name="str_tag_tab_hot">Recommander</string>
