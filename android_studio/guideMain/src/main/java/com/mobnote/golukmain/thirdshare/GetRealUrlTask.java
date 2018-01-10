@@ -25,8 +25,12 @@ public class GetRealUrlTask extends AsyncTask<String, Void, String> {
         try {
             URL url = new URL(urlAddress);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            conn.setInstanceFollowRedirects(false);
             conn.getResponseCode();
-            final String realUrl = conn.getURL().toString();
+            //final String realUrl = conn.getURL().toString();
+            final String realUrl = conn.getHeaderField("Location");
             conn.disconnect();
             if (!TextUtils.isEmpty(realUrl))
                 return realUrl;
