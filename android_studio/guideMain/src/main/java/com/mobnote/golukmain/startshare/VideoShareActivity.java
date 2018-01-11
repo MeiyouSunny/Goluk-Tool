@@ -54,7 +54,6 @@ import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -268,6 +267,9 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mLocationState = LOCATION_STATE_SUCCESS;
             refreshLocationUI();
         }
+
+        // 停止定位
+        BaiduLocation.getInstance().stopLocation();
     }
 
     public void onEventMainThread(EventSharetypeSelected event) {
@@ -916,7 +918,6 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             mSharePlatformAdapter.mSharePlatform.onActivityResult(requestCode, resultCode, data);
         }
     }
-
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

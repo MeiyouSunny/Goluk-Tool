@@ -51,15 +51,19 @@ public class UseGoogle implements LocationListener {
 
     // Gps 定位超时处理
     private boolean mHasLocated, mGpsTimeOut;
-    private static final int GPS_TIME_OUT = 10 * 1000;
+    private static int MSG_TIMEOUT = 100;
+    private static final int GPS_TIME_OUT = 15 * 1000;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-            if (!mHasLocated && TextUtils.equals(LocationManager.GPS_PROVIDER, mProvider)) {
-                mGpsTimeOut = true;
-                mProvider = getProvider();
-                stopGoogleLocation();
-                requestLocation();
+            if (msg.what == MSG_TIMEOUT) {
+                if (!mHasLocated && TextUtils.equals(LocationManager.GPS_PROVIDER, mProvider)) {
+                    GolukDebugUtils.e("Location", "===== Gps location timeout =====");
+                    mGpsTimeOut = true;
+                    mProvider = getProvider();
+                    stopGoogleLocation();
+                    requestLocation();
+                }
             }
         }
     };
@@ -71,19 +75,27 @@ public class UseGoogle implements LocationListener {
             mProvider = getProvider();
             requestLocation();
 
-            mHandler.sendEmptyMessageDelayed(0, GPS_TIME_OUT);
+            mHandler.sendEmptyMessageDelayed(MSG_TIMEOUT, GPS_TIME_OUT);
         }
     }
 
     public void requestLocation() {
-        if (TextUtils.isEmpty(mProvider))
+        if (TextUtils.isEmpty(mProvider)) {
+            GolukDebugUtils.e("Location", "===== No avalible location type! =====");
             return;
+        }
+
         mLocationManager.requestLocationUpdates(mProvider, BaiduLocation.LOCATION_TIMER,
                 BaiduLocation.LOCATION_DISTANCE, this);
+        GolukDebugUtils.e("Location", "===== Start location =====");
     }
 
     public void stopGoogleLocation() {
+        GolukDebugUtils.e("Location", "===== Stop location =====");
         if (null != mLocationManager) {
+
+            mHandler.removeMessages(MSG_TIMEOUT);
+
             mHasLocated = false;
             mGpsTimeOut = false;
             mTryCount = 0;
@@ -94,8 +106,10 @@ public class UseGoogle implements LocationListener {
     private String getProvider() {
         List<String> prodivers = mLocationManager.getProviders(true);
         if (prodivers.contains(LocationManager.GPS_PROVIDER) && !mGpsTimeOut) {
+            GolukDebugUtils.e("Location", "===== Location type: GPS =====");
             return LocationManager.GPS_PROVIDER;
         } else if (prodivers.contains(LocationManager.NETWORK_PROVIDER)) {
+            GolukDebugUtils.e("Location", "===== Location type: Network =====");
             return LocationManager.NETWORK_PROVIDER;
         }
 
@@ -104,7 +118,7 @@ public class UseGoogle implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        GolukDebugUtils.e("xxx", "location--------------onLocationChanged---0");
+        GolukDebugUtils.e("Location", "===== OnLocationChanged ===== [" + location.getLatitude() + "," + location.getLongitude() + "]");
         mHasLocated = true;
         mTryCount++;
         if (null == location) {
@@ -133,17 +147,17 @@ public class UseGoogle implements LocationListener {
 
     @Override
     public void onProviderDisabled(String arg0) {
-        GolukDebugUtils.e("", "--------------onProviderDisabled");
+        GolukDebugUtils.e("Location", "--------------onProviderDisabled");
     }
 
     @Override
     public void onProviderEnabled(String arg0) {
-        GolukDebugUtils.e("", "--------------onProviderEnabled");
+        GolukDebugUtils.e("Location", "--------------onProviderEnabled");
     }
 
     @Override
     public void onStatusChanged(String arg0, int arg1, Bundle arg2) {
-        GolukDebugUtils.e("", "--------------onStatusChanged");
+        GolukDebugUtils.e("Location", "--------------onStatusChanged");
     }
 
     public static LocationAddressDetailBean getAddress(double lat, double lng) {
@@ -151,7 +165,7 @@ public class UseGoogle implements LocationListener {
         Geocoder gc = new Geocoder(Const.getAppContext(), Locale.getDefault());
         LocationAddressDetailBean addressBean = new LocationAddressDetailBean();
         try {
-            GolukDebugUtils.e("xxx", "location--------------getAddress--------lat: " + lat + "  lng: " + lng);
+            //GolukDebugUtils.e("Location", "location--------------getAddress--------lat: " + lat + "  lng: " + lng);
             // 取得地址相关的一些信息、经度、纬度
             List<Address> addressList = gc.getFromLocation(lat, lng, 1);
             if (addressList.size() > 0) {
@@ -161,17 +175,12 @@ public class UseGoogle implements LocationListener {
                 String subAdminArea = address.getSubAdminArea();
                 String locality = address.getLocality();
                 String adminArea = address.getAdminArea();
-                String featureName = address.getFeatureName();
-                String postalCode = address.getPostalCode();
-                String subLocatity = address.getSubLocality();
-                String permises = address.getPremises();
                 String addressLine = address.getAddressLine(0);
                 String throughFrare = address.getThoroughfare();
-                String subFrae = address.getSubThoroughfare();
 
                 addressBean.countryName = countryName;
-                addressBean.cityName = locality;
-                addressBean.subLocatity = subLocatity;
+                addressBean.cityName = adminArea;
+                addressBean.subLocatity = !TextUtils.isEmpty(locality) ? locality : subAdminArea;
                 addressBean.throughFrare = throughFrare;
                 addressBean.state = 1;
                 addressBean.adminArea = adminArea;
@@ -182,16 +191,14 @@ public class UseGoogle implements LocationListener {
                     addressBean.detail = addressLine;
                 }
 
-                GolukDebugUtils.e("xxx", "location--------------getAddress--------2: " + "     countryName:"
-                        + countryName + " locality:" + locality + "  adminArea:" + adminArea + "  subAdminArea:"
-                        + subAdminArea + "  subLocatity:" + subLocatity + "  featureName:" + featureName
-                        + " postalCode:" + postalCode + "permises: " + permises + "  addressLine:" + addressLine
-                        + " throughFrare:" + throughFrare + "  subFrae:" + subFrae);
+                GolukDebugUtils.e("Location", "===== Address geted =====");
+                GolukDebugUtils.e("Location", "Address: " + addressBean.toString());
             }
             return addressBean;
         } catch (IOException e) {
             addressBean.detail = "";
             addressBean.state = 0;
+            GolukDebugUtils.e("Location", "===== getAddress Exception =====");
             return addressBean;
         }
     }
@@ -231,21 +238,22 @@ public class UseGoogle implements LocationListener {
             this.speed = speed;
             this.direction = direction;
             this.radius = radius;
+            GolukDebugUtils.e("Location", "===== GeocoderTask =====");
         }
 
         @Override
         protected LocationAddressDetailBean doInBackground(Void... voids) {
+            GolukDebugUtils.e("Location", "===== GeocoderTask: doInBackground =====");
             return getAddress(lat, lng);
         }
 
         @Override
         protected void onPostExecute(LocationAddressDetailBean result) {
-            if (result == null || TextUtils.isEmpty(result.cityName)
-                    || TextUtils.isEmpty(result.subLocatity) || TextUtils.isEmpty(result.detail)) {
+            if (result == null || TextUtils.isEmpty(result.cityName)) {
                 return;
             }
 
-            GolukDebugUtils.e("Location", "onLocationChanged lat:" + lat + ",lon:" + lng + ",address:" + result);
+            GolukDebugUtils.e("Location", "===== Address geted [lat:" + lat + ",lon:" + lng + ",address:" + result + "] =====");
 
             BaiduLocationInfo locationInfo = new BaiduLocationInfo();
             locationInfo.lat = lat;
@@ -255,7 +263,7 @@ public class UseGoogle implements LocationListener {
             locationInfo.radius = radius;
 
             BaiduLocation.postLocationInfo(0, lat, lng, radius, speed, direction, result.detail, "-1");
-            BaiduLocation.postShortLocationAddress(result.cityName + "·" + result.subLocatity, lat, lng);
+            BaiduLocation.postShortLocationAddress(result.subLocatity + "·" + result.cityName, lat, lng);
 
             getMessage(locationInfo);
         }
