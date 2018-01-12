@@ -52,7 +52,7 @@ public class UseGoogle implements LocationListener {
     // Gps 定位超时处理
     private boolean mHasLocated, mGpsTimeOut;
     private static int MSG_TIMEOUT = 100;
-    private static final int GPS_TIME_OUT = 15 * 1000;
+    private static final int GPS_TIME_OUT = 10 * 1000;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
