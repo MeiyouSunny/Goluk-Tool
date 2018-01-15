@@ -50,6 +50,8 @@ public class UserUtils {
      * AlertDialog
      */
     public static void showDialog(Context context, String message) {
+        if (!isActivityRunning(context))
+            return;
         Builder builder = new AlertDialog.Builder(context);
         AlertDialog dialog = builder.setTitle(context.getResources().getString(R.string.user_dialog_hint_title))
                 .setMessage(message).setPositiveButton(context.getResources().getString(R.string.user_repwd_ok), null)
@@ -527,6 +529,16 @@ public class UserUtils {
             return fmtnumber;
         }
         return number;
+    }
+
+    /**
+     * Return activity is destory
+     */
+    private static boolean isActivityRunning(Context context) {
+        if (context == null && !(context instanceof Activity))
+            return false;
+
+        return !((Activity) context).isFinishing() && !((Activity) context).isDestroyed();
     }
 
 }

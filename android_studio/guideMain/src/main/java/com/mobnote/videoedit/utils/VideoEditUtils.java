@@ -1,18 +1,16 @@
 package com.mobnote.videoedit.utils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
 import android.graphics.Bitmap;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.mobnote.videoedit.bean.ChunkBean;
 import com.mobnote.videoedit.bean.ProjectItemBean;
 import com.mobnote.videoedit.bean.TransitionBean;
 import com.mobnote.videoedit.constant.VideoEditConstant;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.model.Chunk;
@@ -172,7 +170,9 @@ public class VideoEditUtils {
 			list.remove(chunkIndex + 1);
 		}
 		list.remove(chunkIndex);
-		afterEffect.editRemoveChunk(mapI2CIndex(chunkIndex));
+		// Fix Bugly#2455
+		if (afterEffect != null)
+			afterEffect.editRemoveChunk(mapI2CIndex(chunkIndex));
 	}
 
 	public List<Bitmap> getBitmapListFromChunk(Chunk chunk) {

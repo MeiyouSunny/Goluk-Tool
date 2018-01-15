@@ -28,7 +28,7 @@ public class CustomLoadingDialog {
         mDialog.setMessage(mMessage);
     }
 
-    public void show() {
+    public synchronized void show() {
         if (mDialog != null) {
             if (!mDialog.isShowing() && isActivityRunning()) {
                 mDialog.show();
@@ -36,14 +36,14 @@ public class CustomLoadingDialog {
         }
     }
 
-    public boolean isShowing() {
-        if (null != mDialog) {
+    public synchronized boolean isShowing() {
+        if (mDialog != null) {
             return mDialog.isShowing();
         }
         return false;
     }
 
-    public void close() {
+    public synchronized void close() {
         if (mDialog != null) {
             if (mDialog.isShowing()) {
                 mDialog.dismiss();

@@ -1646,8 +1646,14 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         ExportConfiguration.Builder builder =  new ExportConfiguration.Builder();
         if (mVideoFrom.equals("local")) {
             MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            retriever.setDataSource(mVideoUrl);
-            int width = Integer.valueOf(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
+            // Fix Bugly#348187
+            if (!TextUtils.isEmpty(mVideoUrl))
+                retriever.setDataSource(mVideoUrl);
+            // Fix Bugly#1677
+            int width = 0;
+            String widthVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
+            if (!TextUtils.isEmpty(widthVideo))
+                width = Integer.valueOf(widthVideo);
             builder.setVideoMaxWH(width);
             retriever.release();
         }
