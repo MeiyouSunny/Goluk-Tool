@@ -1,10 +1,5 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -18,8 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
@@ -42,9 +35,9 @@ import com.mobnote.golukmain.carrecorder.settings.bean.VideoLogoJson;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoDisplay;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoJson;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
@@ -53,10 +46,16 @@ import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1U_SIGN;
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2U_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
 
@@ -1294,11 +1293,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		EventBus.getDefault().post(eventFnish);
 		GolukApplication.getInstance().setIpcDisconnect();
 		WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-		
-		GolukDebugUtils.e("","restore  init-----SettingActivity--------restoreSuccess: 22: " + bean.ipc_ssid);
-		
 		if (null != bean) {
 			WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
+			GolukDebugUtils.e("", "restore  init-----SettingActivity--------restoreSuccess: 22: " + bean.ipc_ssid);
 		}
 	}
 

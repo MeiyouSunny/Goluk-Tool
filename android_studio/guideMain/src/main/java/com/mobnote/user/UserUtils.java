@@ -534,7 +534,7 @@ public class UserUtils {
     /**
      * Return the activity is destory
      */
-    private static boolean isActivityRunning(Context context) {
+    public static boolean isActivityRunning(Context context) {
         if (context == null && !(context instanceof Activity))
             return false;
 

@@ -375,6 +375,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                         break;
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // mCloudWonderfulVideoAdapter.unlock();
+                        if (mStickyListHeadersListView.getAdapter() == null)
+                            break;
+
                         GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
                         if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
                             GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");

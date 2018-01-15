@@ -2499,7 +2499,7 @@ public class VideoEditActivity extends BaseActivity implements
             getWindow().clearFlags(
                     WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
             if (!VideoEditActivity.this.isFinishing()) {
-                if (epdExport != null) {
+                if (epdExport != null && epdExport.isShowing()) {
                     epdExport.dismiss();
                     epdExport = null;
                 }

@@ -275,7 +275,13 @@ public class MyProfitActivity extends BaseActivity implements OnClickListener, O
 						mIsDataBack = true;
 						GolukUtils.startUserLogin(this);
 						Timer timer = new Timer();
-						timer.schedule(task, GolukConfig.CLOSE_ACTIVITY_TIMER);
+						timer.schedule(new TimerTask(){
+
+							public void run(){
+								MyProfitActivity.this.finish();
+							}
+
+						}, GolukConfig.CLOSE_ACTIVITY_TIMER);
 						return;
 					}
 				}

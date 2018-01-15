@@ -334,13 +334,14 @@ public class TSocket {
 				if (mIsShutDown == false)
 				{
 					try {
-						if(null != mTcpSocket) {
+						if (null != mTcpSocket) {
 							synchronized (mLock) {
-
-								mOutputStream = mTcpSocket.getOutputStream();
-								mOutputStream.write(buf, 0, bufsize);
-								mSendSize = bufsize;
-								mOutputStream.flush();
+								if (mTcpSocket != null) {
+									mOutputStream = mTcpSocket.getOutputStream();
+									mOutputStream.write(buf, 0, bufsize);
+									mSendSize = bufsize;
+									mOutputStream.flush();
+								}
 							}
 						}
 

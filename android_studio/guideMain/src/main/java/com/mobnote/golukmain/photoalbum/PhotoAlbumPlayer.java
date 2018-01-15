@@ -510,9 +510,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         if (mDate != null) {
             TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
-            tvTitleData.setText(mDate.substring(0, 10));
+            if (mDate.length() >= 10)
+                tvTitleData.setText(mDate.substring(0, 10));
             TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
-            tvTitleTime.setText(mDate.substring(11, 19));
+            if (mDate.length() >= 19)
+                tvTitleTime.setText(mDate.substring(11, 19));
             TextView title = (TextView) findViewById(R.id.title);
             title.setText(mDate);
         }

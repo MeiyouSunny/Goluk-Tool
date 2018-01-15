@@ -1086,19 +1086,22 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
                 }
             } else {
-                mVideoConfigState.AudioEnabled = videoState;
-                boolean flog = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-                if (flog) {
-                    if (videoState == 1) {
-                        isRecVideo = true;
-                        mVideoOff.setBackgroundResource(R.drawable.recorder_btn_sound);
-                    } else {
-                        isRecVideo = false;
-                        mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
-                    }
+                // Fix Bugly#1579
+                if (mVideoConfigState != null) {
+                    mVideoConfigState.AudioEnabled = videoState;
+                    boolean flog = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
+                    if (flog) {
+                        if (videoState == 1) {
+                            isRecVideo = true;
+                            mVideoOff.setBackgroundResource(R.drawable.recorder_btn_sound);
+                        } else {
+                            isRecVideo = false;
+                            mVideoOff.setBackgroundResource(R.drawable.recorder_btn_nosound);
+                        }
 
-                } else {
-                    GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+                    } else {
+                        GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+                    }
                 }
             }
         } else if (id == BTN_NORMALSCREEN) {
@@ -1762,7 +1765,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private void stopTrimVideo() {
         if (!IPCControlManager.T1_SIGN.equals(mApp.mIPCControlManager.mProduceName)
                 && !IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
-            mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
+            if (mHandler != null)
+                mHandler.sendEmptyMessageDelayed(CarRecorderActivity.QUERYFILEEXIT, CarRecorderActivity.QUERYFILETIME);
         }
         mShootTime = 0;
         m8sBtn.setText("");

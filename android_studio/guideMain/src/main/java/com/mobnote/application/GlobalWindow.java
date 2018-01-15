@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.golukmain.R;
+import com.mobnote.user.UserUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -300,15 +301,17 @@ public class GlobalWindow implements View.OnClickListener {
 
     private void showDialog() {
         dimissDialog();
-        Context cc = GolukApplication.getInstance().getContext();
-        String title = cc.getString(R.string.str_global_dialog_title);
-        String message = cc.getString(R.string.str_global_dialog_msg);
-        mTwoButtonDialog = new AlertDialog.Builder(cc).create();
+        Context context = GolukApplication.getInstance().getContext();
+        if (!UserUtils.isActivityRunning(context))
+            return;
+        String title = context.getString(R.string.str_global_dialog_title);
+        String message = context.getString(R.string.str_global_dialog_msg);
+        mTwoButtonDialog = new AlertDialog.Builder(context).create();
         mTwoButtonDialog.setTitle(title);
         mTwoButtonDialog.setMessage(message);
         mTwoButtonDialog.setCancelable(false);
 
-        mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, cc.getString(R.string.dialog_str_cancel),
+        mTwoButtonDialog.setButton(DialogInterface.BUTTON_NEGATIVE, context.getString(R.string.dialog_str_cancel),
                 new DialogInterface.OnClickListener() {
 
                     @Override
@@ -317,7 +320,7 @@ public class GlobalWindow implements View.OnClickListener {
                     }
                 });
 
-        mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, cc.getString(R.string.str_global_dialog_right_btn),
+        mTwoButtonDialog.setButton(DialogInterface.BUTTON_POSITIVE, context.getString(R.string.str_global_dialog_right_btn),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialoginterface, int i) {
                         dimissDialog();

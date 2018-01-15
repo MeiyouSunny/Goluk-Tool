@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.followed;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -62,6 +63,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     private final static String REFRESH_PULL_DOWN = "1";
     private final static String REFRESH_PULL_UP = "2";
 
+    private Context mContext;
+
     private PullToRefreshListView mListView;
     private FollowedListAdapter mAdapter;
     private List<Object> mFollowedList;
@@ -82,6 +85,12 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
         super.onCreate(savedInstanceState);
         GolukDebugUtils.d(TAG, "onCreate");
         EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
     }
 
     @Override
@@ -292,9 +301,9 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
         mApp.autoLoginStatus = 3;
         Intent loginIntent;
         if (!GolukApplication.getInstance().isMainland()) {
-            loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
+            loginIntent = new Intent(mContext, InternationUserLoginActivity.class);
         } else {
-            loginIntent = new Intent(getActivity(), UserLoginActivity.class);
+            loginIntent = new Intent(mContext, UserLoginActivity.class);
         }
         startActivity(loginIntent);
     }

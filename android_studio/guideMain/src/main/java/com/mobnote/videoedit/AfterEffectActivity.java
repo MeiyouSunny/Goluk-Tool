@@ -1095,7 +1095,8 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
                 } else if(event.getAction() == MotionEvent.ACTION_DOWN) {
                     mTimeLineLastX = (int)event.getX();
                     clearChunkFocus();
-                    mAfterEffect.playPause();
+                    if(mAfterEffect != null)
+                        mAfterEffect.playPause();
                 } else if(event.getAction() == MotionEvent.ACTION_UP) {
                     mTimeLineLastX = 0;
                 } else {
