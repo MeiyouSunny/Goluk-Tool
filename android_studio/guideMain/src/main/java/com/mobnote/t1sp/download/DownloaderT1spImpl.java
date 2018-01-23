@@ -15,6 +15,7 @@ import com.mobnote.t1sp.util.CollectionUtils;
 
 import org.succlz123.okdownload.OkDownloadEnqueueListener;
 import org.succlz123.okdownload.OkDownloadError;
+import org.succlz123.okdownload.OkDownloadManager;
 import org.succlz123.okdownload.OkDownloadRequest;
 
 import java.io.File;
@@ -122,9 +123,41 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
                     .url(task.getGpsDownloadPath())
                     .filePath(task.getGpsSavePath())
                     .build();
-            mDownloadManager.enqueue(request);
+            //mDownloadManager.enqueue(request, mNoneListener);
+
+            OkDownloadManager.getInstance(mContext).enqueue(request, mNoneListener);
         }
     }
+
+    private OkDownloadEnqueueListener mNoneListener = new OkDownloadEnqueueListener() {
+        @Override
+        public void onStart(int id) {
+        }
+
+        @Override
+        public void onProgress(int progress, long cacheSize, long totalSize) {
+        }
+
+        @Override
+        public void onRestart() {
+        }
+
+        @Override
+        public void onPause() {
+        }
+
+        @Override
+        public void onFinish() {
+        }
+
+        @Override
+        public void onCancel() {
+        }
+
+        @Override
+        public void onError(OkDownloadError error) {
+        }
+    };
 
     @Override
     public void cancelAllDownloadTask(boolean showCancelMsg) {

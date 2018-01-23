@@ -275,42 +275,78 @@
 
                 <View style="@style/LineGrayHorizontal"/>
 
-                <RelativeLayout
-                    android:id="@+id/gsensor_level"
-                    style="@style/SettingLabelLayout">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:id="@+id/gsensor_level"
+                        style="@style/SettingLabelLayout">
+
+                        <TextView
+                            style="@style/SettingLabel.Arrow"
+                            android:text="@string/pzgy_title"/>
+
+                        <TextView
+                            android:id="@+id/gsensor_level_value"
+                            style="@style/SettingLabelValue"/>
+
+                    </RelativeLayout>
 
                     <TextView
-                        style="@style/SettingLabel.Arrow"
-                        android:text="@string/pzgy_title"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#F1F1F2"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/hint_gsensor"
+                        android:textColor="#999999"
+                        android:textSize="12sp"/>
 
-                    <TextView
-                        android:id="@+id/gsensor_level_value"
-                        style="@style/SettingLabelValue"/>
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
-                <RelativeLayout
-                    style="@style/SettingLabelLayout"
-                    android:clickable="false">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        style="@style/SettingLabelLayout"
+                        android:clickable="false">
+
+                        <TextView
+                            style="@style/SettingLabel"
+                            android:text="@string/str_settings_security_title"/>
+
+                        <com.kyleduo.switchbutton.SwitchButton
+                            android:id="@+id/switch_parking_guard"
+                            style="@style/SwitchButton"
+                            app:kswBackDrawable="@drawable/switch_button_drawable"
+                            app:kswBackMeasureRatio="1.4"
+                            app:kswThumbDrawable="@drawable/switch_selector"
+                            app:kswThumbMarginBottom="-8dp"
+                            app:kswThumbMarginLeft="-5dp"
+                            app:kswThumbMarginRight="-5dp"
+                            app:kswThumbMarginTop="-2.5dp"/>
+
+                    </RelativeLayout>
 
                     <TextView
-                        style="@style/SettingLabel"
-                        android:text="@string/str_settings_security_title"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#F1F1F2"
+                        android:paddingBottom="4dp"
+                        android:paddingLeft="16dp"
+                        android:paddingTop="4dp"
+                        android:text="@string/hint_pk_mode"
+                        android:textColor="#999999"
+                        android:textSize="12sp"/>
 
-                    <com.kyleduo.switchbutton.SwitchButton
-                        android:id="@+id/switch_parking_guard"
-                        style="@style/SwitchButton"
-                        app:kswBackDrawable="@drawable/switch_button_drawable"
-                        app:kswBackMeasureRatio="1.4"
-                        app:kswThumbDrawable="@drawable/switch_selector"
-                        app:kswThumbMarginBottom="-8dp"
-                        app:kswThumbMarginLeft="-5dp"
-                        app:kswThumbMarginRight="-5dp"
-                        app:kswThumbMarginTop="-2.5dp"/>
-
-                </RelativeLayout>
+                </LinearLayout>
 
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
