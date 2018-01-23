@@ -9,6 +9,10 @@
     <string name="enter_setting_mode_hint">进入设置模式，记录仪将停止录像</string>
     <string name="recovery_to_record">记录仪已恢复录像</string>
     <string name="capture_success_hint">精彩抓拍成功，视频地址：\n%s</string>
+    <string name="emg_video_sound">紧急视频提示音</string>
+    <string name="lower">较低</string>
+    <string name="higher">较高</string>
+    <string name="t1sp_ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。升级成功后，请拔掉电源重新开机。</string>
 
     <!-- Array -->
     <!-- 视频清晰度 -->
@@ -33,15 +37,17 @@
 
     <!-- GSendor灵敏度 -->
     <array name="gsendor_level">
-        <item>@string/live_str_close</item>
         <item>@string/str_low</item>
+        <item>@string/lower</item>
         <item>@string/str_middle</item>
+        <item>@string/higher</item>
         <item>@string/str_high</item>
     </array>
     <array name="gsendor_level_values">
-        <item>OFF</item>
         <item>LEVEL0</item>
+        <item>LEVEL1</item>
         <item>LEVEL2</item>
+        <item>LEVEL3</item>
         <item>LEVEL4</item>
     </array>
 

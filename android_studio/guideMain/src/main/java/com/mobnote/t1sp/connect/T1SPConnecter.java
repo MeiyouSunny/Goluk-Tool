@@ -2,6 +2,7 @@ package com.mobnote.t1sp.connect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.wifi.WifiManager;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -16,6 +17,7 @@ import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.wifibind.WifiConnectManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +43,17 @@ public class T1SPConnecter {
     // 结束录像页面时是否需要断开WIFI连接
     private boolean mNeedDisconnectWIFI = true;
 
+    private WifiConnectManager mWifiConnectManager;
+
     private T1SPConnecter() {
     }
 
     public void init(Context context) {
         mContext = context;
         mIsConnected = false;
+        WifiManager wifiManager = (WifiManager) mContext.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mWifiConnectManager = new WifiConnectManager(mContext, wifiManager);
+
         mListeners = new ArrayList<>();
         EventBus.getDefault().register(this);
     }
@@ -63,7 +70,7 @@ public class T1SPConnecter {
     public void onEventMainThread(EventWifiState event) {
         if (EventConfig.WIFI_STATE == event.getOpCode()) {
             if (event.getMsg()) {
-                if (NetUtil.isWifiConnected(mContext)) {
+                if (NetUtil.isWifiConnected(mContext) && mWifiConnectManager.isConnectedT1sWifi() && hasListeners()) {
                     // WIFI连接成功,发送连接请求
                     connectToDevice();
                 } else {
@@ -151,6 +158,10 @@ public class T1SPConnecter {
     public void removeListener(T1SPConntectListener listener) {
         if (mListeners != null && listener != null)
             mListeners.remove(listener);
+    }
+
+    private boolean hasListeners() {
+        return mListeners != null && !mListeners.isEmpty();
     }
 
     public void finishRecordActivity(Class<? extends Activity> activity) {

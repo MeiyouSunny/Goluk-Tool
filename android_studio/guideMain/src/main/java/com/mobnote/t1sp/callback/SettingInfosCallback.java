@@ -36,6 +36,12 @@ public abstract class SettingInfosCallback extends DataCallback {
     private static final String KEY_SD_INFO = "Camera.Menu.SDInfo=";
     // 设备信息
     private static final String KEY_DEVICE_INFO = "Camera.Menu.DeviceID=";
+    // 安防模式
+    private static final String KEY_PK_MODE = "Camera.Menu.PKMode=";
+    // 休眠模式
+    private static final String KEY_SLEEP_MODE = "Camera.Menu.SleepMode=";
+    // 紧急视频声音
+    private static final String KEY_EMG_VIDEO_SOUND = "Camera.Menu.LockSound=";
 
     @Override
     protected void parseData(String[] datas) {
@@ -59,6 +65,12 @@ public abstract class SettingInfosCallback extends DataCallback {
                 settingInfo.powerOffDelay = line.substring(KEY_POWER_OFF_DELAY.length(), line.length());
             } else if (line.contains(KEY_PWR_SOUND)) {
                 settingInfo.powerSound = parseOnOffValue(line.substring(KEY_PWR_SOUND.length(), line.length()));
+            } else if (line.contains(KEY_PK_MODE)) {
+                settingInfo.pkMode = parseOnOffValue(line.substring(KEY_PK_MODE.length(), line.length()));
+            } else if (line.contains(KEY_SLEEP_MODE)) {
+                settingInfo.sleepMode = parseOnOffValue(line.substring(KEY_SLEEP_MODE.length(), line.length()));
+            } else if (line.contains(KEY_EMG_VIDEO_SOUND)) {
+                settingInfo.emgVideoSound = parseOnOffValue(line.substring(KEY_EMG_VIDEO_SOUND.length(), line.length()));
             } else if (line.contains(KEY_SNAP_SOUND)) {
                 settingInfo.snapSound = parseOnOffValue(line.substring(KEY_SNAP_SOUND.length(), line.length()));
             } else if (line.contains(KEY_AUTO_ROTATE)) {

@@ -509,6 +509,60 @@ public class ParamsBuilder {
     }
 
     /**
+     * 设置紧急视频声音开关
+     *
+     * @param onOrOff [ON|OFF]
+     * @return
+     */
+    public static Map<String, String> setEmgVideoSoundParam(boolean onOrOff) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "LockSound");
+        if (onOrOff)
+            params.put(KEY_VALUE, VALUE_ON);
+        else
+            params.put(KEY_VALUE, VALUE_OFF);
+
+        return params;
+    }
+
+    /**
+     * 设置休眠模式开关
+     *
+     * @param onOrOff [ON|OFF]
+     * @return
+     */
+    public static Map<String, String> setSleepModeParam(boolean onOrOff) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "SleepMode");
+        if (onOrOff)
+            params.put(KEY_VALUE, VALUE_ON);
+        else
+            params.put(KEY_VALUE, VALUE_OFF);
+
+        return params;
+    }
+
+    /**
+     * 设置安防模式开关
+     *
+     * @param onOrOff [ON|OFF]
+     * @return
+     */
+    public static Map<String, String> setPKModeParam(boolean onOrOff) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "PKMode");
+        if (onOrOff)
+            params.put(KEY_VALUE, VALUE_ON);
+        else
+            params.put(KEY_VALUE, VALUE_OFF);
+
+        return params;
+    }
+
+    /**
      * 获取抓拍视频声音开关信息
      *
      * @return

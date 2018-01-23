@@ -70,6 +70,21 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
     }
 
     @Override
+    public void setEmgVideoSound(boolean onOff) {
+        sendSetRequest(ParamsBuilder.setEmgVideoSoundParam(onOff));
+    }
+
+    @Override
+    public void setSleepMode(boolean onOff) {
+        sendSetRequest(ParamsBuilder.setSleepModeParam(onOff));
+    }
+
+    @Override
+    public void setPKMode(boolean onOff) {
+        sendSetRequest(ParamsBuilder.setPKModeParam(onOff));
+    }
+
+    @Override
     public void setAutoRotate(boolean onOff) {
         sendSetRequest(ParamsBuilder.setAutoRotateParam(onOff));
     }
@@ -81,7 +96,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
     @Override
     public void setParkGuard(boolean onOff) {
-        sendSetRequest(ParamsBuilder.setParkingGuardParam(!onOff ? ParamsBuilder.VALUE_OFF : ParamsBuilder.VALUE_HIGH));
+        sendSetRequest(ParamsBuilder.setPKModeParam(onOff));
     }
 
     @Override

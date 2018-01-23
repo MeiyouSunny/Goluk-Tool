@@ -34,6 +34,21 @@ public interface DeviceSettingsPresenter extends Presenter<DeviceSettingsModel, 
     void setCaptureSound(boolean onOff);
 
     /**
+     * 设置紧急视频声音开关
+     */
+    void setEmgVideoSound(boolean onOff);
+
+    /**
+     * 设置休眠模式开关
+     */
+    void setSleepMode(boolean onOff);
+
+    /**
+     * 设置安防模式开关
+     */
+    void setPKMode(boolean onOff);
+
+    /**
      * 设置自动旋转信息
      */
     void setAutoRotate(boolean onOff);

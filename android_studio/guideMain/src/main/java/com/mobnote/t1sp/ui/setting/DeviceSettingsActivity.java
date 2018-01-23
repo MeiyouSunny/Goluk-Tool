@@ -63,6 +63,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     SwitchButton switchParkingGuard;
     @BindView(R2.id.switch_mtd)
     SwitchButton switchMTD;
+    @BindView(R2.id.switch_emg_video_sound)
+    SwitchButton switchEmgVideoSound;
+    @BindView(R2.id.switch_dormant_mode)
+    SwitchButton switchDormantMode;
 
     // 忽略首次由程序修改设置的check状态
     private boolean mIgnoreSwtich = true;
@@ -126,7 +130,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @OnCheckedChanged({R2.id.switch_record_sound, R2.id.switch_power_sound, R2.id.switch_capture_sound, R2.id.switch_auto_rotate,
-            R2.id.switch_watermark, R2.id.switch_parking_guard, R2.id.switch_mtd})
+            R2.id.switch_watermark, R2.id.switch_parking_guard, R2.id.switch_mtd, R2.id.switch_emg_video_sound, R2.id.switch_dormant_mode})
     public void onChecked(CompoundButton button, boolean isChecked) {
         if (mIgnoreSwtich)
             return;
@@ -137,15 +141,26 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             getPresenter().setPowerSound(isChecked);
         } else if (viewId == R.id.switch_capture_sound) {
             getPresenter().setCaptureSound(isChecked);
+        } else if (viewId == R.id.switch_emg_video_sound) {
+            getPresenter().setEmgVideoSound(isChecked);
+        } else if (viewId == R.id.switch_dormant_mode) {
+            getPresenter().setSleepMode(isChecked);
+            if (isChecked) {
+                mIgnoreSwtich = true;
+                switchParkingGuard.setChecked(!isChecked);
+                mIgnoreSwtich = false;
+            }
+        } else if (viewId == R.id.switch_parking_guard) {
+            getPresenter().setParkGuard(isChecked);
+            if (isChecked) {
+                mIgnoreSwtich = true;
+                switchDormantMode.setChecked(!isChecked);
+                mIgnoreSwtich = false;
+            }
         } else if (viewId == R.id.switch_auto_rotate) {
             getPresenter().setAutoRotate(isChecked);
         } else if (viewId == R.id.switch_watermark) {
             getPresenter().setRecStamp(isChecked);
-        } else if (viewId == R.id.switch_parking_guard) {
-            getPresenter().setParkGuard(isChecked);
-            switchMTD.setEnabled(isChecked);
-            if (!isChecked)
-                switchMTD.setChecked(false);
         } else if (viewId == R.id.switch_mtd) {
             getPresenter().setMTD(isChecked);
         }
@@ -175,9 +190,11 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchCaptureSound.setChecked(settingInfo.snapSound);
         switchAutoRotate.setChecked(settingInfo.autoRotate);
         switchWatermark.setChecked(settingInfo.recStamp);
-        switchParkingGuard.setChecked(settingInfo.parkingGuard);
-        switchMTD.setChecked(false);
-        switchMTD.setEnabled(settingInfo.parkingGuard);
+        switchParkingGuard.setChecked(settingInfo.pkMode);
+        switchDormantMode.setChecked(settingInfo.sleepMode);
+        switchEmgVideoSound.setChecked(settingInfo.emgVideoSound);
+//        switchMTD.setChecked(false);
+//        switchMTD.setEnabled(settingInfo.parkingGuard);
 
         mIgnoreSwtich = false;
     }

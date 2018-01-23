@@ -39,6 +39,12 @@ public class SettingInfo implements Parcelable {
     public String deviceId;
     // 设备版本
     public String deviceVersion;
+    // 安防模式
+    public boolean pkMode;
+    //休眠模式
+    public boolean sleepMode;
+    // 紧急视频声音
+    public boolean emgVideoSound;
 
     public SettingInfo() {
     }

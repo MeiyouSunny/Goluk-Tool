@@ -4,10 +4,14 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,6 +91,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      * 升级过程中提示不要断电图片
      **/
     private ImageView mNoBreakImage, mtfCardImage;
+    // 升级提示
+    private TextView mTvUpgradeHint;
     /**
      * 升级过程中提示不要断点文字
      **/
@@ -599,12 +605,22 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mVoiceLayout = (RelativeLayout) findViewById(R.id.rl_update_voice);
         mtfCardImage = (ImageView) findViewById(R.id.iv_upgrade_tfcard_image);
         mtfCardText = (TextView) findViewById(R.id.tv_upgrade_tfcard_text);
+        mTvUpgradeHint = (TextView) findViewById(R.id.upgrade_hint);
         mLaterLayout = (RelativeLayout) findViewById(R.id.rl_update_later);
 
         // 监听
         mBtnBack.setOnClickListener(this);
         mBtnDownload.setOnClickListener(this);
         mVoiceLayout.setOnClickListener(this);
+
+        // T1SP提示文字增加重启提示
+        if (mApp.getIPCControlManager().isT1SP()) {
+            String hint = getString(R.string.ipc_hint_text);
+            String hintT1SP = getString(R.string.t1sp_ipc_hint_text);
+            SpannableStringBuilder style = new SpannableStringBuilder(hintT1SP);
+            style.setSpan(new ForegroundColorSpan(Color.RED), hint.length(), hintT1SP.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mTvUpgradeHint.setText(style);
+        }
     }
 
     @Override

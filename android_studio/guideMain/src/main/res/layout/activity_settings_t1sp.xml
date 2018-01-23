@@ -169,6 +169,29 @@
 
                     <TextView
                         style="@style/SettingLabel"
+                        android:text="@string/emg_video_sound"/>
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/switch_emg_video_sound"
+                        style="@style/SwitchButton"
+                        app:kswBackDrawable="@drawable/switch_button_drawable"
+                        app:kswBackMeasureRatio="1.4"
+                        app:kswThumbDrawable="@drawable/switch_selector"
+                        app:kswThumbMarginBottom="-8dp"
+                        app:kswThumbMarginLeft="-5dp"
+                        app:kswThumbMarginRight="-5dp"
+                        app:kswThumbMarginTop="-2.5dp"/>
+
+                </RelativeLayout>
+
+                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+
+                <RelativeLayout
+                    style="@style/SettingLabelLayout"
+                    android:clickable="false">
+
+                    <TextView
+                        style="@style/SettingLabel"
                         android:text="@string/jcsp_title"/>
 
                     <com.kyleduo.switchbutton.SwitchButton
@@ -301,13 +324,36 @@
                     android:paddingTop="2dp"
                     android:text="@string/pzgy_text"
                     android:textColor="#999999"
-                    android:textSize="12sp"/>
+                    android:textSize="12sp"
+                    android:visibility="gone"/>
 
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
+
+                    <TextView
+                        style="@style/SettingLabel"
+                        android:text="@string/str_settings_parking_sleep_title"/>
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/switch_dormant_mode"
+                        style="@style/SwitchButton"
+                        app:kswBackDrawable="@drawable/switch_button_drawable"
+                        app:kswBackMeasureRatio="1.4"
+                        app:kswThumbDrawable="@drawable/switch_selector"
+                        app:kswThumbMarginBottom="-8dp"
+                        app:kswThumbMarginLeft="-5dp"
+                        app:kswThumbMarginRight="-5dp"
+                        app:kswThumbMarginTop="-2.5dp"/>
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    style="@style/SettingLabelLayout"
+                    android:clickable="false"
+                    android:visibility="gone">
 
                     <TextView
                         style="@style/SettingLabel"

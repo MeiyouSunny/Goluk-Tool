@@ -39,20 +39,14 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.connect.T1SPConntectListener;
-import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
-import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
@@ -200,9 +194,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.setBinding(true);
         // 断开前面的所有连接
         mApp.setIpcDisconnect();
-
-        // T1SP
-        T1SPConnecter.instance().addListener(this);
     }
 
     private void getIntentData() {
@@ -337,7 +328,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             connFailed();
             return false;
         }
-        if (!mWillConnName.startsWith("Goluk") && !mWillConnName.startsWith("Car")) {
+        if (!mWillConnName.startsWith("Goluk")) {
             showToast(getString(R.string.not_goluk_device));
             collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
             // 连接失败
@@ -534,9 +525,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
+
         // T1SP
-        if (mAutoConn)
+        T1SPConnecter.instance().addListener(this);
+        // 如果是自动连接并且已经连上Goluk_T1s热点
+        if (mAutoConn && mWac.isConnectedT1sWifi()) {
             connectT1SP();
+            return;
+        }
 
         if (!mAutoConn) {
             mStartSystemWifi = true;
@@ -641,6 +637,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onStop() {
         super.onStop();
         mIsCanAcceptNetState = false;
+        // T1SP
+        T1SPConnecter.instance().removeListener(this);
     }
 
     protected void autoConnWifi() {
@@ -849,8 +847,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
         LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
         this.dimissLoadingDialog();
-        // T1SP
-        T1SPConnecter.instance().removeListener(this);
     }
 
     @Override
