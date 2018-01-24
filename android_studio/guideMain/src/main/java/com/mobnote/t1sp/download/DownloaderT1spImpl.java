@@ -7,16 +7,13 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.StringRes;
-import android.util.Log;
 
+import com.liulishuo.filedownloader.BaseDownloadTask;
+import com.liulishuo.filedownloader.FileDownloadListener;
+import com.liulishuo.filedownloader.FileDownloader;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.util.CollectionUtils;
-
-import org.succlz123.okdownload.OkDownloadEnqueueListener;
-import org.succlz123.okdownload.OkDownloadError;
-import org.succlz123.okdownload.OkDownloadManager;
-import org.succlz123.okdownload.OkDownloadRequest;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -25,13 +22,12 @@ import java.util.List;
 /**
  * T1SP 下载管理
  */
-public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueListener {
+public class DownloaderT1spImpl implements DownloaderT1sp {
 
     private static DownloaderT1spImpl mInstance;
 
     private static Context mContext;
 
-    private DownloadManager mDownloadManager;
     /* 总共需要下载的列表 */
     public List<Task> mListTotal;
     /* 已经下载完成的列表 */
@@ -50,16 +46,10 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
             mListTotal = new ArrayList<>();
         if (mListDownloaded == null)
             mListDownloaded = new ArrayList<>();
-        if (mDownloadManager == null)
-            mDownloadManager = DownloadManager.getInstance(context);
+
+        FileDownloader.setup(context);
 
         mSoundPool = new SoundPool(1, AudioManager.STREAM_NOTIFICATION, 0);
-//        mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-//            @Override
-//            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-//                mSoundId = sampleId;
-//            }
-//        });
         mSoundId = mSoundPool.load(mContext, R.raw.ec_alert5, 1);
     }
 
@@ -105,57 +95,43 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
         } else {
             mCurrentFile.getParentFile().mkdirs();
             // 新建下载任务
-            OkDownloadRequest request = new OkDownloadRequest.Builder()
-                    .url(task.downloadPath)
-                    .filePath(task.savePath)
-                    .build();
-            mDownloadManager.enqueue(request, this);
+            download(task.downloadPath, task.savePath, mDownloadListener);
         }
-
-        //updateUiDownloadCount();
     }
 
     private void downloadGpsFile(Task task) {
         File gpsFile = new File(task.getGpsSavePath());
         if (!gpsFile.exists()) {
             gpsFile.getParentFile().mkdirs();
-            OkDownloadRequest request = new OkDownloadRequest.Builder()
-                    .url(task.getGpsDownloadPath())
-                    .filePath(task.getGpsSavePath())
-                    .build();
-            //mDownloadManager.enqueue(request, mNoneListener);
-
-            OkDownloadManager.getInstance(mContext).enqueue(request, mNoneListener);
+            download(task.getGpsDownloadPath(), task.getGpsSavePath(), null);
         }
     }
 
-    private OkDownloadEnqueueListener mNoneListener = new OkDownloadEnqueueListener() {
+    private void download(String url, String savePath, FileDownloadListener listener) {
+        FileDownloader.getImpl().create(url).setPath(savePath).setListener(listener).start();
+    }
+
+    // ======下载监听======
+    private SimpleDownloadListener mDownloadListener = new SimpleDownloadListener() {
         @Override
-        public void onStart(int id) {
+        protected void pending(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            mUihandler.sendEmptyMessage(MSG_TYPE_START);
         }
 
         @Override
-        public void onProgress(int progress, long cacheSize, long totalSize) {
+        protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
+            int percent = Math.round((float) soFarBytes / (float) totalBytes * 100);
+            Message.obtain(mUihandler, MSG_TYPE_UPDATE_PROGRESS, percent).sendToTarget();
         }
 
         @Override
-        public void onRestart() {
+        protected void completed(BaseDownloadTask task) {
+            mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
         }
 
         @Override
-        public void onPause() {
-        }
-
-        @Override
-        public void onFinish() {
-        }
-
-        @Override
-        public void onCancel() {
-        }
-
-        @Override
-        public void onError(OkDownloadError error) {
+        protected void error(BaseDownloadTask task, Throwable e) {
+            mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
         }
     };
 
@@ -211,8 +187,6 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
      * @param progress 下载进度
      */
     private void updateProgress(int progress) {
-        // 更新UI进度
-        // TODO
         GlobalWindow.getInstance().refreshPercent(progress);
     }
 
@@ -220,8 +194,6 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
      * 新的Task开始下载
      */
     private void newTaskStart() {
-        // 更新UI进度
-        // TODO
     }
 
     /**
@@ -280,43 +252,5 @@ public class DownloaderT1spImpl implements DownloaderT1sp, OkDownloadEnqueueList
             }
         }
     };
-
-    // ======下载监听======
-    @Override
-    public void onStart(int id) {
-        mUihandler.sendEmptyMessage(MSG_TYPE_START);
-    }
-
-    @Override
-    public void onProgress(int progress, long cacheSize, long totalSize) {
-        Message.obtain(mUihandler, MSG_TYPE_UPDATE_PROGRESS, progress).sendToTarget();
-    }
-
-    @Override
-    public void onRestart() {
-
-    }
-
-    @Override
-    public void onPause() {
-
-    }
-
-    @Override
-    public void onFinish() {
-        mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
-        Log.e("download", "Success one task");
-    }
-
-    @Override
-    public void onCancel() {
-
-    }
-
-    @Override
-    public void onError(OkDownloadError error) {
-        mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
-        Log.e("download", "error");
-    }
 
 }
