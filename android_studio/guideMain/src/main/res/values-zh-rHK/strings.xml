@@ -1078,4 +1078,17 @@
     <string name="not_goluk_device">你正在連接到非GOLUK Wi-Fi，請切換到GOLUK Wi-Fi後再試一次</string>
     <string name="no_wifi_selected">請連接到GOLUK Wi-Fi。如果您已連接，請關閉藍牙和VPN，然後再試一次</string>
     <string name="no_log_file">暫無日誌數據</string>
+    <string name="capture_time_5_7">精彩連拍(5+7)</string>
+    <string name="storage_left">可用空間</string>
+    <string name="enter_album_mode_hint">進入相冊模式，記錄儀將停止錄像</string>
+    <string name="cancel_downloading_videos_hin">視頻正在下載，退出將取消下載</string>
+    <string name="enter_setting_mode_hint">進入設置模式，記錄儀將停止錄像</string>
+    <string name="recovery_to_record">記錄儀恢復錄像</string>
+    <string name="capture_success_hint">抓拍成功</string>
+    <string name="emg_video_sound">緊急視頻提示音</string>
+    <string name="lower">較低</string>
+    <string name="higher">較高</string>
+    <string name="hint_pk_mode">當車輛熄火後，極路客會開啟一秒一拍的縮時錄影，確保車輛24小時監控。開啟停車安防需搭配降壓線使用。</string>
+    <string name="hint_gsensor">啟動後，車輛在行車中如果發生異常的碰撞，極路客會自動保存12秒(碰撞時刻的前5秒和後7秒)緊急視頻影像。當存儲空間不足時，將自動覆蓋早期錄製的文件。</string>
+    <string name="t1sp_ipc_hint_text">安裝韌體更新前，請確保已正確連接相機。在更新完成前請勿關閉電源。升級成功後，請拔插電源重新開機。</string>
 </resources>

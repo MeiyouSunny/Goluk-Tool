@@ -1077,4 +1077,17 @@
     <string name="str_wifi_name_fail">Не удается задать Wi-Fi имя</string>
     <string name="not_goluk_device">Ваш телефон подключен к  Wi-Fi по умолчанию. Подключитесь к GOLUK Wi-Fi и повторите попытку.</string>
     <string name="no_wifi_selected">Пожалуйста, подключитесь к GOLUK Wi-Fi. Если вы подключены, отключите Bluetooth и VPN и повторите попытку;</string>
+    <string name="capture_time_5_7">12 сек.</string>
+    <string name="storage_left">Доступное хранилище</string>
+    <string name="enter_album_mode_hint">В режиме «Альбом» видеозапись будет приостановлена</string>
+    <string name="cancel_downloading_videos_hin">Загрузка видео. При выходе, загрузка будет отменена</string>
+    <string name="enter_setting_mode_hint">Захват видео успешно завершен</string>
+    <string name="recovery_to_record">Идет видеозапись</string>
+    <string name="capture_success_hint">Захват видео успешно завершен</string>
+    <string name="emg_video_sound">Звук аварийного видео</string>
+    <string name="lower">Средне-низкая</string>
+    <string name="higher">Средне-высокая</string>
+    <string name="hint_pk_mode">Когда зажигание выключено, будет активирован режим таймлапс для круглосуточного наблюдения за автомобилем. Для обеспечения безопасности на парковкe необходим блок питания.</string>
+    <string name="hint_gsensor">При активации автомобиль автоматически сохраняет аварийное видео в течение 12 секунд  (5 секунд до столкновения), если во время вождения происходит столкновение. Файлы будут автоматически перезаписаны.</string>
+    <string name="t1sp_ipc_hint_text">Перед установкой новой прошивки убедитесь, что видеорегистратор подключен правильно. Не отключайте его до конца обновления.После успешного обновления, отключите питание и перезагрузите устройство.</string>
 </resources>

@@ -1077,4 +1077,16 @@
     <string name="str_wifi_name_fail">Impossible de définir Wi-Fi nom</string>
     <string name="not_goluk_device">Vous êtes actuellement connectés au Wi-Fi non GOLUK , veuillez passer à GOLUK  Wi-Fi et essayer de nouveau.</string>
     <string name="no_wifi_selected">Bitte verbinden sie mich mit GOLUK Wi-Fi.wenn sie verbunden sind, wenden sie sich bitte an bluetooth - und versuchen sie es erneut.</string>
+    <string name="capture_time_5_7">Prendre une essentielle (5+7)</string>
+    <string name="enter_album_mode_hint">Mode album, dashcam arrête l\'enregistrement</string>
+    <string name="cancel_downloading_videos_hin">Téléchargement de vidéo Si vous quittez maintenant, le téléchargement sera annulé</string>
+    <string name="enter_setting_mode_hint">Mode paramètres, dashcam arrête l\'enregistrement</string>
+    <string name="recovery_to_record">Enregistrement</string>
+    <string name="capture_success_hint">Capture vidéo réussie</string>
+    <string name="emg_video_sound">Invite vidéo d\'urgence</string>
+    <string name="lower">Faible à moyen</string>
+    <string name="higher">Moyen-élevé</string>
+    <string name="hint_pk_mode">Lorsque le contact est coupé, le mode vidéo accéléré de Goluk sera activé pour s\'assurer que le véhicule est surveillé 24h / 24 et 7j / 7. Un kit de câblage est nécessaire pour activer le mode de sécurité de stationnement.</string>
+    <string name="hint_gsensor">Lorsqu\'il est activé, le véhicule enregistre automatiquement une image vidéo d\'urgence de 12 secondes (les 5 premières secondes pré-enregistrées) si une collision anormale se produit pendant la conduite. Lorsque l\'espace est insuffisant, les fichiers enregistrés précédemment sont automatiquement écrasés.</string>
+    <string name="t1sp_ipc_hint_text">Avant d\'installer la mise à niveau du micrologiciel, veuillez vous assurer que la caméra est correctement connectée. Veuillez ne pas l\'éteindre jusqu\'à la fin de la mise à niveau.Une fois la mise à niveau terminée, débranchez l\'alimentation et redémarrez l\'appareil.</string>
 </resources>

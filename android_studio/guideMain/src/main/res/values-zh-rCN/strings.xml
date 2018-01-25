@@ -1240,4 +1240,17 @@
     <string name="line_no_client">未安装Line客户端</string>
     <string name="line_content">Line只支持文本，图片</string>
     <string name="line_no_content">请设置分享内容</string>
+    <string name="capture_time_5_7">精彩抓拍(5+7)</string>
+    <string name="storage_left">可用空间</string>
+    <string name="enter_album_mode_hint">进入相册模式，记录仪将停止录像</string>
+    <string name="cancel_downloading_videos_hin">视频正在下载，退出将取消下载</string>
+    <string name="enter_setting_mode_hint">进入设置模式，记录仪将停止录像</string>
+    <string name="recovery_to_record">记录仪恢复录像</string>
+    <string name="capture_success_hint">抓拍成功</string>
+    <string name="emg_video_sound">紧急视频提示音</string>
+    <string name="lower">较低</string>
+    <string name="higher">较高</string>
+    <string name="hint_pk_mode">当车辆熄火后，极路客会开启一秒一拍的缩时录影，确保车辆24小时监控。开启停车安防需搭配降压线使用。</string>
+    <string name="hint_gsensor">启动后，车辆在行车中如果发生异常的碰撞，极路客会自动保存12秒（碰撞时刻的前5秒和后7秒）紧急视频影像。当存储空间不足时，将⾃动覆盖早期录制的文件。</string>
+    <string name="t1sp_ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。升级成功后，请拔掉电源重新开机。</string>
 </resources>

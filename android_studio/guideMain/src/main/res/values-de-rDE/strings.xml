@@ -1077,4 +1077,16 @@
     <string name="str_wifi_name_fail">WLAN-name kann nicht festgelegt werden</string>
     <string name="not_goluk_device">Sie sind zur zeit im nicht - GOLUK  Wi-Fi, wechseln sie bitte auf GOLUK  Wi-Fi und versuchen sie es erneut.</string>
     <string name="no_wifi_selected">Passez à GOLUK Wi-Fi.si vous êtes connecté, éteignez le bluetooth et le rpv et essayer de nouveau.</string>
+    <string name="capture_time_5_7">Highlight-Aufnahme (5+7)</string>
+    <string name="enter_album_mode_hint">Im Albummodus stoppt die Dashcam die Aufnahme</string>
+    <string name="cancel_downloading_videos_hin">Video herunterladen Wenn Sie jetzt beenden, wird der Download abgebrochen</string>
+    <string name="enter_setting_mode_hint">Im Einstellungsmodus stoppt die Dashcam die Aufnahme</string>
+    <string name="recovery_to_record">Aufzeichnung</string>
+    <string name="capture_success_hint">Videoaufnahme erfolgreich</string>
+    <string name="emg_video_sound">Notfall-Video-Eingabeaufforderung</string>
+    <string name="lower">Mittel-niedrig</string>
+    <string name="higher">Mittel-hoch</string>
+    <string name="hint_pk_mode">Wenn die Zündung ausgeschaltet ist, wird der Goluk-Zeitraffer-Videomodus aktiviert, um sicherzustellen, dass das Fahrzeug rund um die Uhr überwacht wird. Ein Kit zur Festverdrahtung ist erforderlich, um den Parksicherheitsmodus zu aktivieren.</string>
+    <string name="hint_gsensor">Wenn aktiviert, speichert das Fahrzeug automatisch ein Notfall-Videobild von 12 Sekunden (die ersten 5 Sekunden vorgepuffert), wenn während der Fahrt eine abnormale Kollision auftritt. Wenn nicht genügend Speicherplatz vorhanden ist, werden zuvor aufgenommene Dateien automatisch überschrieben.</string>
+    <string name="t1sp_ipc_hint_text">Vor der Installation des Firmware-Upgrades, stellen Sie sicher, dass die Kamera korrekt verbunden ist. Bitte nicht den Strom abschalten, bevor das Upgrade abgeschlossen ist.Nach Abschluss des Upgrades ziehen Sie bitte den Netzstecker und starten das Gerät neu.</string>
 </resources>
