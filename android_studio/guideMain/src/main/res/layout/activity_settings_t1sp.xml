@@ -210,6 +210,7 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
 
@@ -230,7 +231,8 @@
 
                 </RelativeLayout>
 
-                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+                <View style="@style/LineGrayHorizontalPaddingLeft"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     style="@style/SettingLabelLayout"
