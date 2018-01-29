@@ -365,16 +365,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                             return;
                         }
                         mIsDisConnect = true;
+                        String alertMsg = mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period);
+                        // 小白无升级进度回调
+                        if (!(mApp.getIPCControlManager().isT1SP()))
+                            alertMsg = alertMsg + mPercent + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit);
                         if (mUpdateDialog == null) {
-                            mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this,
-                                    mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period)
-                                            + mPercent
-                                            + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, alertMsg);
                         } else {
-                            mUpdateDialog.setMessage(mApp.getContext().getResources()
-                                    .getString(R.string.str_ipc_update_second_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mUpdateDialog.setMessage(alertMsg);
                         }
                         break;
                     case UPDATE_UPGRADE_OK:
