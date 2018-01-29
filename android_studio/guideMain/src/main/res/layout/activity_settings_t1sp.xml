@@ -444,11 +444,14 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-                <View style="@style/LineGrayHorizontal"/>
+                <View
+                    style="@style/LineGrayHorizontal"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/shutdown_time"
-                    style="@style/SettingLabelLayout">
+                    style="@style/SettingLabelLayout"
+                    android:visibility="gone">
 
                     <TextView
                         style="@style/SettingLabel.Arrow"
