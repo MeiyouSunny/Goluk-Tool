@@ -391,6 +391,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success_t1));
+                        } else if (mApp.getIPCControlManager().isT1SP()) {
+                            UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
+                                    .getString(R.string.str_ipc_update_success_t1s));
                         } else {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success));

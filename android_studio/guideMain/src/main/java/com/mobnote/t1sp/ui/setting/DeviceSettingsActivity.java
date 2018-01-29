@@ -171,6 +171,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         Intent intent = new Intent(this, SelectionActivity.class);
         intent.putExtra("title", titleId);
         intent.putParcelableArrayListExtra("values", values);
+        if (requestCode == TYPE_SNAP_TIME) {
+            intent.putExtra("isCaptureTime", true);
+        }
         startActivityForResult(intent, requestCode);
     }
 

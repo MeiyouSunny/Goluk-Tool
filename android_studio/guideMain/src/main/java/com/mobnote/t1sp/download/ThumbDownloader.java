@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.Target;
@@ -51,9 +50,10 @@ public class ThumbDownloader implements Runnable {
 
     @Override
     public void run() {
-        if(CollectionUtils.isEmpty(mUrls))
+        if (CollectionUtils.isEmpty(mUrls))
             return;
-        for (int i = 0; i < mUrls.size(); i++) {
+        int size = mUrls.size();
+        for (int i = 0; i < size; i++) {
             String url = mUrls.get(i);
             if (!isRunning)
                 return;
@@ -69,7 +69,6 @@ public class ThumbDownloader implements Runnable {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Log.e("Thumb", "Fail");
                 continue;
             }
         }

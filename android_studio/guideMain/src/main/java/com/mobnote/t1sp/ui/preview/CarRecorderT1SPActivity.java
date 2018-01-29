@@ -245,9 +245,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (mCaptureTime > 0) {
             mHandlerCapture.sendEmptyMessageDelayed(0, 1000);
         } else {
-
+            resetCaptureButton();
         }
 
+    }
+
+    private void resetCaptureButton() {
+        mBtnCapture.setText("");
+        mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
     }
 
     @Override

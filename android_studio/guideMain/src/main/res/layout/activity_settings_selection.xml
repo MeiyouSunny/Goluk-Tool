@@ -19,5 +19,17 @@
         app:viewHolderClass="com.mobnote.t1sp.ui.setting.selection.SettingSelectionViewHolder"
         app:viewHolderLayout="@layout/viewholder_setting_selection_item"/>
 
+    <TextView
+        android:id="@+id/tv_wonderful_video_capture_hint_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:text="@string/str_settings_wonderful_video_type_hint_text"
+        android:textColor="#999999"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
 
 </LinearLayout>

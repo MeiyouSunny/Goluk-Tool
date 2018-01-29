@@ -12,6 +12,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import likly.mvp.MvpBinder;
+import likly.mvp.View;
 import likly.view.repeat.OnHolderClickListener;
 import likly.view.repeat.RepeatView;
 
@@ -21,6 +22,8 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
 
     @BindView(R2.id.title)
     TextView mTitle;
+    @BindView(R2.id.tv_wonderful_video_capture_hint_desc)
+    TextView mTvWonderfulCaptureHint;
     @BindView(R2.id.repeater)
     RepeatView<SettingValue, SettingSelectionViewHolder> mRepeatView;
 
@@ -46,6 +49,10 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
             mRepeatView.layoutAdapterManager().showRepeatView();
             mRepeatView.complete();
         }
+
+        final boolean isCaptureTimeType = data.getBooleanExtra("isCaptureTime", false);
+        if (isCaptureTimeType)
+            mTvWonderfulCaptureHint.setVisibility(android.view.View.VISIBLE);
 
         mRepeatView.onClick(this);
 
