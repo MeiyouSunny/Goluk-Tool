@@ -1089,4 +1089,5 @@
     <string name="hint_pk_mode">Wenn die Zündung ausgeschaltet ist, wird der Goluk-Zeitraffer-Videomodus aktiviert, um sicherzustellen, dass das Fahrzeug rund um die Uhr überwacht wird. Ein Kit zur Festverdrahtung ist erforderlich, um den Parksicherheitsmodus zu aktivieren.</string>
     <string name="hint_gsensor">Wenn aktiviert, speichert das Fahrzeug automatisch ein Notfall-Videobild von 12 Sekunden (die ersten 5 Sekunden vorgepuffert), wenn während der Fahrt eine abnormale Kollision auftritt. Wenn nicht genügend Speicherplatz vorhanden ist, werden zuvor aufgenommene Dateien automatisch überschrieben.</string>
     <string name="t1sp_ipc_hint_text">Vor der Installation des Firmware-Upgrades, stellen Sie sicher, dass die Kamera korrekt verbunden ist. Bitte nicht den Strom abschalten, bevor das Upgrade abgeschlossen ist.Nach Abschluss des Upgrades ziehen Sie bitte den Netzstecker und starten das Gerät neu.</string>
+    <string name="str_ipc_update_success_t1s">Die Geräteaktualisierung ist abgeschlossen. Trennen Sie die Stromversorgung und starten Sie das Gerät neu.</string>
 </resources>

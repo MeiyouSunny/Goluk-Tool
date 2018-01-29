@@ -1089,4 +1089,5 @@
     <string name="hint_pk_mode">Quando l\'accensione è disattivata, la modalità video time-lapse di Goluk verrà attivata per garantire che il veicolo sia monitorato 24 ore su 24, 7 giorni su 7. È necessario un kit di cablaggio per abilitare la modalità di sicurezza del parcheggio.</string>
     <string name="hint_gsensor">Se attivato, il veicolo salverà automaticamente un\'immagine video di emergenza di 12 secondi (i primi 5 secondi pre-impostati) se si verifica una collisione anomala durante la guida. Quando non c\'è abbastanza spazio, i file registrati in precedenza verranno automaticamente sovrascritti.</string>
     <string name="t1sp_ipc_hint_text">Prima di installare l\'aggiornamento del Firmware, assicurati che la videocamera sia connessa. Non spegnere il dispositivo prima della fine dell\'aggiornamento.Al termine dell\'aggiornamento, scollegare e riaccendere il dispositivo.</string>
+    <string name="str_ipc_update_success_t1s">L\'aggiornamento del dispositivo è completato, scollegare l\'alimentazione e riavviare il dispositivo.</string>
 </resources>

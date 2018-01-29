@@ -1253,4 +1253,5 @@
     <string name="hint_pk_mode">当车辆熄火后，极路客会开启一秒一拍的缩时录影，确保车辆24小时监控。开启停车安防需搭配降压线使用。</string>
     <string name="hint_gsensor">启动后，车辆在行车中如果发生异常的碰撞，极路客会自动保存12秒（碰撞时刻的前5秒和后7秒）紧急视频影像。当存储空间不足时，将⾃动覆盖早期录制的文件。</string>
     <string name="t1sp_ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。升级成功后，请拔掉电源重新开机。</string>
+    <string name="str_ipc_update_success_t1s">设备升级成功，请拔插电源重新开机</string>
 </resources>
