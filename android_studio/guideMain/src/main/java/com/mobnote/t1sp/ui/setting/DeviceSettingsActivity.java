@@ -10,6 +10,7 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
+import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -86,6 +88,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @Override
     public void onViewCreated() {
         super.onViewCreated();
+        EventBus.getDefault().register(this);
 
         getSettingInfo();
 
@@ -100,10 +103,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 getPresenter().enterOrExitSettingMode(true);
                 mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
                 mHeartbeatTask.start();
-                if (mDialog.isShowing())
-                    mDialog.close();
             }
-        }, 2000);
+        }, 500);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
@@ -200,6 +201,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 //        switchMTD.setEnabled(settingInfo.parkingGuard);
 
         mIgnoreSwtich = false;
+
+        if (mDialog.isShowing())
+            mDialog.close();
     }
 
     @Override
@@ -247,8 +251,22 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @Override
+    public void onGetSDCardInfo(SettingInfo settingInfo) {
+        if (settingInfo != null)
+            mTvSDCardStorage.setText(settingInfo.SDCardInfo);
+    }
+
+    /**
+     * SDcard 格式化成功
+     */
+    public void onEventMainThread(SDCardFormatEvent event) {
+        getPresenter().getSDCardInfo();
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
         if (mHeartbeatTask != null)
             mHeartbeatTask.stop();
     }

@@ -5,6 +5,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
@@ -21,6 +22,7 @@ import com.mobnote.t1sp.service.T1SPUdpService;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import de.greenrobot.event.EventBus;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -105,6 +107,9 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
         confirmDialog.setMessage(message, Gravity.CENTER);
         confirmDialog.setLeftButton(getString(R.string.user_repwd_ok), null);
         confirmDialog.show();
+
+        // Event
+        EventBus.getDefault().post(new SDCardFormatEvent());
     }
 
     @Override
