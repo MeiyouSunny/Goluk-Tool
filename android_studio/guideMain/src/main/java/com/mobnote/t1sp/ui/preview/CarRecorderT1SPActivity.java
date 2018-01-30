@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,11 +42,9 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.base.ui.AbsActivity;
+import com.mobnote.t1sp.bean.DeviceMode;
 import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.listener.OnCaptureListener;
@@ -59,7 +58,6 @@ import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
-import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
@@ -68,14 +66,11 @@ import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
 import java.util.List;
-import java.util.Timer;
 
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 /**
@@ -245,6 +240,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (mCaptureTime > 0) {
             mHandlerCapture.sendEmptyMessageDelayed(0, 1000);
         } else {
+            Log.e("Capture", "倒计时完, 时间(s):" + System.currentTimeMillis() / 1000);
             resetCaptureButton();
         }
 
@@ -265,6 +261,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onCaptureStart() {
+        Log.e("Capture", "抓拍指令发送成功, 时间(s):" + System.currentTimeMillis() / 1000);
         // 抓拍精彩视频开始
         mHandlerCapture.removeMessages(0);
         mCaptureTime = mSettingInfo.captureTimeIs12S() ? CAPTURE_TIME_12 : CAPTURE_TIME_30;
@@ -311,6 +308,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onCaptureVideo(String path) {
+        Log.e("Capture", "收到抓拍回调, 时间(s):" + System.currentTimeMillis() / 1000 + ", 路径:" + path);
         // 停止计时
         mHandlerCapture.removeMessages(0);
         mCaptureTime = 0;
@@ -601,7 +599,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             }
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
             // 更新flag
-            isInOtherMode = true;
+            //isInOtherMode = true;
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
         } else if (id == BTN_NORMALSCREEN) {
@@ -638,7 +636,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
             // 更新flag
-            isInOtherMode = true;
+            //isInOtherMode = true;
         } else if (id == R.id.mRtmpPlayerView) {
             if (m_bIsFullScreen) {
                 setFullScreen(false);
@@ -774,6 +772,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         // 获取本地最近2个视频(精彩视频和紧急视频综合)
         getPresenter().getLatestTwoVideos();
+        // 获取当前模式
+        getPresenter().getDeviceMode();
     }
 
     @Override
@@ -971,23 +971,40 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * 进入录像模式
      */
     private void enterRecordMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-                isInOtherMode = false;
-                showLoading();
-                hidePlayer();
-                isConnecting = true;
-                start();
+//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+//            @Override
+//            protected void onSuccess() {
+//                isInOtherMode = false;
+//                showLoading();
+//                hidePlayer();
+//                isConnecting = true;
+//                start();
+//
+//                $.toast().text(R.string.recovery_to_record).show();
+//            }
+//
+//            @Override
+//            protected void onServerError(int errorCode, String errorMessage) {
+//                $.toast().text(errorMessage).show();
+//            }
+//        });
 
-                $.toast().text(R.string.recovery_to_record).show();
-            }
+    }
 
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
+    @Override
+    public void onGetDeviceModeInfo(DeviceMode deviceMode) {
+        if (deviceMode != null) {
+            if (deviceMode.isInPlaybackMode()) {
+                getPresenter().exitPlaybackMode();
             }
-        });
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // 获取设备信息
+        getPresenter().getVideoSettingInfo();
     }
 
     @Override

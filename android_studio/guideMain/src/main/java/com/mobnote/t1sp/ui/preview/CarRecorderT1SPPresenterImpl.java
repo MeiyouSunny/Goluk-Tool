@@ -2,8 +2,10 @@ package com.mobnote.t1sp.ui.preview;
 
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.bean.DeviceMode;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.callback.DeviceModeCallback;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.util.FileUtil;
 
@@ -48,6 +50,32 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
     public void getLatestTwoVideos() {
         List<String> videos = FileUtil.getLatestTwoVideosWithWonfulAndUrgent();
         getView().onGetLatestTwoVideos(videos);
+    }
+
+    @Override
+    public void getDeviceMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getCameraModeParam(), new DeviceModeCallback() {
+            @Override
+            public void onGetDeviceModeInfo(DeviceMode deviceMode) {
+                getView().onGetDeviceModeInfo(deviceMode);
+            }
+        });
+    }
+
+    @Override
+    public void exitPlaybackMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
+                new CommonCallback() {
+
+                    @Override
+                    protected void onSuccess() {
+                    }
+
+                    @Override
+                    protected void onServerError(int errorCode, String errorMessage) {
+
+                    }
+                });
     }
 
 }

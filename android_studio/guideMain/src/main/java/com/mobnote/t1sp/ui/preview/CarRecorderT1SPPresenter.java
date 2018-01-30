@@ -19,4 +19,14 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
      */
     void getLatestTwoVideos();
 
+    /**
+     * 获取当前设备模式
+     */
+    void getDeviceMode();
+
+    /**
+     * 退出回放模式
+     */
+    void exitPlaybackMode();
+
 }

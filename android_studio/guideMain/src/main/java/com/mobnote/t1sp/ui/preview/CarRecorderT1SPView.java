@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.t1sp.bean.DeviceMode;
 import com.mobnote.t1sp.bean.SettingInfo;
 
 import java.util.List;
@@ -18,5 +19,7 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
     void onCaptureStart();
 
     void onGetLatestTwoVideos(List<String> videos);
+
+    void onGetDeviceModeInfo(DeviceMode deviceMode);
 
 }
