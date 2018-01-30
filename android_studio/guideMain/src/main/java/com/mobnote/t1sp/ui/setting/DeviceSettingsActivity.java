@@ -173,7 +173,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         intent.putExtra("title", titleId);
         intent.putParcelableArrayListExtra("values", values);
         if (requestCode == TYPE_SNAP_TIME) {
-            intent.putExtra("isCaptureTime", true);
+            intent.putExtra("type", SelectionActivity.TYPE_CAPTURE_TIME);
+        } else if (requestCode == TYPE_GSENSOR) {
+            intent.putExtra("type", SelectionActivity.TYPE_G_SENSOR);
         }
         startActivityForResult(intent, requestCode);
     }

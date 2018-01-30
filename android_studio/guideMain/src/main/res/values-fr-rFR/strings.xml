@@ -58,7 +58,7 @@
     <string name="app_name">Goluk</string>
     <string name="str_ipc_number_text">ID de l\'appareil</string>
     <string name="str_ipc_version_text">Version du micrologiciel</string>
-    <string name="unbind_camera_change_wifi_pwd_hint">Le mot de passe et le nom Wi-Fi peuvent être modifiés lorsque l'appareil est connecté avec succès à l'application Goluk</string>
+    <string name="unbind_camera_change_wifi_pwd_hint">Le mot de passe et le nom Wi-Fi peuvent être modifiés lorsque l\'appareil est connecté avec succès à l\'application Goluk</string>
     <string name="unbind_camera_wifi_hint_text">Informations Wi-Fi de Goluk</string>
     <string name="loginout_text">Quitter</string>
     <string name="updating">Dernière mise à jour</string>

@@ -12,13 +12,15 @@ import java.util.List;
 
 import butterknife.BindView;
 import likly.mvp.MvpBinder;
-import likly.mvp.View;
 import likly.view.repeat.OnHolderClickListener;
 import likly.view.repeat.RepeatView;
 
 @MvpBinder(
 )
 public class SelectionActivity extends BackTitleActivity implements OnHolderClickListener<SettingSelectionViewHolder> {
+
+    public static final int TYPE_CAPTURE_TIME = 1;
+    public static final int TYPE_G_SENSOR = 2;
 
     @BindView(R2.id.title)
     TextView mTitle;
@@ -28,6 +30,7 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
     RepeatView<SettingValue, SettingSelectionViewHolder> mRepeatView;
 
     private List<SettingValue> mValues;
+    private int mType;
 
     @Override
     public int initLayoutResId() {
@@ -50,12 +53,17 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
             mRepeatView.complete();
         }
 
-        final boolean isCaptureTimeType = data.getBooleanExtra("isCaptureTime", false);
-        if (isCaptureTimeType)
+        mType = data.getIntExtra("type", -1);
+        if (mType != -1) {
             mTvWonderfulCaptureHint.setVisibility(android.view.View.VISIBLE);
+            if (mType == TYPE_CAPTURE_TIME) {
+                mTvWonderfulCaptureHint.setText(R.string.str_settings_wonderful_video_type_hint_text);
+            } else if (mType == TYPE_G_SENSOR) {
+                mTvWonderfulCaptureHint.setText(R.string.hint_gsensor);
+            }
+        }
 
         mRepeatView.onClick(this);
-
     }
 
     @Override

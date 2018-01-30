@@ -18,4 +18,6 @@ public interface DeviceSettingsView extends View<DeviceSettingsPresenter>, Loadi
 
     void onResetFactory(boolean isSuccess);
 
+    void onGetSDCardInfo(SettingInfo settingInfo);
+
 }

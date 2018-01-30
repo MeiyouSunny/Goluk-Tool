@@ -21,6 +21,11 @@ public interface DeviceSettingsPresenter extends Presenter<DeviceSettingsModel, 
      */
     void getAllInfo();
 
+    /**
+     * 获取SD容量信息
+     */
+    void getSDCardInfo();
+
     //////
 
     /**

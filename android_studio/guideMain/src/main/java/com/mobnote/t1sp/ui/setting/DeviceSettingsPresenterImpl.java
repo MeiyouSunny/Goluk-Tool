@@ -2,6 +2,8 @@ package com.mobnote.t1sp.ui.setting;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -24,13 +26,17 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(isEnter), new CommonCallback() {
             @Override
             protected void onSuccess() {
-                // 获取参数
-                getAllInfo();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 获取参数
+                        getAllInfo();
+                    }
+                }, 2000);
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                System.out.print("");
             }
         });
     }
@@ -44,17 +50,22 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
             }
 
             @Override
-            public void onStart() {
-                getView().showLoadingDialog();
+            protected void onServerError(int errorCode, String errorMessage) {
+            }
+
+        });
+    }
+
+    @Override
+    public void getSDCardInfo() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
+            @Override
+            public void onGetSettingInfos(SettingInfo settingInfo) {
+                getView().onGetSDCardInfo(settingInfo);
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-            }
-
-            @Override
-            public void onFinish() {
-                getView().hideLoadingDialog();
             }
         });
     }
@@ -141,7 +152,13 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
             @Override
             protected void onSuccess() {
-                getAllInfo();
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        // 获取参数
+                        getAllInfo();
+                    }
+                }, 1000);
             }
 
             @Override
