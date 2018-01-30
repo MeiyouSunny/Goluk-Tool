@@ -58,7 +58,7 @@
     <string name="app_name">Goluk</string>
     <string name="str_ipc_number_text">Geräte-ID</string>
     <string name="str_ipc_version_text">Firmware-Version</string>
-    <string name="unbind_camera_change_wifi_pwd_hint">Das Passwort kann geändert werden, wenn das Gerät erfolgreich mit Goluk verbunden ist</string>
+    <string name="unbind_camera_change_wifi_pwd_hint">Passwort und WLAN-Name können geändert werden, wenn das Gerät erfolgreich mit der Goluk App verbunden ist</string>
     <string name="unbind_camera_wifi_hint_text">Goluk WLAN-Informationen</string>
     <string name="loginout_text">Beenden</string>
     <string name="updating">Letzte Aktualisierung</string>
@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Young Wanderers Club (Travel Typography)</string>
     <string name="watch_live_text">Leicht berühren und weiter ansehen</string>
     <string name="video_live_5s_tip">Einen Moment warten. Live startet sofort.</string>
-    <string name="set_ipc_item_hint_text">Die letzten fünf wunderbaren Videos automatisch synchronisieren, sobald Ihr Mobiltelefon mit Goluk verbunden ist</string>
+    <string name="set_ipc_item_hint_text">Die letzten wunderbaren Videos und Notfallvideos automatisch synchronisieren, sobald Ihr Mobiltelefon mit Goluk verbunden ist(nicht für T1s unterstützt)</string>
     <string name="my_install_title_text">Installationsanweisungen</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Nach Freigabe hochladen</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Wird geladen ...</string>
