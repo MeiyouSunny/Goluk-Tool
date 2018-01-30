@@ -42,7 +42,7 @@ public class VersionInfoActivity extends BackTitleActivity {
             mDeviceVersion.setText(settingInfo.deviceVersion);
         }
 
-        mDevicePic.setImageResource(R.drawable.ipc);
+        mDevicePic.setImageResource(R.drawable.connect_t1_icon_1);
     }
 
 }
