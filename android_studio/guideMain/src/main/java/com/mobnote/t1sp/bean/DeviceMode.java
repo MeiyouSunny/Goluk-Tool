@@ -23,4 +23,9 @@ public class DeviceMode {
         return !TextUtils.isEmpty(mode) && TextUtils.equals(mode, MODE_PLAYBACK);
     }
 
+    public boolean needOpenLoopVideo() {
+        return !TextUtils.isEmpty(mode) && TextUtils.equals(mode, MODE_PREVIEW)
+                && !TextUtils.isEmpty(recordState) && TextUtils.equals(recordState, STATE_STANDBY);
+    }
+
 }

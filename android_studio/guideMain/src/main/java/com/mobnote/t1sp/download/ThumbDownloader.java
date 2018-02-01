@@ -132,7 +132,6 @@ public class ThumbDownloader implements Runnable {
         isRunning = false;
         if (mUrls != null) {
             mUrls.clear();
-            mUrls = null;
         }
         mListener = null;
     }

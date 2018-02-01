@@ -1,6 +1,7 @@
 package com.mobnote.t1sp.ui.preview;
 
-import com.mobnote.golukmain.R;
+import android.util.Log;
+
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.DeviceMode;
@@ -65,32 +66,66 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
     @Override
     public void exitPlaybackMode() {
-//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
-//                new CommonCallback() {
-//
-//                    @Override
-//                    protected void onSuccess() {
-//                        getView().onEnterVideoMode();
-//                    }
-//
-//                    @Override
-//                    protected void onServerError(int errorCode, String errorMessage) {
-//
-//                    }
-//                });
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
+                new CommonCallback() {
 
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-                $.toast().text(R.string.recovery_to_record).show();
-            }
+                    @Override
+                    protected void onSuccess() {
+                        getView().onExitOtherModeSuccess();
+                    }
 
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
-            }
-        });
+                    @Override
+                    protected void onServerError(int errorCode, String errorMessage) {
+                        getView().onExitOtherModeFailed();
+                    }
+                });
 
+//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+//            @Override
+//            protected void onSuccess() {
+//                $.toast().text(R.string.recovery_to_record).show();
+//            }
+//
+//            @Override
+//            protected void onServerError(int errorCode, String errorMessage) {
+//                $.toast().text(errorMessage).show();
+//            }
+//        });
+
+    }
+
+    @Override
+    public void exitSetMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(false),
+                new CommonCallback() {
+
+                    @Override
+                    protected void onSuccess() {
+                        getView().onExitOtherModeSuccess();
+                    }
+
+                    @Override
+                    protected void onServerError(int errorCode, String errorMessage) {
+                        getView().onExitOtherModeFailed();
+                    }
+                });
+    }
+
+    @Override
+    public void openLoopMode() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.openLoopRecordParam(),
+                new CommonCallback() {
+
+                    @Override
+                    protected void onSuccess() {
+                        Log.e("T1SP", "OpenLoopRecord success");
+                    }
+
+                    @Override
+                    protected void onServerError(int errorCode, String errorMessage) {
+                        Log.e("T1SP", "OpenLoopRecord failed");
+                    }
+                });
     }
 
 }

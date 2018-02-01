@@ -29,4 +29,13 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
      */
     void exitPlaybackMode();
 
+    /**
+     * 退出设置模式
+     */
+    void exitSetMode();
+
+    /**
+     * 打开循环录像
+     */
+    void openLoopMode();
 }

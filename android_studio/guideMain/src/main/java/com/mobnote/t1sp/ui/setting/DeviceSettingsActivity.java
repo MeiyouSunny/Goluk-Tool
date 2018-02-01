@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mobnote.eventbus.CaptureTimeEvent;
+import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
@@ -106,7 +107,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
                 mHeartbeatTask.start();
             }
-        }, 1500);
+        }, 500);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
@@ -270,6 +271,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @Override
     public void onDestroy() {
         super.onDestroy();
+        // 发送退出设置模式指令
+        EventBus.getDefault().post(new EventExitMode(1));
+
         EventBus.getDefault().unregister(this);
         if (mHeartbeatTask != null)
             mHeartbeatTask.stop();

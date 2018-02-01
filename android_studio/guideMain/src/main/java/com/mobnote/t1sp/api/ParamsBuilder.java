@@ -753,4 +753,16 @@ public class ParamsBuilder {
         return params;
     }
 
+    /**
+     * 打开循环录像
+     */
+    public static Map<String, String> openLoopRecordParam() {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "Video");
+        params.put(KEY_VALUE, "record");
+
+        return params;
+    }
+
 }

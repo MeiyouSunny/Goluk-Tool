@@ -6,13 +6,13 @@ import android.content.DialogInterface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 
+import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -23,10 +23,7 @@ import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.service.HeartbeatTask;
 
-import java.io.File;
-
-import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
-import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
+import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -62,7 +59,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         mDialog = new CustomLoadingDialog(this, getString(R.string.enter_album_mode_hint));
         mDialog.show();
 
-        mHandler.sendEmptyMessageDelayed(MSG_ENTER_PLAYBACK_MODE, 2000);
+        mHandler.sendEmptyMessageDelayed(MSG_ENTER_PLAYBACK_MODE, 1000);
     }
 
     private void enterPlaybackMode() {
@@ -147,6 +144,9 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 发送退出设置模式指令
+        EventBus.getDefault().post(new EventExitMode(2));
+
         if (mShouldClose && mBaseApp.isIpcLoginSuccess) {
             mBaseApp.setIpcDisconnect();
             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
