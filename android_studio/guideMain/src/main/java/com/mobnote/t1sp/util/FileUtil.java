@@ -135,7 +135,12 @@ public class FileUtil {
     }
 
     public static String getThumbCacheByVideoName(String videoName) {
-        String fileName = videoName.replace("MP4", "jpg");
+        String fileName = "";
+        if (videoName.contains("MP4")) {
+            fileName = videoName.replace("MP4", "jpg");
+        } else if (videoName.contains(".mp4")) {
+            fileName = videoName.replace("mp4", "jpg");
+        }
         fileName = FileUtil.THUMB_CACHE_DIR + fileName;
         return fileName;
     }

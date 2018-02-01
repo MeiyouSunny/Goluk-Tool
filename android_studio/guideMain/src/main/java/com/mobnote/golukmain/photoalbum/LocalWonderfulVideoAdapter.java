@@ -17,16 +17,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.t1sp.util.FileUtil;
+import com.mobnote.t1sp.util.ThumbAsyncTask;
 import com.mobnote.t1sp.util.ThumbUtil;
-import com.mobnote.util.GlideUtils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -168,7 +166,6 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             holder.mPreView2.setVisibility(View.VISIBLE);
         }
 
-
         holder.image1.setImageResource(R.drawable.tacitly_pic);
         holder.image2.setImageResource(R.drawable.tacitly_pic);
 
@@ -282,14 +279,15 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
      * 加载并显示预览图片
      *
      * @param videoPath 图片名称
-     * @param imageView    显示控件
+     * @param imageView 显示控件
      * @author xuhw
      * @date 2015年6月8日
      */
     private void loadImage(String videoPath, ImageView imageView) {
         if (TextUtils.isEmpty(videoPath) || imageView == null)
             return;
-        imageView.setImageBitmap(ThumbUtil.getLocalVideoThumb(videoPath));
+        //imageView.setImageBitmap(ThumbUtil.getLocalVideoThumb(videoPath));
+        new ThumbAsyncTask(mContext, imageView).execute(videoPath);
 
 //        filename = filename.replace(".mp4", ".jpg");
 //        String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";

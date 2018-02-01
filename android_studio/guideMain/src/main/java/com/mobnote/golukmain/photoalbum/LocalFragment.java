@@ -344,7 +344,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 updateNewState(filename);
 
                 d.getVideoInfo1().isNew = false;
-                mWonderfulVideoAdapter.notifyDataSetChanged();
+                //mWonderfulVideoAdapter.notifyDataSetChanged();
             } else {
                 // 点击列表右边项,跳转到视频播放页面
 
@@ -358,7 +358,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 updateNewState(filename);
 
                 d.getVideoInfo2().isNew = false;
-                mWonderfulVideoAdapter.notifyDataSetChanged();
+                //mWonderfulVideoAdapter.notifyDataSetChanged();
             }
         }
     }
