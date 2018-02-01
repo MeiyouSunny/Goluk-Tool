@@ -261,6 +261,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             return;
         mSettingInfo = settingInfo;
         mVideoResolutions.setBackgroundResource(settingInfo.is1080P() ? R.drawable.icon_hd1080 : R.drawable.icon_hd720);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPresenter().getDeviceMode();
+            }
+        }, 500);
     }
 
     @Override
@@ -995,6 +1002,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * 退出模式Event
      */
     public void onEventMainThread(final EventExitMode event) {
+        showLoading();
         if (event != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1071,7 +1079,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onExitOtherModeSuccess() {
         Log.e("T1SP", "Exist other mode success");
         $.toast().text(R.string.recovery_to_record).show();
-        hideLoading();
 
         getPresenter().getDeviceMode();
     }

@@ -69,7 +69,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
                 if (mDialog.isShowing())
                     mDialog.close();
 
-                mHandler.sendEmptyMessageDelayed(MSG_LOAD_DATA_AND_HEARTBEAT, 500);
+                mHandler.sendEmptyMessageDelayed(MSG_LOAD_DATA_AND_HEARTBEAT, 1500);
             }
 
             @Override
