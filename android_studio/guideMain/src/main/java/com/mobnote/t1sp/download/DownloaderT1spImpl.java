@@ -12,12 +12,15 @@ import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
 import com.liulishuo.filedownloader.FileDownloader;
 import com.mobnote.application.GlobalWindow;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.util.CollectionUtils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * T1SP 下载管理
@@ -182,6 +185,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             isRunning = false;
             GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
             playSuccessSound();
+            // 发送本地更新视频Event
+            EventBus.getDefault().post(new EventDownloadVideoFinish());
             // 结束
             destory();
         } else {
