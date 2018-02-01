@@ -11,6 +11,8 @@ public interface DownloaderT1sp {
 
     void cancelAllDownloadTask(boolean showCancelMsg);
 
+    boolean isDownloading();
+
     void destory();
 
 }

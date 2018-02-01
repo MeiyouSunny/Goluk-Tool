@@ -70,6 +70,8 @@ public abstract class MapTrackView extends RelativeLayout {
 
     public abstract void drawTrackLine(List<GPSData> list);
 
+    public abstract void drawOnlyOnePoint(GPSData gpsData);
+
     public abstract void drawTrackCar(GPSData data, boolean center);
 
     public abstract void drawTrackCar(GPSData data, boolean center, boolean connectLine);

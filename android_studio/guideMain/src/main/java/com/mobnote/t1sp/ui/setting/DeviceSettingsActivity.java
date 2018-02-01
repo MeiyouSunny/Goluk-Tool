@@ -10,7 +10,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
+import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
+import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
@@ -104,7 +106,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
                 mHeartbeatTask.start();
             }
-        }, 500);
+        }, 1500);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
@@ -273,4 +275,30 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             mHeartbeatTask.stop();
     }
 
+    @Override
+    public void onSelectionSetted(int type, String value) {
+        // 选项设置成功返回,更新UI
+        switch (type) {
+            case DeviceSettingsView.TYPE_VIDEO_RES:
+                mSettingInfo.videoRes = value;
+                mTvVideoResolve.setText(getPresenter().getSettingLabelByValue(this, R.array.video_res, R.array.video_res_values, value));
+                // 发送Event给预览页面
+                VideoResEvent eventVideoRes = new VideoResEvent();
+                eventVideoRes.value = value;
+                EventBus.getDefault().post(eventVideoRes);
+                break;
+            case DeviceSettingsView.TYPE_SNAP_TIME:
+                mSettingInfo.captureTime = value;
+                mTvSnapTime.setText(getPresenter().getSettingLabelByValue(this, R.array.capture_time, R.array.capture_time_values, value));
+                // 发送Event给预览页面
+                CaptureTimeEvent eventCaptureTime = new CaptureTimeEvent();
+                eventCaptureTime.value = value;
+                EventBus.getDefault().post(eventCaptureTime);
+                break;
+            case DeviceSettingsView.TYPE_GSENSOR:
+                mSettingInfo.GSensor = value;
+                mTvGSensor.setText(getPresenter().getSettingLabelByValue(this, R.array.gsendor_level, R.array.gsendor_level_values, value));
+                break;
+        }
+    }
 }

@@ -1110,7 +1110,7 @@ public class GolukUtils {
     }
 
     public static void startPhotoAlbumPlayerT1spActivity(Context context, int type, String vidFrom, String path, String filename, String createTime,
-                                                     String videoHP, String size, PromotionSelectItem promotionItem) {
+                                                     String videoHP, String size, PromotionSelectItem promotionItem, boolean isShareVideo) {
         Intent intent = new Intent(context, PhotoAlbumPlayerT1SP.class);
         intent.putExtra(PhotoAlbumPlayer.TYPE, type);
         intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
@@ -1120,6 +1120,7 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
         intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        intent.putExtra("isShareVideo", isShareVideo);
         context.startActivity(intent);
     }
 

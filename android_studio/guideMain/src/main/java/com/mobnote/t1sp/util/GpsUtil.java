@@ -6,22 +6,18 @@ import java.util.List;
 
 public class GpsUtil {
 
-    public static int avgSpeed(List<GPSData> list, long timeMilles) {
+    public static String avgSpeed(List<GPSData> list, long timeMilles) {
         if (list == null || list.size() == 0) {
-            return 0;
+            return "0";
         }
-//        int total = 0;
-//        for (GPSData data :
-//                list) {
-//            total += data.speed;
-//        }
-//        return total / list.size();
-        int mail = (int) (totalMailslength(list) * 1000);
+
+        int mail = totalMailslength(list);
         if (timeMilles == 0) {
-            return 0;
+            return "0";
         }
-        timeMilles = timeMilles/ 1000;
-        return (int) (mail / timeMilles * 3.6);
+        timeMilles = timeMilles / 1000;
+        float speed = ((float) mail / timeMilles) * 3.6F;
+        return String.format("%.2f", speed);
     }
 
     public static int currentSpeed(GPSData data) {
@@ -51,12 +47,15 @@ public class GpsUtil {
 
     public static final double MAX_LENGTH_PER_SECOND = 66.67; // 240KM/h
 
-    public static double totalMailslength(List<GPSData> list) {
+    /**
+     * 单位米
+     */
+    public static int totalMailslength(List<GPSData> list) {
         if (list == null || list.size() <= 1) {
             return 0;
         }
         float[] results = new float[1];
-        int dis = 0;
+        int distance = 0;
         GPSData lastValidData = list.get(0);
         for (int i = 1; i < list.size(); i++) {
             if (lastValidData.latitude == 0) {
@@ -70,16 +69,21 @@ public class GpsUtil {
                     list.get(i).latitude, list.get(i).longitude, results);
             if (results[0] > MAX_LENGTH_PER_SECOND)
                 continue;
-            dis += results[0];
+            distance += results[0];
             lastValidData = list.get(i);
         }
-        return dis / 1000.0f;
+        return distance;
     }
 
     public static String totalMails(List<GPSData> list) {
-        double length = totalMailslength(list);
-        if (length == 0)
-            return "0.0";
-        else return String.format("%.1f", length);
+        int distance = totalMailslength(list);
+        float distanceKm = distance / 1000F;
+        if (distance == 0)
+            return "0";
+        if (distance < 100) {
+            return String.format("%.2f", distanceKm);
+        }
+
+        return String.format("%.1f", distanceKm);
     }
 }

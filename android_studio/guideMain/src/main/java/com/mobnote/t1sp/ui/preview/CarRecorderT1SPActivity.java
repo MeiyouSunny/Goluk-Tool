@@ -9,6 +9,7 @@ import android.content.pm.ActivityInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
@@ -27,8 +28,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventUpdateAddr;
+import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -594,7 +597,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             getPresenter().captureVideo();
         } else if (id == R.id.mSettingBtn) {
-            if (m_bIsFullScreen) {
+            if (m_bIsFullScreen || !mCanSwitchMode) {
                 return;
             }
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
@@ -632,6 +635,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
+            if (!mCanSwitchMode)
+                return;
             Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
@@ -661,6 +666,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     }
 
+    private boolean mCanSwitchMode;
+
     /**
      * 显示加载中布局
      *
@@ -668,6 +675,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     private void showLoading() {
+        mCanSwitchMode = false;
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.VISIBLE);
@@ -680,6 +688,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     private void hideLoading() {
+        mCanSwitchMode = true;
         mLoadingLayout.setVisibility(View.GONE);
     }
 
@@ -773,7 +782,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 获取本地最近2个视频(精彩视频和紧急视频综合)
         getPresenter().getLatestTwoVideos();
         // 获取当前模式
-        getPresenter().getDeviceMode();
+        showLoading();
+        new Handler() {
+        }.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPresenter().getDeviceMode();
+            }
+        }, 1500);
     }
 
     @Override
@@ -951,6 +967,29 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     /**
+     * 视频质量变化
+     */
+    public void onEventMainThread(VideoResEvent event) {
+        if (event != null && !TextUtils.isEmpty(event.value)) {
+            if (mSettingInfo != null) {
+                mSettingInfo.videoRes = event.value;
+                mVideoResolutions.setBackgroundResource(mSettingInfo.is1080P() ? R.drawable.icon_hd1080 : R.drawable.icon_hd720);
+            }
+        }
+    }
+
+    /**
+     * 抓拍时间变化
+     */
+    public void onEventMainThread(CaptureTimeEvent event) {
+        if (event != null && !TextUtils.isEmpty(event.value)) {
+            if (mSettingInfo != null) {
+                mSettingInfo.captureTime = event.value;
+            }
+        }
+    }
+
+    /**
      * 首次显示使用提示
      */
     private void firstShowHint() {
@@ -995,16 +1034,20 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onGetDeviceModeInfo(DeviceMode deviceMode) {
         if (deviceMode != null) {
             if (deviceMode.isInPlaybackMode()) {
-                getPresenter().exitPlaybackMode();
+                Log.e("T1SP", "Is playback mode, existing...");
+                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPresenter().exitPlaybackMode();
+                    }
+                }, 2500);
             }
         }
     }
 
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        // 获取设备信息
-        getPresenter().getVideoSettingInfo();
+    public void onEnterVideoMode() {
+        Log.e("T1SP", "Exist playback mode success");
     }
 
     @Override

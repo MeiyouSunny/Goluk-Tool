@@ -20,4 +20,6 @@ public interface DeviceSettingsView extends View<DeviceSettingsPresenter>, Loadi
 
     void onGetSDCardInfo(SettingInfo settingInfo);
 
+    void onSelectionSetted(int type, String value);
+
 }

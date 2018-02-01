@@ -1,10 +1,14 @@
 package com.mobnote.t1sp.ui.album;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,9 +20,13 @@ import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.service.HeartbeatTask;
 
-import likly.dollar.$;
+import java.io.File;
+
+import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
+import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -54,41 +62,86 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         mDialog = new CustomLoadingDialog(this, getString(R.string.enter_album_mode_hint));
         mDialog.show();
 
-        enterPlaybackMode();
+        mHandler.sendEmptyMessageDelayed(MSG_ENTER_PLAYBACK_MODE, 2000);
     }
 
     private void enterPlaybackMode() {
-        new Handler().postDelayed(new Runnable() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(true), new CommonCallback() {
             @Override
-            public void run() {
-                ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(true), new CommonCallback() {
-                    @Override
-                    protected void onSuccess() {
-                        if (mDialog.isShowing())
-                            mDialog.close();
-                        // 开始加载数据
-                        mFragmentAlubm.loadData();
-                        // 发送心跳
-                        mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_PLAYBACK);
-                        mHeartbeatTask.start();
-                    }
+            protected void onSuccess() {
+                if (mDialog.isShowing())
+                    mDialog.close();
 
-                    @Override
-                    protected void onServerError(int errorCode, String errorMessage) {
-                        Log.e("mode", errorMessage);
-                    }
-                });
+                mHandler.sendEmptyMessageDelayed(MSG_LOAD_DATA_AND_HEARTBEAT, 500);
             }
-        }, 2000);
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                Log.e("mode", errorMessage);
+            }
+        });
     }
+
+    private void loadInitDataAndSendHeartbeat() {
+        // 开始加载数据
+        if (mFragmentAlubm != null)
+            mFragmentAlubm.loadData();
+        // 发送心跳
+        mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_PLAYBACK);
+        mHeartbeatTask.start();
+    }
+
+    private static final int MSG_ENTER_PLAYBACK_MODE = 1;
+    private static final int MSG_LOAD_DATA_AND_HEARTBEAT = 2;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            if (msg.what == MSG_ENTER_PLAYBACK_MODE) {
+                enterPlaybackMode();
+            } else if (msg.what == MSG_LOAD_DATA_AND_HEARTBEAT) {
+                loadInitDataAndSendHeartbeat();
+            }
+        }
+    };
 
     @Override
     public void onBackPressed() {
-        if (mFragmentAlubm != null && mShouldClose) {
-            mFragmentAlubm.checkDowningExit();
+        boolean hasDownloadTask = DownloaderT1spImpl.getInstance().isDownloading();
+        if (hasDownloadTask) {
+            preExit();
         } else {
             super.onBackPressed();
         }
+    }
+
+    private void preExit() {
+        final AlertDialog dialog = new AlertDialog.Builder(this).create();
+        dialog.setTitle(getString(R.string.str_global_dialog_title));
+        dialog.setMessage(getString(R.string.msg_of_exit_when_download));
+        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+                DownloaderT1spImpl.getInstance().cancelAllDownloadTask(true);
+
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        dialog.dismiss();
+                        finish();
+                    }
+                }, 1500);
+            }
+        });
+        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialog.dismiss();
+            }
+        });
+        dialog.setCancelable(true);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.show();
     }
 
     @Override

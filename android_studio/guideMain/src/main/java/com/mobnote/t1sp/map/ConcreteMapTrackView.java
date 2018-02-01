@@ -80,6 +80,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
     private Marker mTrackCarStart;
     private Marker mTrackCarEnd;
     private BitmapDescriptor mCarBitmapDescriptor;
+    private BitmapDescriptor mOnlyOnePointBitmapDescriptor;
     private BitmapDescriptor mCarBitmapStart;
     private BitmapDescriptor mCarBitmapEnd;
     private Handler mHandler = new Handler();
@@ -171,6 +172,35 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         }
 
         new DrawTrackTask().execute(list);
+    }
+
+    @Override
+    public void drawOnlyOnePoint(GPSData data) {
+        LatLng point = new LatLng(data.latitude, data.longitude);
+        if (data.coordType == GPSData.COORD_TYPE_GPS) {
+            CoordinateConverter converter = new CoordinateConverter();
+            converter.from(CoordinateConverter.CoordType.GPS);
+            // sourceLatLng待转换坐标
+            converter.coord(point);
+            point = converter.convert();
+        } else if (data.coordType == GPSData.COORD_TYPE_AMAP) {
+            CoordinateConverter converter = new CoordinateConverter();
+            converter.from(CoordinateConverter.CoordType.COMMON);
+            // sourceLatLng待转换坐标
+            converter.coord(point);
+            point = converter.convert();
+        }
+
+        OverlayOptions oo = new MarkerOptions().position(point).icon(mOnlyOnePointBitmapDescriptor).zIndex(9).draggable(true).anchor(0.5f, 0.5f);
+        if (mBaiduMap != null) {
+            mTrackCarMar = (Marker) (mBaiduMap.addOverlay(oo));
+        }
+
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(point);
+        MapStatusUpdate statusZoom = MapStatusUpdateFactory.newLatLngZoom(point, 16);
+        if (mBaiduMap != null)
+            mBaiduMap.animateMapStatus(statusZoom);
     }
 
     //画远程视频的GPS轨迹，数据从记录仪获取
@@ -291,6 +321,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         SDKInitializer.initialize(GolukApplication.getInstance().getApplicationContext());
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mCarBitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.image_mycar);
+        mOnlyOnePointBitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.ic_one_location);
         mCarBitmapStart = BitmapDescriptorFactory.fromResource(R.drawable.icon_starting);
         mCarBitmapEnd = BitmapDescriptorFactory.fromResource(R.drawable.pos_end);
         inflater.inflate(R.layout.baidumap_track_view, this);
@@ -301,7 +332,7 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         mBaiduMap.setMyLocationEnabled(false);
         //mBaiduMap.setOnMapClickListener(this);
         // 不显示百度地图的缩放按钮
-        mMapView.showZoomControls(true);
+        mMapView.showZoomControls(false);
 
         findViewById(R.id.baidumap_tarck_follow_button).setOnClickListener(new View.OnClickListener() {
 

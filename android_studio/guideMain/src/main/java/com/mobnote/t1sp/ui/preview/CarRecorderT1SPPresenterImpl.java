@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.DeviceMode;
@@ -56,7 +57,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
     public void getDeviceMode() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getCameraModeParam(), new DeviceModeCallback() {
             @Override
-            public void onGetDeviceModeInfo(DeviceMode deviceMode) {
+            public void onGetDeviceModeInfo(final DeviceMode deviceMode) {
                 getView().onGetDeviceModeInfo(deviceMode);
             }
         });
@@ -64,18 +65,32 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
     @Override
     public void exitPlaybackMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
-                new CommonCallback() {
+//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
+//                new CommonCallback() {
+//
+//                    @Override
+//                    protected void onSuccess() {
+//                        getView().onEnterVideoMode();
+//                    }
+//
+//                    @Override
+//                    protected void onServerError(int errorCode, String errorMessage) {
+//
+//                    }
+//                });
 
-                    @Override
-                    protected void onSuccess() {
-                    }
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                $.toast().text(R.string.recovery_to_record).show();
+            }
 
-                    @Override
-                    protected void onServerError(int errorCode, String errorMessage) {
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(errorMessage).show();
+            }
+        });
 
-                    }
-                });
     }
 
 }

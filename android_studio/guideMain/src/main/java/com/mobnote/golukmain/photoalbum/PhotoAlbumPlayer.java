@@ -235,7 +235,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private ConfigData configData;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -733,12 +732,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             return;
         }
         if (bFull) {
-
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            params.width = metrics.widthPixels;
-            params.height = metrics.heightPixels;
+            params.width = LayoutParams.MATCH_PARENT;
+            params.height = LayoutParams.MATCH_PARENT;
             params.leftMargin = 0;
             if (Build.VERSION.SDK_INT > 16) {
                 params.removeRule(RelativeLayout.BELOW);
@@ -765,7 +763,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             hideOperator();
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
             lp.width = mScreenWidth;
-            lp.height = (int) (lp.width / 1.777);
+            int heightSet = (int) (((float) mVideoHeight / mVideoWidth) * mScreenWidth);
+            //lp.height = (int) (lp.width / 1.777);
+            lp.height = heightSet;
             lp.leftMargin = 0;
             lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
@@ -996,12 +996,29 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         return formatter.format(new Date(time));
     }
 
+    private int mVideoWidth, mVideoHeight;
+
     @Override
     public void onPrepared(GolukPlayer mp) {
+        mVideoWidth = mp.getVideoWidth();
+        mVideoHeight = mp.getVideoHeight();
+        updateLayoutSize(mVideoWidth, mVideoHeight);
         if (null != mDurationTime) {
             mDurationTime.setText(formatTime(mVideoView.getDuration()));
             mVtDurationTime.setText(formatTime(mVideoView.getDuration()));
         }
+    }
+
+    /**
+     * 根据视频实际大小来设置视频控件大小
+     */
+    private void updateLayoutSize(int videoWidth, int videoHeight) {
+        int playerWidth = mVideoViewLayout.getWidth();
+        int heightSet = (int) (((float) videoHeight / videoWidth) * playerWidth);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
+        layoutParams.height = heightSet;
+        mVideoViewLayout.setLayoutParams(layoutParams);
     }
 
     private boolean isShow = false;
@@ -1533,9 +1550,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     }
 
-
     private SparseArray<ActivityResultHandler> registeredActivityResultHandlers;
-
 
     private ConfigData initAndGetConfigData() {
         if (configData == null) {
@@ -1552,7 +1567,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
         return configData;
     }
-
 
     private void initEditorUIAndExportConfig() {
         initAndGetConfigData();
@@ -1663,7 +1677,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         registeredActivityResultHandlers.put(requestCode, handler);
     }
 
-
     private ActivityResultHandler editResultHandler = new ActivityResultHandler() {
 
         @Override
@@ -1692,7 +1705,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         void onActivityResult(Context context, int resultCode, Intent data);
     }
 
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (null != registeredActivityResultHandlers) {
@@ -1717,7 +1729,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             e.printStackTrace();
         }
     }
-
 
     private void initCameraConfig(int UIType) {
         SdkEntry.getSdkService().initConfiguration(
@@ -1786,7 +1797,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         VideoConfig config = new VideoConfig();
         config.enableHWEncoder(CoreUtils.hasJELLY_BEAN_MR2());
         config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
-        config.setVideoSize(mVideoView.getVideoWidth(),mVideoView.getVideoHeight());
+        config.setVideoSize(mVideoView.getVideoWidth(), mVideoView.getVideoHeight());
         String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
         String nickName;
         if (GolukApplication.getInstance().isUserLoginSucess) {
@@ -1806,7 +1817,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             e.printStackTrace();
         }
     }
-
 
     /**
      * 导出视频的回调演示
@@ -1859,7 +1869,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
         @Override
         public void onExportEnd(int result) {
-            if(mDialog!=null && mDialog.isShowing()) {
+            if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
             if (result >= VirtualVideo.RESULT_SUCCESS) {
@@ -1871,6 +1881,5 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             }
         }
     }
-
 
 }

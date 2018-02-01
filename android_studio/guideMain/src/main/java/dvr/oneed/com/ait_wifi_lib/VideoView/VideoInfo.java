@@ -1,5 +1,6 @@
 package dvr.oneed.com.ait_wifi_lib.VideoView;
 
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,12 +9,53 @@ import java.util.List;
  */
 
 public class VideoInfo {
+    /**
+     * Default library loader
+     * Load them by yourself, if your libraries are not installed at default place.
+     */
+    private static final IjkLibLoader sLocalLibLoader = new IjkLibLoader() {
+        @Override
+        public void loadLibrary(String libName) throws UnsatisfiedLinkError, SecurityException {
+            System.loadLibrary(libName);
+        }
+    };
+    private static volatile boolean mIsLibLoaded = false;
 
-    static {
-        System.loadLibrary("videoGpsInfo");
+    public static void loadLibrariesOnce(IjkLibLoader libLoader) {
+        synchronized (VideoInfo.class) {
+            if (!mIsLibLoaded) {
+                if (libLoader == null)
+                    libLoader = sLocalLibLoader;
+                libLoader.loadLibrary("videoGpsInfo");
+                mIsLibLoaded = true;
+            }
+        }
     }
 
+    /**
+     *
+     *
+     */
     public VideoInfo() {
+        this(sLocalLibLoader);
+    }
+
+    /**
+     * do not loadLibaray
+     *
+     * @param libLoader custom library loader, can be null.
+     */
+    public VideoInfo(IjkLibLoader libLoader) {
+        initPlayer(libLoader);
+    }
+
+    private void initPlayer(IjkLibLoader libLoader) {
+        loadLibrariesOnce(libLoader);
+    }
+
+    public interface IjkLibLoader {
+        void loadLibrary(String libName) throws UnsatisfiedLinkError,
+                SecurityException;
     }
 
     /**
@@ -33,23 +75,14 @@ public class VideoInfo {
      */
     public List<GpsInfo> getAllGpsInfo(String path) {
         List<GpsInfo> mList = new ArrayList<>();
-        mList = getGpsVideoInfo(path, 60);
+        Integer length = new Integer(60);
+        mList = getGpsVideoInfo(path, length);
         return mList;
     }
 
-    public List<GpsInfo> getAllInfo(String path) {
-        ArrayList<GpsInfo> gpsList = new ArrayList<>();
-        ArrayList<SensorInfo> sensorList = new ArrayList<>();
-
-        getAllVideoInfo(path, gpsList, 60, sensorList, 60);
-
-        return gpsList;
-    }
-
     public double gpsChange(double org) {
-        double newOrg = org;
-        newOrg = org / 100;
-        return newOrg + (org - newOrg * 100) / 60;
+        return (int)(org/100) + (org/100.0 - (int)(org/100)) *100.0 / 60.0;
+
     }
 
     /**

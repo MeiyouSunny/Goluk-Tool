@@ -121,7 +121,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
     }
 
     @Override
-    public void setSelectionSettingValue(int type, String value) {
+    public void setSelectionSettingValue(final int type, final String value) {
         Map<String, String> params = null;
         switch (type) {
             case DeviceSettingsView.TYPE_VIDEO_RES:
@@ -152,13 +152,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
             @Override
             protected void onSuccess() {
-                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        // 获取参数
-                        getAllInfo();
-                    }
-                }, 1000);
+                getView().onSelectionSetted(type, value);
             }
 
             @Override

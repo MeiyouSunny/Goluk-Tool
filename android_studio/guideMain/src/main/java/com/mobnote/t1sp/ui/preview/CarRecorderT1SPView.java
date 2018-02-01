@@ -22,4 +22,5 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     void onGetDeviceModeInfo(DeviceMode deviceMode);
 
+    void onEnterVideoMode();
 }

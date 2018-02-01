@@ -12,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.util.SparseArray;
 import android.view.Gravity;
@@ -82,6 +81,8 @@ import java.util.Date;
 import java.util.List;
 
 import de.greenrobot.event.EventBus;
+import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
+import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
 
 import static com.rd.veuisdk.SdkEntry.editMedia;
 
@@ -113,6 +114,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private ImageButton mBackBtn = null;
     private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
     private int mType;
+    private FrameLayout mVideoFrameLayout;
     private RelativeLayout mVideoViewLayout;
     private FullScreenVideoView mVideoView;
     private boolean mIsFullScreen = false;
@@ -142,11 +144,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private TextView mDurationTime, mVtDurationTime;
     private ImageView mPlayImg = null;
 
-    private ImageView mBtnDelete;
-
     private TextView mTvShareRightnow;
     private TextView mTvT3Hint;
-    private LinearLayout mStartVideoeditLl;
+    private LinearLayout mLayoutOption, mLayoutDelete, mStartVideoeditLl;
 
     private TextView mResolutionTV;
 
@@ -164,7 +164,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private ImageView mBtnPlay;
     // 总里程, 总用时, 平均速度
     private TextView mTvTotalMails, mTvTotalTime, mTvAverageSpeed;
-    private LinearLayout mLayoutGpsInfo, mLayoutOptions;
+    private LinearLayout mLayoutGpsInfo;
     private RelativeLayout mLayoutTitle, mLayoutMap;
     // 轨迹数据
     private List<GPSData> mGpsList;
@@ -209,6 +209,8 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
     /////////////////
     private MapTrackView mMapTrackView;
+    // 是否是精彩视频类型
+    private boolean isShareVideo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -232,11 +234,22 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     }
 
     private void loadGpsData() {
-        String gpsPath = mPath.replace("MP4", "NMEA");
-        File gpsFile = new File(gpsPath);
-        if (gpsFile.exists()) {
-            T1spGpsTask gpsTask = new T1spGpsTask(this);
-            gpsTask.execute(gpsPath);
+        if (!isShareVideo) {
+            String gpsPath = mPath.replace("MP4", "NMEA");
+            File gpsFile = new File(gpsPath);
+            if (gpsFile.exists()) {
+                T1spGpsTask gpsTask = new T1spGpsTask(this);
+                gpsTask.execute(gpsPath);
+            }
+        } else {
+            // 精彩视频只提取一个GPS点
+            VideoInfo videoInfo = new VideoInfo();
+            GpsInfo gpsInfo = videoInfo.getOnePointGpsInfo(mPath);
+            GPSData gpsData = new GPSData();
+            gpsData.latitude = gpsInfo.dwLat;
+            gpsData.longitude = gpsInfo.dwLon;
+            gpsData.coordType = GPSData.COORD_TYPE_GPS;
+            mMapTrackView.drawOnlyOnePoint(gpsData);
         }
     }
 
@@ -286,6 +299,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mSize = intent.getStringExtra(SIZE);
             mFileName = intent.getStringExtra(FILENAME);
             mType = intent.getIntExtra(TYPE, 0);
+            isShareVideo = intent.getBooleanExtra("isShareVideo", false);
         } else {
             mDate = savedInstanceState.getString(DATE);
             mHP = savedInstanceState.getString(HP);
@@ -449,11 +463,12 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             TextView title = (TextView) findViewById(R.id.title);
             title.setText(mDate);
         }
-        mBtnDelete = (ImageView) findViewById(R.id.btn_delete);
+        mLayoutOption = (LinearLayout) findViewById(R.id.layout_option);
+        mLayoutDelete = (LinearLayout) findViewById(R.id.btn_delete);
         mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
         mTvShareRightnow = (TextView) findViewById(R.id.tv_share_video_rightnow);
 
-        mBtnDelete.setOnClickListener(this);
+        mLayoutDelete.setOnClickListener(this);
         mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
         if (videoEditSupport()) {
@@ -462,6 +477,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mStartVideoeditLl.setVisibility(View.GONE);
         }
 
+        mVideoFrameLayout = (FrameLayout) findViewById(R.id.video_frame_layout);
         mVideoViewLayout = (RelativeLayout) findViewById(R.id.rv_video_player);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
         lp.width = mScreenWidth;
@@ -489,7 +505,6 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         mLayoutTitle = (RelativeLayout) findViewById(R.id.relativelayout_title);
         mLayoutGpsInfo = (LinearLayout) findViewById(R.id.layout_gps_info);
         mLayoutMap = (RelativeLayout) findViewById(R.id.video_map_container);
-        mLayoutOptions = (LinearLayout) findViewById(R.id.rl_operation);
         mBtnPlay.setOnClickListener(this);
     }
 
@@ -572,11 +587,14 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             return;
         }
         if (bFull) {
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+            setVideoLayoutWeight(true);
+
             FrameLayout.LayoutParams params = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            params.width = metrics.widthPixels;
-            params.height = metrics.heightPixels;
+//            params.width = metrics.widthPixels;
+//            params.height = metrics.heightPixels;
+            params.width = FrameLayout.LayoutParams.MATCH_PARENT;
+            params.height = FrameLayout.LayoutParams.MATCH_PARENT;
             params.leftMargin = 0;
 
             mVideoViewLayout.setLayoutParams(params);
@@ -584,13 +602,11 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 //                    LayoutParams.WRAP_CONTENT);
 //            norParams.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 //            norParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-            mStartVideoeditLl.setVisibility(View.GONE);
+            mLayoutOption.setVisibility(View.GONE);
             mLayoutTitle.setVisibility(View.GONE);
             mLayoutGpsInfo.setVisibility(View.GONE);
             mLayoutMap.setVisibility(View.GONE);
-            mLayoutOptions.setVisibility(View.GONE);
             //mVideoView.setOnTouchListener(mVideoTouchListener);
-
         } else {
             //mVideoView.setOnTouchListener(null);
             try {
@@ -602,16 +618,18 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             hideOperator();
             FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
             lp.width = mScreenWidth;
-            lp.height = (int) (lp.width / 1.777);
+            int heightSet = (int) (((float) mVideoHeight / mVideoWidth) * mScreenWidth);
+            //lp.height = (int) (lp.width / 1.777);
+            lp.height = heightSet;
             lp.leftMargin = 0;
             //lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
-            mStartVideoeditLl.setVisibility(View.VISIBLE);
+            mLayoutOption.setVisibility(View.VISIBLE);
             mLayoutTitle.setVisibility(View.VISIBLE);
             mLayoutGpsInfo.setVisibility(View.VISIBLE);
             mLayoutMap.setVisibility(View.VISIBLE);
-            mLayoutOptions.setVisibility(View.VISIBLE);
 
+            setVideoLayoutWeight(false);
         }
         mIsFullScreen = bFull;
     }
@@ -736,13 +754,35 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         return formatter.format(new Date(time));
     }
 
+    private int mVideoWidth, mVideoHeight;
     @Override
     public void onPrepared(GolukPlayer mp) {
+        mVideoWidth = mp.getVideoWidth();
+        mVideoHeight = mp.getVideoHeight();
+        updateLayoutSize(mVideoWidth, mVideoHeight);
         mDuration = mVideoView.getDuration();
         mDurationTime.setText(formatTime(mDuration));
         mVtDurationTime.setText(formatTime(mDuration));
         mTvTotalTime.setText(formatTime(mDuration));
         updateAvgSpeed();
+    }
+
+    private void setVideoLayoutWeight(boolean isFullScreen) {
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mVideoFrameLayout.getLayoutParams();
+        layoutParams.weight = isFullScreen ? 1 : 0;
+        mVideoFrameLayout.setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 根据视频实际大小来设置视频控件大小
+     */
+    private void updateLayoutSize(int videoWidth, int videoHeight) {
+        int playerWidth = mVideoFrameLayout.getWidth();
+        int heightSet = (int) (((float) videoHeight / videoWidth) * playerWidth);
+
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) mVideoFrameLayout.getLayoutParams();
+        layoutParams.height = heightSet;
+        mVideoFrameLayout.setLayoutParams(layoutParams);
     }
 
     /**

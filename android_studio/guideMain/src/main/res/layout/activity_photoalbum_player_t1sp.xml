@@ -100,9 +100,9 @@
 
         <!-- 视频 -->
         <FrameLayout
+            android:id="@+id/video_frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_height="180dp"
             android:orientation="vertical">
 
             <!-- 视频播放 -->
@@ -429,7 +429,7 @@
             android:id="@+id/video_map_container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2">
+            android:layout_weight="1">
 
             <RelativeLayout
                 android:id="@+id/tarck_map_parent_view"
@@ -446,47 +446,65 @@
                 android:visibility="gone"/>
         </RelativeLayout>
 
-        <!-- 操作 -->
-        <LinearLayout
-            android:id="@+id/rl_operation"
-            android:layout_width="match_parent"
-            android:layout_height="58dp"
-            android:background="@color/photoalbum_title_bg_color"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/btn_delete"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/btn_photoalum_delete"/>
-        </LinearLayout>
-
         <!-- 编辑视频 -->
+
         <LinearLayout
-            android:id="@+id/ll_start_videoedit"
+            android:id="@+id/layout_option"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:background="@drawable/btn_start_ae_bg"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/icon_edit"/>
-
-            <TextView
-                android:id="@+id/tv_start_videoedit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
+            <LinearLayout
+                android:id="@+id/btn_delete"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/btn_start_ae_bg"
                 android:gravity="center"
-                android:text="@string/str_edit_short_video"
-                android:textColor="#ffffff"
-                android:textSize="16sp"/>
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_delete_video"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="@string/del"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_start_videoedit"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="48dp"
+                android:layout_alignParentBottom="true"
+                android:background="@drawable/btn_start_ae_bg"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_edit"/>
+
+                <TextView
+                    android:id="@+id/tv_start_videoedit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:gravity="center"
+                    android:text="@string/edit_text"
+                    android:textColor="#ffffff"
+                    android:textSize="16sp"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

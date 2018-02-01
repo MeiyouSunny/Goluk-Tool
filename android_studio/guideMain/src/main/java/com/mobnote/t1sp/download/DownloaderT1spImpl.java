@@ -135,8 +135,17 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         }
     };
 
+    /**
+     * 是否正在下载
+     */
+    public boolean isDownloading() {
+        return isRunning;
+    }
+
     @Override
     public void cancelAllDownloadTask(boolean showCancelMsg) {
+        // 取消下载任务
+        FileDownloader.getImpl().pauseAll();
         // 删除当前正在下载的文件
         if (mCurrentFile != null && mCurrentFile.exists())
             mCurrentFile.delete();
@@ -170,6 +179,7 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         // 判断所有下载任务是否完成
         if (mListDownloaded.size() >= mListTotal.size()) {
             // 所有任务下载完成
+            isRunning = false;
             GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
             playSuccessSound();
             // 结束

@@ -310,7 +310,6 @@
             android:background="@drawable/btn_vt_pause" />
     </RelativeLayout>
 
-
     <TextView
         android:id="@+id/tv_t3_hint"
         android:layout_width="match_parent"
