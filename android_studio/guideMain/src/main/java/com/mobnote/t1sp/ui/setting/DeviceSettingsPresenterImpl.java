@@ -5,8 +5,8 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
+import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
@@ -17,6 +17,7 @@ import com.mobnote.t1sp.callback.SettingInfosCallback;
 import java.util.ArrayList;
 import java.util.Map;
 
+import likly.dollar.$;
 import likly.mvp.BasePresenter;
 
 public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsModel, DeviceSettingsView> implements DeviceSettingsPresenter {
@@ -157,6 +158,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(R.string.str_carrecoder_setting_failed).show();
             }
 
             @Override
@@ -198,12 +200,11 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
             @Override
             protected void onSuccess() {
-                System.out.print("");
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                Log.e("Setting", errorCode + errorMessage);
+                $.toast().text(R.string.str_carrecoder_setting_failed).show();
             }
 
             @Override
