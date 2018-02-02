@@ -1,7 +1,5 @@
 package com.mobnote.t1sp.ui.preview;
 
-import android.util.Log;
-
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.DeviceMode;
@@ -118,12 +116,12 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
                     @Override
                     protected void onSuccess() {
-                        Log.e("T1SP", "OpenLoopRecord success");
+                        getView().onOpenLoopModeSuccess();
                     }
 
                     @Override
                     protected void onServerError(int errorCode, String errorMessage) {
-                        Log.e("T1SP", "OpenLoopRecord failed");
+                        getView().onOpenLoopModeFailed();
                     }
                 });
     }

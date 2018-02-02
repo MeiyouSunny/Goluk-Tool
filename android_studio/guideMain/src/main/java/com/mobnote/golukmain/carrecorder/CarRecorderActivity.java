@@ -458,7 +458,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
         }
-        firstShowHint();
+        //firstShowHint();
     }
 
     private void firstShowHint() {

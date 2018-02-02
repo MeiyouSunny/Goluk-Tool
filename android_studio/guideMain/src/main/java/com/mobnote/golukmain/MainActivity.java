@@ -176,7 +176,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     private FragmentTabHost mTabHost;
 
     private ImageView mCarrecorderIv;
-    private ViewStub mGuideMainViewStub;
+    //private ViewStub mGuideMainViewStub;
     private SharePlatformUtil mSharePlatform = null;
 
     private void playDownLoadedSound() {
@@ -229,17 +229,17 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.mCurrentAid = userInfo.aid;
         }
 
-        // 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
-        SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
-        // 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-        boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
-        if (isFirstIndex) { // 如果是第一次启动
-            mGuideMainViewStub.inflate();
-            Editor editor = preferences.edit();
-            editor.putBoolean("isFirstIndex", false);
-            // 提交修改
-            editor.commit();
-        }
+//        // 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
+//        SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
+//        // 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
+//        boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
+//        if (isFirstIndex) { // 如果是第一次启动
+//            mGuideMainViewStub.inflate();
+//            Editor editor = preferences.edit();
+//            editor.putBoolean("isFirstIndex", false);
+//            // 提交修改
+//            editor.commit();
+//        }
 
         // 为了兼容以前的版本， 把旧的绑定信息读取出来
         mWac = new WifiConnectManager(mWifiManager, this);
@@ -314,20 +314,20 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     }
 
     private void initView() {
-        mGuideMainViewStub = (ViewStub) findViewById(R.id.viewstub_guide_main);
-        mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
-
-            @Override
-            public void onInflate(ViewStub stub, View inflated) {
-                inflated.setOnTouchListener(new OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        mGuideMainViewStub.setVisibility(View.GONE);
-                        return false;
-                    }
-                });
-            }
-        });
+//        mGuideMainViewStub = (ViewStub) findViewById(R.id.viewstub_guide_main);
+//        mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
+//
+//            @Override
+//            public void onInflate(ViewStub stub, View inflated) {
+//                inflated.setOnTouchListener(new OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        mGuideMainViewStub.setVisibility(View.GONE);
+//                        return false;
+//                    }
+//                });
+//            }
+//        });
 
         LayoutInflater inflater = LayoutInflater.from(this);
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);

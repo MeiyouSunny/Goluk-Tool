@@ -27,4 +27,8 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
     void onExitOtherModeSuccess();
 
     void onExitOtherModeFailed();
+
+    void onOpenLoopModeSuccess();
+
+    void onOpenLoopModeFailed();
 }

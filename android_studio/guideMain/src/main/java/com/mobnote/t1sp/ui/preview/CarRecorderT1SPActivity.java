@@ -221,8 +221,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         Intent receiveIntent = getIntent();
         isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
-        firstShowHint();
-
         start();
 
         // 设置抓拍回调
@@ -251,8 +249,15 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     private void resetCaptureButton() {
+        mBtnCapture.setEnabled(true);
         mBtnCapture.setText("");
         mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
+    }
+
+    private void disableCaptureButton() {
+        mBtnCapture.setEnabled(false);
+        mBtnCapture.setText("");
+        mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
     }
 
     @Override
@@ -504,6 +509,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 // 隐藏
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
+                // 抓拍按钮
+                resetCaptureButton();
             }
         });
     }
@@ -1003,6 +1010,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      */
     public void onEventMainThread(final EventExitMode event) {
         showLoading();
+        disableCaptureButton();
+
         if (event != null) {
             new Handler().postDelayed(new Runnable() {
                 @Override
@@ -1063,9 +1072,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onGetDeviceModeInfo(DeviceMode deviceMode) {
         if (deviceMode != null) {
+            Log.e("T1SP", "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
             if (deviceMode.needOpenLoopVideo()) {
-                Log.e("T1SP", "needOpenLoopVideo");
+                Log.e("T1SP", "NeedOpenLoopVideo");
                 getPresenter().openLoopMode();
+            } else {
+                resetCaptureButton();
             }
         }
     }
@@ -1080,12 +1092,30 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         Log.e("T1SP", "Exist other mode success");
         $.toast().text(R.string.recovery_to_record).show();
 
-        getPresenter().getDeviceMode();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPresenter().getDeviceMode();
+            }
+        }, 100);
     }
 
     @Override
     public void onExitOtherModeFailed() {
         Log.e("T1SP", "Exist other mode failed");
+        $.toast().text("进入录像模式失败").show();
+        finish();
+    }
+
+    @Override
+    public void onOpenLoopModeSuccess() {
+        Log.e("T1SP", "OpenLoopRecord success");
+        resetCaptureButton();
+    }
+
+    @Override
+    public void onOpenLoopModeFailed() {
+        Log.e("T1SP", "OpenLoopRecord failed");
         $.toast().text("进入录像模式失败").show();
         finish();
     }
