@@ -107,7 +107,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
                 mHeartbeatTask.start();
             }
-        }, 500);
+        }, 200);
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,

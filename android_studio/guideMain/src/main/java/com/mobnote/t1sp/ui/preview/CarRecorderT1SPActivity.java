@@ -617,8 +617,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             }
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
-            // 更新flag
-            //isInOtherMode = true;
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
         } else if (id == BTN_NORMALSCREEN) {
@@ -656,8 +654,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
-            // 更新flag
-            //isInOtherMode = true;
         } else if (id == R.id.mRtmpPlayerView) {
             if (m_bIsFullScreen) {
                 setFullScreen(false);
@@ -778,14 +774,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         if (isShowPlayer) {
             if (!isConnecting) {
-                if (isInOtherMode) {
-                    enterRecordMode();
-                } else {
-                    showLoading();
-                    hidePlayer();
-                    isConnecting = true;
-                    start();
-                }
+                showLoading();
+                hidePlayer();
+                isConnecting = true;
+                start();
             }
         }
 
@@ -1043,30 +1035,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 }
             });
         }
-    }
-
-    /**
-     * 进入录像模式
-     */
-    private void enterRecordMode() {
-//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-//            @Override
-//            protected void onSuccess() {
-//                isInOtherMode = false;
-//                showLoading();
-//                hidePlayer();
-//                isConnecting = true;
-//                start();
-//
-//                $.toast().text(R.string.recovery_to_record).show();
-//            }
-//
-//            @Override
-//            protected void onServerError(int errorCode, String errorMessage) {
-//                $.toast().text(errorMessage).show();
-//            }
-//        });
-
     }
 
     @Override
