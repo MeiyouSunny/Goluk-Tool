@@ -30,6 +30,7 @@ import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.eventbus.EventUpdateAddr;
+import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
@@ -227,7 +228,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 设置抓拍回调
         T1SPUdpService.setCaptureListener(this);
         // 获取设备信息
-        getPresenter().getVideoSettingInfo();
+        getPresenter().getVideoSettingInfo(false);
     }
 
     /**
@@ -262,18 +263,20 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     @Override
-    public void onGetVideoSettingInfo(SettingInfo settingInfo) {
+    public void onGetVideoSettingInfo(SettingInfo settingInfo, boolean onlySettingInfo) {
         if (settingInfo == null)
             return;
         mSettingInfo = settingInfo;
         mVideoResolutions.setBackgroundResource(settingInfo.is1080P() ? R.drawable.icon_hd1080 : R.drawable.icon_hd720);
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getPresenter().getDeviceMode();
-            }
-        }, 500);
+        if (!onlySettingInfo) {
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    getPresenter().getDeviceMode();
+                }
+            }, 500);
+        }
     }
 
     @Override
@@ -996,6 +999,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 mSettingInfo.captureTime = event.value;
             }
         }
+    }
+
+    /**
+     * 恢复出厂设置成功
+     */
+    public void onEventMainThread(RestoreFactoryEvent event) {
+        // 获取设备信息
+        getPresenter().getVideoSettingInfo(true);
     }
 
     /**

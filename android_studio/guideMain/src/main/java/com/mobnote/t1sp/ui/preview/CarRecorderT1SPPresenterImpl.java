@@ -17,11 +17,11 @@ import likly.mvp.BasePresenter;
 public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPModel, CarRecorderT1SPView> implements CarRecorderT1SPPresenter {
 
     @Override
-    public void getVideoSettingInfo() {
+    public void getVideoSettingInfo(final boolean onlySettingInfo) {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
-                getView().onGetVideoSettingInfo(settingInfo);
+                getView().onGetVideoSettingInfo(settingInfo, onlySettingInfo);
                 getLatestTwoVideos();
             }
 

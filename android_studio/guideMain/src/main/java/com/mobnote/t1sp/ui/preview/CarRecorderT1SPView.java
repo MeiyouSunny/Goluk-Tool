@@ -14,7 +14,7 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
     /* 精彩视频抓拍12S */
     int CAPTURE_TIME_12 = 12;
 
-    void onGetVideoSettingInfo(SettingInfo settingInfo);
+    void onGetVideoSettingInfo(SettingInfo settingInfo, boolean onlySettingInfo);
 
     void onCaptureStart();
 

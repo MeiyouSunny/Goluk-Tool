@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventExitMode;
+import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
@@ -240,6 +241,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onResetFactory(final boolean isSuccess) {
+        RestoreFactoryEvent eventFactory = new RestoreFactoryEvent();
+        EventBus.getDefault().post(eventFactory);
+
         String message = getString(isSuccess ? R.string.str_restore_success : R.string.str_restore_fail);
         CustomDialog confirmDialog = new CustomDialog(this);
         confirmDialog.setCancelable(false);

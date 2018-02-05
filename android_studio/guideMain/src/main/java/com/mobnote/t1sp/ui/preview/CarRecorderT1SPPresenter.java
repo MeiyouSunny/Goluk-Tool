@@ -7,7 +7,7 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
     /**
      * 获取视频设置信息
      */
-    void getVideoSettingInfo();
+    void getVideoSettingInfo(boolean onlySettingInfo);
 
     /**
      * 抓拍精彩视频
