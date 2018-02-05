@@ -1,9 +1,10 @@
 package com.mobnote.t1sp.api;
 
-import android.util.Log;
+import com.mobnote.t1sp.util.Const;
 
 import java.lang.reflect.Method;
 
+import cn.com.tiros.debug.GolukDebugUtils;
 import likly.reverse.OnServiceInvokeListener;
 import likly.reverse.RequestHolder;
 
@@ -17,7 +18,7 @@ public class ApiServiceRequestListener implements OnServiceInvokeListener {
 
     @Override
     public RequestHolder onServiceInvoke(Method method, RequestHolder requestHolder) {
-        Log.e("T1SP", "" + requestHolder.url());
+        GolukDebugUtils.e(Const.LOG_TAG, "" + requestHolder.url());
 
         return requestHolder;
     }

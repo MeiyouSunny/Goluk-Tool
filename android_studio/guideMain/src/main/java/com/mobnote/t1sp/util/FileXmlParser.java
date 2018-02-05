@@ -1,6 +1,5 @@
 package com.mobnote.t1sp.util;
 
-import android.util.Log;
 import android.util.Xml;
 
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -11,6 +10,8 @@ import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * Xml文件列表解析
@@ -77,7 +78,7 @@ public class FileXmlParser {
                 event = xmlPullParser.next();
             }
         } catch (Exception e) {
-            Log.e("rss", "Parse xml data error：" + e.getMessage());
+            GolukDebugUtils.e(Const.LOG_TAG, "Parse remote xml data error：" + e.getMessage());
         }
         return list;
     }

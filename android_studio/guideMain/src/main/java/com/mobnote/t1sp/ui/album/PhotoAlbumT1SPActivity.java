@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.golukmain.BaseActivity;
@@ -22,7 +21,9 @@ import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.service.HeartbeatTask;
+import com.mobnote.t1sp.util.Const;
 
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
@@ -74,7 +75,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                Log.e("mode", errorMessage);
+                GolukDebugUtils.e(Const.LOG_TAG, errorMessage);
             }
         });
     }

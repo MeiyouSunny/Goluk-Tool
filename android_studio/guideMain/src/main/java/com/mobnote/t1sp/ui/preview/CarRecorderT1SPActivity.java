@@ -11,7 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -55,6 +54,7 @@ import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
 import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ThumbUtil;
 import com.mobnote.t1sp.util.ViewUtil;
@@ -73,6 +73,7 @@ import java.util.List;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import likly.dollar.$;
 import likly.mvp.MvpBinder;
@@ -242,7 +243,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (mCaptureTime > 0) {
             mHandlerCapture.sendEmptyMessageDelayed(0, 1000);
         } else {
-            Log.e("T1SP", "倒计时完, 时间(s):" + System.currentTimeMillis() / 1000);
+            GolukDebugUtils.e(Const.LOG_TAG, "Timer count over: " + System.currentTimeMillis() / 1000);
             resetCaptureButton();
         }
 
@@ -277,7 +278,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onCaptureStart() {
-        Log.e("T1SP", "抓拍指令发送成功, 时间(s):" + System.currentTimeMillis() / 1000);
+        GolukDebugUtils.e(Const.LOG_TAG, "Capture command send success, time:" + System.currentTimeMillis() / 1000);
         // 抓拍精彩视频开始
         mHandlerCapture.removeMessages(0);
         mCaptureTime = mSettingInfo.captureTimeIs12S() ? CAPTURE_TIME_12 : CAPTURE_TIME_30;
@@ -325,7 +326,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onCaptureVideo(String path) {
-        Log.e("T1SP", "收到抓拍回调, 时间(s):" + System.currentTimeMillis() / 1000 + ", 路径:" + path);
+        GolukDebugUtils.e(Const.LOG_TAG, "Received capture video path, time:" + System.currentTimeMillis() / 1000 + ", 路径:" + path);
         // 停止计时
         mHandlerCapture.removeMessages(0);
         mCaptureTime = 0;
@@ -1010,10 +1011,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 public void run() {
                     if (event.isSetMode()) {
                         getPresenter().exitSetMode();
-                        Log.e("T1SP", "Exit SetMode");
+                        GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
                     } else if (event.isPlaybackMode()) {
                         getPresenter().exitPlaybackMode();
-                        Log.e("T1SP", "Exit PlaybackMode");
+                        GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
                     }
                 }
             }, 1000);
@@ -1040,9 +1041,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onGetDeviceModeInfo(DeviceMode deviceMode) {
         if (deviceMode != null) {
-            Log.e("T1SP", "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
+            GolukDebugUtils.e(Const.LOG_TAG, "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
             if (deviceMode.needOpenLoopVideo()) {
-                Log.e("T1SP", "NeedOpenLoopVideo");
+                GolukDebugUtils.e(Const.LOG_TAG, "NeedOpenLoopVideo");
                 getPresenter().openLoopMode();
             } else {
                 resetCaptureButton();
@@ -1052,12 +1053,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onEnterVideoMode() {
-        Log.e("T1SP", "Exist playback mode success");
+        GolukDebugUtils.e(Const.LOG_TAG, "Exist playback mode success");
     }
 
     @Override
     public void onExitOtherModeSuccess() {
-        Log.e("T1SP", "Exist other mode success");
+        GolukDebugUtils.e(Const.LOG_TAG, "Exist other mode success");
         $.toast().text(R.string.recovery_to_record).show();
 
         new Handler().postDelayed(new Runnable() {
@@ -1070,20 +1071,20 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onExitOtherModeFailed() {
-        Log.e("T1SP", "Exist other mode failed");
+        GolukDebugUtils.e(Const.LOG_TAG, "Exist other mode failed");
         $.toast().text("进入录像模式失败").show();
         finish();
     }
 
     @Override
     public void onOpenLoopModeSuccess() {
-        Log.e("T1SP", "OpenLoopRecord success");
+        GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord success");
         resetCaptureButton();
     }
 
     @Override
     public void onOpenLoopModeFailed() {
-        Log.e("T1SP", "OpenLoopRecord failed");
+        GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord failed");
         $.toast().text("进入录像模式失败").show();
         finish();
     }

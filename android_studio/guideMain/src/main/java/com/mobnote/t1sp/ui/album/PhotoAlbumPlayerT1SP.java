@@ -58,6 +58,7 @@ import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.t1sp.map.MapTrackView;
 import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.GpsUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -80,6 +81,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
 import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
@@ -563,7 +565,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         } else if (id == R.id.btn_delete) {
             showConfimDeleteDialog(mPath);
         } else {
-            Log.e(TAG, "id = " + id);
+            GolukDebugUtils.e(Const.LOG_TAG, "id = " + id);
         }
     }
 

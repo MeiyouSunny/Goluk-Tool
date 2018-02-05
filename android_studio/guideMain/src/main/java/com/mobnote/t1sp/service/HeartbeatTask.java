@@ -3,13 +3,15 @@ package com.mobnote.t1sp.service;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.util.Log;
 
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
+import com.mobnote.t1sp.util.Const;
 
 import java.util.Map;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 心跳任务
@@ -68,17 +70,17 @@ public class HeartbeatTask {
      * 发送设置心跳
      */
     private void sendHeartbeat() {
-        Log.e("T1SP", "Send hearbeat");
+        GolukDebugUtils.e(Const.LOG_TAG, "Send hearbeat");
         ApiUtil.apiServiceAit().sendRequest(mParams, new CommonCallback() {
             @Override
             protected void onSuccess() {
-                Log.e("T1SP", "Receive hearbeat success");
+                GolukDebugUtils.e(Const.LOG_TAG, "Receive hearbeat success");
                 mHandler.sendEmptyMessageDelayed(MSG_TYPE_HEARTBEAT, DELAY_TIME);
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                Log.e("T1SP", "Receive hearbeat failed");
+                GolukDebugUtils.e(Const.LOG_TAG, "Receive hearbeat failed");
             }
         });
     }

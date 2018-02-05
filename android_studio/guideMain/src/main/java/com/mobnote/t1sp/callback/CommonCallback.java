@@ -1,9 +1,11 @@
 package com.mobnote.t1sp.callback;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.mobnote.t1sp.api.Callback;
+import com.mobnote.t1sp.util.Const;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 通用请求回调接口
@@ -14,7 +16,7 @@ public abstract class CommonCallback extends Callback<String> {
     public void onResponse(String response) {
         super.onResponse(response);
 
-        Log.e("==Response==", response);
+        GolukDebugUtils.e(Const.LOG_TAG, "Response: " + response);
 
         parseResponse(response);
     }

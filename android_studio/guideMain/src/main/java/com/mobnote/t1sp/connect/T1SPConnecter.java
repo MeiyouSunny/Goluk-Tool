@@ -15,6 +15,7 @@ import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiConnectManager;
@@ -22,6 +23,7 @@ import com.mobnote.wifibind.WifiConnectManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 /**
@@ -138,12 +140,16 @@ public class T1SPConnecter {
             return;
         for (T1SPConntectListener listener : mListeners) {
             if (state == -1) {
+                GolukDebugUtils.e(Const.LOG_TAG, "Disconnect T1SP device...");
                 listener.onT1SPDisconnected();
             } else if (state == 0) {
+                GolukDebugUtils.e(Const.LOG_TAG, "Start connect to T1SP device...");
                 listener.onT1SPConnectStart();
             } else if (state == 1) {
+                GolukDebugUtils.e(Const.LOG_TAG, "Connected to T1SP device success...");
                 listener.onT1SPConnectResult(true);
             } else if (state == 2) {
+                GolukDebugUtils.e(Const.LOG_TAG, "Connected to T1SP device failed...");
                 listener.onT1SPConnectResult(false);
             }
         }

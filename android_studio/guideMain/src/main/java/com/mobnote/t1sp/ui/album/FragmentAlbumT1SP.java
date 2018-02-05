@@ -30,14 +30,12 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.photoalbum.CustomViewPager;
 import com.mobnote.golukmain.photoalbum.LocalFragment;
-import com.mobnote.golukmain.photoalbum.LoopFragment;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.UrgentFragment;
-import com.mobnote.golukmain.photoalbum.WonderfulFragment;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -150,7 +148,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
+                GolukDebugUtils.e(Const.LOG_TAG, "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     mWonderfulFragment.removeFooterView();
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {

@@ -43,6 +43,7 @@ import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
@@ -530,6 +531,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         T1SPConnecter.instance().addListener(this);
         // 如果是自动连接并且已经连上Goluk_T1s热点
         if (mAutoConn && mWac.isConnectedT1sWifi()) {
+            GolukDebugUtils.e(Const.LOG_TAG, "Current connected WIFI is T1SP type");
             connectT1SP();
             return;
         }

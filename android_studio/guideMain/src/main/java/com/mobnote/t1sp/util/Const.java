@@ -9,4 +9,7 @@ public class Const {
     public static final String HTTP_SCHEMA = "http://";
     public static final String HTTP_SCHEMA_ADD_IP = HTTP_SCHEMA + IP;
 
+    /* Log Tag */
+    public static final String LOG_TAG = "T1SP";
+
 }
