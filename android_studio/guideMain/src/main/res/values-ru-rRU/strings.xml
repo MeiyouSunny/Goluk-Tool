@@ -778,7 +778,7 @@
     <string name="video_live_desc_text">Клуб молодых путешественников (туристическая типография)</string>
     <string name="watch_live_text">Слегка коснитесь и подождите еще</string>
     <string name="video_live_5s_tip">Подождите немного, трансляция скоро начнется</string>
-    <string name="set_ipc_item_hint_text">Автоматическая синхронизация последних замечательных и аварийных видеозаписей после подключения телефона к Goluk (не поддерживается для T1s)</string>
+    <string name="set_ipc_item_hint_text">Автоматическая синхронизация последних замечательных видеозаписей после подключения телефона к Goluk (не поддерживается для T1s)</string>
     <string name="my_install_title_text">Инструкции по установке</string>
     <string name="goluk_pull_to_refresh_footer_release_label">Отпустив, отправить</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">Загрузка...</string>

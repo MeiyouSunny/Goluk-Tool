@@ -932,7 +932,7 @@
     <string name="video_live_desc_text">Young Wanderers Club(Travel Typography)</string>
     <string name="watch_live_text">轻触继续观看</string>
     <string name="video_live_5s_tip">稍候片刻,即将进入直播</string>
-    <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步最近录制的精彩和紧急视频（T1s 不支持该功能）</string>
+    <string name="set_ipc_item_hint_text">手机与极路客连接成功后自动同步最近录制的精彩视频（T1s 不支持该功能）</string>
     <string name="my_install_title_text">安装指导</string>
     <string name="goluk_pull_to_refresh_footer_release_label">松开后加载</string>
     <string name="goluk_pull_to_refresh_footer_refreshing_label">加载中…</string>
