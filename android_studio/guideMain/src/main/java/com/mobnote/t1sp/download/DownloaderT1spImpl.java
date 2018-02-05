@@ -15,6 +15,7 @@ import com.mobnote.application.GlobalWindow;
 import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -43,12 +44,16 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     private SoundPool mSoundPool;
     private int mSoundId;
 
+    private List<IDownloadSuccess> mListeners;
+
     private DownloaderT1spImpl(Context context) {
         mContext = context;
         if (mListTotal == null)
             mListTotal = new ArrayList<>();
         if (mListDownloaded == null)
             mListDownloaded = new ArrayList<>();
+        if (mListeners == null)
+            mListeners = new ArrayList<>();
 
         FileDownloader.setup(context);
 
@@ -70,11 +75,13 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     }
 
     @Override
-    public void addDownloadTasks(List<Task> tasks) {
+    public void addDownloadTasks(List<Task> tasks, IDownloadSuccess listener) {
         if (CollectionUtils.isEmpty(tasks))
             return;
 
         mListTotal.addAll(tasks);
+        if (mListeners != null)
+            mListeners.add(listener);
 
         if (!isRunning) {
             isRunning = true;
@@ -129,11 +136,18 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
 
         @Override
         protected void completed(BaseDownloadTask task) {
+            //final String videoName = getCurrentDownloadingVideoName(task.getFilename());
+
+            onCallbackListener(task.getFilename(), true);
+
             mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
         }
 
         @Override
         protected void error(BaseDownloadTask task, Throwable e) {
+            //final String videoName = getCurrentDownloadingVideoName();
+            onCallbackListener(task.getFilename(), false);
+
             mUihandler.sendEmptyMessage(MSG_TYPE_SINGLE_COMPLETE);
         }
     };
@@ -166,6 +180,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             mListTotal.clear();
         if (mListDownloaded != null)
             mListDownloaded.clear();
+        if (mListeners != null)
+            mListeners.clear();
         if (mSoundPool != null) {
             //mSoundPool.release();
             //mSoundPool = null;
@@ -243,6 +259,22 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     private void playSuccessSound() {
         if (null != mSoundPool) {
             mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
+        }
+    }
+
+    private String getCurrentDownloadingVideoName(File file) {
+        if (file == null)
+            return "";
+        String filePath = file.getAbsolutePath();
+        return FileUtil.getFileNameFromPath(filePath);
+    }
+
+    private void onCallbackListener(String videoName, boolean success) {
+        if (CollectionUtils.isEmpty(mListeners))
+            return;
+        for (IDownloadSuccess listener : mListeners) {
+            if (listener != null)
+                listener.onVideoDownloadSuccess(videoName, success);
         }
     }
 

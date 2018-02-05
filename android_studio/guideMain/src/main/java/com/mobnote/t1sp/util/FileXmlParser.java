@@ -27,8 +27,6 @@ public class FileXmlParser {
             xmlPullParser.setInput(ios, "UTF-8");
             int event = xmlPullParser.getEventType();
 
-            //FileInfo fileInfo = null;
-
             VideoInfo videoInfo = null;
 
             while (event != XmlPullParser.END_DOCUMENT) {
@@ -49,13 +47,18 @@ public class FileXmlParser {
                                 String attributeName = xmlPullParser.getAttributeName(i);
                                 String attributeValue = xmlPullParser.getAttributeValue(i);
                                 if ("size".equals(attributeName)) {
-                                    //fileInfo.resolution = attributeValue;
+                                    if (attributeValue.contains("1080")) {
+                                        videoInfo.videoHP = "1080p";
+                                    } else if (attributeValue.contains("720")) {
+                                        videoInfo.videoHP = "720p";
+                                    } else if (attributeValue.contains("480")) {
+                                        videoInfo.videoHP = "480p";
+                                    }
                                 } else if ("fps".equals(attributeName)) {
                                     //fileInfo.fps = attributeValue;
                                 } else if ("time".equals(attributeName)) {
                                     //fileInfo.videoTime = (int) Float.parseFloat(attributeValue);
                                     videoInfo.countTime = attributeValue;
-                                    videoInfo.videoHP = "1080p";
                                 }
                             }
                             //fileInfo.format = xmlPullParser.nextText();

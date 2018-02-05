@@ -7,7 +7,6 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.Utils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
-import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.t1sp.util.FileUtil;
 
 import java.io.File;
@@ -106,13 +105,13 @@ public class GolukVideoUtils {
 
             }
 
-            String time = FileInfoManagerUtils.countFileDateToString(dateStr);
+            //String time = FileInfoManagerUtils.countFileDateToString(dateStr);
 
             if (!TextUtils.isEmpty(periodStr) && TextUtils.isDigitsOnly(periodStr)) {
                 period = Integer.valueOf(periodStr);
             }
             VideoInfo mVideoInfo = new VideoInfo();
-            mVideoInfo.videoCreateDate = time;
+            mVideoInfo.videoCreateDate = dateStr;
             mVideoInfo.videoSize = size;
             mVideoInfo.isSelect = false;
             mVideoInfo.videoPath = videoPath;

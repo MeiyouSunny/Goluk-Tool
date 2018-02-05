@@ -23,6 +23,8 @@ import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
+import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.photoalbum.LocalWonderfulVideoAdapter;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
@@ -33,6 +35,7 @@ import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.FileListCallback;
+import com.mobnote.t1sp.download.DownloaderT1sp;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
 import com.mobnote.t1sp.download.ThumbDownloader;
@@ -50,7 +53,7 @@ import de.greenrobot.event.EventBus;
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
  */
-public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener {
+public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener, DownloaderT1sp.IDownloadSuccess {
 
     private View mWonderfulVideoView;
 
@@ -514,7 +517,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             downloadTasks.add(task);
         }
 
-        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks);
+        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks, this);
     }
 
     /**
@@ -637,6 +640,29 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         // 视频缩略图下载成功
         if (mRemoteVideoAdapter != null)
             mRemoteVideoAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onVideoDownloadSuccess(String videoName, boolean sucess) {
+        // 单个文件下载成功,保存
+        VideoInfo videoInfo = getVideoInfoByName(videoName);
+        VideoFileInfoBean videoFileInfo = new VideoFileInfoBean();
+        videoFileInfo.filename = videoInfo.filename;
+        videoFileInfo.resolution = videoInfo.videoHP;
+        videoFileInfo.timestamp = videoInfo.videoCreateDate;
+        // 写入DB
+        GolukVideoInfoDbManager.getInstance().addVideoInfoData(videoFileInfo);
+    }
+
+    private VideoInfo getVideoInfoByName(String videoName) {
+        if (TextUtils.isEmpty(videoName))
+            return null;
+        for (VideoInfo videoInfo : mDataList) {
+            if (TextUtils.equals(videoInfo.filename, videoName))
+                return videoInfo;
+        }
+
+        return null;
     }
 
 }

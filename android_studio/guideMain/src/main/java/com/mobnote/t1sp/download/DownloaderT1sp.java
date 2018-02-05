@@ -7,12 +7,16 @@ import java.util.List;
  */
 public interface DownloaderT1sp {
 
-    void addDownloadTasks(List<Task> tasks);
+    void addDownloadTasks(List<Task> tasks, IDownloadSuccess listener);
 
     void cancelAllDownloadTask(boolean showCancelMsg);
 
     boolean isDownloading();
 
     void destory();
+
+    public interface IDownloadSuccess {
+        void onVideoDownloadSuccess(String videoName, boolean sucess);
+    }
 
 }
