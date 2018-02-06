@@ -223,7 +223,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         Intent receiveIntent = getIntent();
         isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
-        start();
+        startPlay();
 
         // 设置抓拍回调
         T1SPUdpService.setCaptureListener(this);
@@ -563,14 +563,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         @Override
         public void run() {
             isConnecting = true;
-            start();
+            startPlay();
         }
     };
 
     /**
      * 启动视频预览
      */
-    public void start() {
+    public void startPlay() {
         WifiRsBean wrb = ReadWifiConfig.readConfig();
         if (wrb != null && GolukApplication.getInstance().getIpcIsLogin()) {
             mConnectTip.setText(WiFiInfo.IPC_SSID);
@@ -629,7 +629,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             if (!isShowPlayer) {
                 if (!isConnecting) {
                     isConnecting = true;
-                    start();
+                    startPlay();
                 }
 
                 showLoading();
@@ -691,7 +691,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     private void showLoading() {
-        mCanSwitchMode = false;
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.VISIBLE);
@@ -704,7 +703,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     private void hideLoading() {
-        mCanSwitchMode = true;
         mLoadingLayout.setVisibility(View.GONE);
     }
 
@@ -758,7 +756,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             hidePlayer();
             mRtspPlayerView.removeCallbacks(retryRunnable);
             isConnecting = true;
-            start();
+            startPlay();
         } else {
             isShowPlayer = false;
             isConnecting = false;
@@ -781,7 +779,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 showLoading();
                 hidePlayer();
                 isConnecting = true;
-                start();
+                //startPlay();
             }
         }
 
@@ -1014,6 +1012,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      */
     public void onEventMainThread(final EventExitMode event) {
         showLoading();
+        mCanSwitchMode = false;
         disableCaptureButton();
 
         if (event != null) {
@@ -1028,7 +1027,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                         GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
                     }
                 }
-            }, 1000);
+            }, 500);
         }
     }
 
@@ -1054,10 +1053,18 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (deviceMode != null) {
             GolukDebugUtils.e(Const.LOG_TAG, "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
             if (deviceMode.needOpenLoopVideo()) {
-                GolukDebugUtils.e(Const.LOG_TAG, "NeedOpenLoopVideo");
-                getPresenter().openLoopMode();
+                GolukDebugUtils.e(Const.LOG_TAG, "Need open loop video mode");
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        getPresenter().openLoopMode();
+                    }
+                }, 200);
             } else {
+                $.toast().text(R.string.recovery_to_record).show();
+                mCanSwitchMode = true;
                 resetCaptureButton();
+                startPlay();
             }
         }
     }
@@ -1070,7 +1077,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onExitOtherModeSuccess() {
         GolukDebugUtils.e(Const.LOG_TAG, "Exist other mode success");
-        $.toast().text(R.string.recovery_to_record).show();
 
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -1090,7 +1096,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onOpenLoopModeSuccess() {
         GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord success");
+        $.toast().text(R.string.recovery_to_record).show();
+        mCanSwitchMode = true;
         resetCaptureButton();
+        startPlay();
     }
 
     @Override

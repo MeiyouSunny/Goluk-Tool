@@ -33,7 +33,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
                         // 获取参数
                         getAllInfo();
                     }
-                }, 500);
+                }, 300);
             }
 
             @Override

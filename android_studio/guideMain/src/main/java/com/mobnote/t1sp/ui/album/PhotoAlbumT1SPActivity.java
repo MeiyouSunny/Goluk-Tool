@@ -60,7 +60,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         mDialog = new CustomLoadingDialog(this, getString(R.string.enter_album_mode_hint));
         mDialog.show();
 
-        mHandler.sendEmptyMessageDelayed(MSG_ENTER_PLAYBACK_MODE, 1000);
+        mHandler.sendEmptyMessageDelayed(MSG_ENTER_PLAYBACK_MODE, 500);
     }
 
     private void enterPlaybackMode() {
@@ -70,7 +70,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
                 if (mDialog.isShowing())
                     mDialog.close();
 
-                mHandler.sendEmptyMessageDelayed(MSG_LOAD_DATA_AND_HEARTBEAT, 1500);
+                mHandler.sendEmptyMessageDelayed(MSG_LOAD_DATA_AND_HEARTBEAT, 500);
             }
 
             @Override
