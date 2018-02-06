@@ -457,13 +457,14 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mResolutionTV.setText(mHP);
         }
 
-        if (mDate != null) {
+        // eg: 20180131135629
+        if (!TextUtils.isEmpty(mDate) && mDate.length() >= 14) {
+            String dateText = mDate.substring(0, 4) + "-" + mDate.substring(4, 6) + "-" + mDate.substring(6, 8);
             TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
-            tvTitleData.setText(mDate.substring(0, 10));
+            tvTitleData.setText(dateText);
+            String timeText = mDate.substring(8, 10) + ":" + mDate.substring(10, 12) + ":" + mDate.substring(12, 14);
             TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
-            tvTitleTime.setText(mDate.substring(11, 19));
-            TextView title = (TextView) findViewById(R.id.title);
-            title.setText(mDate);
+            tvTitleTime.setText(timeText);
         }
         mLayoutOption = (LinearLayout) findViewById(R.id.layout_option);
         mLayoutDelete = (LinearLayout) findViewById(R.id.btn_delete);
@@ -757,6 +758,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     }
 
     private int mVideoWidth, mVideoHeight;
+
     @Override
     public void onPrepared(GolukPlayer mp) {
         mVideoWidth = mp.getVideoWidth();
