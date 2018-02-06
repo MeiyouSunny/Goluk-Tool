@@ -311,11 +311,12 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 		ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setTimeParam(time), new CommonCallback() {
 			@Override
 			protected void onSuccess() {
-				$.toast().text(R.string.str_set_ok);
+				$.toast().text(R.string.str_set_ok).show();
 			}
 
 			@Override
 			protected void onServerError(int errorCode, String errorMessage) {
+				$.toast().text(R.string.str_carrecoder_setting_failed).show();
 			}
 		});
 	}
@@ -452,6 +453,8 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
 				if (0 != time) {
 					// T1SP
 					if (GolukApplication.getInstance().getIPCControlManager().isT1SP()) {
+						// 秒转毫秒
+						time = time * 1000;
 						final String timeStr = DateTimeUtils.getTimeStringSplitWith$(time);
 						setT1SPSystemTime(timeStr);
 					} else {
