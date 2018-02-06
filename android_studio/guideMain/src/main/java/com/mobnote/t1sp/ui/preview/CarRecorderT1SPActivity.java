@@ -229,6 +229,17 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         T1SPUdpService.setCaptureListener(this);
         // 获取设备信息
         getPresenter().getVideoSettingInfo(false);
+        // 自动同步时间
+        syncSystemTime();
+    }
+
+    private void syncSystemTime() {
+        mUiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                getPresenter().autoSyncSystemTime();
+            }
+        }, 3500);
     }
 
     /**
@@ -946,6 +957,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         reportLog();
         finish();
     }
+
+    private Handler mUiHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish) {
         if (null == eventShortLocationFinish) {

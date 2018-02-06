@@ -38,4 +38,10 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
      * 打开循环录像
      */
     void openLoopMode();
+
+    /**
+     * 自动同步系统时间
+     */
+    void autoSyncSystemTime();
+
 }

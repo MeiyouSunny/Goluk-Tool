@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.DeviceMode;
@@ -7,10 +8,13 @@ import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.DeviceModeCallback;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
+import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
+import com.rd.veuisdk.utils.DateTimeUtils;
 
 import java.util.List;
 
+import cn.com.tiros.debug.GolukDebugUtils;
 import likly.dollar.$;
 import likly.mvp.BasePresenter;
 
@@ -124,6 +128,25 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
                         getView().onOpenLoopModeFailed();
                     }
                 });
+    }
+
+    @Override
+    public void autoSyncSystemTime() {
+        boolean autoSyncn = SettingUtils.getInstance().getBoolean("systemtime", true);
+        if (!autoSyncn)
+            return;
+        final String nowTime = DateTimeUtils.getNowTimeStringSplitWith$();
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setTimeParam(nowTime), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                GolukDebugUtils.e(Const.LOG_TAG, "Sync system time success");
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                GolukDebugUtils.e(Const.LOG_TAG, "Sync system time failed");
+            }
+        });
     }
 
 }
