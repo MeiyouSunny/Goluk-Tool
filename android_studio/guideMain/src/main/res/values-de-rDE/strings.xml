@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">Klassischer Modus</string>
     <string name="str_seconds">Sekunden</string>
     <string name="str_settings_wonderful_video_type_hint_text">Highlight-Aufnahme (6+6)：KIT-Button drücken, um Aufnahme von Highlight-Videoabschnitt von den ersten 6+6 (12) Sekunden zu aktivieren.Klassischer Modus：KIT-Button drücken, um Aufnahme von 30 Sekunden Highlight-Video zu aktivieren.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Highlight-Aufnahme (5+7)：KIT-Button drücken, um Aufnahme von Highlight-Videoabschnitt von den ersten 5+7 (12) Sekunden zu aktivieren.Klassischer Modus：KIT-Button drücken, um Aufnahme von 30 Sekunden Highlight-Video zu aktivieren.</string>
     <string name="str_usercenter_header_attention_each_other_text">Gegenseitig folgen</string>
     <string name="str_follow_list_title">Ich folge</string>
     <string name="str_search_hint">Benutzer suchen (nach Spitzname/Bestätigungsbeschreibung)</string>

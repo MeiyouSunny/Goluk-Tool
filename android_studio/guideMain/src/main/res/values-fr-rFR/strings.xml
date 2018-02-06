@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">Mode classique</string>
     <string name="str_seconds">secondes</string>
     <string name="str_settings_wonderful_video_type_hint_text">Prendre une essentielle (6+6)：Appuyez sur le bouton du KIT pour activer l\'enregistrement des 12 premières secondes (6+6) d\'une section d\'une vidéo essentielle.Mode classique：Appuyez sur le bouton du KIT pour activer l\'enregistrement de 30 secondes de vidéo essentielle.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Prendre une essentielle (5+7)：Appuyez sur le bouton du KIT pour activer l\'enregistrement des 12 premières secondes (5+7) d\'une section d\'une vidéo essentielle.Mode classique：Appuyez sur le bouton du KIT pour activer l\'enregistrement de 30 secondes de vidéo essentielle.</string>
     <string name="str_usercenter_header_attention_each_other_text">Se suivre mutuellement</string>
     <string name="str_follow_list_title">Je suis</string>
     <string name="str_search_hint">Chercher un utilisateur (par pseudonyme / description de vérification)</string>

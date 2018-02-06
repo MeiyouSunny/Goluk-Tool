@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">クラシックモード</string>
     <string name="str_seconds">秒</string>
     <string name="str_settings_wonderful_video_type_hint_text">ハイライトキャプチャ（6+6）：[KIT]ボタンを押して、最初の6+6（12）秒のハイライトビデオセクションの録画を有効にします。クラシックモード：[KIT]ボタンを押して、ハイライトビデオの30秒の録画を有効にします。</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">ハイライトキャプチャ（5+7）：[KIT]ボタンを押して、最初の5+7（12）秒のハイライトビデオセクションの録画を有効にします。クラシックモード：[KIT]ボタンを押して、ハイライトビデオの30秒の録画を有効にします。</string>
     <string name="str_usercenter_header_attention_each_other_text">相互フォロー</string>
     <string name="str_follow_list_title">フォロー中</string>
     <string name="str_search_hint">ユーザーを検索（ニックネーム/認証記述による）</string>

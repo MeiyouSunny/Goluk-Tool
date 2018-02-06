@@ -641,6 +641,7 @@
     <string name="str_settings_video_type2">经典模式</string>
     <string name="str_seconds">秒</string>
     <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒精彩视频片段。 经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">精彩抓拍（5+7）：按下遥控器（KIT）按键，触发录制前5秒+后7秒的12秒精彩视频片段。 经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
     <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
     <string name="str_follow_list_title">我的关注</string>
     <string name="str_search_hint">搜索用户(昵称/认证说明)</string>

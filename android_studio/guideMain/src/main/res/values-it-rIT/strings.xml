@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">Modalità classica</string>
     <string name="str_seconds">secondi</string>
     <string name="str_settings_wonderful_video_type_hint_text">Registra clou (6+6)：Premi il pulsante KIT per attivare la registrazione di una sezione video clou dei primi 6+6 (12) secondi.Modalità classica：Premi il pulsante KIT per attivare una registrazione da 30 secondi di video clou.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Registra clou (5+7)：Premi il pulsante KIT per attivare la registrazione di una sezione video clou dei primi 5+7 (12) secondi.Modalità classica：Premi il pulsante KIT per attivare una registrazione da 30 secondi di video clou.</string>
     <string name="str_usercenter_header_attention_each_other_text">Segui mutualmente</string>
     <string name="str_follow_list_title">Sto seguendo</string>
     <string name="str_search_hint">Cerca utente (per nickname/verifica della descrizione)</string>

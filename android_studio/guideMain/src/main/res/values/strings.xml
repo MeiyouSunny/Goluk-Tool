@@ -488,6 +488,7 @@
     <string name="str_seconds">second</string>
     <string name="str_settings_wonderful_video_type_hint_text">12S：Press the remote control (KIT), recording 12 seconds of the wonderful video (6 seconds before press and 6 seconds after press).
 30S：Press the remote control (KIT), recording 30 seconds of the wonderful video.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">12S：Press the remote control (KIT), recording 12 seconds of the wonderful video (5 seconds before press and 7 seconds after press). 30S：Press the remote control (KIT), recording 30 seconds of the wonderful video.</string>
     <string name="str_usercenter_header_attention_each_other_text">followed</string>
     <string name="str_follow_list_title">My Follow</string>
     <string name="str_search_hint">Search users</string>

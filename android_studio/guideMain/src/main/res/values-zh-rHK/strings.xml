@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">經典模式</string>
     <string name="str_seconds">秒</string>
     <string name="str_settings_wonderful_video_type_hint_text">精彩連拍（6+6）：按下遙控器（KIT）鍵，錄製前後 6 秒 + 6 秒共 12 秒的精彩影片。 經典模式：按下遙控器（KIT）鍵，錄製 30 秒精彩影片</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">精彩連拍（5+7）：按下遙控器（KIT）鍵，錄製前後 5 秒 + 7 秒共 12 秒的精彩影片。 經典模式：按下遙控器（KIT）鍵，錄製 30 秒精彩影片</string>
     <string name="str_usercenter_header_attention_each_other_text">相互關注</string>
     <string name="str_follow_list_title">我的關注</string>
     <string name="str_search_hint">搜尋用戶 (昵稱/認證說明)</string>
