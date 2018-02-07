@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
@@ -140,6 +141,8 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
             @Override
             protected void onSuccess() {
                 GolukDebugUtils.e(Const.LOG_TAG, "Sync system time success");
+                // 保存时间
+                $.config().putLong(TimeSettingActivity.TAG_LAST_SYNC_TIME, System.currentTimeMillis());
             }
 
             @Override
