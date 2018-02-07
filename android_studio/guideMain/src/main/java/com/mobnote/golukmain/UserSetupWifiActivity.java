@@ -134,7 +134,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT1SP()) {
             int sp = ssid.lastIndexOf("_") + 1;
             part_ssid = ssid.substring(0, sp);
         } else {
@@ -148,7 +148,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT1SP()) {
             part_ssid = ssid.substring(ssid.lastIndexOf("_") + 1);
         } else {
             part_ssid = ssid.substring(5);
@@ -198,7 +198,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
 
         // T1SP
         if (mApp.getIPCControlManager().isT1SP()) {
-            enterSettingMode(newPwd);
+            enterSettingMode();
             return;
         }
         // Other
@@ -230,15 +230,16 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         return json;
     }
 
-    private void enterSettingMode(final String wifiName) {
+    private void enterSettingMode() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(true), new CommonCallback() {
             @Override
             public void onStart() {
                 LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
             }
+
             @Override
             protected void onSuccess() {
-                updateWifiName(wifiName);
+                updateWifiName();
             }
 
             @Override
@@ -250,12 +251,12 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
 
     /**
      * T1SP修改WIFI名称
-     *
-     * @param wifiName WIFI名称
      */
-    private void updateWifiName(String wifiName) {
+    private void updateWifiName() {
+        String wifiName = mTvName.getText().toString() + mEditText2.getText().toString();
         if (TextUtils.isEmpty(wifiName))
             return;
+
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiNameParam(wifiName), new CommonCallback() {
             @Override
             public void onStart() {
