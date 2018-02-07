@@ -25,7 +25,8 @@ public class UpgradeManager {
      * 开始升级流程
      */
     public void start() {
-        enterUpgradeMode();
+//        enterUpgradeMode();
+        getFWInfo();
     }
 
     public void stop() {
@@ -34,6 +35,21 @@ public class UpgradeManager {
         if (mUploadTask != null && !mUploadTask.isCancelled())
             mUploadTask.cancel(true);
         mUploadTask = null;
+    }
+
+    private void getFWInfo() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+                enterUpgradeMode();
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+                if (mListener != null)
+                    mListener.onEnterUpgradeMode(false);
+            }
+        });
     }
 
     /**
@@ -70,6 +86,12 @@ public class UpgradeManager {
                 // 固件上传完成,开始升级固件
                 if (success)
                     startUpgrade();
+            }
+
+            @Override
+            public void onUploadProgress(int progress) {
+                if (mListener != null)
+                    mListener.onUploadProgress(progress);
             }
         });
         mUploadTask.execute(binFile);

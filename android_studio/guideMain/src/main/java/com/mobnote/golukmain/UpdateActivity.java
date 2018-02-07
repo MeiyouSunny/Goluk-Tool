@@ -336,16 +336,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         if (mIsExit) {
                             return;
                         }
+                        String text = getString(R.string.str_ipc_update_first_period);
+                        if (!mApp.getIPCControlManager().isT1SP()) {
+                            text = text + ": " + mPercent + getString(R.string.str_ipc_update_percent_unit);
+                        }
                         if (mSendDialog == null) {
-                            mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, mApp.getContext()
-                                    .getResources().getString(R.string.str_ipc_update_first_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, text);
                         } else {
-                            mSendDialog.setMessage(mApp.getContext().getResources().getString(
-                                    R.string.str_ipc_update_first_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mSendDialog.setMessage(text);
                         }
                         break;
                     case UPDATE_TRANSFER_OK:
@@ -368,7 +366,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         String alertMsg = mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period);
                         // 小白无升级进度回调
                         if (!(mApp.getIPCControlManager().isT1SP()))
-                            alertMsg = alertMsg + mPercent + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit);
+                            alertMsg = alertMsg + ": " + mPercent + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit);
                         if (mUpdateDialog == null) {
                             mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, alertMsg);
                         } else {
@@ -1111,6 +1109,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     @Override
     public void onUploadUpgradeFileStart() {
         mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
+    }
+
+    @Override
+    public void onUploadProgress(int progress) {
+//        mPercent = String.valueOf(progress);
+//        mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
     }
 
     @Override

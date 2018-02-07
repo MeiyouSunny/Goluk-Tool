@@ -834,8 +834,8 @@
     <string name="str_adas_road_offset_sensibility">차선 이탈 경고 감도</string>
     <string name="str_adas_assistance_info">보조 정보 디스플레이 (OSD 합성)</string>
     <string name="str_adas_paramter_error">안전한 운전을 위한 정확한 정보를 제공하기 위해, 올바른 위치 파라미터를 입력 해주세요.</string>
-    <string name="str_ipc_update_first_period">업그레이드가 시작되었습니다. 이 과정은 몇 분 정도 걸릴 수 있습니다. 카메라 전원을 끄지 마세요. 업그레이드 단계 1:</string>
-    <string name="str_ipc_update_second_period">업그레이드가 시작되었습니다. 이 과정은 몇 분 정도 걸릴 수 있습니다. 카메라 전원을 끄지 마세요. 업그레이드 단계 2:</string>
+    <string name="str_ipc_update_first_period">업그레이드가 시작되었습니다. 이 과정은 몇 분 정도 걸릴 수 있습니다. 카메라 전원을 끄지 마세요. 업그레이드 단계 1</string>
+    <string name="str_ipc_update_second_period">업그레이드가 시작되었습니다. 이 과정은 몇 분 정도 걸릴 수 있습니다. 카메라 전원을 끄지 마세요. 업그레이드 단계 2</string>
     <string name="str_ipc_update_transfer_file_success">파일 전송에 성공했습니다. 업그레이드를 준비 중입니다.</string>
     <string name="str_ipc_update_success_t1">기기 업그레이드 성공</string>
     <string name="str_ipc_update_fail">죄송합니다. 업그레이드 할 수 없습니다. 다시 시도하세요.</string>

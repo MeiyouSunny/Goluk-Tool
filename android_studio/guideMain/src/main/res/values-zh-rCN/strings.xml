@@ -990,8 +990,8 @@
     <string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
     <string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
     <string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
-    <string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级1阶段：</string>
-    <string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级2阶段：</string>
+    <string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级1阶段</string>
+    <string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级2阶段</string>
     <string name="str_ipc_update_transfer_file_success">文件传输成功，正在为您准备升级</string>
     <string name="str_ipc_update_success_t1">设备升级成功</string>
     <string name="str_ipc_update_fail">很抱歉，升级失败。请您重试。</string>

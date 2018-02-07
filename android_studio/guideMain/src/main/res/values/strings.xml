@@ -838,8 +838,8 @@
     <string name="str_adas_road_offset_sensibility">Lane Departure Warning sensitvity</string>
     <string name="str_adas_assistance_info">Auxiliary information display (OSD superimposed)</string>
     <string name="str_adas_paramter_error">In order to provide accurate infosrmation to assist you drive safely, please enter the correct location parameters.</string>
-    <string name="str_ipc_update_first_period">Upgrade has started. This process may take a few minutes. \nPlease do not turn off the camera power.  …..\nUpgrade Stage 1 : </string>
-    <string name="str_ipc_update_second_period">Upgrade has started. This process may take a few minutes. \nPlease do not turn off the camera power.  …..\nUpgrade Stage 2 : </string>
+    <string name="str_ipc_update_first_period">Upgrade has started. This process may take a few minutes. \nPlease do not turn off the camera power.  …..\nUpgrade Stage 1 </string>
+    <string name="str_ipc_update_second_period">Upgrade has started. This process may take a few minutes. \nPlease do not turn off the camera power.  …..\nUpgrade Stage 2 </string>
     <string name="str_ipc_update_transfer_file_success">File transfer is successful. Preparing for upgrade</string>
     <string name="str_ipc_update_success_t1">Device upgrade is successful</string>
     <string name="str_ipc_update_fail">Sorry, unable to upgrade. Please try again.</string>

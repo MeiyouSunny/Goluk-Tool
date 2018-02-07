@@ -5,14 +5,12 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -314,6 +312,12 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         }
     }
 
+    /* 是否显示IPC升级提示框,默认True */
+    private boolean mNeedShowIpcDialog = true;
+
+    public void setNeedShowIpcDialog(boolean needShow) {
+        mNeedShowIpcDialog = needShow;
+    }
     /**
      * type: 0/1 下载／安装 ipc升级
      * <p/>
@@ -323,6 +327,18 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         if (ipcInfo == null || TextUtils.isEmpty(ipcInfo.version)) {
             return;
         }
+
+        // 如果不需要显示提示框,只发送事件消息
+        if (!mNeedShowIpcDialog) {
+            EventIPCCheckUpgradeResult eventIpcUpdate = new EventIPCCheckUpgradeResult();
+            eventIpcUpdate.ipcInfo = ipcInfo;
+            int eventType = (type == 0) ? EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY
+                    : EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY;
+            eventIpcUpdate.ResultType = eventType;
+            EventBus.getDefault().post(eventIpcUpdate);
+            return;
+        }
+
         // 如果当前的请求来自启动页，且当前版本被忽略更新过，则不弹框
         String latestIgnoredIpcUpgradeVersion = SharedPrefUtil.getLatestIgnoredIpcUpgradeVersion();
         if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion)

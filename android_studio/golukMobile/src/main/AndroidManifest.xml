@@ -48,6 +48,7 @@
             android:name="com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait" />
         <activity
             android:name="com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity"

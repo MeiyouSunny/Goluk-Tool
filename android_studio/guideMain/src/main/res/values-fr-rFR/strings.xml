@@ -836,8 +836,8 @@
     <string name="str_adas_road_offset_sensibility">Sensibilité de l\'avertissement lors de la sortie de la voie</string>
     <string name="str_adas_assistance_info">Affichage d\'informations auxiliaire (affichage à l\'écran en surimpression)</string>
     <string name="str_adas_paramter_error">Afin de fournir des informations précises pour vous aider à conduire de manière sûre, veuillez saisir les paramètres d\'emplacement corrects.</string>
-    <string name="str_ipc_update_first_period">La mise à niveau a commencé. Ce processus peut prendre quelques minutes. Veuillez ne pas éteindre la caméra. ... Étape de la mise à niveau 1 :</string>
-    <string name="str_ipc_update_second_period">La mise à niveau a commencé. Ce processus peut prendre quelques minutes. Veuillez ne pas éteindre la caméra. ... Étape de la mise à niveau 2 :</string>
+    <string name="str_ipc_update_first_period">La mise à niveau a commencé. Ce processus peut prendre quelques minutes. Veuillez ne pas éteindre la caméra. ... Étape de la mise à niveau 1 </string>
+    <string name="str_ipc_update_second_period">La mise à niveau a commencé. Ce processus peut prendre quelques minutes. Veuillez ne pas éteindre la caméra. ... Étape de la mise à niveau 2 </string>
     <string name="str_ipc_update_transfer_file_success">Transfert réussi du fichier. Préparation de la mise à niveau</string>
     <string name="str_ipc_update_success_t1">Mise à niveau réussie de l\'appareil</string>
     <string name="str_ipc_update_fail">Désolé, impossible de mettre à niveau. Veuillez réessayer plus tard.</string>

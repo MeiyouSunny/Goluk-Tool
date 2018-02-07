@@ -7,11 +7,9 @@ import com.mobnote.t1sp.util.Const;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.UUID;
 
 /**
  * T1SP 固件上传Task
@@ -20,7 +18,7 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
 
     private static final String UPLOAD_URL = Const.HTTP_SCHEMA_ADD_IP + "/cgi-bin/FWupload.cgi";
     private static final String DEFAULT_BIN_FILE_NAME = "SD_CarDV.bin";
-    private static final int TIME_OUT = 15 * 1000;
+    private static final int TIME_OUT = 300 * 1000;
 
     private UploadListener mListener;
 
@@ -31,8 +29,9 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
 
         final File binFile = files[0];
 
+        long totalSize = binFile.length();
         // 边界标识 随机生成
-        String BOUNDARY = UUID.randomUUID().toString();
+        String BOUNDARY = "---------------------------7d4a6d158c9";
         String PREFIX = "--", LINE_END = "\r\n";
         // 内容类型
         String CONTENT_TYPE = "multipart/form-data";
@@ -42,15 +41,21 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
         try {
             URL url = new URL(UPLOAD_URL);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            //conn.setReadTimeout(TIME_OUT);
             conn.setConnectTimeout(TIME_OUT);
+            //conn.setReadTimeout(TIME_OUT);
             conn.setDoInput(true);
             conn.setDoOutput(true);
             conn.setUseCaches(false);
             conn.setRequestMethod("POST");
             conn.setRequestProperty("Charset", "UTF-8");
-            conn.setRequestProperty("connection", "keep-alive");
+            conn.setRequestProperty("connection", "keep-Alive");
+            conn.setRequestProperty("Accept", "*/*");
+            conn.setRequestProperty("Cache-Control", "no-cache");
             conn.setRequestProperty("Content-Type", CONTENT_TYPE + ";boundary=" + BOUNDARY);
+            conn.setRequestProperty(
+                    "User-Agent",
+                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; .NET CLR 2.0.50727; .NET CLR 3.0.04506.30)");
+            conn.connect();
             // 文件包装上传
             dataOutputStream = new DataOutputStream(conn.getOutputStream());
             StringBuffer sb = new StringBuffer();
@@ -67,12 +72,17 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
             sb.append(LINE_END);
             dataOutputStream.write(sb.toString().getBytes());
             inputStream = new FileInputStream(binFile);
-            byte[] bytes = new byte[1024];
+            byte[] bytes = new byte[1024 * 4];
+            long lengthUploaded = 0;
             int len = 0;
             while ((len = inputStream.read(bytes)) != -1) {
                 dataOutputStream.write(bytes, 0, len);
                 //dataOutputStream.flush();
+                lengthUploaded += len;
+                //updateProgress(lengthUploaded, totalSize);
             }
+
+            inputStream.close();
 
             dataOutputStream.write(LINE_END.getBytes());
             byte[] end_data = (PREFIX + BOUNDARY + PREFIX + LINE_END).getBytes();
@@ -81,19 +91,26 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
 
             conn.getInputStream();
             int responseCode = conn.getResponseCode();
+//            if (responseCode == 200) {
+//                conn.getInputStream();
+//            }
+            dataOutputStream.close();
+            conn.disconnect();
             return (responseCode == 200);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                inputStream.close();
-                //dataOutputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+//                inputStream.close();
+            //dataOutputStream.close();
         }
 
         return false;
+    }
+
+    private void updateProgress(long lengthUploaded, long totalSize) {
+        int progress = (int) (((float) lengthUploaded / totalSize) * 100);
+        if (mListener != null)
+            mListener.onUploadProgress(progress);
     }
 
     @Override
@@ -109,6 +126,8 @@ public class UploadTask extends AsyncTask<File, Void, Boolean> {
 
     public interface UploadListener {
         void onUploaded(boolean success);
+
+        void onUploadProgress(int progress);
     }
 
 }

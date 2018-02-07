@@ -22,6 +22,9 @@ public class EventIPCCheckUpgradeResult {
     public int ResultType;
     public IPCInfo ipcInfo;
 
+    public EventIPCCheckUpgradeResult() {
+    }
+
     public EventIPCCheckUpgradeResult(int type) {
         ResultType = type;
     }

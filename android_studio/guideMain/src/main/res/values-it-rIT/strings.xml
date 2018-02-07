@@ -836,8 +836,8 @@
     <string name="str_adas_road_offset_sensibility">Sensibilità dell\'avviso di partenza dalla corsia</string>
     <string name="str_adas_assistance_info">Display di informazioni aggiuntive (OSD sovrapposto)</string>
     <string name="str_adas_paramter_error">Per aiutarti ad ottenere una guida sicura, fornisci dei parametri di posizione corretti.</string>
-    <string name="str_ipc_update_first_period">L\'aggiornamento è iniziato. La procedura potrebbe impiegare qualche minuto. Non spegnere la videocamera. ….. Fase 1 dell\'aggiornamento:</string>
-    <string name="str_ipc_update_second_period">L\'aggiornamento è iniziato. La procedura potrebbe impiegare qualche minuto. Non spegnere la videocamera. ….. Fase 2 dell\'aggiornamento:</string>
+    <string name="str_ipc_update_first_period">L\'aggiornamento è iniziato. La procedura potrebbe impiegare qualche minuto. Non spegnere la videocamera. ….. Fase 1 dell\'aggiornamento</string>
+    <string name="str_ipc_update_second_period">L\'aggiornamento è iniziato. La procedura potrebbe impiegare qualche minuto. Non spegnere la videocamera. ….. Fase 2 dell\'aggiornamento</string>
     <string name="str_ipc_update_transfer_file_success">Trasferimento di file completato. Preparando l\'aggiornamento</string>
     <string name="str_ipc_update_success_t1">Aggiornamento del dispositivo completato</string>
     <string name="str_ipc_update_fail">Siamo spiacenti, l\'aggiornamento non è stato completato. Ti preghiamo di riprovare.</string>

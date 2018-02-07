@@ -18,6 +18,13 @@ public interface UpgradeListener {
     void onUploadUpgradeFileStart();
 
     /**
+     * 上传进度
+     *
+     * @param progress 进度
+     */
+    void onUploadProgress(int progress);
+
+    /**
      * 上传固件到设备是否成功
      *
      * @param success 是否成功

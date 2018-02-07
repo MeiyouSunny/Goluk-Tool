@@ -836,8 +836,8 @@
     <string name="str_adas_road_offset_sensibility">車線逸脱の警告感度</string>
     <string name="str_adas_assistance_info">補助情報表示（OSD重畳）</string>
     <string name="str_adas_paramter_error">安全運転をサポートする正確な情報を取得するには、位置情報のパラメータを正しく入力してください。</string>
-    <string name="str_ipc_update_first_period">アップグレードが開始されました。この処理には数分かかることがあります。 カメラの電源をオフにしないでください。 ..... アップグレードステージ1：</string>
-    <string name="str_ipc_update_second_period">アップグレードが開始されました。この処理には数分かかることがあります。 カメラの電源をオフにしないでください。 ..... アップグレードステージ2：</string>
+    <string name="str_ipc_update_first_period">アップグレードが開始されました。この処理には数分かかることがあります。 カメラの電源をオフにしないでください。 ..... アップグレードステージ1</string>
+    <string name="str_ipc_update_second_period">アップグレードが開始されました。この処理には数分かかることがあります。 カメラの電源をオフにしないでください。 ..... アップグレードステージ2</string>
     <string name="str_ipc_update_transfer_file_success">ファイルが転送されました。アップグレードの準備をしています</string>
     <string name="str_ipc_update_success_t1">デバイスがアップグレードされました</string>
     <string name="str_ipc_update_fail">申し訳ありませんが、アップグレードできません。もう一度お試しください。</string>
