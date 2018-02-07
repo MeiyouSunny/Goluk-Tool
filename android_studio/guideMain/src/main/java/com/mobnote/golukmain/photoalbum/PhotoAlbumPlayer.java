@@ -497,14 +497,21 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mResolutionTV.setText(mHP);
         }
 
-        if (mDate != null) {
-            TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
-            tvTitleData.setText(mDate.substring(0, 10));
-            TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
-            tvTitleTime.setText(mDate.substring(11, 19));
-            TextView title = (TextView) findViewById(R.id.title);
-            title.setText(mDate);
+        TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
+        TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
+        // eg: 20180131135629
+        if (!TextUtils.isEmpty(mDate)) {
+            if (mDate.length() >= 19) {
+                tvTitleData.setText(mDate.substring(0, 10));
+                tvTitleTime.setText(mDate.substring(11, 19));
+            } else if (mDate.length() >= 14) {
+                String dateText = mDate.substring(0, 4) + "-" + mDate.substring(4, 6) + "-" + mDate.substring(6, 8);
+                tvTitleData.setText(dateText);
+                String timeText = mDate.substring(8, 10) + ":" + mDate.substring(10, 12) + ":" + mDate.substring(12, 14);
+                tvTitleTime.setText(timeText);
+            }
         }
+
         mBtnDownload = (Button) findViewById(R.id.btn_download);
         if (!TextUtils.isEmpty(mVideoFrom) && "local".equals(mVideoFrom)) {
             mBtnDownload.setVisibility(View.GONE);
