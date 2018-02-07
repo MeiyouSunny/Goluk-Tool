@@ -56,6 +56,9 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
     private String mApSSID = "";
     private String mApPWD = "";
 
+    // 新SSID
+    private String mNewSsid;
+
     // 写死ip,网关
     private final String ip = "192.168.1.103";
     private final String way = "192.168.1.103";
@@ -177,10 +180,8 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         LiveDialogManager.getManagerInstance().dissmissCustomDialog();
         if (0 == state) {
             GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_success));
-            WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-            if (null != bean) {
-                WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
-            }
+            updateSavedIpcInfo();
+
             this.setResult(11);
             this.finish();
         } else {
@@ -212,8 +213,8 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
     private String getSetIPCJson() {
         // 连接ipc热点wifi---调用ipc接口
         GolukDebugUtils.e("", "通知ipc连接手机热点--setIpcLinkPhoneHot---1");
-        final String newName = mTvName.getText().toString() + mEditText2.getText().toString();
-        String json = getIPCJson(mGolukSSID, mGolukPWD, newName, mApPWD);
+        mNewSsid = mTvName.getText().toString() + mEditText2.getText().toString();
+        String json = getIPCJson(mGolukSSID, mGolukPWD, mNewSsid, mApPWD);
         return json;
     }
 
@@ -253,11 +254,11 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
      * T1SP修改WIFI名称
      */
     private void updateWifiName() {
-        String wifiName = mTvName.getText().toString() + mEditText2.getText().toString();
-        if (TextUtils.isEmpty(wifiName))
+        mNewSsid = mTvName.getText().toString() + mEditText2.getText().toString();
+        if (TextUtils.isEmpty(mNewSsid))
             return;
 
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiNameParam(wifiName), new CommonCallback() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiNameParam(mNewSsid), new CommonCallback() {
             @Override
             public void onStart() {
                 LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
@@ -284,10 +285,8 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             @Override
             protected void onSuccess() {
                 $.toast().text(R.string.str_wifi_success).show();
-                WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-                if (null != bean) {
-                    WifiBindDataCenter.getInstance().deleteBindData(bean.ipc_ssid);
-                }
+                updateSavedIpcInfo();
+
                 setResult(11);
                 finish();
             }
@@ -302,6 +301,20 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
                 LiveDialogManager.getManagerInstance().dissmissCustomDialog();
             }
         });
+    }
+
+    /**
+     * 更新保存的IPC信息
+     */
+    private void updateSavedIpcInfo() {
+        WifiBindHistoryBean currentIpcInfo = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+        if (currentIpcInfo != null) {
+            // 先删除之前保存记录
+            WifiBindDataCenter.getInstance().deleteBindData(currentIpcInfo.ipc_ssid);
+            // 添加新的IPC信息
+            currentIpcInfo.ipc_ssid = mNewSsid;
+            WifiBindDataCenter.getInstance().saveBindData(currentIpcInfo);
+        }
     }
 
 }
