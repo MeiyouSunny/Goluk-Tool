@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCUpdate;
+import com.mobnote.eventbus.EventIpcUpdateSuccess;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
@@ -395,6 +396,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                     .getString(R.string.str_ipc_update_success));
                         }
                         isNewVersion();
+                        // 发送升级成功Event
+                        EventBus.getDefault().post(new EventIpcUpdateSuccess());
                         break;
                     case UPDATE_UPGRADE_FAIL:
                         mIsUpgrading = false;

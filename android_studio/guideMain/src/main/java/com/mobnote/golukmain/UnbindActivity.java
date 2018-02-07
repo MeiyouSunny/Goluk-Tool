@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
+import com.mobnote.eventbus.EventIpcUpdateSuccess;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
@@ -67,6 +68,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private ImageView mIPCimage;
     private IPCInfo mIpcInfo;
     private RelativeLayout mNameLayout;
+
+    // IPC固件升级成功Flag
+    private boolean mIpcUpdateSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,12 +124,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
         mUnbindBtn.setVisibility(View.GONE);
         // 获取当前使用的信息
-        WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-        if ((mApplication.isBindSucess() || mApplication.isIpcLoginSuccess) && null != bean) {
+        WifiBindHistoryBean currentIpcInfo = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+        if ((currentIpcInfo != null) && (mIpcUpdateSuccess || (mApplication.isBindSucess() || mApplication.isIpcLoginSuccess))) {
             mIPCViewLayout.setVisibility(View.VISIBLE);
             mPwdLayout.setEnabled(true);
             // String ipcName = this.ipcName();
-            mTextCameraName.setText(bean.ipc_ssid);
+            mTextCameraName.setText(currentIpcInfo.ipc_ssid);
             mTextVersion.setText(vIpc);
             GolukApplication.getInstance().getIPCControlManager();
             if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)
@@ -137,6 +141,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             mIPCModelText.setText(this.getResources().getString(R.string.app_name) + ipcModel);
             mIPCNumberText.setText(this.getResources().getString(R.string.str_ipc_number_text) + ipcNumber);
             mIPCVersionText.setText(this.getResources().getString(R.string.str_ipc_version_text) + vIpc);
+            // 重设标识
+            mIpcUpdateSuccess = false;
         } else {
             mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_bind_news));
             mIPCViewLayout.setVisibility(View.GONE);
@@ -274,6 +280,15 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             downloadNow(event.ipcInfo);
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY) {
             installLater(event.ipcInfo);
+        }
+    }
+
+    /**
+     * 固件升级成功Event
+     */
+    public void onEventMainThread(EventIpcUpdateSuccess event) {
+        if (event != null) {
+            mIpcUpdateSuccess = true;
         }
     }
 
