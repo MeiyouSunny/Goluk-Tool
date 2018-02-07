@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.eventbus.EventUpdateAddr;
+import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
@@ -39,6 +41,7 @@ import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.live.GetBaiduAddress;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
@@ -352,9 +355,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         GolukUtils.showToast(this, getString(R.string.capture_success_hint, path), Toast.LENGTH_LONG);
     }
 
+    /* 是否在已经显示预览Activity的情况下,进入其他页面,断开连接,再次进入预览Activity */
+    private boolean mIsReEnter;
+
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        mIsReEnter = true;
     }
 
     /**
@@ -778,7 +785,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mConnectTip.setText(WiFiInfo.IPC_SSID);
         mSettingBtn.setVisibility(View.VISIBLE);
         mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
-
+        mCanSwitchMode = true;
     }
 
     @Override
@@ -965,6 +972,17 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     };
 
+    public void onEventMainThread(EventWifiState event) {
+        if (EventConfig.WIFI_STATE == event.getOpCode()) {
+            if (!event.getMsg()) {
+                if (!NetUtil.isWifiConnected(this)) {
+                    // WIFI 断开
+                    startActivity(new Intent(this, CarRecorderT1SPActivity.class));
+                }
+            }
+        }
+    }
+
     public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish) {
         if (null == eventShortLocationFinish) {
             return;
@@ -1037,6 +1055,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
+                    // 如果是断开连接返回预览页面
+                    if (mIsReEnter) {
+                        mIsReEnter = false;
+                        return;
+                    }
+
                     if (event.isSetMode()) {
                         getPresenter().exitSetMode();
                         GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
