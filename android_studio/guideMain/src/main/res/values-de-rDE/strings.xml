@@ -836,8 +836,8 @@
     <string name="str_adas_road_offset_sensibility">Spurentfernung-Warnsensibilität</string>
     <string name="str_adas_assistance_info">Anzeige der Hilfsinformationen (auf Bildschirm eingeblendet)</string>
     <string name="str_adas_paramter_error">Um Ihnen genaue Informationen für die Assistenz bei einer sicheren Fahrt zu liefern, geben Sie bitte die korrekten Standortparameter ein.</string>
-    <string name="str_ipc_update_first_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 1:</string>
-    <string name="str_ipc_update_second_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 2:</string>
+    <string name="str_ipc_update_first_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 1</string>
+    <string name="str_ipc_update_second_period">Upgrade hat begonnen. Dieser Vorgang kann ein paar Minuten dauern. Bitte schalten Sie nicht die Stromzufuhr der Kamera ab. ... Upgrade Stufe 2</string>
     <string name="str_ipc_update_transfer_file_success">Dateiübertragung war erfolgreich. Upgrade wird vorbereitet.</string>
     <string name="str_ipc_update_success_t1">Upgrade des Geräts war erfolgreich.</string>
     <string name="str_ipc_update_fail">Entschuldigung, Upgrade nicht möglich. Bitte erneut versuchen.</string>
@@ -1091,4 +1091,5 @@
     <string name="hint_gsensor">Wenn aktiviert, speichert das Fahrzeug automatisch ein Notfall-Videobild von 12 Sekunden (die ersten 5 Sekunden vorgepuffert), wenn während der Fahrt eine abnormale Kollision auftritt. Wenn nicht genügend Speicherplatz vorhanden ist, werden zuvor aufgenommene Dateien automatisch überschrieben.</string>
     <string name="t1sp_ipc_hint_text">Vor der Installation des Firmware-Upgrades, stellen Sie sicher, dass die Kamera korrekt verbunden ist. Bitte nicht den Strom abschalten, bevor das Upgrade abgeschlossen ist.Nach Abschluss des Upgrades ziehen Sie bitte den Netzstecker und starten das Gerät neu.</string>
     <string name="str_ipc_update_success_t1s">Die Geräteaktualisierung ist abgeschlossen. Trennen Sie die Stromversorgung und starten Sie das Gerät neu.</string>
+    <string name="hint_gsensor_t1sp">Wenn aktiviert, speichert das Fahrzeug automatisch ein Notfall-Videobild von 15 Sekunden (die ersten 5 Sekunden vorgepuffert), wenn während der Fahrt eine abnormale Kollision auftritt. Wenn nicht genügend Speicherplatz vorhanden ist, werden zuvor aufgenommene Dateien automatisch überschrieben.</string>
 </resources>

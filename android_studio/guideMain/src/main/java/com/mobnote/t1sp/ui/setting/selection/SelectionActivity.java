@@ -59,7 +59,7 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
             if (mType == TYPE_CAPTURE_TIME) {
                 mTvWonderfulCaptureHint.setText(R.string.str_settings_wonderful_video_type_ts1p_hint_text);
             } else if (mType == TYPE_G_SENSOR) {
-                mTvWonderfulCaptureHint.setText(R.string.hint_gsensor);
+                mTvWonderfulCaptureHint.setText(R.string.hint_gsensor_t1sp);
             }
         }
 
