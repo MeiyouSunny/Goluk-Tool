@@ -18,6 +18,7 @@ import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.t1sp.base.control.BindTitle;
@@ -243,6 +244,11 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     public void onResetFactory(final boolean isSuccess) {
         RestoreFactoryEvent eventFactory = new RestoreFactoryEvent();
         EventBus.getDefault().post(eventFactory);
+
+        // 设置时间为自动同步
+        if (isSuccess) {
+            SettingUtils.getInstance().putBoolean("systemtime", true);
+        }
 
         String message = getString(isSuccess ? R.string.str_restore_success : R.string.str_restore_fail);
         CustomDialog confirmDialog = new CustomDialog(this);

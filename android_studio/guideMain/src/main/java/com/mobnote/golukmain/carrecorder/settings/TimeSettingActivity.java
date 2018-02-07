@@ -145,6 +145,10 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
         if (!isT1() && mCurrentState == STATE_GPS_AUTO) {
             mCurrentState = STATE_AUTO;
         }
+        // T1SP
+        if (GolukApplication.getInstance().getIPCControlManager().isT1SP() && systemtime) {
+            mCurrentState = STATE_AUTO;
+        }
     }
 
     private void switchNextState(int state) {
