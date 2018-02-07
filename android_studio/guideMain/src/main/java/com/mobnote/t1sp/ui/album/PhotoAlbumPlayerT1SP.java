@@ -457,15 +457,21 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             mResolutionTV.setText(mHP);
         }
 
+        TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
+        TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
         // eg: 20180131135629
-        if (!TextUtils.isEmpty(mDate) && mDate.length() >= 14) {
-            String dateText = mDate.substring(0, 4) + "-" + mDate.substring(4, 6) + "-" + mDate.substring(6, 8);
-            TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
-            tvTitleData.setText(dateText);
-            String timeText = mDate.substring(8, 10) + ":" + mDate.substring(10, 12) + ":" + mDate.substring(12, 14);
-            TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
-            tvTitleTime.setText(timeText);
+        if (!TextUtils.isEmpty(mDate)) {
+            if (mDate.length() >= 19) {
+                tvTitleData.setText(mDate.substring(0, 10));
+                tvTitleTime.setText(mDate.substring(11, 19));
+            } else if (mDate.length() >= 14) {
+                String dateText = mDate.substring(0, 4) + "-" + mDate.substring(4, 6) + "-" + mDate.substring(6, 8);
+                tvTitleData.setText(dateText);
+                String timeText = mDate.substring(8, 10) + ":" + mDate.substring(10, 12) + ":" + mDate.substring(12, 14);
+                tvTitleTime.setText(timeText);
+            }
         }
+
         mLayoutOption = (LinearLayout) findViewById(R.id.layout_option);
         mLayoutDelete = (LinearLayout) findViewById(R.id.btn_delete);
         mStartVideoeditLl = (LinearLayout) findViewById(R.id.ll_start_videoedit);
