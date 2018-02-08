@@ -9,6 +9,6 @@
 
     <include layout="@layout/app_bar_base"/>
 
-    <include layout="@layout/carrecorder_version"/>
+    <include layout="@layout/carrecorder_version_t1sp"/>
 
 </LinearLayout>
