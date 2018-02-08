@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloadListener;
@@ -79,7 +80,9 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         if (CollectionUtils.isEmpty(tasks))
             return;
 
-        mListTotal.addAll(tasks);
+        addTasks(tasks);
+        updateUiDownloadCount();
+
         if (mListeners != null)
             mListeners.add(listener);
 
@@ -88,6 +91,30 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             updateUiDownloadCount();
             startNextTask();
         }
+    }
+
+    /**
+     * 需要过滤掉已经在下载列表的Task
+     */
+    private void addTasks(List<Task> tasks) {
+        if (mListTotal == null || CollectionUtils.isEmpty(tasks))
+            return;
+        for (Task task : tasks) {
+            if (!isInTaskList(task)) {
+                mListTotal.add(task);
+            }
+        }
+    }
+
+    private boolean isInTaskList(Task task) {
+        if (task == null)
+            return true;
+        for (Task temp : mListTotal) {
+            if (TextUtils.equals(temp.downloadPath, task.downloadPath)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

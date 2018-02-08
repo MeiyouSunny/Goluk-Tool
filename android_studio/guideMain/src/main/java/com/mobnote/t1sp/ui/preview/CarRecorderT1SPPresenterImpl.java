@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.t1sp.api.ApiUtil;
@@ -46,7 +47,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(errorMessage).show();
+                $.toast().text(R.string.capture_failed).show();
             }
         });
     }
