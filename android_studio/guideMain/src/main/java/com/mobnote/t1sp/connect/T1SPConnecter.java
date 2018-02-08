@@ -2,6 +2,7 @@ package com.mobnote.t1sp.connect;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.wifi.WifiManager;
 
 import com.mobnote.application.GolukApplication;
@@ -85,6 +86,7 @@ public class T1SPConnecter {
                     setConnected(false);
                     GolukApplication.getInstance().setIpcLoginState(false);
                     stateCallback(-1);
+                    stopUdpService();
                 }
             }
         }
@@ -198,4 +200,15 @@ public class T1SPConnecter {
     public boolean needDisconnectWIFI() {
         return mNeedDisconnectWIFI;
     }
+
+    /**
+     * 停止Udp监听
+     */
+    private void stopUdpService() {
+        if (mContext == null)
+            return;
+        Intent serviceIntent = new Intent(mContext, T1SPUdpService.class);
+        mContext.stopService(serviceIntent);
+    }
+
 }
