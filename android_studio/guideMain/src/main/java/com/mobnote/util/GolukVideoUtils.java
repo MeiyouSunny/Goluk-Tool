@@ -18,8 +18,7 @@ public class GolukVideoUtils {
     public static VideoInfo getVideoInfo(String fileName) {
         try {
 
-            GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
-            VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(fileName);
+            VideoFileInfoBean videoFileInfoBean = GolukVideoInfoDbManager.getInstance().selectSingleData(fileName);
 
             int currType = 0;
             if (!TextUtils.isEmpty(fileName)) {
@@ -97,6 +96,7 @@ public class GolukVideoUtils {
                     dateStr = dateStr.replace("-", "");
                 }
 
+                dateStr = parseDateString(dateStr);
             } else {
                 dateStr = videoFileInfoBean.timestamp;
                 periodStr = videoFileInfoBean.period;
@@ -123,6 +123,19 @@ public class GolukVideoUtils {
         } catch (Exception e) {
         }
         return null;
+    }
+
+    // 20180214120000 --> 2018-02-14 12:00:00
+    private static String parseDateString(String dateString) {
+        if (TextUtils.isEmpty(dateString) && dateString.length() != 14)
+            return dateString;
+        String date = dateString.substring(0, 4) + "-"
+                + dateString.substring(4, 6) + "-"
+                + dateString.substring(6, 8) + " "
+                + dateString.substring(8, 10) + ":"
+                + dateString.substring(10, 12) + ":"
+                + dateString.substring(12, 14);
+        return date;
     }
 
 }

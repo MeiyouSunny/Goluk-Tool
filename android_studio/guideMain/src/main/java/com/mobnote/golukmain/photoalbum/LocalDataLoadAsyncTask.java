@@ -3,6 +3,7 @@ package com.mobnote.golukmain.photoalbum;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.util.GolukVideoUtils;
@@ -31,6 +32,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... arg0) {
+        GolukVideoInfoDbManager.getInstance().initDb(GolukApplication.getInstance());
         String[] videoPaths = {"", "loop/", "urgent/", "", "wonderful/"};
 //		String[] filePaths = { "", "loop/loop.txt", "urgent/urgent.txt", "", "wonderful/wonderful.txt" };
 //		String file = mFilePath + filePaths[type];

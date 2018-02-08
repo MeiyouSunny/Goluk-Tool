@@ -646,6 +646,9 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     public void onVideoDownloadSuccess(String videoName, boolean sucess) {
         // 单个文件下载成功,保存
         VideoInfo videoInfo = getVideoInfoByName(videoName);
+        if (videoInfo == null)
+            return;
+
         VideoFileInfoBean videoFileInfo = new VideoFileInfoBean();
         videoFileInfo.filename = videoInfo.filename;
         videoFileInfo.resolution = videoInfo.videoHP;
