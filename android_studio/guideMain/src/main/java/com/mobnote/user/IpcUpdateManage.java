@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDownloadState;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.golukmain.R;
@@ -248,6 +249,14 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
     }
 
     /**
+     * 当前下载的更新固件是否还存在
+     */
+    public boolean isIpcUpdateBinFileExist() {
+        String binFile = isHasIPCFile(SharedPrefUtil.getIPCDownVersion());
+        return !TextUtils.isEmpty(binFile);
+    }
+
+    /**
      * 获取下载的文件路径 (下载前获取一次，升级安装时获取一次)
      */
     public String getBinFilePath(String filename) {
@@ -287,6 +296,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
             ((UpdateActivity) mApp.getContext()).downloadCallback(state, param1, param2);
         }
+
+        // Send event
+        EventBus.getDefault().post(new EventDownloadState(state));
     }
 
     /**

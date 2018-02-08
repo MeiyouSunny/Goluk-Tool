@@ -591,6 +591,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         ZhugeUtils.eventIpcUpdate(this);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // 处理手动删除已下载的固件,返回当前页面
+        boolean hasIpcFile = mApp.mIpcUpdateManage.isIpcUpdateBinFileExist();
+        if (!hasIpcFile) {
+            mSign = 0;
+            mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_undownload));
+            mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
+            mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
+            mBtnDownload.setEnabled(true);
+        }
+    }
+
     // 初始化view
     public void initView() {
         ImageButton mBtnBack = (ImageButton) findViewById(R.id.back_btn);

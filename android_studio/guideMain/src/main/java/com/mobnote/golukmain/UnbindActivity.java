@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventDownloadState;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIpcUpdateSuccess;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
@@ -191,6 +192,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         }
     }
 
+    private void judgeIsDownloading() {
+        if (mApplication.mIpcUpdateManage.isDownloading()) {
+            mTextVersion.setText(R.string.str_fireware_is_downloading);
+        }
+    }
+
     private void isNewest() {
         mTextVersion.setText(R.string.newest_firmware);
         mUpdateLayout.setEnabled(false);
@@ -202,6 +209,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
         mIpcInfo = ipcInfo;
+
+        judgeIsDownloading();
     }
 
     private void downloadNow(IPCInfo ipcInfo) {
@@ -210,6 +219,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         canOfflineInstallLater = true;
         canOfflineInstall = false;
         mIpcInfo = ipcInfo;
+
+        judgeIsDownloading();
     }
 
     private void installLater(IPCInfo ipcInfo) {
@@ -289,6 +300,19 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     public void onEventMainThread(EventIpcUpdateSuccess event) {
         if (event != null) {
             mIpcUpdateSuccess = true;
+        }
+    }
+
+    /**
+     * 固件下载状态
+     */
+    public void onEventMainThread(EventDownloadState event) {
+        if (event == null)
+            return;
+        if (event.isDownloading()) {
+            mTextVersion.setText(R.string.str_fireware_is_downloading);
+        } else if (event.isDownloadSuccess()) {
+            mTextVersion.setText(R.string.install_new_firmware);
         }
     }
 
