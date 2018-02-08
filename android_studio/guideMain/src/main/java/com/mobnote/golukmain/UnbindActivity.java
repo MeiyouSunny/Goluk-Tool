@@ -168,7 +168,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     }
 
     private void adaptDownloadState() {
-        mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+        boolean isConnectedIPC = (mApplication != null && mApplication.isIpcLoginSuccess);
+        if (!isConnectedIPC) {
+            mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+        }
+
         mUpdateLayout.setEnabled(true);
         if (mApplication.mIpcUpdateManage.isDownloading()) {// 下载中
             mTextVersion.setText(R.string.str_fireware_is_downloading);
