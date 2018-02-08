@@ -11,7 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,6 +47,7 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.DeviceMode;
 import com.mobnote.t1sp.bean.SettingInfo;
@@ -444,7 +444,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         lp.leftMargin = 0;
         mRtmpPlayerLayout.setLayoutParams(lp);
 
-        mConnectTip.setText(WiFiInfo.IPC_SSID);
+        mConnectTip.setText(getCurrentIpcSsid());
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
         }
@@ -591,7 +591,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void startPlay() {
         WifiRsBean wrb = ReadWifiConfig.readConfig();
         if (wrb != null && GolukApplication.getInstance().getIpcIsLogin()) {
-            mConnectTip.setText(WiFiInfo.IPC_SSID);
+            mConnectTip.setText(getCurrentIpcSsid());
         }
         if (null != mRtspPlayerView) {
             mRtspPlayerView.setVisibility(View.VISIBLE);
@@ -602,6 +602,16 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             mRtspPlayerView.setDataSource(url);
             mRtspPlayerView.start();
         }
+    }
+
+    /**
+     * 获取当前IPC SSID
+     */
+    private String getCurrentIpcSsid() {
+        WifiBindHistoryBean currentIpcInfo = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+        if (currentIpcInfo == null)
+            return "";
+        return currentIpcInfo.ipc_ssid;
     }
 
     public void onEventMainThread(EventUpdateAddr event) {
@@ -782,7 +792,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
         mNotconnected.setVisibility(View.GONE);
         mConncetLayout.setVisibility(View.GONE);
-        mConnectTip.setText(WiFiInfo.IPC_SSID);
+        mConnectTip.setText(getCurrentIpcSsid());
         mSettingBtn.setVisibility(View.VISIBLE);
         mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
         mCanSwitchMode = true;

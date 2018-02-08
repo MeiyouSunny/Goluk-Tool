@@ -33,6 +33,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                getView().onOpenLoopModeFailed();
             }
         });
     }
@@ -64,6 +65,11 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
             @Override
             public void onGetDeviceModeInfo(final DeviceMode deviceMode) {
                 getView().onGetDeviceModeInfo(deviceMode);
+            }
+
+            @Override
+            public void onError(Throwable throwable) {
+                getView().onExitOtherModeFailed();
             }
         });
     }
