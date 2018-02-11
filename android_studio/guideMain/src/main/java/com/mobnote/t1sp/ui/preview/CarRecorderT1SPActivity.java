@@ -14,7 +14,6 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.eventbus.RestoreFactoryEvent;
@@ -43,7 +41,6 @@ import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
-import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -65,7 +62,6 @@ import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
-import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -91,6 +87,13 @@ import likly.mvp.MvpBinder;
 )
 @SuppressLint("NewApi")
 public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener {
+
+    // 录像模式
+    private static final int MODE_RECORDING = 1;
+    // 设置模式
+    private static final int MODE_SETTING = 2;
+    // 回放模式
+    private static final int MODE_PLAYBACK = 3;
 
     // 抓拍按钮
     private Button mBtnCapture = null;
@@ -163,23 +166,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private final int BTN_NORMALSCREEN = 231;
 
     private RelativeLayout mPalyerLayout = null;
-
     private boolean isShowPlayer = false;
-
-    private View mNotconnected = null;
-
-    private View mConncetLayout = null;
-
-    private ImageView new1;
-
-    private ImageView new2;
-
+    private View mNotconnected, mConncetLayout;
+    private ImageView new1, new2, mChangeBtn;
     private String SelfContextTag = "carrecordert1sp";
-
     private String mLocationAddress = "";
-
-    private ImageView mChangeBtn;
-
     private AlertDialog mExitAlertDialog;
 
     private SettingInfo mSettingInfo;
@@ -187,8 +178,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private int mCaptureTime;
     // 最新2视频(精彩视频和紧急视频)
     private List<String> mLatestTwoVideos;
-    // 是否处于其他模式(录像模式意外的模式)
-    private boolean isInOtherMode;
+    // 模式: 1:录像; 2:设置; 3:回放
+    private int mCurrentMode = MODE_RECORDING;
+    // 是否连接上IPC
+    private boolean mConnectedIpc;
 
     @Override
     public int initLayoutResId() {
@@ -233,7 +226,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 获取设备信息
         getPresenter().getVideoSettingInfo(false);
         // 自动同步时间
-        syncSystemTime();
+        //syncSystemTime();
     }
 
     private void syncSystemTime() {
@@ -280,16 +273,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onGetVideoSettingInfo(SettingInfo settingInfo, boolean onlySettingInfo) {
         if (settingInfo == null)
             return;
+        mConnectedIpc = true;
         mSettingInfo = settingInfo;
         mVideoResolutions.setBackgroundResource(settingInfo.is1080P() ? R.drawable.icon_hd1080 : R.drawable.icon_hd720);
 
         if (!onlySettingInfo) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    getPresenter().getDeviceMode();
-                }
-            }, 500);
+            queryDeviceMode();
         }
     }
 
@@ -362,6 +351,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mIsReEnter = true;
+        exitOtherMode();
     }
 
     /**
@@ -532,7 +522,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
                 // 抓拍按钮
-                resetCaptureButton();
+                //resetCaptureButton();
             }
         });
     }
@@ -645,9 +635,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             getPresenter().captureVideo();
         } else if (id == R.id.mSettingBtn) {
-            if (m_bIsFullScreen || !mCanSwitchMode) {
+            if (m_bIsFullScreen) {
                 return;
             }
+            // 进入设置模式
+            mCurrentMode = MODE_SETTING;
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
@@ -681,8 +673,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
-            if (!mCanSwitchMode)
-                return;
+            // 进入回放模式
+            mCurrentMode = MODE_PLAYBACK;
             Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
             photoalbum.putExtra("from", "cloud");
             startActivity(photoalbum);
@@ -710,7 +702,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     }
 
-    private boolean mCanSwitchMode;
+    private boolean mCanSwitchMode = true;
 
     /**
      * 显示加载中布局
@@ -768,6 +760,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     private void ipcConnFailed() {
+        mConnectedIpc = false;
         mFullScreen.setVisibility(View.GONE);
         mConnectTip.setText(R.string.str_disconnect_ipc);
         mPalyerLayout.setVisibility(View.GONE);
@@ -775,10 +768,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mConncetLayout.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
 
-        mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon_1);
+        disableCaptureButton();
     }
 
     private void ipcConnSucess() {
+        mConnectedIpc = true;
         if (isShowPlayer || isConnecting) {
             showLoading();
             hidePlayer();
@@ -794,7 +788,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mConncetLayout.setVisibility(View.GONE);
         mConnectTip.setText(getCurrentIpcSsid());
         mSettingBtn.setVisibility(View.VISIBLE);
-        mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
         mCanSwitchMode = true;
     }
 
@@ -821,13 +814,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         getPresenter().getLatestTwoVideos();
         // 获取当前模式
         showLoading();
-//        new Handler() {
-//        }.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                getPresenter().getDeviceMode();
-//            }
-//        }, 1500);
+
+        exitOtherMode();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 
     @Override
@@ -1054,50 +1047,39 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     /**
-     * 退出模式Event
+     * 如果处于设置模式或回放模式,需要先退出该模式
      */
-    public void onEventMainThread(final EventExitMode event) {
+    private void exitOtherMode() {
         showLoading();
-        mCanSwitchMode = false;
         disableCaptureButton();
 
-        if (event != null) {
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    // 如果是断开连接返回预览页面
-                    if (mIsReEnter) {
-                        mIsReEnter = false;
-                        return;
-                    }
+        // 如果是断开连接返回预览页面
+//        if (mIsReEnter) {
+//            mIsReEnter = false;
+//            return;
+//        }
 
-                    if (event.isSetMode()) {
-                        getPresenter().exitSetMode();
-                        GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
-                    } else if (event.isPlaybackMode()) {
-                        getPresenter().exitPlaybackMode();
-                        GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
-                    }
-                }
-            }, 500);
+        if (isInSettingMode()) {
+            getPresenter().exitSetMode();
+            mCanSwitchMode = false;
+            GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
+        } else if (isInPlaybackMode()) {
+            getPresenter().exitPlaybackMode();
+            mCanSwitchMode = false;
+            GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
         }
     }
 
-    /**
-     * 首次显示使用提示
-     */
-    private void firstShowHint() {
-        if (!SharedPrefUtil.isShowChangeIpc()) {
-            SharedPrefUtil.setShowChangeIpc(true);
-            final ViewStub stub = (ViewStub) findViewById(R.id.stub_change);
-            View view = stub.inflate();
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    stub.setVisibility(View.GONE);
-                }
-            });
-        }
+    private boolean isInSettingMode() {
+        return mCurrentMode == MODE_SETTING;
+    }
+
+    private boolean isInPlaybackMode() {
+        return mCurrentMode == MODE_PLAYBACK;
+    }
+
+    private void setModeToRecordMode() {
+        mCurrentMode = MODE_RECORDING;
     }
 
     @Override
@@ -1106,36 +1088,53 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             GolukDebugUtils.e(Const.LOG_TAG, "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
             if (deviceMode.needOpenLoopVideo()) {
                 GolukDebugUtils.e(Const.LOG_TAG, "Need open loop video mode");
-                new Handler().postDelayed(new Runnable() {
+                mUiHandler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         getPresenter().openLoopMode();
                     }
-                }, 200);
+                }, 500);
             } else {
                 $.toast().text(R.string.recovery_to_record).show();
                 mCanSwitchMode = true;
                 resetCaptureButton();
-                startPlay();
+                //startPlay();
             }
         }
     }
 
     @Override
     public void onEnterVideoMode() {
-        GolukDebugUtils.e(Const.LOG_TAG, "Exist playback mode success");
+        GolukDebugUtils.e(Const.LOG_TAG, "Exit playback mode success");
     }
 
     @Override
     public void onExitOtherModeSuccess() {
-        GolukDebugUtils.e(Const.LOG_TAG, "Exist other mode success");
-
-        new Handler().postDelayed(new Runnable() {
+        GolukDebugUtils.e(Const.LOG_TAG, "Exit other mode success");
+        mCanSwitchMode = true;
+        setModeToRecordMode();
+        // 开始预览
+        mUiHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getPresenter().getDeviceMode();
+                startPlay();
             }
-        }, 100);
+        }, 1500);
+
+        queryDeviceMode();
+    }
+
+    /**
+     * 查询设备当前状态
+     */
+    private void queryDeviceMode() {
+        mUiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (mConnectedIpc)
+                    getPresenter().getDeviceMode();
+            }
+        }, 6000);
     }
 
     @Override
@@ -1151,7 +1150,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         $.toast().text(R.string.recovery_to_record).show();
         mCanSwitchMode = true;
         resetCaptureButton();
-        startPlay();
+        //startPlay();
     }
 
     @Override
@@ -1174,6 +1173,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onT1SPConnectResult(boolean success) {
         ipcConnSucess();
+        queryDeviceMode();
     }
 
 }

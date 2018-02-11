@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
 import com.mobnote.eventbus.CaptureTimeEvent;
-import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.eventbus.VideoResEvent;
@@ -281,8 +280,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @Override
     public void onDestroy() {
         super.onDestroy();
-        // 发送退出设置模式指令
-        EventBus.getDefault().post(new EventExitMode(1));
 
         EventBus.getDefault().unregister(this);
         if (mHeartbeatTask != null)

@@ -11,7 +11,6 @@ import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.mobnote.eventbus.EventExitMode;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -24,7 +23,6 @@ import com.mobnote.t1sp.service.HeartbeatTask;
 import com.mobnote.t1sp.util.Const;
 
 import cn.com.tiros.debug.GolukDebugUtils;
-import de.greenrobot.event.EventBus;
 
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
@@ -145,9 +143,6 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 发送退出设置模式指令
-        EventBus.getDefault().post(new EventExitMode(2));
-
         if (mShouldClose && mBaseApp.isIpcLoginSuccess) {
             mBaseApp.setIpcDisconnect();
             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
