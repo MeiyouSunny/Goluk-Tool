@@ -117,7 +117,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
     private int mType;
     private FrameLayout mVideoFrameLayout;
-    private RelativeLayout mVideoViewLayout;
+    private RelativeLayout mVideoViewLayout, mLayoutSpeed;
     private FullScreenVideoView mVideoView;
     private boolean mIsFullScreen = false;
 
@@ -144,6 +144,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private ImageView mPlayImageView;
     private TextView mPlayTimeTextView, mVtPlayTimeTextView;
     private TextView mDurationTime, mVtDurationTime;
+    private TextView mTvSpeed;
     private ImageView mPlayImg = null;
 
     private TextView mTvShareRightnow;
@@ -488,6 +489,8 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
         mVideoFrameLayout = (FrameLayout) findViewById(R.id.video_frame_layout);
         mVideoViewLayout = (RelativeLayout) findViewById(R.id.rv_video_player);
+        mLayoutSpeed = (RelativeLayout) findViewById(R.id.layout_speed);
+        mTvSpeed = (TextView) findViewById(R.id.tv_speed);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
         lp.width = mScreenWidth;
         lp.height = (int) (lp.width / 1.777);
@@ -1062,9 +1065,23 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
                 return;
             final int position = progress * mGpsList.size() / 100;
             GPSData carGps = mGpsList.get(position);
+            // 更新当前轨迹
             mMapTrackView.drawTrackCar(carGps);
+            // 更新当前速度
+            updateCurrentSpeed(carGps);
         }
     };
+
+    /**
+     * 更新当前速度
+     */
+    private void updateCurrentSpeed(GPSData carGps) {
+        if (carGps == null)
+            return;
+        if (mLayoutSpeed.getVisibility() == View.GONE)
+            mLayoutSpeed.setVisibility(View.VISIBLE);
+        mTvSpeed.setText(String.valueOf(carGps.speed));
+    }
 
     /**
      * 是否是横屏
