@@ -13,7 +13,7 @@ import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.callback.SettingInfosCallback;
+import com.mobnote.t1sp.callback.DeviceIDCallback;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
@@ -99,7 +99,7 @@ public class T1SPConnecter {
         if (mIsConnecing)
             return;
 
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new DeviceIDCallback() {
 
             @Override
             public void onStart() {
@@ -109,6 +109,9 @@ public class T1SPConnecter {
 
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
+                if (settingInfo == null)
+                    return;
+
                 stateCallback(1);
 
                 // T1SP连接成功
