@@ -18,7 +18,7 @@ public class ApiServiceRequestListener implements OnServiceInvokeListener {
 
     @Override
     public RequestHolder onServiceInvoke(Method method, RequestHolder requestHolder) {
-        GolukDebugUtils.e(Const.LOG_TAG, "" + requestHolder.url());
+        GolukDebugUtils.e(Const.LOG_TAG + "HTTP", "" + requestHolder.url());
 
         return requestHolder;
     }

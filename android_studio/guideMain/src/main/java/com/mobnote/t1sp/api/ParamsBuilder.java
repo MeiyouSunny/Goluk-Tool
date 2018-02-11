@@ -123,14 +123,14 @@ public class ParamsBuilder {
      * @return
      */
     public static Map<String, String> getFileListParam(String... values) {
-        if (values == null || values.length != 4)
+        if (values == null || values.length != 3)
             return null;
         Map<String, String> params = new HashMap<>();
         params.put(KEY_ACTION, ACTION_DIR);
         params.put(KEY_PROPERTY, values[0]);
-        params.put(KEY_FORMAT, values[1]);
-        params.put(KEY_FROM, values[2]);
-        params.put(KEY_COUNT, values[3]);
+        params.put(KEY_FORMAT, "MP4");
+        params.put(KEY_FROM, values[1]);
+        params.put(KEY_COUNT, values[2]);
         params.put(KEY_BACKWARD, "");
 
         return params;

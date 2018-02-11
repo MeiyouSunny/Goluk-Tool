@@ -365,7 +365,6 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
         return ParamsBuilder.getFileListParam(
                 type,
-                ParamsBuilder.FILE_TYPE_ALL,
                 mLastFileIndex + "",
                 FILE_COUNT_ONE_TIME + ""
         );
