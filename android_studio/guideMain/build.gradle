@@ -51,6 +51,7 @@ dependencies {
     // 仅调用依赖
     provided files('../systemAPI/libs/BaiduLBS_Android.jar')
     provided files('../systemAPI/libs/eventbus-2.4.0.jar')
+    provided files('../commonGoluk/libs/volley.jar')
 
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.android.support:support-v4:23.3.0'

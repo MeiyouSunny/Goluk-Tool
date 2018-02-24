@@ -1,16 +1,9 @@
 package com.mobnote.golukmain.http.request;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.text.TextUtils;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.api.Tapi;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
@@ -19,11 +12,19 @@ import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.api.Tapi;
+
 
 public abstract class GolukFastjsonRequest<T> {
     private  Class<T> mClazz;
     private  Map<String, String> mHeaders = new HashMap<String, String>();
     private  Map<String, String> mParams = new HashMap<String, String>();
+    private String mRequestBody;
     private  IRequestResultListener mListener;
     private Object mTag;
     private boolean bCache = false;
@@ -122,7 +123,7 @@ public abstract class GolukFastjsonRequest<T> {
             mParams = null;
 		}
 
-		FastjsonRequest<T> request = new FastjsonRequest<T>(type, url, mClazz, mHeaders, mParams, new Response.Listener<T>(){
+		FastjsonRequest<T> request = new FastjsonRequest<T>(type, url, mClazz, mHeaders, mParams, mRequestBody, new Response.Listener<T>(){
 
 			@Override
 			public void onResponse(T response) {
@@ -151,4 +152,13 @@ public abstract class GolukFastjsonRequest<T> {
 		request.setRetryPolicy(mDefaultRetryPolicy);
 		HttpManager.getInstance().add(request);
 	}
+
+	public String getRequestBody() {
+		return mRequestBody;
+	}
+
+	public void setRequestBody(String requestBody) {
+		this.mRequestBody = requestBody;
+	}
+
 }
