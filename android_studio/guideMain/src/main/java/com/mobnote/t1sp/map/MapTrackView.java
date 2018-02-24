@@ -17,6 +17,8 @@ public abstract class MapTrackView extends RelativeLayout {
     public static int GPS_LOCAL_MP4 = 0;
     public static int GPS_REMOTE_MP4 = 1;
     public static int GPS_REMOTE_MP4_TS = 2;
+    // 是否画起点终点Icon
+    protected boolean mDrawStartAndEndIcon = true;
 
     public MapTrackView(Context context) {
         super(context);
@@ -60,6 +62,10 @@ public abstract class MapTrackView extends RelativeLayout {
 
     public interface SnapshotReadyCallback {
         void onSnapshotReady(final Bitmap bitmap);
+    }
+
+    public void setDrawStartAndEndIcon(boolean needDraw) {
+        mDrawStartAndEndIcon = needDraw;
     }
 
     public abstract boolean isMapAvailable();

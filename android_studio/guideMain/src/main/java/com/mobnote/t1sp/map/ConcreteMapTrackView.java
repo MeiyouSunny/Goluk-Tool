@@ -545,25 +545,30 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         }
 
         try {
+            // 轨迹线
             for (PolylineOptions polylineOptions : mTrackLineOverlayData) {
                 if (mBaiduMap != null)
                     mBaiduMap.addOverlay(polylineOptions);
             }
-            if (points.size() >= 1) {
-                if (mTrackCarStart == null) {
-                    OverlayOptions oo = new MarkerOptions().position(points.get(0)).icon(mCarBitmapStart);
-                    if (mBaiduMap != null) {
-                        mTrackCarStart = (Marker) (mBaiduMap.addOverlay(oo));
+
+            // 起点终点Icon
+            if (mDrawStartAndEndIcon) {
+                if (points.size() >= 1) {
+                    if (mTrackCarStart == null) {
+                        OverlayOptions oo = new MarkerOptions().position(points.get(0)).icon(mCarBitmapStart);
+                        if (mBaiduMap != null) {
+                            mTrackCarStart = (Marker) (mBaiduMap.addOverlay(oo));
+                        }
                     }
-                }
-                mTrackCarStart.setPosition(points.get(0));
-                if (mTrackCarEnd == null) {
-                    OverlayOptions oo = new MarkerOptions().position(points.get(points.size() - 1)).icon(mCarBitmapEnd);
-                    if (mBaiduMap != null) {
-                        mTrackCarEnd = (Marker) (mBaiduMap.addOverlay(oo));
+                    mTrackCarStart.setPosition(points.get(0));
+                    if (mTrackCarEnd == null) {
+                        OverlayOptions oo = new MarkerOptions().position(points.get(points.size() - 1)).icon(mCarBitmapEnd);
+                        if (mBaiduMap != null) {
+                            mTrackCarEnd = (Marker) (mBaiduMap.addOverlay(oo));
+                        }
                     }
+                    mTrackCarEnd.setPosition(points.get(points.size() - 1));
                 }
-                mTrackCarEnd.setPosition(points.get(points.size() - 1));
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -78,7 +78,6 @@ import com.mobnote.util.ZhugeUtils;
 import com.rockerhieu.emojicon.EmojiconGridFragment;
 import com.rockerhieu.emojicon.EmojiconsFragment;
 import com.rockerhieu.emojicon.emoji.Emojicon;
-import com.umeng.socialize.utils.Log;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONArray;
