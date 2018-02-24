@@ -46,7 +46,10 @@ import net.sf.marineapi.bean.GPSData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderResultListener {
+/**
+ * 百度地图轨迹视图
+ */
+public class BaiduMapTrackView extends MapTrackView implements OnGetGeoCoderResultListener {
 
     private static final String TAG = "CarSvc_BaiduTrackView";
 
@@ -88,17 +91,17 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
     private boolean mShowCarInfo = true;
     private boolean mShowCarInfoTime = true;
 
-    public ConcreteMapTrackView(Context context) {
+    public BaiduMapTrackView(Context context) {
         super(context);
         initView();
     }
 
-    public ConcreteMapTrackView(Context context, AttributeSet attrs) {
+    public BaiduMapTrackView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initView();
     }
 
-    public ConcreteMapTrackView(Context context, AttributeSet attrs, int defStyle) {
+    public BaiduMapTrackView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         initView();
     }
@@ -201,12 +204,6 @@ public class ConcreteMapTrackView extends MapTrackView implements OnGetGeoCoderR
         MapStatusUpdate statusZoom = MapStatusUpdateFactory.newLatLngZoom(point, 16);
         if (mBaiduMap != null)
             mBaiduMap.animateMapStatus(statusZoom);
-    }
-
-    //画远程视频的GPS轨迹，数据从记录仪获取
-    @Override
-    public void drawRemoteTrackLine(String url) {
-        //new DrawRemoteTrackTask().execute(url);
     }
 
     @Override

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
+import com.mobnote.application.GolukApplication;
+
 import net.sf.marineapi.bean.GPSData;
 
 import java.util.List;
@@ -41,7 +43,13 @@ public abstract class MapTrackView extends RelativeLayout {
         MapTrackView view;
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        view = new ConcreteMapTrackView(context);
+
+        if (GolukApplication.getInstance().isMainland()) {
+            view = new BaiduMapTrackView(context);
+        } else {
+            view = new GoogleMapTrackView(context);
+        }
+
         view.setLayoutParams(lp);
         return view;
     }
@@ -71,8 +79,6 @@ public abstract class MapTrackView extends RelativeLayout {
     public abstract boolean isMapAvailable();
 
     public abstract void setGPSDataFromType(int value);
-
-    public abstract void drawRemoteTrackLine(String url);
 
     public abstract void drawTrackLine(List<GPSData> list);
 
