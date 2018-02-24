@@ -99,6 +99,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
     private CustomDialog mCustomDialog;
     private int mVideoPosition = 0;
 
+    // 速度
+    private RelativeLayout mLayoutSpeed;
+    private TextView mTvSpeed;
     // 地图轨迹
     private LinearLayout mLayoutMap;
     private MapTrackView mMapTrackView;
@@ -189,6 +192,9 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
         //mLoading.setBackgroundResource(R.anim.video_loading);
         //mAnimationDrawable = (AnimationDrawable) mLoading.getBackground();
 
+        // 速度
+        mLayoutSpeed = (RelativeLayout) convertView.findViewById(R.id.layout_speed);
+        mTvSpeed = (TextView) convertView.findViewById(R.id.tv_speed);
         // 轨迹
         mLayoutMap = (LinearLayout) convertView.findViewById(R.id.layout_map);
 
@@ -838,6 +844,17 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
         return mVideoDetailRetBean.data.avideo.video.picture;
     }
 
+    /**
+     * 更新当前速度
+     */
+    private void updateCurrentSpeed(GPSData carGps) {
+        if (carGps == null)
+            return;
+        if (mLayoutSpeed.getVisibility() == View.GONE)
+            mLayoutSpeed.setVisibility(View.VISIBLE);
+        mTvSpeed.setText(String.valueOf(carGps.speed));
+    }
+
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         // 画当前车辆位置
@@ -847,6 +864,8 @@ public class VideoDetailHeader implements OnClickListener, GolukPlayer.OnPrepare
         GPSData carGps = mGpsList.get(position);
         // 更新当前轨迹
         mMapTrackView.drawTrackCar(carGps);
+        // 更新当前速度
+        updateCurrentSpeed(carGps);
     }
 
     @Override

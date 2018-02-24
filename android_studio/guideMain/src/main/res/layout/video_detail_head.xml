@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:background="@color/white"
               android:orientation="vertical">
 
@@ -89,7 +90,7 @@
     <RelativeLayout
         android:id="@+id/mPlayerLayout"
         android:layout_width="match_parent"
-        android:layout_height="205dp">
+        android:layout_height="207dp">
 
         <com.mobnote.golukmain.player.FullScreenVideoView
             android:id="@+id/video_detail_videoview"
@@ -168,6 +169,38 @@
                 android:textColor="#ffffff"
                 android:textSize="12sp"/>
         </LinearLayout>
+
+        <!-- 速度 -->
+        <RelativeLayout
+            android:id="@+id/layout_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="#5518181D"
+            android:paddingEnd="4dp"
+            android:paddingStart="4dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_speed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:textColor="#88FFFFFF"
+                android:textSize="16sp"
+                tools:text="60"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@id/tv_speed"
+                android:layout_marginLeft="2dp"
+                android:layout_toRightOf="@id/tv_speed"
+                android:text="km/h"
+                android:textColor="#88FFFFFF"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <!-- 地图轨迹 -->
