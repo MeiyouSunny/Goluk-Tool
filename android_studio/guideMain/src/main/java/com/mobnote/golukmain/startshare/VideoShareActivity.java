@@ -45,15 +45,19 @@ import com.mobnote.golukmain.promotion.PromotionData;
 import com.mobnote.golukmain.promotion.PromotionListRequest;
 import com.mobnote.golukmain.promotion.PromotionModel;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.golukmain.startshare.bean.GpsTrackParamBean;
+import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
+import com.mobnote.golukmain.startshare.bean.UploadGpsTrackRetBean;
 import com.mobnote.golukmain.startshare.bean.VideoSaveDataBean;
 import com.mobnote.golukmain.startshare.bean.VideoSaveRetBean;
-import com.mobnote.golukmain.startshare.bean.ShareTypeBean;
 import com.mobnote.golukmain.thirdshare.SharePlatformAdapter;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
 import com.mobnote.map.LngLat;
+import com.mobnote.t1sp.util.CollectionUtils;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukFileUtils;
@@ -63,12 +67,16 @@ import com.mobnote.util.ZhugeUtils;
 import com.mobnote.util.glideblur.FastBlur;
 import com.mobnote.util.glideblur.RSBlur;
 
+import net.sf.marineapi.bean.GPSData;
+import net.sf.marineapi.task.T1spGpsTask;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -80,7 +88,7 @@ import de.greenrobot.event.EventBus;
 /**
  * Created by wangli on 2016/5/10.
  */
-public class VideoShareActivity extends BaseActivity implements View.OnClickListener , IDialogDealFn , IUploadVideoFn ,IRequestResultListener {
+public class VideoShareActivity extends BaseActivity implements View.OnClickListener , IDialogDealFn , IUploadVideoFn ,IRequestResultListener, T1spGpsTask.GpsDataListener {
 
     private final int SHARE_PLATFORM_COLUMN_NUMBERS = 3;
     private int mCurrSelectedSharePlatform;
@@ -237,6 +245,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         mSelectedShareString = "# " + getResources().getString(R.string.share_str_type_ssp);
 
         getVideoCreateTime();
+
+        // Gps列表数据
+        if (FileUtil.hasGpsFile(mVideoPath)) {
+            T1spGpsTask gpsTask = new T1spGpsTask(this);
+            gpsTask.execute(FileUtil.getGpsFileByVideoPath(mVideoPath));
+        }
     }
 
     public void onEventMainThread(EventShortLocationFinish event) {
@@ -363,6 +377,25 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssSSS");
             cal.setTimeInMillis(time);
             videoCreateTime = formatter.format(cal.getTime());
+        }
+    }
+
+    private List<GpsInfo> mGpsInfos;
+    @Override
+    public void getGpsData(List<GPSData> list) {
+        mGpsInfos = new ArrayList<>();
+        GpsInfo gpsInfo;
+        for(GPSData gpsData: list) {
+            gpsInfo = new GpsInfo();
+            gpsInfo.altitude = gpsData.altitude;
+            gpsInfo.direction = gpsData.angle;
+            gpsInfo.lat = gpsData.latitude;
+            gpsInfo.lon = gpsData.longitude;
+            gpsInfo.ltime = 0;
+            gpsInfo.radius = 0;
+            gpsInfo.speed = gpsData.speed;
+
+            mGpsInfos.add(gpsInfo);
         }
     }
 
@@ -757,6 +790,12 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 //                        mActivityname, shareState);
                 zhugeShareVideo(shareState);
                 break;
+            case IPageNotifyFn.PAGETYPE_UPLOAD_GPS_TRACK:
+                UploadGpsTrackRetBean uploadGpsResult = (UploadGpsTrackRetBean) result;
+                if (uploadGpsResult != null && uploadGpsResult.success) {
+                    // 视频Gps数据上传成功
+                }
+                break;
         }
     }
 
@@ -822,6 +861,15 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         if(mSharePlatformAdapter != null && mSharePlatformAdapter.getCurrSelectedPlatformType() != SharePlatform.SHARE_PLATFORM_NULL){
             mSharePlatformAdapter.getCurrSelectedPlatformzBean().startShare(this,new SharePlatformUtil(this),bean);
+        }
+
+        // 上传视频轨迹数据
+        if (!CollectionUtils.isEmpty(mGpsInfos)) {
+            GpsTrackParamBean param = new GpsTrackParamBean();
+            param.videoid = mUploadVideo.getVideoId();
+            param.gps = mGpsInfos;
+            UploadGpsTrackRequest uploadGpsTrackRequest = new UploadGpsTrackRequest(IPageNotifyFn.PAGETYPE_UPLOAD_GPS_TRACK, this);
+            uploadGpsTrackRequest.request(param);
         }
     }
 

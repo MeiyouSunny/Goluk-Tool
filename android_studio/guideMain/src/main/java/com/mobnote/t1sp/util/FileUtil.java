@@ -237,4 +237,25 @@ public class FileUtil {
         return path;
     }
 
+    /**
+     * 获取对应的Gps文件路径
+     *
+     * @param videoPath 视频路径
+     */
+    public static String getGpsFileByVideoPath(String videoPath) {
+        if (TextUtils.isEmpty(videoPath))
+            return "";
+        return videoPath.replace("MP4", "NMEA");
+    }
+
+    /**
+     * 对应的Gps文件是否存在
+     *
+     * @param videoPath 视频路径
+     */
+    public static boolean hasGpsFile(String videoPath) {
+        String gpsFilePath = getGpsFileByVideoPath(videoPath);
+        return !TextUtils.isEmpty(gpsFilePath) && (new File(gpsFilePath).exists());
+    }
+
 }
