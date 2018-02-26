@@ -104,9 +104,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getPresenter().enterOrExitSettingMode(true);
-                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
-                mHeartbeatTask.start();
+//                getPresenter().enterOrExitSettingMode(true);
+//                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
+//                mHeartbeatTask.start();
+                getPresenter().getAllInfo();
             }
         }, 200);
     }

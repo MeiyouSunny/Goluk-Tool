@@ -219,12 +219,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         Intent receiveIntent = getIntent();
         isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
-        startPlay();
+        //startPlay();
 
         // 设置抓拍回调
         T1SPUdpService.setCaptureListener(this);
         // 获取设备信息
-        getPresenter().getVideoSettingInfo(false);
+        getPresenter().getVideoSettingInfo(true);
         // 自动同步时间
         //syncSystemTime();
     }
@@ -639,7 +639,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             }
             // 进入设置模式
-            mCurrentMode = MODE_SETTING;
+            //mCurrentMode = MODE_SETTING;
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
@@ -1067,6 +1067,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             getPresenter().exitPlaybackMode();
             mCanSwitchMode = false;
             GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
+        } else {
+            startPlay();
+            queryDeviceMode();
         }
     }
 
@@ -1095,7 +1098,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                     }
                 }, 500);
             } else {
-                $.toast().text(R.string.recovery_to_record).show();
+                //$.toast().text(R.string.recovery_to_record).show();
                 mCanSwitchMode = true;
                 resetCaptureButton();
                 //startPlay();
