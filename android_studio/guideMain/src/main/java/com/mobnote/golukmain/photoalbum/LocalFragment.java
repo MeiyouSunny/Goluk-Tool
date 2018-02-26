@@ -93,6 +93,13 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                             GolukDebugUtils.e(LocalFragment.this.getClass().getSimpleName(), "Delete failed  Path is :" + imgfile.getAbsolutePath());
                         }
                     }
+                    // T1SP删除对应的GPS文件
+                    final String gpsFilePath = FileUtil.getGpsFileByVideoPath(path);
+                    File gpsFile = new File(gpsFilePath);
+                    if (gpsFile.exists()) {
+                        gpsFile.delete();
+                    }
+
                     SettingUtils.getInstance().putBoolean(filename, true);
                     break;
                 }
