@@ -470,7 +470,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     }
 
     private void checkListState() {
-        if (mDataList == null || mDataList.isEmpty()) {
+        if (dataListIsEmpty()) {
             empty.setVisibility(View.VISIBLE);
             Drawable drawable = this.getResources().getDrawable(R.drawable.album_img_novideo);
             empty.setCompoundDrawablesRelativeWithIntrinsicBounds(null, drawable, null, null);
@@ -487,6 +487,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     }
 
     /**
+     * 列表是否为空
+     */
+    private boolean dataListIsEmpty() {
+        return mDataList == null || mDataList.isEmpty();
+    }
+
+    /**
      * 移除loading
      *
      * @author jyf
@@ -497,6 +504,14 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             isGetFileListDataing = false;
             mStickyListHeadersListView.removeFooterView(mBottomLoadingView);
         }
+    }
+
+    /**
+     * PagerView滑动重新显示
+     */
+    public void onShow() {
+        // 更新编辑按钮显示
+        updateEditState(!dataListIsEmpty());
     }
 
     /**
@@ -572,6 +587,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_delete_ok));
             // 恢复顶部按钮状态
             getFragmentAlbum().resetTopBar();
+            // 更新显示
+            checkListState();
             return;
         }
 

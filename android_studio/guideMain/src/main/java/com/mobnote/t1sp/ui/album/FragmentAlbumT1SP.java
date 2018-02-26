@@ -55,7 +55,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     public static final String SELECT_MODE = "select_item";
 
     private CustomViewPager mViewPager;
-    private LocalFragment mLocalFragment;
+    //private LocalFragment mLocalFragment;
     private RemoteWonderfulAlbumFragment mWonderfulFragment;
     private RemoteLoopAlbumFragment mLoopFragment;
     private RemoteEventAlbumFragment mUrgentFragment;
@@ -125,7 +125,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         editState = false;
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(1);
-        mLocalFragment = new LocalFragment();
+        //mLocalFragment = new LocalFragment();
         mWonderfulFragment = new RemoteWonderfulAlbumFragment();
         mLoopFragment = new RemoteLoopAlbumFragment();
         mUrgentFragment = new RemoteEventAlbumFragment();
@@ -133,7 +133,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
 
         fragmentList = new ArrayList<>();
         if (parentViewIsMainActivity) {
-            fragmentList.add(mLocalFragment);
+            //fragmentList.add(mLocalFragment);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
         } else {
             fragmentList.add(mWonderfulFragment);
@@ -148,29 +148,13 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                GolukDebugUtils.e(Const.LOG_TAG, "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
-                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-                    mWonderfulFragment.removeFooterView();
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-                    mUrgentFragment.removeFooterView();
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-                    mLoopFragment.removeFooterView();
-                }
-
-                if (parentViewIsMainActivity) {
-                    mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
-                } else {
-                    if (position == 0) {
-                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-                    } else if (position == 1) {
-                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-                    } else {
-                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
-                    }
-                }
-//                mCurrentType = position;
-//                setItemLineState(position);
+                // 移除FooterView
+                ((BaseRemoteAblumFragment) fragmentList.get(mCurrentType - 1)).removeFooterView();
+                mCurrentType = position + 1;
+                // 刷新Tab显示
                 setItemLineState(mCurrentType);
+                // 更新当前Fragment编辑按钮显示
+                ((BaseRemoteAblumFragment) fragmentList.get(mCurrentType - 1)).onShow();
             }
 
             @Override
@@ -236,7 +220,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean all = mCBAll.getText().equals(getString(R.string.select_all));
                 adaptCbAllText(!all);
-                mLocalFragment.allSelect(all);
+                //mLocalFragment.allSelect(all);
             }
         });
     }
@@ -268,7 +252,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     /**
      * 设置tab页的下划线显示和隐藏
      *
-     * @param position 位置index
+     * @param currentType 位置index
      */
     public void setItemLineState(int currentType) {
         mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
@@ -490,7 +474,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
                 mLoopFragment.deleteListData(selectedListData);
             }
         } else {
-            mLocalFragment.deleteListData(selectedListData);
+            //mLocalFragment.deleteListData(selectedListData);
         }
     }
 
