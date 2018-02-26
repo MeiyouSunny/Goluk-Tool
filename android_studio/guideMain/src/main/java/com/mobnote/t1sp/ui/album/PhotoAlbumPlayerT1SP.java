@@ -85,6 +85,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import dvr.oneed.com.ait_wifi_lib.VideoView.GpsInfo;
 import dvr.oneed.com.ait_wifi_lib.VideoView.VideoInfo;
+import likly.dollar.$;
 
 import static com.rd.veuisdk.SdkEntry.editMedia;
 
@@ -243,6 +244,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
             if (gpsFile.exists()) {
                 T1spGpsTask gpsTask = new T1spGpsTask(this);
                 gpsTask.execute(gpsPath);
+
+                // 保存临时Gps轨迹文件路径
+                $.config().putString("gpsTrackFile", gpsPath);
             }
         } else {
             // 精彩视频只提取一个GPS点
@@ -422,6 +426,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
         if (mGpsList != null)
             mGpsList.clear();
+
+        // 清除保存的临时Gps轨迹文件路径
+        $.config().putString("gpsTrackFile", "");
 
         super.onDestroy();
     }
