@@ -164,7 +164,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 mIgnoreSwtich = false;
             }
         } else if (viewId == R.id.switch_auto_rotate) {
-            getPresenter().setAutoRotate(isChecked);
+            //getPresenter().setAutoRotate(isChecked);
         } else if (viewId == R.id.switch_watermark) {
             getPresenter().setRecStamp(isChecked);
         } else if (viewId == R.id.switch_mtd) {

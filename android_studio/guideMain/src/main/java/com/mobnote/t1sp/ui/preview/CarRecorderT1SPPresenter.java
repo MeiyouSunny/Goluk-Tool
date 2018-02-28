@@ -44,4 +44,9 @@ public interface CarRecorderT1SPPresenter extends Presenter<CarRecorderT1SPModel
      */
     void autoSyncSystemTime();
 
+    /**
+     * 旋转预览视频
+     */
+    void rotateVideo();
+
 }

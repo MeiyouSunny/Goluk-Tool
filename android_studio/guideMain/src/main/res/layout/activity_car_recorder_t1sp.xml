@@ -200,14 +200,14 @@
         </RelativeLayout>
 
         <ImageButton
-            android:id="@+id/video_off"
+            android:id="@+id/ic_rotate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/mFullScreen"
             android:layout_alignRight="@+id/mRtmpPlayerLayout"
             android:layout_marginBottom="6dp"
             android:layout_marginRight="6dp"
-            android:background="@drawable/recorder_btn_sound"
+            android:background="@drawable/ic_rotate"
             android:contentDescription="@string/def"
             android:visibility="gone"/>
 
@@ -220,7 +220,8 @@
             android:layout_marginBottom="6dp"
             android:layout_marginRight="6dp"
             android:background="@drawable/carrecorder_btn_full_press"
-            android:contentDescription="@string/def"/>
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <ImageView

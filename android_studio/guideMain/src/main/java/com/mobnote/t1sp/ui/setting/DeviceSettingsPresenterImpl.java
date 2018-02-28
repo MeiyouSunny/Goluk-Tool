@@ -98,7 +98,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
     @Override
     public void setAutoRotate(boolean onOff) {
-        sendSetRequest(ParamsBuilder.setAutoRotateParam(onOff));
+        //sendSetRequest(ParamsBuilder.rotateVideoParam(onOff));
     }
 
     @Override

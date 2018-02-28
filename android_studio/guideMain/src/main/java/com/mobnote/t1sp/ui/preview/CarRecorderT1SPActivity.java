@@ -160,7 +160,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private GolukApplication mApp = null;
     private boolean m_bIsFullScreen = false;
     private ViewGroup m_vgNormalParent;
-    private ImageButton mFullScreen = null;
+    private ImageButton mFullScreen, mBtnRotate;
     private RelativeLayout mPlayerLayout = null;
     private Button mNormalScreen = null;
     private final int BTN_NORMALSCREEN = 231;
@@ -396,7 +396,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private void initView() {
         mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
         mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
-        mFullScreen.setVisibility(View.GONE);
+        mBtnRotate = (ImageButton) findViewById(R.id.ic_rotate);
         mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
         mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
         mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
@@ -457,6 +457,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         findViewById(R.id.mPlayBtn).setOnClickListener(this);
         mPalyerLayout.setOnClickListener(this);
         mFullScreen.setOnClickListener(this);
+        mBtnRotate.setOnClickListener(this);
         mBtnCapture.setOnClickListener(this);
         mNotconnected.setOnClickListener(this);
         image1.setOnClickListener(this);
@@ -521,6 +522,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 // 隐藏
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
+                mBtnRotate.setVisibility(View.VISIBLE);
                 // 抓拍按钮
                 //resetCaptureButton();
             }
@@ -643,6 +645,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
+        } else if (id == R.id.ic_rotate) {
+            rotatePreviewVideo();
         } else if (id == BTN_NORMALSCREEN) {
             setFullScreen(false);
         } else if (id == R.id.mPlayBtn) {
@@ -691,6 +695,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 mNotconnected.setVisibility(View.GONE);
                 mConncetLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.GONE);
+                mBtnRotate.setVisibility(View.GONE);
             }
         } else if (id == R.id.mConncetLayout) {
             Intent intent = new Intent(this, WiFiLinkListActivity.class);
@@ -700,6 +705,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM, false);
             startActivity(intent);
         }
+    }
+
+    /**
+     * 旋转视频预览
+     */
+    private void rotatePreviewVideo() {
+        getPresenter().rotateVideo();
     }
 
     private boolean mCanSwitchMode = true;
@@ -743,6 +755,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     private void ipcConnecting() {
         mFullScreen.setVisibility(View.GONE);
+        mBtnRotate.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
         if (mApp.isBindSucess()) {
             mPalyerLayout.setVisibility(View.GONE);
@@ -762,6 +775,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private void ipcConnFailed() {
         mConnectedIpc = false;
         mFullScreen.setVisibility(View.GONE);
+        mBtnRotate.setVisibility(View.GONE);
         mConnectTip.setText(R.string.str_disconnect_ipc);
         mPalyerLayout.setVisibility(View.GONE);
         mNotconnected.setVisibility(View.VISIBLE);
@@ -829,6 +843,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (isShowPlayer) {
             if (null != mRtspPlayerView) {
                 mFullScreen.setVisibility(View.GONE);
+                mBtnRotate.setVisibility(View.GONE);
                 mRtspPlayerView.removeCallbacks(retryRunnable);
                 if (mRtspPlayerView.isPlaying()) {
                     isConnecting = false;

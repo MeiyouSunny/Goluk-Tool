@@ -159,4 +159,17 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
         });
     }
 
+    @Override
+    public void rotateVideo() {
+        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.rotateVideoParam(), new CommonCallback() {
+            @Override
+            protected void onSuccess() {
+            }
+
+            @Override
+            protected void onServerError(int errorCode, String errorMessage) {
+            }
+        });
+    }
+
 }

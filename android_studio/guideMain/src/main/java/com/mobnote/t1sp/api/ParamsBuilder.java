@@ -666,17 +666,12 @@ public class ParamsBuilder {
     /**
      * 设置镜头自动翻转
      *
-     * @param onOrOff [ON|OFF]
      * @return
      */
-    public static Map<String, String> setAutoRotateParam(boolean onOrOff) {
+    public static Map<String, String> rotateVideoParam() {
         Map<String, String> params = new HashMap<>();
         params.put(KEY_ACTION, ACTION_SET);
         params.put(KEY_PROPERTY, "AutoRotate");
-        if (onOrOff)
-            params.put(KEY_VALUE, VALUE_ON);
-        else
-            params.put(KEY_VALUE, VALUE_OFF);
 
         return params;
     }
