@@ -48,6 +48,10 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                if (errorCode == 716) {
+                    $.toast().text("抓拍是吧,没有SD卡").show();
+                    return;
+                }
                 $.toast().text(R.string.capture_failed).show();
             }
         });
