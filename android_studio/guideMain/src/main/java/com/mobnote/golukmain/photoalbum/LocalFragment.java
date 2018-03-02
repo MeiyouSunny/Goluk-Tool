@@ -132,8 +132,14 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         LocalDataLoadAsyncTask task = new LocalDataLoadAsyncTask(IPCManagerFn.TYPE_SHORTCUT, new DataCallBack() {
             @Override
             public void onSuccess(int type, List<VideoInfo> mLocalListData, List<String> mGroupListName) {
-                mDataList.clear();
-                mDoubleDataList.clear();
+                // Bugly #4656
+                if (mDataList != null && !mDataList.isEmpty())
+                    mDataList.clear();
+                if (mDoubleDataList != null && !mDoubleDataList.isEmpty())
+                    mDoubleDataList.clear();
+                if (mDataList == null)
+                    mDataList = new ArrayList<>();
+
                 mDataList.addAll(mLocalListData);
                 mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
                 mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
