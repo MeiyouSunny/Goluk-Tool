@@ -227,6 +227,9 @@ public class UserUtils {
      * 升级成功
      */
     public static void showUpdateSuccess(AlertDialog showUpdateDialog, Context context, String message) {
+        // Bugly #11676
+        if (!isActivityRunning(context))
+            return;
         if (showUpdateDialog == null) {
             showUpdateDialog = new AlertDialog.Builder(context)
                     .setTitle(context.getResources().getString(R.string.user_dialog_hint_title)).setMessage(message)

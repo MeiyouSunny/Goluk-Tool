@@ -2,16 +2,6 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.text.TextUtils;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TimeZone;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -23,6 +13,15 @@ import com.mobnote.golukmain.reportlog.ReportLog;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.TimeZone;
 
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -1117,7 +1116,7 @@ public class IPCControlManager implements IPCManagerFn {
      * @return
      */
     public boolean getWonderfulVideoType() {
-        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+        return mApplication.mGoluk != null && mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPCManagerFn.IPC_VDCPCmd_GetVideoTimeConf, "");
     }
 
