@@ -44,7 +44,7 @@ public class CustomLoadingDialog {
     }
 
     public synchronized void close() {
-        if (mDialog != null) {
+        if (mDialog != null && isActivityRunning()) {
             if (mDialog.isShowing()) {
                 mDialog.dismiss();
             }

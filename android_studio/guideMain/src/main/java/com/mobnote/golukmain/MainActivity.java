@@ -1003,7 +1003,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.destroyLogic();
             MobclickAgent.onKillProcess(this);
             mApp.appFree();
-            finish();
+            if (!isDestroyed())
+                finish();
             GolukNotification.getInstance().destroy();
             CommentTimerManager.getInstance().cancelTimer();
         }

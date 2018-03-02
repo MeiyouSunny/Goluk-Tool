@@ -32,7 +32,8 @@ public class NewUserCenterAdapter extends BaseAdapter {
 	}
 
 	public void appendData(List<HomeVideoList> list) {
-		mList.addAll(list);
+		if (mList != null)
+			mList.addAll(list);
 		this.notifyDataSetChanged();
 	}
 

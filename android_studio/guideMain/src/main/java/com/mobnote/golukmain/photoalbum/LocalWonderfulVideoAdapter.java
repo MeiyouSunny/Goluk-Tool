@@ -409,40 +409,44 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             }
         }
 
-        String time[] = headerText.split("-");
-        if (3 == time.length) {
-            Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH) + 1;
-            int day = c.get(Calendar.DAY_OF_MONTH);
-            int o_year = Integer.parseInt(time[0]);
-            if (year == o_year) {
-                int o_month = Integer.parseInt(time[1]);
-                int o_day = Integer.parseInt(time[2]);
+        try {
+            String time[] = headerText.split("-");
+            if (3 == time.length) {
+                Calendar c = Calendar.getInstance();
+                int year = c.get(Calendar.YEAR);
+                int month = c.get(Calendar.MONTH) + 1;
+                int day = c.get(Calendar.DAY_OF_MONTH);
+                int o_year = Integer.parseInt(time[0]);
+                if (year == o_year) {
+                    int o_month = Integer.parseInt(time[1]);
+                    int o_day = Integer.parseInt(time[2]);
 
-                if (month == o_month) {
-                    if (day == o_day) {
-                        holder.date.setText(mContext.getString(R.string.str_today));
-                    } else if (day == (o_day + 1)) {
-                        holder.date.setText(mContext.getString(R.string.str_yestoday));
+                    if (month == o_month) {
+                        if (day == o_day) {
+                            holder.date.setText(mContext.getString(R.string.str_today));
+                        } else if (day == (o_day + 1)) {
+                            holder.date.setText(mContext.getString(R.string.str_yestoday));
+                        } else {
+                            holder.date.setText(time[1] + "/" + time[2]);
+                        }
                     } else {
                         holder.date.setText(time[1] + "/" + time[2]);
                     }
+
                 } else {
-                    holder.date.setText(time[1] + "/" + time[2]);
+                    String t_str = time[0] + "\n" + time[1] + "/" + time[2];
+
+                    SpannableStringBuilder style = new SpannableStringBuilder(t_str);
+                    style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, 4,
+                            Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                    style.setSpan(new AbsoluteSizeSpan(16, true), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    holder.date.setText(style);
                 }
-
             } else {
-                String t_str = time[0] + "\n" + time[1] + "/" + time[2];
-
-                SpannableStringBuilder style = new SpannableStringBuilder(t_str);
-                style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, 4,
-                        Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
-                style.setSpan(new AbsoluteSizeSpan(16, true), 0, 4, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-                holder.date.setText(style);
+                holder.date.setText(headerText);
             }
-        } else {
-            holder.date.setText(headerText);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         return convertView;

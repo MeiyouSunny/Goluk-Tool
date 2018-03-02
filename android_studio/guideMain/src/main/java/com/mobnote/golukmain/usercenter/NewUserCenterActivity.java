@@ -22,7 +22,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshHeaderGridView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeleteVideo;
-import com.mobnote.eventbus.EventRefreshUserInfo;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
@@ -522,7 +521,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
     @Override
     public void forbidBackKey(int backKey) {
         if (1 == backKey) {
-            if (mLoadinDialog.isShowing()) {
+            if (mLoadinDialog != null && mLoadinDialog.isShowing()) {
                 mLoadinDialog.close();
             }
         }

@@ -1359,6 +1359,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             mAfterEffect.playStop();
             mPlayerState = PlayerState.RELEASED;
             mAfterEffect.release();
+            mAfterEffect = null;
         }
 
         if (null != mExportDialog && mExportDialog.isShowing()) {
