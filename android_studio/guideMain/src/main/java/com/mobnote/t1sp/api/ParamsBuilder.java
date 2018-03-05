@@ -672,6 +672,7 @@ public class ParamsBuilder {
         Map<String, String> params = new HashMap<>();
         params.put(KEY_ACTION, ACTION_SET);
         params.put(KEY_PROPERTY, "AutoRotate");
+        params.put(KEY_VALUE, "Rotate");
 
         return params;
     }
