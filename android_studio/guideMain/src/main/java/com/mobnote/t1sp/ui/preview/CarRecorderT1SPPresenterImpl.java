@@ -172,6 +172,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(R.string.str_carrecoder_setting_failed).show();
             }
         });
     }
