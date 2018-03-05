@@ -49,7 +49,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
                 if (errorCode == 716) {
-                    $.toast().text("抓拍是吧,没有SD卡").show();
+                    $.toast().text("抓拍失败,没有SD卡").show();
                     return;
                 }
                 $.toast().text(R.string.capture_failed).show();
@@ -167,12 +167,22 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
     public void rotateVideo() {
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.rotateVideoParam(), new CommonCallback() {
             @Override
+            public void onStart() {
+                getView().showLoading();
+            }
+
+            @Override
             protected void onSuccess() {
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
                 $.toast().text(R.string.str_carrecoder_setting_failed).show();
+            }
+
+            @Override
+            public void onFinish() {
+                getView().hideLoading();
             }
         });
     }

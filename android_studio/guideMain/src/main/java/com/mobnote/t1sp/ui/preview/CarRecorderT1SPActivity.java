@@ -711,6 +711,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * 旋转视频预览
      */
     private void rotatePreviewVideo() {
+        if (mLoadingLayout.getVisibility() == View.VISIBLE)
+            return;
+
+        showLoading();
         getPresenter().rotateVideo();
     }
 
@@ -722,7 +726,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @author xuhw
      * @date 2015年3月8日
      */
-    private void showLoading() {
+    public void showLoading() {
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.VISIBLE);
@@ -734,7 +738,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @author xuhw
      * @date 2015年3月8日
      */
-    private void hideLoading() {
+    public void hideLoading() {
         mLoadingLayout.setVisibility(View.GONE);
     }
 
@@ -1152,7 +1156,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 if (mConnectedIpc)
                     getPresenter().getDeviceMode();
             }
-        }, 6000);
+        }, 3000);
     }
 
     @Override

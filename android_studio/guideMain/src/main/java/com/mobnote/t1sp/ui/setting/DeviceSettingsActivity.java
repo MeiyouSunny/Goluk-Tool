@@ -99,7 +99,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     private void getSettingInfo() {
-        mDialog = new CustomLoadingDialog(this, getString(R.string.enter_setting_mode_hint));
+        mDialog = new CustomLoadingDialog(this, "");
         mDialog.show();
         new Handler().postDelayed(new Runnable() {
             @Override

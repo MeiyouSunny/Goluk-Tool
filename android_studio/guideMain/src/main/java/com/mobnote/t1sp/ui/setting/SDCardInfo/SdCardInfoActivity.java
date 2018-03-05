@@ -23,6 +23,7 @@ import com.mobnote.t1sp.service.T1SPUdpService;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -125,6 +126,7 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                $.toast().text(R.string.str_carrecorder_storage_format_sdcard_fail).show();
             }
         });
     }
