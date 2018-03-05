@@ -670,7 +670,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         videoFileInfo.resolution = videoInfo.videoHP;
         videoFileInfo.timestamp = videoInfo.videoCreateDate;
         // 写入DB
-        GolukVideoInfoDbManager.getInstance().addVideoInfoData(videoFileInfo);
+        if (!GolukVideoInfoDbManager.getInstance().hasSaved(videoFileInfo.filename))
+            GolukVideoInfoDbManager.getInstance().addVideoInfoData(videoFileInfo);
     }
 
     private VideoInfo getVideoInfoByName(String videoName) {

@@ -162,6 +162,16 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 		return bean;
 	}
 
+	/**
+	 * 是否已经保存了对应的视频信息
+	 *
+	 * @param fileName 视频名称
+	 */
+	public boolean hasSaved(String fileName) {
+		VideoFileInfoBean fileInfo = selectSingleData(fileName);
+		return fileInfo != null;
+	}
+
 	@Override
 	public void destroy() {
 		if (null != db) {
