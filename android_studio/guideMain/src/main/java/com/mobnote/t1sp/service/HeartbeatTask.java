@@ -20,7 +20,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 public class HeartbeatTask {
 
     // 间隔时间 12s
-    private static final int DELAY_TIME = 12 * 1000;
+    private static final int DELAY_TIME = 10 * 1000;
     // 消息类型
     private static final int MSG_TYPE_HEARTBEAT = 0;
 
@@ -81,6 +81,7 @@ public class HeartbeatTask {
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
                 GolukDebugUtils.e(Const.LOG_TAG, "Receive hearbeat failed");
+                mHandler.sendEmptyMessageDelayed(MSG_TYPE_HEARTBEAT, 5000);
             }
         });
     }

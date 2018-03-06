@@ -113,7 +113,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Downloader
-    compile 'com.liulishuo.filedownloader:library:1.6.9'
+    compile 'com.liulishuo.filedownloader:library:1.7.1'
     // Gps parser
     compile files('libs/T1SP-Gps.jar')
 }
