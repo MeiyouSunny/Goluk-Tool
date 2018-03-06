@@ -999,7 +999,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             if (!event.getMsg()) {
                 if (!NetUtil.isWifiConnected(this)) {
                     // WIFI 断开
-                    //startActivity(new Intent(this, CarRecorderT1SPActivity.class));
+                    startActivity(new Intent(this, CarRecorderT1SPActivity.class));
                 }
             }
         }
