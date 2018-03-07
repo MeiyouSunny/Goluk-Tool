@@ -27,7 +27,6 @@ import android.widget.Toast;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.VideoResEvent;
@@ -37,7 +36,6 @@ import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
@@ -59,7 +57,6 @@ import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ThumbUtil;
 import com.mobnote.t1sp.util.ViewUtil;
-import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.wifibind.WifiRsBean;
@@ -70,8 +67,6 @@ import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
 import java.util.List;
 
-import cn.com.mobnote.eventbus.EventLocationFinish;
-import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -98,76 +93,50 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     // 抓拍按钮
     private Button mBtnCapture = null;
 
-    /**
-     * 设置按钮
-     */
-    private ImageView mSettingBtn = null;
-    /**
-     * 当前地址显示
-     */
-    private TextView mAddr = null;
-    /**
-     * 加载中布局
-     */
-    private LinearLayout mLoadingLayout = null;
-    /**
-     * 加载中动画显示控件
-     */
-    private ProgressBar mLoading = null;
+    /* 设置 */
+    private ImageView mSettingBtn;
+    /* 加载中布局 */
+    private LinearLayout mLoadingLayout;
+    private ProgressBar mLoadingProgressBar;
+    private TextView mLoadingText;
 
-    /**
-     * 最新两个精彩视频或抢拍视频
-     */
-    private ImageView image1 = null;
-    private ImageView image2 = null;
+    /* 本地最新两个相册 */
+    private ImageView mLocalAlbumOne, mLocalalbumTwo;
+    /* 远程相册 */
+    private TextView mRemoteAlbum;
 
-    /**
-     * 进入相册
-     **/
-    private TextView image3 = null;
-
-    /**
-     * 加载中显示文字
-     */
-    private TextView mLoadingText = null;
-    /**
-     * rtsp视频播放器
-     */
-    private RtspPlayerView mRtspPlayerView = null;
-    /**
-     * 重新连接IPC时间间隔
-     */
+    /* RTSP视频播放器 */
+    private RtspPlayerView mRtspPlayerView;
+    /* 重新连接IPC时间间隔 */
     private final int RECONNECTIONTIME = 5000;
 
-    private boolean isBackGroundStart = true;
-    /**
-     * 是否发起预览链接
-     */
-    private boolean isConnecting = false;
     private RelativeLayout mVLayout, mRtmpPlayerLayout;
     private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
     /**
      * 连接状态
      */
-    private TextView mConnectTip = null;
+    private TextView mConnectTip;
     /**
      * 视频分辨率显示
      */
-    private ImageView mVideoResolutions = null;
+    private ImageView mVideoResolutions;
 
-    private GolukApplication mApp = null;
     private boolean m_bIsFullScreen = false;
+    /* 全屏/旋转 */
     private ImageButton mFullScreen, mBtnRotate;
 
     private RelativeLayout mPalyerLayout, mLayoutVideo;
-    private boolean isShowPlayer = false;
     private View mNotconnected, mConncetLayout, mLayoutTitle, mLayoutState,
-            mLayoutAddress, mLayoutAlumb, mLayoutCapture, mLayoutOptions;
+            mLayoutAlumb, mLayoutCapture, mLayoutOptions;
     private ImageView new1, new2, mChangeBtn;
     private String SelfContextTag = "carrecordert1sp";
-    private String mLocationAddress = "";
     private AlertDialog mExitAlertDialog;
 
+    private GolukApplication mApp;
+    private boolean isShowPlayer;
+    private boolean isBackGroundStart = true;
+    /* 是否发起预览链接 */
+    private boolean isConnecting;
     private SettingInfo mSettingInfo;
     private Handler mHandlerCapture;
     private int mCaptureTime;
@@ -191,8 +160,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         T1SPConnecter.instance().mRecordActivity = this;
 
         mApp = (GolukApplication) getApplication();
-
-        mLocationAddress = GolukFileUtils.loadString("loactionAddress", "");
 
         mHandlerCapture = new Handler() {
             @Override
@@ -284,24 +251,24 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onGetLatestTwoVideos(List<String> videos) {
         if (videos == null || videos.isEmpty()) {
-            image1.setVisibility(View.GONE);
-            image2.setVisibility(View.GONE);
+            mLocalAlbumOne.setVisibility(View.GONE);
+            mLocalalbumTwo.setVisibility(View.GONE);
             return;
         }
 
         mLatestTwoVideos = videos;
-        image1.setVisibility(View.GONE);
-        image2.setVisibility(View.GONE);
+        mLocalAlbumOne.setVisibility(View.GONE);
+        mLocalalbumTwo.setVisibility(View.GONE);
         final String imagePath1 = videos.get(videos.size() == 2 ? 1 : 0);
         final String imagePath2 = videos.size() == 2 ? videos.get(0) : "";
         if (!TextUtils.isEmpty(imagePath1)) {
-            image1.setVisibility(View.VISIBLE);
-            image1.setImageBitmap(ThumbUtil.getLocalVideoThumb(imagePath1));
+            mLocalAlbumOne.setVisibility(View.VISIBLE);
+            mLocalAlbumOne.setImageBitmap(ThumbUtil.getLocalVideoThumb(imagePath1));
             new1.setVisibility(isNewByName(imagePath1) ? View.VISIBLE : View.GONE);
         }
         if (!TextUtils.isEmpty(imagePath2)) {
-            image2.setVisibility(View.VISIBLE);
-            image2.setImageBitmap(ThumbUtil.getLocalVideoThumb(imagePath2));
+            mLocalalbumTwo.setVisibility(View.VISIBLE);
+            mLocalalbumTwo.setImageBitmap(ThumbUtil.getLocalVideoThumb(imagePath2));
             new2.setVisibility(isNewByName(imagePath2) ? View.VISIBLE : View.GONE);
         }
 
@@ -391,20 +358,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
         mBtnCapture = (Button) findViewById(R.id.btn_capture);
         mSettingBtn = (ImageView) findViewById(R.id.mSettingBtn);
-        mAddr = (TextView) findViewById(R.id.mAddr);
-        if (GolukApplication.getInstance().isMainland()) {
-            //mAddr.setVisibility(View.VISIBLE);
-        } else {
-            mAddr.setVisibility(View.GONE);
-        }
         mConnectTip = (TextView) findViewById(R.id.mConnectTip);
         mLoadingLayout = (LinearLayout) findViewById(R.id.mLoadingLayout);
-        mLoading = (ProgressBar) findViewById(R.id.mLoading);
+        mLoadingProgressBar = (ProgressBar) findViewById(R.id.mLoading);
         mLoadingText = (TextView) findViewById(R.id.mLoadingText);
         mRtspPlayerView = (RtspPlayerView) findViewById(R.id.mRtmpPlayerView);
-        image1 = (ImageView) findViewById(R.id.image1);
-        image2 = (ImageView) findViewById(R.id.image2);
-        image3 = (TextView) findViewById(R.id.image3);
+        mLocalAlbumOne = (ImageView) findViewById(R.id.image1);
+        mLocalalbumTwo = (ImageView) findViewById(R.id.image2);
+        mRemoteAlbum = (TextView) findViewById(R.id.image3);
         mChangeBtn = (ImageView) findViewById(R.id.changeBtn);
 
         new1 = (ImageView) findViewById(R.id.new1);
@@ -428,16 +389,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             mBtnCapture.setBackgroundResource(R.drawable.driving_car_living_defalut_icon);
         }
 
-        if ("".equals(mLocationAddress)) {
-            mAddr.setText(this.getResources().getString(R.string.str_localization_ongoing));
-        } else {
-            mAddr.setText(mLocationAddress);
-        }
-
         mLayoutVideo = (RelativeLayout) findViewById(R.id.ipclive);
         mLayoutTitle = findViewById(R.id.title_layout);
         mLayoutState = findViewById(R.id.rl_carrecorder_connection_state);
-        mLayoutAddress = findViewById(R.id.layout_address);
         mLayoutAlumb = findViewById(R.id.jcqp_info);
         mLayoutCapture = findViewById(R.id.layout_capture);
         mLayoutOptions = findViewById(R.id.layout_full_screen_options);
@@ -456,9 +410,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mBtnRotate.setOnClickListener(this);
         mBtnCapture.setOnClickListener(this);
         mNotconnected.setOnClickListener(this);
-        image1.setOnClickListener(this);
-        image2.setOnClickListener(this);
-        image3.setOnClickListener(this);
+        mLocalAlbumOne.setOnClickListener(this);
+        mLocalalbumTwo.setOnClickListener(this);
+        mRemoteAlbum.setOnClickListener(this);
         mRtspPlayerView.setOnClickListener(this);
         mConncetLayout.setOnClickListener(this);
         mChangeBtn.setOnClickListener(this);
@@ -604,23 +558,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         return currentIpcInfo.ipc_ssid;
     }
 
-    public void onEventMainThread(EventUpdateAddr event) {
-        if (null == event) {
-            return;
-        }
-
-        switch (event.getOpCode()) {
-            case EventConfig.CAR_RECORDER_UPDATE_ADDR:
-                String addr = event.getMsg();
-                if (!TextUtils.isEmpty(addr)) {
-                    mAddr.setText(addr);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
     @Override
     public void onClick(View view) {
         int id = view.getId();
@@ -729,7 +666,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             return;
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
-        mLoading.setVisibility(View.VISIBLE);
+        mLoadingProgressBar.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -856,9 +793,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 hidePlayer();
             }
         }
-        // 移除定位通知及反编码通知
-        mApp.removeLocationListener(SelfContextTag);
-        GetBaiduAddress.getInstance().setCallBackListener(null);
     }
 
     @Override
@@ -917,7 +851,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             mConncetLayout.setVisibility(View.GONE);
             mLayoutTitle.setVisibility(View.GONE);
             mLayoutState.setVisibility(View.GONE);
-            mLayoutAddress.setVisibility(View.GONE);
             mLayoutAlumb.setVisibility(View.GONE);
             mLayoutCapture.setVisibility(View.GONE);
             mVLayout.setVisibility(View.GONE);
@@ -937,7 +870,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             //mConncetLayout.setVisibility(View.VISIBLE);
             mLayoutTitle.setVisibility(View.VISIBLE);
             mLayoutState.setVisibility(View.VISIBLE);
-            //mLayoutAddress.setVisibility(View.VISIBLE);
             mLayoutAlumb.setVisibility(View.VISIBLE);
             mLayoutCapture.setVisibility(View.VISIBLE);
             mLayoutOptions.setVisibility(View.GONE);
@@ -1018,35 +950,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 }
             }
         }
-    }
-
-    public void onEventMainThread(EventShortLocationFinish eventShortLocationFinish) {
-        if (null == eventShortLocationFinish) {
-            return;
-        }
-    }
-
-    public void onEventMainThread(EventLocationFinish event) {
-        if (null == event) {
-            return;
-        }
-
-        if (event.getCityCode().equals("-1") && TextUtils.isEmpty(event.getAddress())) {// 定位失败
-            if (mLocationAddress.equals("")) {
-                mAddr.setText(this.getResources().getString(R.string.str_unknow_street));
-            } else {
-                mAddr.setText(mLocationAddress);
-            }
-        } else {// 定位成功
-            if (event.getAddress() != null && !"".equals(event.getAddress())) {
-                mLocationAddress = event.getAddress();
-                //mLocationLat = event.getLat();
-                //mLocationLon = event.getLon();
-                GolukFileUtils.saveString("loactionAddress", mLocationAddress);
-                mAddr.setText(mLocationAddress);
-            }
-        }
-
     }
 
     /**

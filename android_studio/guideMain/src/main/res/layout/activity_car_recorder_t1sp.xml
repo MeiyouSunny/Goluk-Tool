@@ -260,45 +260,11 @@
 
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ipclive"
-        android:orientation="horizontal"
-        android:visibility="gone">
-
-        <ImageView
-            android:id="@+id/position"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            android:background="@drawable/carrecorder_icon_position"
-            android:contentDescription="@string/def"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/mAddr"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="4dp"
-            android:layout_toRightOf="@+id/position"
-            android:text="@string/str_localization_ongoing_default"
-            android:textColor="@color/carrecorder_text_nor_color"
-            android:textSize="12sp"
-            android:visibility="gone"/>
-
-    </LinearLayout>
-
     <RelativeLayout
         android:id="@+id/jcqp_info"
         android:layout_width="match_parent"
         android:layout_height="115dp"
-        android:layout_below="@+id/layout_address"
+        android:layout_below="@+id/ipclive"
         android:background="#17191a">
 
         <RelativeLayout
