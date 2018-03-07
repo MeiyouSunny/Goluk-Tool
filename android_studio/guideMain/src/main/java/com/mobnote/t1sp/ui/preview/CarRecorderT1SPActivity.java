@@ -215,7 +215,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 获取设备信息
         getPresenter().getVideoSettingInfo(true);
         // 自动同步时间
-        //syncSystemTime();
+        syncSystemTime();
     }
 
     private void syncSystemTime() {
@@ -1078,6 +1078,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onEventMainThread(RestoreFactoryEvent event) {
         // 获取设备信息
         getPresenter().getVideoSettingInfo(true);
+        // 同步时间
+        syncSystemTime();
     }
 
     /**
