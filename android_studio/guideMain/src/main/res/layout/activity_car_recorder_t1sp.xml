@@ -40,6 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_layout"
+        android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp">
 
         <LinearLayout
@@ -99,8 +100,7 @@
         android:id="@+id/ipclive"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_carrecorder_connection_state"
-        android:layout_marginTop="10dp">
+        android:layout_below="@id/rl_carrecorder_connection_state">
 
         <RelativeLayout
             android:id="@+id/mRtmpPlayerLayout"
@@ -116,33 +116,31 @@
                     android:id="@+id/mRtmpPlayerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"/>
-            </RelativeLayout>
 
-            <LinearLayout
-                android:id="@+id/mLoadingLayout"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <ProgressBar
-                    android:id="@+id/mLoading"
+                <ImageButton
+                    android:id="@+id/ic_rotate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true"/>
+                    android:layout_above="@+id/mFullScreen"
+                    android:layout_alignRight="@+id/mFullScreen"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/ic_rotate"
+                    android:contentDescription="@string/def"
+                    android:visibility="visible"/>
 
-                <TextView
-                    android:id="@+id/mLoadingText"
-                    android:layout_width="fill_parent"
+                <ImageButton
+                    android:id="@+id/mFullScreen"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:paddingTop="20dp"
-                    android:textColor="#ffffff"
-                    android:textSize="12sp"/>
-            </LinearLayout>
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="6dp"
+                    android:background="@drawable/carrecorder_btn_full_press"
+                    android:contentDescription="@string/def"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/mPalyerLayout"
@@ -199,62 +197,108 @@
 
         </RelativeLayout>
 
-        <ImageButton
-            android:id="@+id/ic_rotate"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/mLoadingLayout"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/mFullScreen"
-            android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginBottom="6dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/ic_rotate"
-            android:contentDescription="@string/def"
-            android:visibility="gone"/>
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
 
-        <ImageButton
-            android:id="@+id/mFullScreen"
+            <ProgressBar
+                android:id="@+id/mLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"/>
+
+            <TextView
+                android:id="@+id/mLoadingText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="#ffffff"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_full_screen_options"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/mRtmpPlayerLayout"
-            android:layout_alignRight="@+id/mRtmpPlayerLayout"
-            android:layout_marginBottom="6dp"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/carrecorder_btn_full_press"
-            android:contentDescription="@string/def"
-            android:visibility="gone"/>
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/ic_rotate_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/mFullScreen"
+                android:layout_alignRight="@+id/mRtmpPlayerLayout"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/ic_rotate"
+                android:contentDescription="@string/def"
+                android:visibility="visible"/>
+
+            <ImageButton
+                android:id="@+id/ic_exit_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/mRtmpPlayerLayout"
+                android:layout_alignRight="@+id/mRtmpPlayerLayout"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/btn_player_normal"
+                android:contentDescription="@string/def"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
     </RelativeLayout>
 
-    <ImageView
-        android:id="@+id/position"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/layout_address"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/ipclive"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/carrecorder_icon_position"
-        android:contentDescription="@string/def"
-        android:visibility="gone"/>
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <TextView
-        android:id="@+id/mAddr"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/ipclive"
-        android:layout_marginBottom="6dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="4dp"
-        android:layout_toRightOf="@+id/position"
-        android:text="@string/str_localization_ongoing_default"
-        android:textColor="@color/carrecorder_text_nor_color"
-        android:textSize="12sp"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/position"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/carrecorder_icon_position"
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/mAddr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="4dp"
+            android:layout_toRightOf="@+id/position"
+            android:text="@string/str_localization_ongoing_default"
+            android:textColor="@color/carrecorder_text_nor_color"
+            android:textSize="12sp"
+            android:visibility="gone"/>
+
+    </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/jcqp_info"
         android:layout_width="match_parent"
         android:layout_height="115dp"
-        android:layout_below="@+id/mAddr"
+        android:layout_below="@+id/layout_address"
         android:background="#17191a">
 
         <RelativeLayout
@@ -340,33 +384,8 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/jcqp_info"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="6dp"
-        android:visibility="gone">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginRight="6dp"
-            android:background="@drawable/carrecorder_icon_record"
-            android:contentDescription="@string/def"/>
-
-        <TextView
-            android:id="@+id/mTime"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="6dp"
-            android:textColor="@color/carrecorder_text_nor_color"
-            android:textSize="12sp"/>
-    </LinearLayout>
-
     <RelativeLayout
+        android:id="@+id/layout_capture"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/jcqp_info">
@@ -383,12 +402,5 @@
             android:textStyle="bold"/>
 
     </RelativeLayout>
-
-    <ViewStub
-        android:id="@+id/stub_change"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_carrecorder_connection_state"
-        android:layout="@layout/vid_change_ipc_hud"/>
 
 </RelativeLayout>

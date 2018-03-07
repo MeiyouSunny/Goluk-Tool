@@ -144,10 +144,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * 是否发起预览链接
      */
     private boolean isConnecting = false;
-    private RelativeLayout mVLayout = null;
-    private RelativeLayout mRtmpPlayerLayout = null;
+    private RelativeLayout mVLayout, mRtmpPlayerLayout;
     private int screenWidth = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
-    private float density = SoundUtils.getInstance().getDisplayMetrics().density;
     /**
      * 连接状态
      */
@@ -159,15 +157,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     private GolukApplication mApp = null;
     private boolean m_bIsFullScreen = false;
-    private ViewGroup m_vgNormalParent;
     private ImageButton mFullScreen, mBtnRotate;
-    private RelativeLayout mPlayerLayout = null;
-    private Button mNormalScreen = null;
-    private final int BTN_NORMALSCREEN = 231;
 
-    private RelativeLayout mPalyerLayout = null;
+    private RelativeLayout mPalyerLayout, mLayoutVideo;
     private boolean isShowPlayer = false;
-    private View mNotconnected, mConncetLayout;
+    private View mNotconnected, mConncetLayout, mLayoutTitle, mLayoutState,
+            mLayoutAddress, mLayoutAlumb, mLayoutCapture, mLayoutOptions;
     private ImageView new1, new2, mChangeBtn;
     private String SelfContextTag = "carrecordert1sp";
     private String mLocationAddress = "";
@@ -196,12 +191,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         T1SPConnecter.instance().mRecordActivity = this;
 
         mApp = (GolukApplication) getApplication();
-
-        mPlayerLayout = new RelativeLayout(this);
-        mNormalScreen = new Button(this);
-        mNormalScreen.setId(BTN_NORMALSCREEN);
-        mNormalScreen.setBackgroundResource(R.drawable.btn_player_normal);
-        mNormalScreen.setOnClickListener(this);
 
         mLocationAddress = GolukFileUtils.loadString("loactionAddress", "");
 
@@ -445,6 +434,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             mAddr.setText(mLocationAddress);
         }
 
+        mLayoutVideo = (RelativeLayout) findViewById(R.id.ipclive);
+        mLayoutTitle = findViewById(R.id.title_layout);
+        mLayoutState = findViewById(R.id.rl_carrecorder_connection_state);
+        mLayoutAddress = findViewById(R.id.layout_address);
+        mLayoutAlumb = findViewById(R.id.jcqp_info);
+        mLayoutCapture = findViewById(R.id.layout_capture);
+        mLayoutOptions = findViewById(R.id.layout_full_screen_options);
     }
 
     /**
@@ -469,6 +465,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         findViewById(R.id.back_btn).setOnClickListener(this);
         findViewById(R.id.mSettingBtn).setOnClickListener(this);
+        findViewById(R.id.ic_rotate_full_screen).setOnClickListener(this);
+        findViewById(R.id.ic_exit_full_screen).setOnClickListener(this);
         mRtspPlayerView.setPlayerListener(new RtspPlayerLisener() {
 
             @Override
@@ -645,9 +643,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
-        } else if (id == R.id.ic_rotate) {
+        } else if (id == R.id.ic_rotate || id == R.id.ic_rotate_full_screen) {
             rotatePreviewVideo();
-        } else if (id == BTN_NORMALSCREEN) {
+        } else if (id == R.id.ic_exit_full_screen) {
             setFullScreen(false);
         } else if (id == R.id.mPlayBtn) {
             if (!isShowPlayer) {
@@ -727,6 +725,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     public void showLoading() {
+        if (!NetUtil.isWifiConnected(this))
+            return;
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
         mLoading.setVisibility(View.VISIBLE);
@@ -891,6 +891,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         super.onDestroy();
         T1SPConnecter.instance().removeListener(this);
         T1SPConnecter.instance().needDisconnectWIFI(true);
+
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     /**
@@ -908,33 +910,46 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             if (!mRtspPlayerView.isPlaying()) {
                 return;
             }
-            m_vgNormalParent = (ViewGroup) mRtspPlayerView.getParent();
-            if (null == m_vgNormalParent) {
-                return;
-            }
-            ViewGroup vgRoot = (ViewGroup) mRtspPlayerView.getRootView(); // 获取根布局
-            m_vgNormalParent.removeView(mRtspPlayerView);
-            mPlayerLayout.addView(mRtspPlayerView);
-            RelativeLayout.LayoutParams norParams = new RelativeLayout.LayoutParams((int) (38.66 * density),
-                    (int) (30 * density));
-            norParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-            norParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-            norParams.setMargins(0, 0, (int) (10 * density), (int) (10 * density));
-            mPlayerLayout.addView(mNormalScreen, norParams);
-            vgRoot.addView(mPlayerLayout);
 
-            getWindow()
-                    .setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        } else if (m_vgNormalParent != null) {
-            ViewGroup vgRoot = (ViewGroup) mRtspPlayerView.getRootView();
-            vgRoot.removeView(mPlayerLayout);
-            mPlayerLayout.removeView(mRtspPlayerView);
-            mPlayerLayout.removeView(mNormalScreen);
-            m_vgNormalParent.addView(mRtspPlayerView);
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
 
+            mConncetLayout.setVisibility(View.GONE);
+            mLayoutTitle.setVisibility(View.GONE);
+            mLayoutState.setVisibility(View.GONE);
+            mLayoutAddress.setVisibility(View.GONE);
+            mLayoutAlumb.setVisibility(View.GONE);
+            mLayoutCapture.setVisibility(View.GONE);
+            mVLayout.setVisibility(View.GONE);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLayoutVideo.getLayoutParams();
+            layoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            layoutParams.height = RelativeLayout.LayoutParams.MATCH_PARENT;
+            mLayoutVideo.setLayoutParams(layoutParams);
+            ((ViewGroup) mRtspPlayerView.getParent()).removeView(mRtspPlayerView);
+            mLayoutVideo.addView(mRtspPlayerView, 0);
+            mLayoutOptions.setVisibility(View.VISIBLE);
+
+        } else {
             getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+            //mConncetLayout.setVisibility(View.VISIBLE);
+            mLayoutTitle.setVisibility(View.VISIBLE);
+            mLayoutState.setVisibility(View.VISIBLE);
+            //mLayoutAddress.setVisibility(View.VISIBLE);
+            mLayoutAlumb.setVisibility(View.VISIBLE);
+            mLayoutCapture.setVisibility(View.VISIBLE);
+            mLayoutOptions.setVisibility(View.GONE);
+            mVLayout.setVisibility(View.VISIBLE);
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mLayoutVideo.getLayoutParams();
+            layoutParams.width = RelativeLayout.LayoutParams.MATCH_PARENT;
+            layoutParams.height = RelativeLayout.LayoutParams.WRAP_CONTENT;
+            mLayoutVideo.setLayoutParams(layoutParams);
+
+            mLayoutVideo.removeView(mRtspPlayerView);
+            mVLayout.addView(mRtspPlayerView, 0);
         }
         m_bIsFullScreen = bFull;
     }
