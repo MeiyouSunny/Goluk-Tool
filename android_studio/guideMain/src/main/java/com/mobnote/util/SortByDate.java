@@ -2,29 +2,27 @@ package com.mobnote.util;
 
 import android.text.TextUtils;
 
-import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.t1sp.util.FileUtil;
 
 import java.util.Comparator;
 
 public class SortByDate implements Comparator<String> {
-	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
+//	GolukVideoInfoDbManager mGolukVideoInfoDbManager = GolukVideoInfoDbManager.getInstance();
 	@Override
 	public int compare(String s1, String s2) {
 		// TODO Auto-generated method stub
 		String date1 = "";
 		String date2 = "";
-		if (mGolukVideoInfoDbManager != null) {
-			VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s1);
-			if (videoFileInfoBean != null) {
-				date1 = videoFileInfoBean.timestamp;
-			}
-			videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s2);
-			if (videoFileInfoBean != null) {
-				date2 = videoFileInfoBean.timestamp;
-			}
-		}
+//		if (mGolukVideoInfoDbManager != null) {
+//			VideoFileInfoBean videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s1);
+//			if (videoFileInfoBean != null) {
+//				date1 = videoFileInfoBean.timestamp;
+//			}
+//			videoFileInfoBean = mGolukVideoInfoDbManager.selectSingleData(s2);
+//			if (videoFileInfoBean != null) {
+//				date2 = videoFileInfoBean.timestamp;
+//			}
+//		}
 
 		if (TextUtils.isEmpty(date1)) {
 			date1 = getDateFromName(s1);
