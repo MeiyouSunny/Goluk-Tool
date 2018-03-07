@@ -64,9 +64,9 @@ public class ThumbDownloader implements Runnable {
                 if (thumbCacheFile.exists())
                     continue;
 
-                if (mIsWonderfulVideo)
-                    getThumbFromVideo(url, thumbCacheFile);
-                else
+//                if (mIsWonderfulVideo)
+//                    getThumbFromVideo(url, thumbCacheFile);
+//                else
                     getThumbFromThumbFile(url, thumbCacheFile);
 
             } catch (Exception e) {
