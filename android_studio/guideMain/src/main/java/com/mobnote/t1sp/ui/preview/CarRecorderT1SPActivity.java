@@ -1125,7 +1125,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onGetDeviceModeInfo(DeviceMode deviceMode) {
         if (deviceMode != null) {
             GolukDebugUtils.e(Const.LOG_TAG, "DeviceMode:" + deviceMode.mode + " - " + deviceMode.recordState);
-            if (deviceMode.needOpenLoopVideo()) {
+            if (deviceMode.isInPlaybackMode()) {
+                // 如果是处于文件模式,必须先退出文件模式
+                mCurrentMode = MODE_PLAYBACK;
+                exitOtherMode();
+            } else if (deviceMode.needOpenLoopVideo()) {
                 GolukDebugUtils.e(Const.LOG_TAG, "Need open loop video mode");
                 mUiHandler.postDelayed(new Runnable() {
                     @Override
@@ -1173,7 +1177,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 if (mConnectedIpc)
                     getPresenter().getDeviceMode();
             }
-        }, 3000);
+        }, 1000);
     }
 
     @Override
