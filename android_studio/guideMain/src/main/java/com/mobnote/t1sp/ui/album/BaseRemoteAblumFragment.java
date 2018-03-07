@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.greenrobot.event.EventBus;
+import likly.dollar.$;
 
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
@@ -592,6 +593,14 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             return;
         }
 
+        // 如果要删除正在下载的视频,给出提示,取消删除操作
+        boolean isAllowDelete = isAllowedDelete(selectedList);
+        if (!isAllowDelete) {
+            $.toast().text(R.string.str_photo_downing).show();
+            getFragmentAlbum().resetTopBar();
+            return;
+        }
+
         // 删除文件
         // http://192.72.1.1/SD/Share/F/SHARE171113-151216F.MP4 --> /SD/Share/F/SHARE171113-151216F.MP4
         String filelPath = selectedList.get(0);
@@ -628,6 +637,18 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             closeLoading();
         }
     };
+
+    private boolean isAllowedDelete(List<String> deleteList) {
+        List<Task> tasks = DownloaderT1spImpl.getInstance().getDownloadList();
+        if (!CollectionUtils.isEmpty(tasks)) {
+            for (Task downloadTask : tasks) {
+                if (deleteList.contains(downloadTask.downloadPath))
+                    return false;
+            }
+        }
+
+        return true;
+    }
 
     /**
      * 根据视频文件从列表中移除对应的数据

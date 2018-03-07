@@ -13,6 +13,8 @@ public interface DownloaderT1sp {
 
     boolean isDownloading();
 
+    List<Task> getDownloadList();
+
     void destory();
 
     public interface IDownloadSuccess {

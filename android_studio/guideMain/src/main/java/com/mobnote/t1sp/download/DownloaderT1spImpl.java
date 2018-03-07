@@ -76,6 +76,11 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     }
 
     @Override
+    public List<Task> getDownloadList() {
+        return mListTotal;
+    }
+
+    @Override
     public void addDownloadTasks(List<Task> tasks, IDownloadSuccess listener) {
         if (CollectionUtils.isEmpty(tasks))
             return;
