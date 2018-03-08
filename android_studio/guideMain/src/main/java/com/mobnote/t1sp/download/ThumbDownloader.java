@@ -15,7 +15,9 @@ import com.mobnote.t1sp.util.ThumbUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -23,16 +25,20 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThumbDownloader implements Runnable {
 
+    /* 重试次数 */
+    private final static int MAX_RETRY_COUNT = 3;
     private Context mContext;
     private List<String> mUrls;
     private boolean isRunning;
     private ThumbDownloadListener mListener;
     private boolean mIsWonderfulVideo;
+    private Map<String, Integer> mRetryMap;
 
     public ThumbDownloader(Context context, boolean isWonderfulVideo) {
         mContext = context;
         mIsWonderfulVideo = isWonderfulVideo;
         mUrls = new ArrayList<>();
+        mRetryMap = new HashMap<>();
     }
 
     public void addUrls(List<String> urls) {
@@ -61,13 +67,13 @@ public class ThumbDownloader implements Runnable {
                 return;
             try {
                 File thumbCacheFile = getThumbCacheFileByUrl(url);
-                if (thumbCacheFile.exists())
+                if (thumbCacheFile.exists() && thumbCacheFile.length() > 0)
                     continue;
 
 //                if (mIsWonderfulVideo)
 //                    getThumbFromVideo(url, thumbCacheFile);
 //                else
-                    getThumbFromThumbFile(url, thumbCacheFile);
+                getThumbFromThumbFile(url, thumbCacheFile);
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -109,13 +115,32 @@ public class ThumbDownloader implements Runnable {
                 .downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
                 .get(10, TimeUnit.SECONDS);
 
-        if (result != null) {
+        if (result != null && result.length() > 0) {
             FileUtil.copyFile(result, thumbCacheFile);
             if (mListener != null) {
                 Message msg = Message.obtain(mUihandler, 0, url);
                 msg.sendToTarget();
             }
+        } else {
+            // 获取失败,重试
+            int retryCount = getRetryCountByUrl(url);
+            if (retryCount > MAX_RETRY_COUNT)
+                return;
+
+            retryCount++;
+            mRetryMap.put(url, retryCount);
+            getThumbFromThumbFile(url, thumbCacheFile);
         }
+    }
+
+    /**
+     * 根据URL获取对应缩略图已经重试的次数
+     */
+    private int getRetryCountByUrl(String url) {
+        if (mRetryMap == null || mRetryMap.isEmpty() || !mRetryMap.containsKey(url))
+            return 0;
+
+        return mRetryMap.get(url);
     }
 
     private File getThumbCacheFileByUrl(String thumbUrl) {
