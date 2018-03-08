@@ -170,6 +170,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
     private TextView mTvTotalMails, mTvTotalTime, mTvAverageSpeed;
     private LinearLayout mLayoutGpsInfo;
     private RelativeLayout mLayoutTitle, mLayoutMap;
+    private TextView mTvNoGpsHint;
     // 轨迹数据
     private List<GPSData> mGpsList;
 
@@ -262,6 +263,12 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
     @Override
     public void getGpsData(List<GPSData> list) {
+        if (CollectionUtils.isEmpty(list)) {
+            mTvNoGpsHint.setVisibility(View.VISIBLE);
+            mTvTotalMails.setText("0");
+            mTvAverageSpeed.setText("0");
+            return;
+        }
         mGpsList = list;
         mMapTrackView.drawTrackLine(list);
 
@@ -525,6 +532,7 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         mLayoutGpsInfo = (LinearLayout) findViewById(R.id.layout_gps_info);
         mLayoutMap = (RelativeLayout) findViewById(R.id.video_map_container);
         mBtnPlay.setOnClickListener(this);
+        mTvNoGpsHint = (TextView) findViewById(R.id.tv_no_gps_hint);
     }
 
     private boolean videoEditSupport() {
@@ -809,7 +817,9 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
      * 更新平均速度
      */
     private void updateAvgSpeed() {
-        mTvAverageSpeed.setText(GpsUtil.avgSpeed(mGpsList, mDuration) + "");
+        if (!CollectionUtils.isEmpty(mGpsList)) {
+            mTvAverageSpeed.setText(GpsUtil.avgSpeed(mGpsList, mDuration) + "");
+        }
     }
 
     private boolean isShow = false;
