@@ -71,6 +71,9 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.t1sp.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.download.Task;
+import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -787,13 +790,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     }
 
     private boolean isAllowedDelete(String path) {
-        List<String> dlist = GolukApplication.getInstance().getDownLoadList();
-        if (dlist.contains(path)) {
-            return false;
-        } else {
-            return true;
+        List<Task> tasks = DownloaderT1spImpl.getInstance().getDownloadList();
+        if (!CollectionUtils.isEmpty(tasks)) {
+            for (Task downloadTask : tasks) {
+                if (TextUtils.equals(path, downloadTask.downloadPath))
+                    return false;
+            }
         }
 
+        return true;
     }
 
     private void showConfimDeleteDialog(final String path) {
