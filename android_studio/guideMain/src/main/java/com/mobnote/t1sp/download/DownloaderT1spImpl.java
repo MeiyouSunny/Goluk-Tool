@@ -20,7 +20,9 @@ import com.mobnote.t1sp.util.FileUtil;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 
@@ -41,6 +43,9 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     private boolean isRunning;
     // 当前正在下载的本地文件
     private File mCurrentFile;
+    // 当前进行的Task
+    private Task mCurrentTask;
+    private Map<Task, Integer> mRetryMap;
 
     private SoundPool mSoundPool;
     private int mSoundId;
@@ -94,7 +99,7 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         if (!isRunning) {
             isRunning = true;
             updateUiDownloadCount();
-            startNextTask();
+            startTask(getNextTask());
         }
     }
 
@@ -125,8 +130,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     /**
      * 取出下一个任务并开始下载
      */
-    private void startNextTask() {
-        Task task = mListTotal.get(mListDownloaded.size());
+    private void startTask(Task task) {
+        mCurrentTask = task;
         mCurrentFile = new File(task.savePath);
 
         // 下载对应的GPS文件
@@ -139,6 +144,15 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             // 新建下载任务
             download(task.downloadPath, task.savePath, mDownloadListener);
         }
+    }
+
+    /**
+     * 获取下一个Task
+     */
+    private Task getNextTask() {
+        if (mListTotal.size() > mListDownloaded.size())
+            return mListTotal.get(mListDownloaded.size());
+        return null;
     }
 
     private void downloadGpsFile(Task task) {
@@ -164,6 +178,9 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         protected void progress(BaseDownloadTask task, int soFarBytes, int totalBytes) {
             int percent = Math.round((float) soFarBytes / (float) totalBytes * 100);
             Message.obtain(mUihandler, MSG_TYPE_UPDATE_PROGRESS, percent).sendToTarget();
+            // 如果10s没有进度更新,则重新开始下载
+            mUihandler.removeMessages(MSG_TYPE_TASK_TIMEOUT);
+            mUihandler.sendEmptyMessageDelayed(MSG_TYPE_TASK_TIMEOUT, TASK_TIMEOUT);
         }
 
         @Override
@@ -218,6 +235,8 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             //mSoundPool.release();
             //mSoundPool = null;
         }
+        if (mRetryMap != null && !mRetryMap.isEmpty())
+            mRetryMap.clear();
 
         mInstance = null;
     }
@@ -239,7 +258,7 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
             destory();
         } else {
             // 开始下一个任务
-            startNextTask();
+            startTask(getNextTask());
             updateUiDownloadCount();
         }
     }
@@ -310,9 +329,41 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
         }
     }
 
+    private void dealTaskTimeout() {
+        if (mCurrentTask != null) {
+            int retryCount = getCurrentRetryCount();
+            if (retryCount >= MAX_RETRY_COUNT) {
+                startTask(getNextTask());
+            } else {
+                startTask(mCurrentTask);
+                addRetryCount();
+            }
+        } else {
+            startTask(getNextTask());
+        }
+    }
+
+    private int getCurrentRetryCount() {
+        if (mRetryMap == null || !mRetryMap.containsKey(mCurrentTask))
+            return 0;
+
+        return mRetryMap.get(mCurrentTask);
+    }
+
+    private void addRetryCount() {
+        if (mRetryMap == null)
+            mRetryMap = new HashMap<>();
+        int count = mRetryMap.get(mCurrentTask);
+        count++;
+        mRetryMap.put(mCurrentTask, count);
+    }
+
     private static final int MSG_TYPE_START = 1;
     private static final int MSG_TYPE_UPDATE_PROGRESS = 2;
     private static final int MSG_TYPE_SINGLE_COMPLETE = 3;
+    private static final int MSG_TYPE_TASK_TIMEOUT = 4;
+    private static final int TASK_TIMEOUT = 10 * 1000;
+    private static final int MAX_RETRY_COUNT = 2;
     private Handler mUihandler = new Handler(Looper.getMainLooper()) {
         @Override
         public void handleMessage(Message msg) {
@@ -327,6 +378,9 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
                     break;
                 case MSG_TYPE_SINGLE_COMPLETE:
                     checkDownloadListProgress();
+                    break;
+                case MSG_TYPE_TASK_TIMEOUT:
+                    dealTaskTimeout();
                     break;
             }
         }
