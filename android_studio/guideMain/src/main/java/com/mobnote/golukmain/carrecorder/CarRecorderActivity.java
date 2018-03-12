@@ -709,7 +709,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
         mRtspPlayerView.setAudioMute(true);
         mRtspPlayerView.setZOrderMediaOverlay(true);
-        mRtspPlayerView.setBufferTime(1000);
+        mRtspPlayerView.setBufferTime(0);
         mRtspPlayerView.setConnectionTimeout(30000);
         mRtspPlayerView.setVisibility(View.VISIBLE);
         mConncetLayout = findViewById(R.id.mConncetLayout);

@@ -371,9 +371,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         new1 = (ImageView) findViewById(R.id.new1);
         new2 = (ImageView) findViewById(R.id.new2);
 
+        mRtspPlayerView.setEnableHWCodec(true);
         mRtspPlayerView.setAudioMute(true);
         mRtspPlayerView.setZOrderMediaOverlay(true);
-        mRtspPlayerView.setBufferTime(1000);
+        mRtspPlayerView.setBufferTime(500);
         mRtspPlayerView.setConnectionTimeout(30000);
         mRtspPlayerView.setVisibility(View.VISIBLE);
         mConncetLayout = findViewById(R.id.mConncetLayout);
