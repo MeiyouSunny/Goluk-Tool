@@ -32,6 +32,8 @@ import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.util.JsonUtil;
 
@@ -289,6 +291,13 @@ public class WifiConnectManagerSupport {
     public WifiRsBean getConnResult(String title) {
         String regEx = "^" + title;
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "before getConnectionInfo"));
+
+        // 先判断当前WIFI是否已经连接上
+        boolean isWifiConnected = NetUtil.isWIFIConnected(GolukApplication.getInstance().getApplicationContext());
+        if (!isWifiConnected) {
+            return null;
+        }
+
         WifiInfo info = wifiManager.getConnectionInfo();
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;

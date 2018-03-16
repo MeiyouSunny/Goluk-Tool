@@ -230,5 +230,18 @@ public class NetUtil {
         return false;
     }
 
+    /**
+     * 判断WIFI是否已连接上
+     */
+    public static boolean isWIFIConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null
+                && networkInfo.getType() == ConnectivityManager.TYPE_WIFI
+                && networkInfo.isAvailable()
+                && networkInfo.isConnected();
+    }
+
 
 }
