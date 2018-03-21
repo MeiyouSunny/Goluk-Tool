@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
@@ -389,6 +390,9 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_share_video_state), state);
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_upload_sharevideo_event), json);
+
+            // XLog
+            XLog.tag("ShareVideo").i(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -429,6 +433,9 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_live_voice), getLiveVoice(context, voice));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_start_live_event), json);
+
+            // XLog
+            XLog.i(json);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -448,6 +455,9 @@ public class ZhugeUtils {
             json.put(context.getString(R.string.str_zhuge_close_live_time), getCloseLiveTime(context, time));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_close_live_event), json);
+
+            // XLog
+            XLog.i(json);
         } catch (Exception e) {
             e.printStackTrace();
         }

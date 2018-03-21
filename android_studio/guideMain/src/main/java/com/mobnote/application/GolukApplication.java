@@ -423,9 +423,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         LogConfiguration config = new LogConfiguration.Builder()
                 .logLevel(LogLevel.ALL)            // Specify log level, logs below this level won't be printed, default: LogLevel.ALL
                 .tag("goluk")                                         // Specify TAG, default: "X-LOG"
-                .nt()                                                   // Enable thread info, disabled by default
-                .st(1)                                                 // Enable stack trace info with depth 2, disabled by default
-                .b()                                                   // Enable border, disabled by default
+                .nt()                                                  // Enable thread info, disabled by default
+                //.st(1)                                                 // Enable stack trace info with depth 2, disabled by default
+                //.b()                                                   // Enable border, disabled by default
                 .build();
 
         Printer androidPrinter = new AndroidPrinter();             // Printer that print the log using android.util.Log
@@ -439,7 +439,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         XLog.init(                                                 // Initialize XLog
                 config,                                                // Specify the log configuration, if not specified, will use new LogConfiguration.Builder().build()
                 androidPrinter,                                        // Specify printers, if no printer is specified, AndroidPrinter(for Android)/ConsolePrinter(for java) will be used.
-                consolePrinter,
+                //consolePrinter,
                 filePrinter);
     }
 
@@ -975,6 +975,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                     }
 
+                    XLog.tag("Download").i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
+                            mDownLoadFileList.size(), filename, percent);
                 } else if (0 == success) {
                     // 下载完成
                     if (null != mMainActivity) {
@@ -1008,6 +1010,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                         GlobalWindow.getInstance().topWindowSucess(
                                 this.getResources().getString(R.string.str_video_transfer_success));
+                        XLog.tag("Download").i("Download complete");
                     }
 
                     resetSDCheckState();
@@ -1024,6 +1027,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     }
                     // 下载文件失败，删除数据库中的信息
                     GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
+                    XLog.tag("Download").i("Download video %s failed", filename);
 
                     GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail====" + mNoDownLoadFileList.size());
                     if (checkDownloadCompleteState()) {
@@ -1242,6 +1246,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (null != mMainActivity) {
                     mMainActivity.wiFiLinkStatus(3);
                 }
+                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state idel");
                 break;
             case ConnectionStateMsg_Connecting:
                 GolukDebugUtils
@@ -1257,6 +1262,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //                        mMainActivity.wiFiLinkStatus(1);
 //                    }
                 }
+                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state connecting");
                 break;
             case ConnectionStateMsg_Connected:
                 // 只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
@@ -1277,6 +1283,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (mPageSource == "WiFiLinkList") {
                     ((WiFiLinkListActivity) mContext).ipcFailedCallBack();
                 }
+                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state disconnected");
                 break;
         }
     }
@@ -1302,6 +1309,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (mPageSource.equals("WiFiLinkBindAll")) {
             ((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
         }
+
+        XLog.tag("Connection").i("Ipc connection success");
 
         if (isBindSucess() || getEnableSingleWifi()) {
             GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
@@ -1349,6 +1358,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             mIPCControlManager.setProduceName(ipcInfo.productname);
             // 保存设备型号
             SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
+            XLog.tag("Connection").i("Ipc info: %s %s %s",ipcInfo.productname, ipcInfo.serial, ipcInfo.version);
         }
     }
 
@@ -1971,6 +1981,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
             if (null != user && !"".equals(user)) {
                 myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
+                XLog.i("User info: nickname:%s, userName:%s, uid:%s", myInfo.nickname, myInfo.phone, myInfo.uid);
             }
 
         } catch (Exception e) {

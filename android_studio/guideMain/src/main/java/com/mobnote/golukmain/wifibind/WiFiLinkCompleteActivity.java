@@ -1,7 +1,23 @@
 package com.mobnote.golukmain.wifibind;
 
-import org.json.JSONObject;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageButton;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
@@ -26,28 +42,11 @@ import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 
-import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.wifi.WifiManager;
-import android.os.Bundle;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageButton;
+import org.json.JSONObject;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3_SIGN;
 
 public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
         ILiveDialogManagerFn {
@@ -176,8 +175,12 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     }
 
     private void collectLog(String method, String msg) {
+        JSONObject logJson = JsonUtil.getReportData(TAG_LOG, method, msg);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
-                .addLogData(JsonUtil.getReportData(TAG_LOG, method, msg));
+                .addLogData(logJson);
+
+        // XLog
+        XLog.i(logJson);
     }
 
     @Override

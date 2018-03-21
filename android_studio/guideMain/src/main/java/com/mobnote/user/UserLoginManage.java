@@ -1,19 +1,12 @@
 package com.mobnote.user;
 
-import java.util.HashMap;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.HttpCommHeaderBean;
@@ -29,6 +22,15 @@ import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 import com.umeng.socialize.sina.helper.MD5;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 登录管理类
@@ -225,7 +227,8 @@ public class UserLoginManage implements IRequestResultListener {
                 String loginMsg = GolukFastJsonUtil.setParseObj(userresult);
                 mApp.setLoginRespInfo(loginMsg);
                 int code = Integer.parseInt(userresult.code);
-                switch (code) {
+				XLog.i("用户登录返回code:%d", code);
+				switch (code) {
                     case 200:
                         String type = "";
                         if (requestType == IPageNotifyFn.PageType_Login) {
@@ -242,6 +245,8 @@ public class UserLoginManage implements IRequestResultListener {
                         mEditor.putBoolean("FirstLogin", false);
                         // 提交
                         mEditor.commit();
+
+						XLog.i("登录成功 UserId:%s", uid);
 
 					mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
 					mEditor = mSharedPreferences.edit();

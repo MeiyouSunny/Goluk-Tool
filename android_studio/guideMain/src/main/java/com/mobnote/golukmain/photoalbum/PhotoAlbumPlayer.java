@@ -281,12 +281,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mVideoView.setVideoPath(mMicroVideoUrl);
             mIsUsingMicro = true;
             mResolutionTV.setText(MICRO_RESOLUTION);
-            XLog.i("start with microSolution");
         } else {
             mVideoView.setVideoPath(mVideoUrl);
             mIsUsingMicro = false;
             mResolutionTV.setText(mHP);
-            XLog.i("start with originSolution");
         }
         showLoading();
         mVideoView.requestFocus();
@@ -302,12 +300,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mVideoView.setVideoPath(mMicroVideoUrl);
             mIsUsingMicro = true;
             mResolutionTV.setText(MICRO_RESOLUTION);
-            XLog.i("change 2 microSolution");
         } else {
             mVideoView.setVideoPath(mVideoUrl);
             mIsUsingMicro = false;
             mResolutionTV.setText(mHP);
-            XLog.i("change 2 originSolution");
         }
         mVideoView.requestFocus();
         if (mVideoView.isPlaying()) {

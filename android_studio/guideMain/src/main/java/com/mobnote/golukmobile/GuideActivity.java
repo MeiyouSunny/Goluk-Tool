@@ -1,16 +1,5 @@
 package com.mobnote.golukmobile;
 
-import com.elvishew.xlog.XLog;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventStartApp;
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.MainActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserStartActivity;
-import com.mobnote.golukmain.xdpush.GolukNotification;
-import com.mobnote.golukmain.xdpush.StartAppBean;
-import com.mobnote.guide.GolukGuideManage;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +10,17 @@ import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.RelativeLayout;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventStartApp;
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.MainActivity;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserStartActivity;
+import com.mobnote.golukmain.xdpush.GolukNotification;
+import com.mobnote.golukmain.xdpush.StartAppBean;
+import com.mobnote.guide.GolukGuideManage;
+
 import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -57,7 +57,6 @@ public class GuideActivity extends BaseActivity {
 		mPreExist = mApp.isExit();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
-		XLog.i("guide on create");
 		mContext = this;
 		GolukApplication.getInstance().setContext(this, "GuideActivity");
 		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);

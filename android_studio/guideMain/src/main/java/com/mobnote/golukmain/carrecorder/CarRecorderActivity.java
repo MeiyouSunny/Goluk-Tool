@@ -26,6 +26,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
@@ -759,6 +760,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
                 collectLog("RD Rtsp Player Error, what id[" + String.valueOf(what) + "],extra id[" + String.valueOf(extra) + "],Errorinfo is:[" + strErrorInfo + "]");
+                XLog.tag("Preview").i("Rtsp play error: whet:%d, errorInfo:%s", what, strErrorInfo);
                 rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
@@ -838,8 +840,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void collectLog(String msg) {
+        JSONObject logJson = JsonUtil.getReportData("CarRecorderActivity", "rtsp", msg);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_RTSP_REVIEW)
-                .addLogData(JsonUtil.getReportData("CarRecorderActivity", "rtsp", msg));
+                .addLogData(logJson);
+
+        // XLog
+        XLog.i(logJson);
     }
 
     /**
@@ -944,6 +950,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             collectLog("IPCVERSION=" + mBaseApp.mIpcVersion);
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
+            XLog.tag("Preview").i("Rtsp:%s", url);
+            XLog.tag("Preview").i("Ipc:%s, Ipc Version:%s", mApp.mIPCControlManager.mProduceName, mBaseApp.mIpcVersion);
             if (TextUtils.isEmpty(url)) {
                 return;
             }

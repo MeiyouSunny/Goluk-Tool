@@ -1,23 +1,24 @@
 package com.mobnote.golukmain.http.request;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import android.text.TextUtils;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.api.Tapi;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
-import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.api.Tapi;
 
 
 public abstract class GolukFastjsonRequest<T> {
@@ -37,7 +38,7 @@ public abstract class GolukFastjsonRequest<T> {
 		addDefaultHeader();
 		addDefaultParam();
 	}
-	
+
 	protected abstract String getPath();
 	protected abstract String getMethod();
 	/**
@@ -48,7 +49,7 @@ public abstract class GolukFastjsonRequest<T> {
 		if (!TextUtils.isEmpty(Method))
 		mParams.put("method", getMethod());
 	}
-	
+
 	/**
 	 * 继承实现，添加不变的Header,Header中要变化的参数在addHeader中添加
 	 */
@@ -103,7 +104,7 @@ public abstract class GolukFastjsonRequest<T> {
     protected void setCurrentTimeout(int timeout) {
     	mDefaultRetryPolicy.setCurrentTimeout(timeout);
     }
-    
+
     protected void setCurrentRetryCount(int retryCount) {
     	mDefaultRetryPolicy.setCurrentRetryCount(retryCount);
     }
@@ -111,11 +112,11 @@ public abstract class GolukFastjsonRequest<T> {
     protected void get() {
 		addRequest(Method.GET);
 	}
-	
+
     protected void post() {
 		addRequest(Method.POST);
 	}
-	
+
 	private void addRequest(int type) {
 		String url = HttpManager.getInstance().getUrl(type, getPath(), mParams);
 		if(type == Method.GET){
@@ -131,7 +132,7 @@ public abstract class GolukFastjsonRequest<T> {
 					mListener.onLoadComplete(mRequestType, response);
 				}
 			}
-			
+
 		}, new Response.ErrorListener() {
 
 			@Override
@@ -140,8 +141,11 @@ public abstract class GolukFastjsonRequest<T> {
 				if (mListener != null) {
 					mListener.onLoadComplete(mRequestType, null);
 				}
-			}
-			
+
+                // XLog
+                XLog.tag("HTTP").i("URL request error:%s", error.getMessage());
+            }
+
 		});
 		if (mTag == null) {
 			mTag = mListener;
@@ -150,5 +154,10 @@ public abstract class GolukFastjsonRequest<T> {
 		request.setShouldCache(bCache);
 		request.setRetryPolicy(mDefaultRetryPolicy);
 		HttpManager.getInstance().add(request);
-	}
+
+		// XLog
+        String method = (type == Method.GET) ? "Get" : "Post";
+        XLog.tag("HTTP").i("URL(%s): %s", method, url);
+        XLog.tag("HTTP").i("Params:%s", mParams);
+    }
 }

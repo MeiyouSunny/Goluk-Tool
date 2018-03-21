@@ -1,7 +1,14 @@
 package com.mobnote.wifibind;
 
-import org.json.JSONObject;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
+import android.os.Handler;
+import android.os.Message;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.multicast.IMultiCastFn;
 import com.mobnote.golukmain.multicast.NetUtil;
@@ -10,13 +17,7 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.tencent.bugly.crashreport.CrashReport;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
-import android.os.Handler;
-import android.os.Message;
+import org.json.JSONObject;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -846,7 +847,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
 
     private void collectLog(String method, String msg) {
+        JSONObject logJson = JsonUtil.getReportData(TAG, method, msg);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
                 .addLogData(JsonUtil.getReportData(TAG, method, msg));
+
+        // XLog
+        XLog.i(logJson);
     }
 }

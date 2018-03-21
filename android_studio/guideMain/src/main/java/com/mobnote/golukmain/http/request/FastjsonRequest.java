@@ -1,28 +1,19 @@
 package com.mobnote.golukmain.http.request;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
-
-import cn.com.tiros.debug.GolukDebugUtils;
-
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
+import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
-import com.android.volley.AuthFailureError;
-import com.android.volley.ParseError;
 import com.android.volley.toolbox.HttpHeaderParser;
-import com.alibaba.fastjson.JSON;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserLoginActivity;
-import com.mobnote.util.GolukUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
+
+import cn.com.tiros.debug.GolukDebugUtils;
  
 /**
  * Volley adapter for JSON requests that will be parsed into Java objects by Fastjason.
@@ -92,6 +83,11 @@ public class FastjsonRequest<T> extends Request<T> {
 		try {
 			String json = new String(response.data, HttpHeaderParser.parseCharset(response.headers));
 			GolukDebugUtils.e("", "-------------parseNetworkResponse--------json: " + json);
+
+            // XLog
+            //XLog.tag("HTTP").i("URL %s response", getUrl());
+            //XLog.tag("HTTP").json(json);
+
 			return Response.success(JSON.parseObject(json, clazz), HttpHeaderParser.parseCacheHeaders(response));
 		} catch (UnsupportedEncodingException e) {
 			return Response.error(new ParseError(e));

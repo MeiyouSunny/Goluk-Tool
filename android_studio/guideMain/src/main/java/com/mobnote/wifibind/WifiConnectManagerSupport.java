@@ -1,5 +1,26 @@
 package com.mobnote.wifibind;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiConfiguration.AuthAlgorithm;
+import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.elvishew.xlog.XLog;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.multicast.NetUtil;
+import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.util.JsonUtil;
+
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,32 +31,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.json.JSONObject;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiConfiguration.AuthAlgorithm;
-import android.net.wifi.WifiConfiguration.KeyMgmt;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.multicast.NetUtil;
-import com.mobnote.golukmain.reportlog.ReportLogManager;
-import com.mobnote.util.JsonUtil;
 
 public class WifiConnectManagerSupport {
 
@@ -636,7 +636,11 @@ public class WifiConnectManagerSupport {
     }
 
     private void collectLog(String method, String msg) {
+        JSONObject logJson = JsonUtil.getReportData(TAG, method, msg);
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND)
                 .addLogData(JsonUtil.getReportData(TAG, method, msg));
+
+        // XLog
+        XLog.i(logJson);
     }
 }

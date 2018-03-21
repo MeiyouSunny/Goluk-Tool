@@ -5,14 +5,12 @@ import android.app.AlertDialog.Builder;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
-import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -148,7 +146,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
      * 升级 将appVersion和ipcVersion信息请求给服务器
      */
     public boolean requestInfo(int function, String vIpc) {
-        XLog.i("start versionCheckRequest, curr function = " + function);
         CheckUpgradeRequest checkRequest = new CheckUpgradeRequest(IPageNotifyFn.PageType_CheckUpgrade, this);
         if (!UserUtils.isNetDeviceAvailable(mApp.getContext())) {
             if (function == FUNCTION_SETTING_APP || function == FUNCTION_SETTING_IPC) {
@@ -360,7 +357,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     public void onClick(DialogInterface arg0, int arg1) {
                         if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
                             SharedPrefUtil.setLatestIgnoredIpcUpgradeVersion(ipcInfo.version);
-                            XLog.i("later with ignore ipc update");
                         }
                         operate[0] = mApp.getContext().getString(R.string.str_zhuge_ipc_update_dialog_operate_ignore);
                         if (type == 0) {
@@ -375,7 +371,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             mDownloadDialog.setView(ignoreView, 20,0,0,0);
         }
         ZhugeUtils.eventIpcUpdateDialog(mApp.getContext(), operate[0]);
-        XLog.i("show the ipc upgrade dialog");
 
         mDownloadDialog.show();
     }
@@ -636,7 +631,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     }
                 }).create();
         mAppUpdateDialog.show();
-        XLog.i("show the app force upgrade dialog");
     }
 
     /**
@@ -671,7 +665,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                             public void onClick(DialogInterface arg0, int arg1) {
                                 if (mFunction == FUNCTION_AUTO && ignoreCheckbox.isChecked()) {
                                     SharedPrefUtil.setLatestIgnoredAppUpgradeVersion(appInfo.version);
-                                    XLog.i("later with ignore app upgrade");
                                 }
                                 dimissAppDialog();
                             }
@@ -695,7 +688,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
             mAppUpdateDialog.setView(ignoreView, 20,0,0,0);
         }
         mAppUpdateDialog.show();
-        XLog.i("show the app normal upgrade dialog");
     }
 
     /**
@@ -839,6 +831,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         try {
             JSONObject jsonData = new JSONObject(JSON.toJSONString(bean.dataInfo));
             if (jsonData != null) {
+                XLog.i("版本信息:");
                 XLog.json(JSON.toJSONString(bean.dataInfo));
             }
             final String goluk = jsonData.getString("goluk");
