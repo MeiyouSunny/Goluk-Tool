@@ -703,6 +703,28 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
+     * 获取紧急碰撞灵敏配置
+     */
+    public boolean getGSensorMoreValueCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_GetCollisionValueConf, "");
+    }
+
+    /**
+     * 设置紧急碰撞灵敏度配置
+     */
+    public boolean setGSensorMoreValueCfg(int collisionValue) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("collisionValue", collisionValue);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_SetCollisionValueConf, json.toString());
+    }
+
+    /**
      * 设置安防模式和移动侦测参数
      *
      * @return

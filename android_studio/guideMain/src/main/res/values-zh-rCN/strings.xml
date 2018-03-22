@@ -1246,4 +1246,7 @@
     <string name="sina_weibo_low_version">尚未安装新浪微博或版本太低</string>
     <string name="emg_video_sound">紧急视频提示音</string>
     <string name="timelapse">缩时录影</string>
+    <string name="lower">较低</string>
+    <string name="highter">较高</string>
+
 </resources>
