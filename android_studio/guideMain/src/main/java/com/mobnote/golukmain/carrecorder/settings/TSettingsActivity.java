@@ -70,11 +70,13 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			mWonderfulQualityLayout, mVoiceRecordLayout, mAutoPhotoLayout, mVolumeLayout, mKgjtsyLayout,
 			mWonderfulTakephtotLayout, mImageFlipLayout, mVideoLogoLayout, mFatigueLayout, mUrgentCrashLayout,
 			mParkingsleepLayout,mAFLayout,mAdasAssistanceLayout, mMSLayout,
-			mShutdownTimeLayout, mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout;
+			mShutdownTimeLayout, mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout,
+			mLayoutEmgVideoSound, mLayoutTimesplase;
 	private TextView mSDDesc, mRecycleQualityDesc, mWonderfulTypeDesc, mWonderfulQualityDesc, mVolumeDesc,
 			mUrgentCrashDesc, mShutdownTimeDesc, mLanguageDesc;
 	private Button mAutoRecycleBtn, mVoiceRecordBtn, mAutophotoBtn, mKgjtsyBtn, mWonderfulTakephotoBtn, mImageFlipBtn,
-			mVideoLogoBtn, mFatigueBtn, mParkingsleepBtn, mAFBtn;
+			mVideoLogoBtn, mFatigueBtn, mParkingsleepBtn, mAFBtn,
+			mBtnEmgVideoSound, mBtnTimeslapse;
 	/** ADAS **/
 	private Button mAdasAssistanceBtn, mForwardCloseBtn, mForwardSetupBtn, mMoveMotionBtn;
 	private RelativeLayout mForwardCloseLayout, mForwardSetupLayout, mAdasConfigLayout;
@@ -164,6 +166,11 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 	private String mVoiceType = "";
 	/**视频水印参数**/
 	private WonderfulVideoDisplay mDisplay;
+
+	/* 紧急视频提示音开关状态 */
+	private int mEmgVideoSoundState;
+	/* 缩时视频开关状态 */
+	private int mTimeslapseState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -255,11 +262,15 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mTimeSetupLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_time);
 		mVersionLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_version);
 		mRestoreLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_restore);
+		mLayoutEmgVideoSound =  (RelativeLayout) findViewById(R.id.layout_emg_video_sound);
+		mLayoutTimesplase =  (RelativeLayout) findViewById(R.id.layout_timelapse);
 		mMSLayout =  (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
+		mBtnEmgVideoSound = (Button) findViewById(R.id.btn_emg_video_sound);
+		mBtnTimeslapse = (Button) findViewById(R.id.btn_timelapse);
 		mLayoutList = new RelativeLayout[] { mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout,
 				mWonderfulTypeLayout, mWonderfulQualityLayout, mVolumeLayout, mKgjtsyLayout, mImageFlipLayout,
 				mVideoLogoLayout, mUrgentCrashLayout, mParkingsleepLayout, mAdasAssistanceLayout, mShutdownTimeLayout,
-				mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout };
+				mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout};
 
 		if (mAutoState) {
 			mAutophotoBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -298,6 +309,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		mForwardCloseBtn.setOnClickListener(this);//前向距离过近提示
 		mForwardSetupBtn.setOnClickListener(this);//前向车辆启动提示
 		mAdasConfigLayout.setOnClickListener(this);//前向距离预警配置
+		mBtnEmgVideoSound.setOnClickListener(this);
+		mBtnTimeslapse.setOnClickListener(this);
 	}
 
 	private void requestInfo() {
@@ -369,6 +382,14 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		if(!mBaseApp.isMainland()){
 			GolukApplication.getInstance().getIPCControlManager().getTxLanguage();
 		}
+
+		// 获取缩时视频状态
+		boolean flagTimelapse = GolukApplication.getInstance().getIPCControlManager().getTimelapseCfg();
+		GolukDebugUtils.e("", "TSettingsActivity-------------------flagTimelapse：" + videoLogo);
+		// 获取紧急视频提示音状态
+		boolean flagEmgVideoSound = GolukApplication.getInstance().getIPCControlManager().getEmgVideoSoundCfg();
+		GolukDebugUtils.e("", "TSettingsActivity-------------------flagEmgVideoSound：" + videoLogo);
+
 		showLoading();
 	}
 
@@ -435,6 +456,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			startActivity(bbxx);
 		} else if (id == R.id.ry_t_settings_restore) {// 恢复出厂
 			click_reset();
+		} else if (id == R.id.btn_emg_video_sound) { // 紧急视频提示音
+			click_EmgVideoSound();
+		} else if (id == R.id.btn_timelapse) { // 缩时录影
+			click_Timeslapse();
 		}
 	}
 
@@ -524,6 +549,12 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		} else {
 			mLanguageLayout.setVisibility(View.GONE);
 		}
+
+		// 一秒一拍新增
+		if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+			mLayoutEmgVideoSound.setVisibility(View.VISIBLE);
+			mLayoutTimesplase.setVisibility(View.VISIBLE);
+		}
 	}
 
 	@Override
@@ -607,6 +638,16 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 				callback_restore(msg, param1, param2);
 			} else if(msg == IPC_VDCP_Msg_Reboot) {//重启IPC
 				GolukDebugUtils.e("", "TSettingsActivity-----------IPC_VDCP_Msg_Reboot-----param2: " + param2);
+			} else if(msg == IPC_VDCP_Msg_GetTimelapseConf) { // 获取缩时视频开关
+				callback_getTimesplase(event, msg, param1, param2);
+			}  else if(msg == IPC_VDCP_Msg_SetTimelapseConf) { // 设置缩时视频开关
+				callback_setVoiceRecord(event, msg, param1, param2);
+				GolukApplication.getInstance().getIPCControlManager().getTimelapseCfg();
+			} else if(msg == IPC_VDCP_Msg_GetUrgentVoiceConf) { // 获取紧急视频提示音开关
+				callback_getEmgVideoSound(event, msg, param1, param2);
+			} else if(msg == IPC_VDCP_Msg_SetUrgentVoiceConf) { // 设置紧急视频提示音开关
+				callback_setVoiceRecord(event, msg, param1, param2);
+				GolukApplication.getInstance().getIPCControlManager().getEmgVideoSoundCfg();
 			}
 		}
 	}
@@ -872,6 +913,46 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 		closeLoading();
 		if (RESULE_SUCESS != param1) {
 			GolukUtils.showToast(this, this.getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	/**
+	 * 获取紧急视频提示音状态返回
+	 */
+	private void callback_getEmgVideoSound(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "TSettingsActivity-----------callback_getEmgVideoSound-----param2: " + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				mEmgVideoSoundState = Integer.parseInt(obj.optString("urgentSwitch"));
+				if (STATE_CLOSE != mEmgVideoSoundState) {
+					mEmgVideoSoundState = STATE_OPEN;
+				}
+				refreshUI_emgVideoSound(mEmgVideoSoundState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * 获取缩时视频开关返回
+	 */
+	private void callback_getTimesplase(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "TSettingsActivity-----------callback_getTimesplase-----param2: " + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				mTimeslapseState = Integer.parseInt(obj.optString("timelapse"));
+				if (STATE_CLOSE != mTimeslapseState) {
+					mTimeslapseState = STATE_OPEN;
+				}
+				refreshUI_timeslapse(mTimeslapseState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -1620,6 +1701,20 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			break;
 		}
 	}
+
+	/**
+	 * 更新紧急视频提示语开关显示
+	 */
+	private void refreshUI_emgVideoSound(int state) {
+		mBtnEmgVideoSound.setBackgroundResource(state == STATE_OPEN ? R.drawable.set_open_btn : R.drawable.set_close_btn);
+	}
+
+	/**
+	 * 更新缩时视频开关显示
+	 */
+	private void refreshUI_timeslapse(int state) {
+		mBtnTimeslapse.setBackgroundResource(state == STATE_OPEN ? R.drawable.set_open_btn : R.drawable.set_close_btn);
+	}
 	
 	/**
 	 * 更新提示音音量大小
@@ -1719,6 +1814,29 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener,I
 			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
 		}
 	}
+
+	private void click_EmgVideoSound() {
+		mEmgVideoSoundState = mEmgVideoSoundState == 0 ? 1 : 0;
+		//GolukApplication.getInstance().setT1VideoCfgState(mEmgVideoSoundState);
+		boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setEmgVideoSoundCfg(mEmgVideoSoundState);
+		if (isSuccess) {
+			showLoading();
+		} else {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	private void click_Timeslapse() {
+		mTimeslapseState = mTimeslapseState == 0 ? 1 : 0;
+		//GolukApplication.getInstance().setT1VideoCfgState(mTimeslapseState);
+		boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setTimelapseCfg(mTimeslapseState);
+		if (isSuccess) {
+			showLoading();
+		} else {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
 	//自动同步照片
 	private void click_autoPhoto() {
 		if (mAutoState) {

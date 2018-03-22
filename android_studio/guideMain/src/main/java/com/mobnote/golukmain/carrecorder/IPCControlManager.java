@@ -669,6 +669,40 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
+     * 获取紧急视频提示音
+     */
+    public boolean getEmgVideoSoundCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCP_Msg_GetUrgentVoiceConf,
+                "");
+    }
+
+    /**
+     * 设置紧急视频提示音
+     */
+    public boolean setEmgVideoSoundCfg(int state) {
+        String json = JsonUtil.getEmgVideoSoundConfigJson_T1(state);
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetUrgentVoiceConf,
+                json);
+    }
+
+    /**
+     * 获取缩时视频录制开关状态
+     */
+    public boolean getTimelapseCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTimelapseConf,
+                "");
+    }
+
+    /**
+     * 设置缩时视频录制开关
+     */
+    public boolean setTimelapseCfg(int state) {
+        String json = JsonUtil.getTimelapseConfigJson_T1(state);
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTimelapseConf,
+                json);
+    }
+
+    /**
      * 设置安防模式和移动侦测参数
      *
      * @return
@@ -1226,6 +1260,28 @@ public class IPCControlManager implements IPCManagerFn {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 是否支持: 缩时视频/紧急视频提示语开关/碰撞灵敏度6个等级设置
+     * 型号及对应最低版本: T1U_1.7 T1_1.7 T2U_1.7 T2_1.7 T3U_1.4 T3_1.4
+     */
+    public boolean isSupportTimeslapse() {
+        final String ipcType = mProduceName;
+        final String ipcVersion = getVersionCode();
+        if (T1_SIGN.equals(ipcType) || T1U_SIGN.equals(ipcType) || T2_SIGN.equals(ipcType) || T2U_SIGN.equals(ipcType))
+            return bigThan(ipcVersion, "1.6");
+        if (T3_SIGN.equals(ipcType) || T3U_SIGN.equals(ipcType))
+            return bigThan(ipcVersion, "1.4");
+
+        return false;
+    }
+
+    /**
+     * 版本比较
+     */
+    private boolean bigThan(String versionOne, String versionTwo) {
+        return !TextUtils.isEmpty(versionOne) && !TextUtils.isEmpty(versionTwo) && versionOne.compareTo(versionTwo) >= 0;
     }
 
     public boolean needShowT3Hint() {

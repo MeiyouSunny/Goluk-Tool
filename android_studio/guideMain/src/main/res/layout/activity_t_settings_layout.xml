@@ -484,6 +484,42 @@
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
 
+            <!-- 紧急视频提示音 -->
+
+            <RelativeLayout
+                android:id="@+id/layout_emg_video_sound"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_emg_video_sound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/btn_emg_video_sound"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/emg_video_sound"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+            </RelativeLayout>
+
             <!-- 精彩视频拍照提示音 -->
 
             <RelativeLayout
@@ -835,6 +871,48 @@
                     android:textColor="#047cf3"
                     android:textSize="10sp" />
             </LinearLayout>
+
+            <!-- 缩时录影 -->
+
+            <RelativeLayout
+                android:id="@+id/layout_timelapse"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
+
+                <Button
+                    android:id="@+id/btn_timelapse"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@id/btn_timelapse"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/timelapse"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+            </RelativeLayout>
 
             <!-- 移动侦测 -->
 

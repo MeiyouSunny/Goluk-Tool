@@ -603,6 +603,34 @@ public class JsonUtil {
         }
     }
 
+    /**
+     * 设置紧急视频提示语开关配置
+     */
+    public static String getEmgVideoSoundConfigJson_T1(int state) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("urgentSwitch", state);
+
+            return obj.toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    /**
+     * 设置缩时视频录制开关配置
+     */
+    public static String getTimelapseConfigJson_T1(int state) {
+        try {
+            JSONObject obj = new JSONObject();
+            obj.put("timelapse", state);
+
+            return obj.toString();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     public static GolukPosition parseLocatoinJson(String jsonData) {
         if (null == jsonData || "".equals(jsonData) || 0 >= jsonData.length()) {
             return null;
