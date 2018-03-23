@@ -878,7 +878,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 String fileName = mFileName;
                 String[] names = fileName.split("_");
                 if (names.length > 3) {
-                    if (names[0].equals("NRM")) {
+                    if (fileName.contains("NRM_TL")) { // 缩时视频
+                        fileName = names[0] + "_" + names[1] + "_" + names[2];
+                    } else if (names[0].equals("NRM")) { // 循环视频
                         fileName = names[0] + "_" + names[1];
                     } else {
                         fileName = names[0] + "_" + names[2];
