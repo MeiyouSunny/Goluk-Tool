@@ -475,18 +475,20 @@ public class IpcDataParser {
 		
 		return dataList;
 	}
-	
+
 	public static int parseVideoFileType(String filename) {
 		int type = -1;
-		
+
 		if (filename.contains("WND")) {
 			type = IPCManagerFn.TYPE_SHORTCUT;
-		} else if(filename.contains("URG")) {
+		} else if (filename.contains("URG")) {
 			type = IPCManagerFn.TYPE_URGENT;
-		}else if(filename.contains("NRM")) {
+		} else if (filename.contains("NRM_TL")) {
+			type = IPCManagerFn.TYPE_TIMESLAPSE;
+		} else if (filename.contains("NRM")) {
 			type = IPCManagerFn.TYPE_CIRCULATE;
 		}
-		
+
 		return type;
 	}
 

@@ -298,6 +298,7 @@ public class IPCControlManager implements IPCManagerFn {
      */
     public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend, String resform) {
         String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend, resform);
+        GolukDebugUtils.e("queryFileList", "queryParam= " + queryParam);
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
                 queryParam);
     }
@@ -722,6 +723,22 @@ public class IPCControlManager implements IPCManagerFn {
         }
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
                 IPC_VDCPCmd_SetCollisionValueConf, json.toString());
+    }
+
+    /**
+     * 获取设备异常日志
+     */
+    public boolean getExceptionList() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id", 5);
+            json.put("count", 5);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetExceptionList,
+                json.toString());
     }
 
     /**

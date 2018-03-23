@@ -52,6 +52,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
     private CustomViewPager mViewPager;
     private LocalFragment mLocalFragment;
+    private TimeslapseFragment mTimeslapseFragment;
     private WonderfulFragment mWonderfulFragment;
     private LoopFragment mLoopFragment;
     private UrgentFragment mUrgentFragment;
@@ -59,10 +60,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     private LinearLayout mLinearLayoutTab;
 
     // 四个tab
-    private TextView mTabLocal;
-    private TextView mTabWonderful;
-    private TextView mTabUrgent;
-    private TextView mTabLoop;
+    private TextView mTabLocal, mTabTimeslapse, mTabWonderful, mTabUrgent, mTabLoop;
     private CheckBox mCBAll;
     private Button mCancelBtn;
 
@@ -101,7 +99,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
     public PromotionSelectItem mPromotionSelectItem;
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -123,6 +120,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(1);
         mLocalFragment = new LocalFragment();
+        mTimeslapseFragment = new TimeslapseFragment();
         mWonderfulFragment = new WonderfulFragment(); // WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT,
         // IPCManagerFn.TYPE_SHORTCUT);
         mLoopFragment = new LoopFragment();// newInstance(IPCManagerFn.TYPE_CIRCULATE,
@@ -138,6 +136,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         } else {
             fragmentList.add(mWonderfulFragment);
             fragmentList.add(mUrgentFragment);
+            fragmentList.add(mTimeslapseFragment);
             fragmentList.add(mLoopFragment);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
         }
@@ -149,7 +148,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             @Override
             public void onPageSelected(int position) {
                 GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
-                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                    mTimeslapseFragment.removeFooterView();
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     mWonderfulFragment.removeFooterView();
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                     mUrgentFragment.removeFooterView();
@@ -164,7 +165,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
                     } else if (position == 1) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-                    } else {
+                    } else if (position == 2) {
+                        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE;
+                    } else if (position == 3) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
                     }
                 }
@@ -186,6 +189,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
     public void initView() {
         mTabLocal = (TextView) mAlbumRootView.findViewById(R.id.tab_local);
+        mTabTimeslapse = (TextView) mAlbumRootView.findViewById(R.id.tab_timeslapse);
         mTabWonderful = (TextView) mAlbumRootView.findViewById(R.id.tab_wonderful);
         mTabUrgent = (TextView) mAlbumRootView.findViewById(R.id.tab_urgent);
         mTabLoop = (TextView) mAlbumRootView.findViewById(R.id.tab_loop);
@@ -210,12 +214,14 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 mBackBtn.setBackgroundResource(0);
             }
             mTabLocal.setVisibility(View.VISIBLE);
+            mTabTimeslapse.setVisibility(View.GONE);
             mTabWonderful.setVisibility(View.GONE);
             mTabUrgent.setVisibility(View.GONE);
             mTabLoop.setVisibility(View.GONE);
         } else {
             mBackBtn.setVisibility(View.VISIBLE);
             mTabLocal.setVisibility(View.GONE);
+            mTabTimeslapse.setVisibility(View.VISIBLE);
             mTabWonderful.setVisibility(View.VISIBLE);
             mTabUrgent.setVisibility(View.VISIBLE);
             mTabLoop.setVisibility(View.VISIBLE);
@@ -226,6 +232,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mBackBtn.setOnClickListener(this);
         mAlbumRootView.findViewById(R.id.mDeleteBtn).setOnClickListener(this);
         mTabLocal.setOnClickListener(this);
+        mTabTimeslapse.setOnClickListener(this);
         mTabWonderful.setOnClickListener(this);
         mTabUrgent.setOnClickListener(this);
         mTabLoop.setOnClickListener(this);
@@ -254,6 +261,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                         mWonderfulFragment.loadData(true);
                     }
 
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                    if (!mTimeslapseFragment.isShowPlayer) {
+                        mTimeslapseFragment.loadData(true);
+                    }
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                     if (!mUrgentFragment.isShowPlayer) {
                         mUrgentFragment.loadData(true);
@@ -277,12 +288,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
      */
     public void setItemLineState(int currentType) {
         mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
+        mTabTimeslapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         if (currentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             mLocalFragment.loadData(true);
             mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+            mTimeslapseFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
+            mTabTimeslapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
         } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
             mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
@@ -319,6 +334,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 ZhugeUtils.eventAlbumBatchDownload(getActivity(), mCurrentType);
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     mWonderfulFragment.downloadVideoFlush(selectedListData);
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                    mTimeslapseFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                     mUrgentFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
@@ -360,8 +377,11 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         } else if (id == R.id.tab_urgent) {
             mViewPager.setCurrentItem(1);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (id == R.id.tab_loop) {
+        } else if (id == R.id.tab_timeslapse) {
             mViewPager.setCurrentItem(2);
+            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE;
+        } else if (id == R.id.tab_loop) {
+            mViewPager.setCurrentItem(3);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
         } else if (id == R.id.edit_btn) {
             mViewPager.setCanScroll(false);
@@ -488,6 +508,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                 mWonderfulFragment.deleteListData(selectedListData);
+            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                mTimeslapseFragment.deleteListData(selectedListData);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                 mUrgentFragment.deleteListData(selectedListData);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
@@ -532,6 +554,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
                 mDownLoadBtn.setVisibility(View.GONE);
                 mLLAll.setVisibility(View.VISIBLE);
+            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                mDownLoadBtn.setVisibility(View.VISIBLE);
+                mLLAll.setVisibility(View.GONE);
             } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                 mDownLoadBtn.setVisibility(View.VISIBLE);
                 mLLAll.setVisibility(View.GONE);
