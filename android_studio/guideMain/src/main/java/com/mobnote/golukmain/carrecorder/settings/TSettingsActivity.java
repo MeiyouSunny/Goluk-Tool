@@ -1330,6 +1330,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                         if (mBaseApp.getIPCControlManager().isSupportMoveDection()) {
                             mMSLayout.setVisibility(View.VISIBLE);
                         }
+                        if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+                            mLayoutTimesplase.setVisibility(View.VISIBLE);
+                        }
                         mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
                         if (1 == dormant) {
                             dormant = 0;
@@ -1340,6 +1343,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                     } else {
                         mAFBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
                         mMSLayout.setVisibility(View.GONE);
+                        mLayoutTimesplase.setVisibility(View.GONE);
                     }
                 }
             } catch (JSONException e) {
@@ -1356,6 +1360,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                 if (mBaseApp.getIPCControlManager().isSupportMoveDection()) {
                     mMSLayout.setVisibility(View.VISIBLE);
                 }
+                if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+                    mLayoutTimesplase.setVisibility(View.VISIBLE);
+                }
                 // TODO 判断休眠是否打开
                 if (1 == dormant) {
                     dormant = 0;
@@ -1366,6 +1373,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             } else {
                 mAFBtn.setBackgroundResource(R.drawable.set_close_btn);// 关闭
                 mMSLayout.setVisibility(View.GONE);
+                mLayoutTimesplase.setVisibility(View.GONE);
             }
         } else {
             if (1 == enableSecurity) {
