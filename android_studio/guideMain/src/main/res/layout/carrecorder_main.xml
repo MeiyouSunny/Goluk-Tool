@@ -414,11 +414,11 @@
     </RelativeLayout>
 
 
-    <ViewStub
-        android:id="@+id/stub_change"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/rl_carrecorder_connection_state"
-        android:layout="@layout/vid_change_ipc_hud"/>
+    <!--<ViewStub-->
+        <!--android:id="@+id/stub_change"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_below="@+id/rl_carrecorder_connection_state"-->
+        <!--android:layout="@layout/vid_change_ipc_hud"/>-->
 
 </RelativeLayout>
