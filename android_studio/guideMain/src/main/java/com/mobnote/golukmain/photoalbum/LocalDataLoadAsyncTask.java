@@ -1,9 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import android.os.AsyncTask;
+import android.text.TextUtils;
 
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
@@ -12,8 +10,10 @@ import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.util.SortByDate;
 
-import android.os.AsyncTask;
-import android.text.TextUtils;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 	private DataCallBack mDataCallBack = null;
@@ -99,9 +99,14 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 						periodStr = names[7];
 						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
 						dateStr = names[1];
+					} else if (names.length == 9 && currType == 1) { // 缩时
+						hpStr = names[7];
+						periodStr = names[8];
+						periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
+						dateStr = names[2];
 					}
 
-					if (TextUtils.isDigitsOnly(hpStr)) {
+					if (!TextUtils.isEmpty(hpStr) && TextUtils.isDigitsOnly(hpStr)) {
 						hp = Integer.valueOf(hpStr);
 					}
 					if (1 == hp) {
