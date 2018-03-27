@@ -24,7 +24,7 @@ public interface IPCManagerFn extends IGolukCommFn {
     /**
      * 一秒一拍
      */
-    int TYPE_TIMESLAPSE = 5;
+    int TYPE_TIMESLAPSE = 8;
 
     /**
      *
