@@ -339,7 +339,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         mLayoutList = new RelativeLayout[]{mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout,
                 mWonderfulTypeLayout, mWonderfulQualityLayout, mVolumeLayout, mKgjtsyLayout, mImageFlipLayout,
                 mVideoLogoLayout, mUrgentCrashLayout, mParkingsleepLayout, mAdasAssistanceLayout, mShutdownTimeLayout,
-                mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout};
+                mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout,
+                mLayoutTimesplase, mLayoutEmgVideoSound};
 
         if (mAutoState) {
             mAutophotoBtn.setBackgroundResource(R.drawable.set_open_btn);
@@ -547,7 +548,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         String[] settingList = null;
         String[] layoutList = new String[]{"sd", "conf_stream", "record", "conf_event_time", "conf_event_resolution",
                 "conf_volume", "conf_voice", "auto_flip", "conf_logo", "conf_gsensor", "conf_mode", "adas",
-                "conf_powoff_time", "conf_voice_type", "time", "systeminfo", "restore"};
+                "conf_powoff_time", "conf_voice_type", "time", "systeminfo", "restore",
+                "enable_timelapse","enable_urgent_voice"};
 
         String basicList = "";
         String localList = "";
