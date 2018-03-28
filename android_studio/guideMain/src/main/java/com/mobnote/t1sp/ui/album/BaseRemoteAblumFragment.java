@@ -144,6 +144,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private void initView() {
         empty = (TextView) mWonderfulVideoView.findViewById(R.id.empty);
         this.mCustomProgressDialog = new CustomLoadingDialog(getActivity(), null);
+        mCustomProgressDialog.setCancel(false);
         mStickyListHeadersListView = (StickyListHeadersListView) mWonderfulVideoView
                 .findViewById(R.id.mStickyListHeadersListView);
         mRemoteVideoAdapter = new RemoteVideoAdapter(getActivity(), getVideoType(),
@@ -589,7 +590,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             // 恢复顶部按钮状态
             getFragmentAlbum().resetTopBar();
             // 更新显示
-            checkListState();
+            //checkListState();
+            parseDataAndShow();
             return;
         }
 
@@ -598,6 +600,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         if (!isAllowDelete) {
             $.toast().text(R.string.str_photo_downing).show();
             getFragmentAlbum().resetTopBar();
+            closeLoading();
             return;
         }
 
@@ -608,12 +611,14 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             filelPath = filelPath.substring(Const.HTTP_SCHEMA_ADD_IP.length());
         }
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.deleteFileParam(filelPath), mDeleteCallback);
+
+        showLoading();
     }
 
     private CommonCallback mDeleteCallback = new CommonCallback() {
         @Override
         public void onStart() {
-            showLoading();
+            //showLoading();
         }
 
         @Override
@@ -622,7 +627,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             deleteFromDataByVideoName(selectedList.get(0));
             selectedList.remove(0);
             // 更新显示
-            parseDataAndShow();
+            //parseDataAndShow();
             // 删除下一个
             deleteListData(selectedList);
         }
@@ -634,7 +639,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
         @Override
         public void onFinish() {
-            closeLoading();
+            // closeLoading();
         }
     };
 
