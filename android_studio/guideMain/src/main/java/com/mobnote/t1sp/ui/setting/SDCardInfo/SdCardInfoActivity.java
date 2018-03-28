@@ -139,7 +139,8 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                onSdFormat(false);
+                if (errorCode != 722) // 没有SD的情况,UDP会返回错误
+                    onSdFormat(false);
             }
         });
     }
