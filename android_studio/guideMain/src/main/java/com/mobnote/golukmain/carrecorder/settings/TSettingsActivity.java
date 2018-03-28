@@ -633,6 +633,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             mLayoutEmgVideoSound.setVisibility(View.VISIBLE);
             mLayoutTimesplase.setVisibility(View.VISIBLE);
         }
+
+        // 隐藏ADAS
+        mAdasAssistanceLayout.setVisibility(View.GONE);
     }
 
     @Override

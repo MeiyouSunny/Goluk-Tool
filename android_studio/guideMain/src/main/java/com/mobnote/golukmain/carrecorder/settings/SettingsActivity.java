@@ -1,9 +1,20 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
-import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAdasConfigStatus;
 import com.mobnote.eventbus.EventBindFinish;
@@ -19,12 +30,11 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
-import com.mobnote.golukmain.carrecorder.settings.bean.VideoLogoJson;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoDisplay;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -35,21 +45,9 @@ import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.os.Message;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -152,7 +150,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //	mCarrecorderSensitivityLine;
 
 	/**ADAS驾驶安全辅助**/
-	private RelativeLayout mADASAssistanceLayout = null;
+	//private RelativeLayout mADASAssistanceLayout = null;
 	private Button mADASAssistanceBtn = null;
 	
 	/**adas需求变更 暂时拿掉**/
@@ -616,7 +614,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoLogoBtn = (Button) findViewById(R.id.btn_t_settings_video_logo);
 //		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 
-		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
+		//mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
 		mADASAssistanceBtn = (Button) findViewById(R.id.btn_adas_assistance);
 		/**adas需求变更 暂时拿掉**/
 //		mADASForwardWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_forward_sensibility);
@@ -1520,14 +1518,14 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			} else if (msg == IPC_VDCP_Msg_SetAutoRotationCfg) {// 设置T1图像自动翻转
 				setT1AutoRotaingCallback(msg, param1, param2);
 			} else if (msg == IPC_VDCP_Msg_GetADASConfig) {
-				if (RESULE_SUCESS == param1) {
-					if (!TextUtils.isEmpty((String) param2)) {
-						mAdasConfigParamter = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
-						switchAdasEnableUI(mAdasConfigParamter.enable == 1);
-					}
-				} else {
-					mADASAssistanceLayout.setVisibility(View.GONE);
-				}
+//				if (RESULE_SUCESS == param1) {
+//					if (!TextUtils.isEmpty((String) param2)) {
+//						mAdasConfigParamter = JSON.parseObject((String)param2, AdasConfigParamterBean.class);
+//						switchAdasEnableUI(mAdasConfigParamter.enable == 1);
+//					}
+//				} else {
+//					mADASAssistanceLayout.setVisibility(View.GONE);
+//				}
 			} else if (msg == IPC_VDCP_Msg_SetADASConfig){
 				if (GolukApplication.getInstance().getContext() != this) {
 					return;
