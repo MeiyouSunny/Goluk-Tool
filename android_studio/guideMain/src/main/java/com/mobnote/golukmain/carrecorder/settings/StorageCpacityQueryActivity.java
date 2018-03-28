@@ -1,14 +1,5 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.IpcDataParser;
-import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
-import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
-import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -17,6 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.IpcDataParser;
+import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
+import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -34,14 +35,6 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 	private TextView mTotalSize = null;
 	/** 已用容量 */
 	private TextView mUsedSize = null;
-	/** 循环视频可用容量 */
-	private TextView mCycleSize = null;
-	/** 精彩视频可用容量 */
-	private TextView mWonderfulSize = null;
-	/** 紧急视频可用容量 */
-	private TextView mEmergencySize = null;
-	/** 其它可用容量 */
-	private TextView mOtherSize = null;
 	private CustomFormatDialog mCustomFormatDialog = null;
 
 	@Override
@@ -70,17 +63,9 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 	private void initView() {
 		mTotalSize = (TextView) findViewById(R.id.mTotalSize);
 		mUsedSize = (TextView) findViewById(R.id.mUsedSize);
-		mCycleSize = (TextView) findViewById(R.id.mCycleSize);
-		mWonderfulSize = (TextView) findViewById(R.id.mWonderfulSize);
-		mEmergencySize = (TextView) findViewById(R.id.mEmergencySize);
-		mOtherSize = (TextView) findViewById(R.id.mOtherSize);
 
 		mTotalSize.setText(this.getResources().getString(R.string.str_zero_gb_text));
 		mUsedSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
-		mCycleSize.setText(this.getResources().getString(R.string.str_zero_gb_text));
-		mWonderfulSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
-		mEmergencySize.setText(this.getResources().getString(R.string.str_zero_mb_text));
-		mOtherSize.setText(this.getResources().getString(R.string.str_zero_mb_text));
 
 		findViewById(R.id.mFormatSDCard).setOnClickListener(this);
 	}
@@ -108,10 +93,6 @@ public class StorageCpacityQueryActivity extends CarRecordBaseActivity implement
 
 						mTotalSize.setText(getSize(mRecordStorgeState.totalSdSize));
 						mUsedSize.setText(getSize(usedsize));
-						mCycleSize.setText(getSize(cyclesize));
-						mWonderfulSize.setText(getSize(wonderfulsize));
-						mEmergencySize.setText(getSize(emergencysize));
-						mOtherSize.setText(getSize(picsize));
 
 						GolukDebugUtils.e("xuhw", "YYY===========２２２２２=========normalRecQuota="
 								+ mRecordStorgeState.normalRecQuota + "=====normalRecSize="
