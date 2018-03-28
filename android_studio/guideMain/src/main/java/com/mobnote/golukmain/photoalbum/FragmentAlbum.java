@@ -120,7 +120,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(1);
         mLocalFragment = new LocalFragment();
-        mTimeslapseFragment = new TimeslapseFragment();
+
+        if (isSupportTimeslapse())
+            mTimeslapseFragment = new TimeslapseFragment();
+
         mWonderfulFragment = new WonderfulFragment(); // WonderfulFragment.newInstance(IPCManagerFn.TYPE_SHORTCUT,
         // IPCManagerFn.TYPE_SHORTCUT);
         mLoopFragment = new LoopFragment();// newInstance(IPCManagerFn.TYPE_CIRCULATE,
@@ -136,7 +139,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         } else {
             fragmentList.add(mWonderfulFragment);
             fragmentList.add(mUrgentFragment);
-            fragmentList.add(mTimeslapseFragment);
+            if (isSupportTimeslapse())
+                fragmentList.add(mTimeslapseFragment);
             fragmentList.add(mLoopFragment);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
         }
@@ -165,9 +169,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
                     } else if (position == 1) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-                    } else if (position == 2) {
+                    } else if (position == 2 && isSupportTimeslapse()) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE;
-                    } else if (position == 3) {
+                    } else if (((position == 2) && !isSupportTimeslapse())
+                            || ((position == 3) && isSupportTimeslapse())) {
                         mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
                     }
                 }
@@ -246,6 +251,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 mLocalFragment.allSelect(all);
             }
         });
+
+        if (!isSupportTimeslapse())
+            mTabTimeslapse.setVisibility(View.GONE);
     }
 
     @Override
@@ -606,4 +614,9 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             mEditBtn.setVisibility(View.GONE);
         }
     }
+
+    private boolean isSupportTimeslapse() {
+        return GolukApplication.getInstance().getIPCControlManager().isSupportTimeslapse();
+    }
+
 }
