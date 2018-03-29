@@ -367,6 +367,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
         mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
         editState = false;
+        mBackBtn.setVisibility(View.VISIBLE);
         mTitleName.setVisibility(View.GONE);
         mEditLayout.setVisibility(View.GONE);
         selectedListData.clear();
@@ -548,7 +549,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     private void updateEditState() {
         if (!editState) {
             editState = true;
-
+            mBackBtn.setVisibility(View.GONE);
             // mEditBtn.setText(this.getResources().getString(R.string.short_input_cancel));
             mTitleName.setVisibility(View.VISIBLE);
             mCancelBtn.setVisibility(View.VISIBLE);
