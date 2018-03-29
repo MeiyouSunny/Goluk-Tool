@@ -32,6 +32,8 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     void onOpenLoopModeFailed();
 
+    void onOpenLoopModeErrorNoSdCard();
+
     void showLoading();
 
     void hideLoading();

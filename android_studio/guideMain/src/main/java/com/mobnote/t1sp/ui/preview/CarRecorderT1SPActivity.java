@@ -1108,6 +1108,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     @Override
+    public void onOpenLoopModeErrorNoSdCard() {
+        GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord failed, No SdCard");
+        mCanSwitchMode = true;
+        resetCaptureButton();
+    }
+
+    @Override
     public void onT1SPDisconnected() {
         ipcConnFailed();
     }

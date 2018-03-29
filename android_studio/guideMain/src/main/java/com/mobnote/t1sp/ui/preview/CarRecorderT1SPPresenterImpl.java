@@ -48,7 +48,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                if (errorCode == 716) {
+                if (errorCode == Const.ERROR_CODE_NO_SD_CARD) {
                     $.toast().text("抓拍失败,没有SD卡").show();
                     return;
                 }
@@ -137,7 +137,10 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
                     @Override
                     protected void onServerError(int errorCode, String errorMessage) {
-                        getView().onOpenLoopModeFailed();
+                        if (errorCode == Const.ERROR_CODE_NO_SD_CARD)
+                            getView().onOpenLoopModeErrorNoSdCard();
+                        else
+                            getView().onOpenLoopModeFailed();
                     }
                 });
     }

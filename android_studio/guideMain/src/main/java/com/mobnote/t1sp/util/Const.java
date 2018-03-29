@@ -12,4 +12,7 @@ public class Const {
     /* Log Tag */
     public static final String LOG_TAG = "T1SP";
 
+    // 错误码,无SdCard
+    public static final int ERROR_CODE_NO_SD_CARD = 716;
+
 }
