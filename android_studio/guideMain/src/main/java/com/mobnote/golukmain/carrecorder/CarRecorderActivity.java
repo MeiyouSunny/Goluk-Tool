@@ -26,10 +26,12 @@ import android.widget.TextView;
 
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -2348,7 +2350,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mExitAlertDialog.show();
         mExitAlertDialog.setCancelable(true);
         mExitAlertDialog.setCanceledOnTouchOutside(true);
+    }
 
+    /**
+     * 下载完成Event
+     */
+    public void onEventMainThread(Event event) {
+        if (EventUtil.isDownloadCompleteEvent(event)) {
+            if (mExitAlertDialog != null && mExitAlertDialog.isShowing()) {
+                mExitAlertDialog.dismiss();
+                mExitAlertDialog = null;
+            }
+        }
     }
 
     private void exit() {

@@ -4,13 +4,13 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,8 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
@@ -39,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class FragmentAlbum extends Fragment implements OnClickListener {
 
@@ -98,6 +100,18 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     public boolean fromCloud = false;
 
     public PromotionSelectItem mPromotionSelectItem;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -486,27 +500,41 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         }
     }
 
+    private AlertDialog mCancelDonalodDialog;
+
     private void preExit() {
-        final AlertDialog dialog = new AlertDialog.Builder(getContext()).create();
-        dialog.setTitle(getString(R.string.str_global_dialog_title));
-        dialog.setMessage(getString(R.string.msg_of_exit_when_download));
-        dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
+        mCancelDonalodDialog = new AlertDialog.Builder(getContext()).create();
+        mCancelDonalodDialog.setTitle(getString(R.string.str_global_dialog_title));
+        mCancelDonalodDialog.setMessage(getString(R.string.msg_of_exit_when_download));
+        mCancelDonalodDialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.str_button_ok), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialog.dismiss();
+                mCancelDonalodDialog.dismiss();
                 GolukApplication.getInstance().stopDownloadList();
                 getActivity().finish();
             }
         });
-        dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
+        mCancelDonalodDialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.dialog_str_cancel), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                dialog.dismiss();
+                mCancelDonalodDialog.dismiss();
             }
         });
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
-        dialog.show();
+        mCancelDonalodDialog.setCancelable(true);
+        mCancelDonalodDialog.setCanceledOnTouchOutside(true);
+        mCancelDonalodDialog.show();
+    }
+
+    /**
+     * 下载完成Event
+     */
+    public void onEventMainThread(Event event) {
+        if (EventUtil.isDownloadCompleteEvent(event)) {
+            if (mCancelDonalodDialog != null && mCancelDonalodDialog.isShowing()) {
+                mCancelDonalodDialog.dismiss();
+                mCancelDonalodDialog = null;
+            }
+        }
     }
 
     private void deleteDataFlush() {

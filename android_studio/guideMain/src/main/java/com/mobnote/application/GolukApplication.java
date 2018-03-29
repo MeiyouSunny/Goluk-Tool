@@ -54,6 +54,7 @@ import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
@@ -1011,6 +1012,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         GlobalWindow.getInstance().topWindowSucess(
                                 this.getResources().getString(R.string.str_video_transfer_success));
                         XLog.tag("Download").i("Download complete");
+                        // 发送Event
+                        EventUtil.sendDownloadCompleteEvent();
                     }
 
                     resetSDCheckState();
