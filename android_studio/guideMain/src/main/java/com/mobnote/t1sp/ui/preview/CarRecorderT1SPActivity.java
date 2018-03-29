@@ -586,7 +586,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             getPresenter().captureVideo();
         } else if (id == R.id.mSettingBtn) {
-            if (m_bIsFullScreen) {
+            if (m_bIsFullScreen || mIsInCapture) {
                 return;
             }
             // 进入设置模式
