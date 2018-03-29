@@ -146,6 +146,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private int mCurrentMode = MODE_RECORDING;
     // 是否连接上IPC
     private boolean mConnectedIpc;
+    // 是否正在抓拍
+    private boolean mIsInCapture;
 
     @Override
     public int initLayoutResId() {
@@ -209,6 +211,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else {
             GolukDebugUtils.e(Const.LOG_TAG, "Timer count over: " + System.currentTimeMillis() / 1000);
             resetCaptureButton();
+
+            mHandlerCapture.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mIsInCapture = false;
+                }
+            }, 3000);
         }
 
     }
@@ -241,6 +250,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onCaptureStart() {
         GolukDebugUtils.e(Const.LOG_TAG, "Capture command send success, time:" + System.currentTimeMillis() / 1000);
+
+        mIsInCapture = true;
         // 抓拍精彩视频开始
         mHandlerCapture.removeMessages(0);
         mCaptureTime = mSettingInfo.captureTimeIs12S() ? CAPTURE_TIME_12 : CAPTURE_TIME_30;
@@ -289,6 +300,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onCaptureVideo(String path) {
         GolukDebugUtils.e(Const.LOG_TAG, "Received capture video path, time:" + System.currentTimeMillis() / 1000 + ", 路径:" + path);
+
+        mIsInCapture = false;
         // 停止计时
         mHandlerCapture.removeMessages(0);
         mCaptureTime = 0;
@@ -582,6 +595,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
         } else if (id == R.id.ic_rotate || id == R.id.ic_rotate_full_screen) {
+            if (mIsInCapture)
+                return;
             rotatePreviewVideo();
         } else if (id == R.id.ic_exit_full_screen) {
             setFullScreen(false);
@@ -613,6 +628,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
+            if (mIsInCapture)
+                return;
             // 进入回放模式
             mCurrentMode = MODE_PLAYBACK;
             Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
