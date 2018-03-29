@@ -42,6 +42,8 @@ public abstract class SettingInfosCallback extends DataCallback {
     private static final String KEY_SLEEP_MODE = "Camera.Menu.SleepMode=";
     // 紧急视频声音
     private static final String KEY_EMG_VIDEO_SOUND = "Camera.Menu.LockSound=";
+    // 语言
+    private static final String KEY_LANGUAGE = "Camera.Menu.Language=";
 
     @Override
     protected void parseData(String[] datas) {
@@ -83,6 +85,8 @@ public abstract class SettingInfosCallback extends DataCallback {
                 settingInfo.SDCardInfo = parseSDCardInfo(line.substring(KEY_SD_INFO.length(), line.length()));
             } else if (line.contains(KEY_DEVICE_INFO)) {
                 parseVersionInfo(settingInfo, line.substring(KEY_DEVICE_INFO.length(), line.length()));
+            } else if (line.contains(KEY_LANGUAGE)) {
+                settingInfo.language = line.substring(KEY_LANGUAGE.length(), line.length());
             }
         }
 

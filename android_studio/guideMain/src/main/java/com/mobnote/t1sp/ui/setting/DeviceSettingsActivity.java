@@ -55,6 +55,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     TextView mTvPowerOffDelay;
     @BindView(R2.id.gsensor_level_value)
     TextView mTvGSensor;
+    @BindView(R2.id.language_value)
+    TextView mTvLanguage;
     @BindView(R2.id.switch_record_sound)
     SwitchButton switchRecordSound;
     @BindView(R2.id.switch_power_sound)
@@ -113,7 +115,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
-            R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory})
+            R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
@@ -126,6 +128,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             startSelections(R.string.pzgy_title, R.array.gsendor_level, R.array.gsendor_level_values, mSettingInfo.GSensor, TYPE_GSENSOR);
         } else if (viewId == R.id.shutdown_time) {
             startSelections(R.string.str_settings_shutdown_title, R.array.power_off_delay, R.array.power_off_delay_values, mSettingInfo.powerOffDelay, TYPE_POWER_OFF_DELAY);
+        } else if (viewId == R.id.language_set) {
+            startSelections(R.string.str_settings_language_title, R.array.list_language_t, R.array.list_language_t_value, mSettingInfo.language, TYPE_LANGUAGE);
         } else if (viewId == R.id.reset_factory) {
             showRestFactoryConfirmDialog();
         } else if (viewId == R.id.version_info) {
@@ -196,6 +200,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         mTvPowerOffDelay.setText(getPresenter().getSettingLabelByValue(this, R.array.power_off_delay, R.array.power_off_delay_values, settingInfo.powerOffDelay));
         mTvGSensor.setText(getPresenter().getSettingLabelByValue(this, R.array.gsendor_level, R.array.gsendor_level_values, settingInfo.GSensor));
         mTvSnapTime.setText(getPresenter().getSettingLabelByValue(this, R.array.capture_time, R.array.capture_time_values, settingInfo.captureTime));
+        mTvLanguage.setText(getPresenter().getSettingLabelByValue(this, R.array.list_language_t, R.array.list_language_t_value, settingInfo.language));
         switchRecordSound.setChecked(settingInfo.soundRecord);
         switchPowerSound.setChecked(settingInfo.powerSound);
         switchCaptureSound.setChecked(settingInfo.snapSound);
@@ -310,6 +315,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             case DeviceSettingsView.TYPE_GSENSOR:
                 mSettingInfo.GSensor = value;
                 mTvGSensor.setText(getPresenter().getSettingLabelByValue(this, R.array.gsendor_level, R.array.gsendor_level_values, value));
+                break;
+            case DeviceSettingsView.TYPE_LANGUAGE:
+                mSettingInfo.language = value;
+                mTvLanguage.setText(getPresenter().getSettingLabelByValue(this, R.array.list_language_t, R.array.list_language_t_value, value));
                 break;
         }
     }

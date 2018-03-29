@@ -143,6 +143,9 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
             case DeviceSettingsView.TYPE_POWER_OFF_DELAY:
                 params = ParamsBuilder.setPowerOffDelayParam(value);
                 break;
+            case DeviceSettingsView.TYPE_LANGUAGE:
+                params = ParamsBuilder.setLanguageParam(value);
+                break;
         }
 
         ApiUtil.apiServiceAit().sendRequest(params, new CommonCallback() {

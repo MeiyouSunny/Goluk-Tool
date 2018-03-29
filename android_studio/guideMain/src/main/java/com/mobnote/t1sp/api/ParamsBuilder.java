@@ -650,6 +650,21 @@ public class ParamsBuilder {
     }
 
     /**
+     * 设置语言参数
+     *
+     * @param value EN/SC/RU
+     * @return
+     */
+    public static Map<String, String> setLanguageParam(String value) {
+        Map<String, String> params = new HashMap<>();
+        params.put(KEY_ACTION, ACTION_SET);
+        params.put(KEY_PROPERTY, "Language");
+        params.put(KEY_VALUE, value);
+
+        return params;
+    }
+
+    /**
      * 恢复出厂设置
      *
      * @return

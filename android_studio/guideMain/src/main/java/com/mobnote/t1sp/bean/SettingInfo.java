@@ -45,6 +45,8 @@ public class SettingInfo implements Parcelable {
     public boolean sleepMode;
     // 紧急视频声音
     public boolean emgVideoSound;
+    // 语言
+    public String language;
 
     public SettingInfo() {
     }

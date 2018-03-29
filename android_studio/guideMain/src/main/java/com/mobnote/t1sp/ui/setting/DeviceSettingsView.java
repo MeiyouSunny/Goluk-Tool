@@ -13,6 +13,7 @@ public interface DeviceSettingsView extends View<DeviceSettingsPresenter>, Loadi
     int TYPE_PARKING_GUARD = 4;
     int TYPE_MTD = 5;
     int TYPE_POWER_OFF_DELAY = 6;
+    int TYPE_LANGUAGE = 7;
 
     void onGetSettingInfos(SettingInfo settingInfo);
 

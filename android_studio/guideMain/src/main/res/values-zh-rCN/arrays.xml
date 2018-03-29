@@ -230,7 +230,13 @@
         <item>English</item>
         <item>Русский</item>
     </string-array>
-    
+
+    <string-array name="list_language_t_value">
+        <item>SC</item>
+        <item>EN</item>
+        <item>RU</item>
+    </string-array>
+
     <!-- 适配的所有时区 -->
     <string-array name="zone_array">
         <item>zh_CN</item>
