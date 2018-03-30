@@ -1309,7 +1309,7 @@ public class IPCControlManager implements IPCManagerFn {
         final String ipcType = mProduceName;
         final String ipcVersion = getVersionCode();
         if (T1_SIGN.equals(ipcType) || T1U_SIGN.equals(ipcType) || T2_SIGN.equals(ipcType) || T2U_SIGN.equals(ipcType))
-            return bigThan(ipcVersion, "1.6");
+            return bigThan(ipcVersion, "1.7");
         if (T3_SIGN.equals(ipcType) || T3U_SIGN.equals(ipcType))
             return bigThan(ipcVersion, "1.4");
 
