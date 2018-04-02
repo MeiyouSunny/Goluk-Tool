@@ -1,5 +1,7 @@
 package com.mobnote.eventbus;
 
+import com.mobnote.golukmain.comment.CommentBean;
+
 import de.greenrobot.event.EventBus;
 
 public class EventUtil {
@@ -8,6 +10,8 @@ public class EventUtil {
     private static final int EVENT_FOLLOW = 1;
     /* 下载完成事件 */
     private static final int EVENT_DOWNLOAD_COMPLETE = 2;
+    /* 评论成功事件 */
+    private static final int EVENT_COMMENT_SUCCESS = 3;
 
     /////////////////////////////////////////////////////////////////////////
 
@@ -33,6 +37,18 @@ public class EventUtil {
 
     public static boolean isDownloadCompleteEvent(Event event) {
         return event != null && event.type == EVENT_DOWNLOAD_COMPLETE;
+    }
+
+    /**
+     * 视频评论成功事件
+     */
+    public static void sendCommentSuccessEvent(CommentBean comment) {
+        Event event = Event.create(EVENT_COMMENT_SUCCESS, comment);
+        EventBus.getDefault().post(event);
+    }
+
+    public static boolean isCommentSuccessEvent(Event event) {
+        return event != null && event.type == EVENT_COMMENT_SUCCESS;
     }
 
 }

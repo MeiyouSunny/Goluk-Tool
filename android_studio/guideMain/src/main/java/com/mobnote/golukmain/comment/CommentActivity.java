@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
@@ -757,6 +758,8 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 						mIsReply = false;
 						mEditInput.setHint(this.getString(R.string.str_comment_input_hit));
 						mCommentTime = System.currentTimeMillis();
+
+						EventUtil.sendCommentSuccessEvent(bean);
 					} else if ("1".equals(bean.result)) {
 						GolukDebugUtils.e("", this.getString(R.string.str_parameter_error));
 					} else if ("2".equals(bean.result)) {// 重复评论
