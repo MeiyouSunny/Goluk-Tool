@@ -444,6 +444,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
             @Override
             public boolean onPlayerError(RtspPlayerView rpv, int what, int extra, String strErrorInfo) {
+                if (!mConnectedIpc)
+                    return false;
                 hidePlayer();
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
