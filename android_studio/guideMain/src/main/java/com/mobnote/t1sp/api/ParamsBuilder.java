@@ -53,7 +53,7 @@ public class ParamsBuilder {
     public static final String FILE_DIR_TYPE_DCIM = "DCIM";
     public static final String FILE_DIR_TYPE_NORMAL = "Normal";
     public static final String FILE_DIR_TYPE_EVENT = "Event";
-    public static final String FILE_DIR_TYPE_PARK = "Park";
+    public static final String FILE_DIR_TYPE_PARK = "Parking";
     public static final String FILE_DIR_TYPE_SHARE = "Share";
     //=== 前后摄像头切换 ===
     /* 前置摄像头 */

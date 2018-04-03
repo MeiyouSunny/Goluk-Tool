@@ -7,6 +7,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.Utils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.t1sp.util.FileUtil;
 
 import java.io.File;
@@ -20,19 +21,9 @@ public class GolukVideoUtils {
 
             VideoFileInfoBean videoFileInfoBean = GolukVideoInfoDbManager.getInstance().selectSingleData(fileName);
 
-            int currType = 0;
-            if (!TextUtils.isEmpty(fileName)) {
-                // 后面的判断是T1SP的文件前缀
-                if (fileName.startsWith("NRM") || fileName.startsWith(FileUtil.LOOP_VIDEO_PREFIX)) {
-                    currType = 1;
-                } else if (fileName.startsWith("URG") || fileName.startsWith(FileUtil.URGENT_VIDEO_PREFIX)) {
-                    currType = 2;
-                } else if (fileName.startsWith("WND") || fileName.startsWith(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
-                    currType = 4;
-                }
-            }
+            int currType = PhotoAlbumConfig.getVideoTypeByName(fileName);
 
-            String[] videoPaths = {"", "loop/", "urgent/", "", "wonderful/"};
+            String[] videoPaths = {"", "wonderful/", "urgent/", "loop/"};
             String mFilePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
             String videoPath = mFilePath + videoPaths[currType] + fileName;
             String resolution = "1080p"; // 默认1080P
@@ -63,7 +54,7 @@ public class GolukVideoUtils {
                         periodStr = names[6];
                         periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
                         dateStr = names[2];
-                    } else if (names.length == 8 && currType == 1) {
+                    } else if (names.length == 8 && currType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                         hpStr = names[6];
                         periodStr = names[7];
                         periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
@@ -89,6 +80,8 @@ public class GolukVideoUtils {
                         startIndex = FileUtil.URGENT_VIDEO_PREFIX.length();
                     } else if (fileName.contains(FileUtil.LOOP_VIDEO_PREFIX)) {
                         startIndex = FileUtil.LOOP_VIDEO_PREFIX.length();
+                    } else if (fileName.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX)) {
+                        startIndex = FileUtil.TIMELAPSE_VIDEO_PREFIX.length();
                     }
 
                     dateStr = fileName.substring(startIndex, fileName.indexOf("F."));

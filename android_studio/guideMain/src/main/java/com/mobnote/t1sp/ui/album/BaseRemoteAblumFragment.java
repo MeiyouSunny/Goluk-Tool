@@ -363,6 +363,9 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
                 type = ParamsBuilder.FILE_DIR_TYPE_NORMAL;
                 break;
+            case PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE:
+                type = ParamsBuilder.FILE_DIR_TYPE_PARK;
+                break;
         }
 
         return ParamsBuilder.getFileListParam(
@@ -548,6 +551,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             case PhotoAlbumConfig.PHOTO_BUM_IPC_URG:
                 return FileUtil.URGENT_VIDEO_PATH + videoName;
             case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
+                return FileUtil.LOOP_VIDEO_PATH + videoName;
+            case PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE:
                 return FileUtil.LOOP_VIDEO_PATH + videoName;
         }
         return "";

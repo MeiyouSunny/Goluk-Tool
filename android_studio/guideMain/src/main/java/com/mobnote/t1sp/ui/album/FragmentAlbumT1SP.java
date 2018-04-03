@@ -2,7 +2,6 @@ package com.mobnote.t1sp.ui.album;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +9,6 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -29,20 +26,14 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.photoalbum.CustomViewPager;
-import com.mobnote.golukmain.photoalbum.LocalFragment;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.t1sp.util.CollectionUtils;
-import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import cn.com.tiros.debug.GolukDebugUtils;
 
 public class FragmentAlbumT1SP extends Fragment implements OnClickListener, AlbumCloudAdapterListener {
 
@@ -50,12 +41,11 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
      * 活动分享
      */
     public static final String ACTIVITY_INFO = "activityinfo";
-    private static final String TAG = "FragmentAlbum";
-    public static final String PARENT_VIEW = "MainActivity";
+    private static final String TAG = "FragmentAlbumT1SP";
     public static final String SELECT_MODE = "select_item";
 
     private CustomViewPager mViewPager;
-    //private LocalFragment mLocalFragment;
+    private RemoteTimelapseAlbumFragment mTimelapseFragment;
     private RemoteWonderfulAlbumFragment mWonderfulFragment;
     private RemoteLoopAlbumFragment mLoopFragment;
     private RemoteEventAlbumFragment mUrgentFragment;
@@ -63,10 +53,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     private LinearLayout mLinearLayoutTab;
 
     // 四个tab
-    private TextView mTabLocal;
-    private TextView mTabWonderful;
-    private TextView mTabUrgent;
-    private TextView mTabLoop;
+    private TextView mTabTimelapse, mTabWonderful, mTabUrgent, mTabLoop;
     private CheckBox mCBAll;
     private Button mCancelBtn;
 
@@ -95,11 +82,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
 
     private List<String> selectedListData = null;
 
-    /**
-     * Fragment的父节点只会是{@link com.mobnote.golukmain.MainActivity} 和  {@link PhotoAlbumActivity}
-     * 如果为true 表示父页面为MainActivity，否则相反
-     */
-    public boolean parentViewIsMainActivity = true;
     public boolean selectMode = false;
     public boolean fromCloud = false;
 
@@ -110,7 +92,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         super.onCreateView(inflater, container, savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
-            parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW, true);
             selectMode = bundle.getBoolean(SELECT_MODE, false);
             fromCloud = bundle.getBoolean("from", false);
         }
@@ -121,26 +102,22 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
         }
 
-        mAlbumRootView = inflater.inflate(R.layout.photo_album, container, false);
+        mAlbumRootView = inflater.inflate(R.layout.photo_album_t1sp, container, false);
         editState = false;
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
         mViewPager.setOffscreenPageLimit(1);
-        //mLocalFragment = new LocalFragment();
+        mTimelapseFragment = new RemoteTimelapseAlbumFragment();
         mWonderfulFragment = new RemoteWonderfulAlbumFragment();
         mLoopFragment = new RemoteLoopAlbumFragment();
         mUrgentFragment = new RemoteEventAlbumFragment();
         selectedListData = new ArrayList<>();
 
         fragmentList = new ArrayList<>();
-        if (parentViewIsMainActivity) {
-            //fragmentList.add(mLocalFragment);
-            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
-        } else {
-            fragmentList.add(mWonderfulFragment);
-            fragmentList.add(mUrgentFragment);
-            fragmentList.add(mLoopFragment);
-            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
-        }
+        fragmentList.add(mWonderfulFragment);
+        fragmentList.add(mUrgentFragment);
+        fragmentList.add(mTimelapseFragment);
+        fragmentList.add(mLoopFragment);
+        mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
 
         mViewPager.setCurrentItem(0);
         initView();
@@ -169,7 +146,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     }
 
     public void initView() {
-        mTabLocal = (TextView) mAlbumRootView.findViewById(R.id.tab_local);
+        mTabTimelapse = (TextView) mAlbumRootView.findViewById(R.id.tab_timelapse);
         mTabWonderful = (TextView) mAlbumRootView.findViewById(R.id.tab_wonderful);
         mTabUrgent = (TextView) mAlbumRootView.findViewById(R.id.tab_urgent);
         mTabLoop = (TextView) mAlbumRootView.findViewById(R.id.tab_loop);
@@ -184,32 +161,14 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         mCancelBtn = (Button) mAlbumRootView.findViewById(R.id.cancel_btn);
         mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
-        if (parentViewIsMainActivity) {
-            mBackBtn.setVisibility(View.VISIBLE);
-            if (selectMode) {
-                mTabLocal.setText(R.string.str_ae_add_video_title);
-            }
-            if (!selectMode && !fromCloud) {
-                mBackBtn.setImageResource(R.drawable.remote_album_sd);
-                mBackBtn.setBackgroundResource(0);
-            }
-            mTabLocal.setVisibility(View.VISIBLE);
-            mTabWonderful.setVisibility(View.GONE);
-            mTabUrgent.setVisibility(View.GONE);
-            mTabLoop.setVisibility(View.GONE);
-        } else {
-            mBackBtn.setVisibility(View.VISIBLE);
-            mTabLocal.setVisibility(View.GONE);
-            mTabWonderful.setVisibility(View.VISIBLE);
-            mTabUrgent.setVisibility(View.VISIBLE);
-            mTabLoop.setVisibility(View.VISIBLE);
-        }
+
+        mBackBtn.setVisibility(View.VISIBLE);
 
         mCancelBtn.setOnClickListener(this);
         mDownLoadBtn.setOnClickListener(this);
         mBackBtn.setOnClickListener(this);
         mAlbumRootView.findViewById(R.id.mDeleteBtn).setOnClickListener(this);
-        mTabLocal.setOnClickListener(this);
+        mTabTimelapse.setOnClickListener(this);
         mTabWonderful.setOnClickListener(this);
         mTabUrgent.setOnClickListener(this);
         mTabLoop.setOnClickListener(this);
@@ -220,7 +179,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 boolean all = mCBAll.getText().equals(getString(R.string.select_all));
                 adaptCbAllText(!all);
-                //mLocalFragment.allSelect(all);
             }
         });
     }
@@ -236,7 +194,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             if (!mWonderfulFragment.isShowPlayer) {
                 mWonderfulFragment.loadData(true);
             }
-
         } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
             if (!mUrgentFragment.isShowPlayer) {
                 mUrgentFragment.loadData(true);
@@ -245,7 +202,10 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             if (!mLoopFragment.isShowPlayer) {
                 mLoopFragment.loadData(true);
             }
-
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+            if (!mTimelapseFragment.isShowPlayer) {
+                mTimelapseFragment.loadData(true);
+            }
         }
     }
 
@@ -255,14 +215,12 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
      * @param currentType 位置index
      */
     public void setItemLineState(int currentType) {
-        mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
+        mTabTimelapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
-        if (currentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
-            //mLocalFragment.loadData(true);
-            mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+
+        if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
             mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
             if (!mWonderfulFragment.hasLoadedFirst())
                 mWonderfulFragment.loadData(true);
@@ -274,6 +232,10 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
             if (!mLoopFragment.hasLoadedFirst())
                 mLoopFragment.loadData(true);
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+            mTabTimelapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
+            if (!mTimelapseFragment.hasLoadedFirst())
+                mTimelapseFragment.loadData(true);
         }
     }
 
@@ -305,6 +267,8 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
                     mUrgentFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                     mLoopFragment.downloadVideoFlush(selectedListData);
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                    mTimelapseFragment.downloadVideoFlush(selectedListData);
                 }
 
             }
@@ -332,17 +296,17 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     @Override
     public void onClick(View view) {
         int id = view.getId();
-        if (id == R.id.tab_local) {
-            mViewPager.setCurrentItem(0);
-            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_LOCAL;
-        } else if (id == R.id.tab_wonderful) {
+        if (id == R.id.tab_wonderful) {
             mViewPager.setCurrentItem(0);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_WND;
         } else if (id == R.id.tab_urgent) {
             mViewPager.setCurrentItem(1);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (id == R.id.tab_loop) {
+        } else if (id == R.id.tab_local) {
             mViewPager.setCurrentItem(2);
+            mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE;
+        } else if (id == R.id.tab_loop) {
+            mViewPager.setCurrentItem(3);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP;
         } else if (id == R.id.edit_btn) {
             mViewPager.setCanScroll(false);
@@ -362,32 +326,8 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             setEditBtnState(true);
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
-            if (parentViewIsMainActivity && !selectMode && !fromCloud) {
-                final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
-                mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
-                mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        mPopMenu.dismiss();
-                        if (item.getItemId() == R.id.action_sd) {
-                            if (GolukApplication.getInstance().getIpcIsLogin()) {
-                                Intent photoalbum = new Intent(FragmentAlbumT1SP.this.getActivity(), PhotoAlbumActivity.class);
-                                photoalbum.putExtra("from", "cloud");
-                                startActivity(photoalbum);
-                            } else {
-                                Intent intent = new Intent(getContext(), WiFiLinkListActivity.class);
-                                intent.putExtra(WiFiLinkListActivity.ACTION_GO_To_ALBUM, true);
-                                startActivity(intent);
-                            }
-                        }
-                        return false;
-                    }
-                });
-                mPopMenu.show();
-            } else {
-                PhotoAlbumT1SPActivity activity = (PhotoAlbumT1SPActivity) getActivity();
-                activity.onBackPressed();
-            }
+            PhotoAlbumT1SPActivity activity = (PhotoAlbumT1SPActivity) getActivity();
+            activity.onBackPressed();
         } else if (id == R.id.mDeleteBtn) {
             if (CollectionUtils.isEmpty(selectedListData))
                 return;
@@ -465,16 +405,14 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         //相册页面-批量删除视频
         ZhugeUtils.eventAlbumBatchDelete(getActivity(), mCurrentType);
 
-        if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
-            if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-                mWonderfulFragment.deleteListData(selectedListData);
-            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-                mUrgentFragment.deleteListData(selectedListData);
-            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-                mLoopFragment.deleteListData(selectedListData);
-            }
-        } else {
-            //mLocalFragment.deleteListData(selectedListData);
+        if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+            mWonderfulFragment.deleteListData(selectedListData);
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+            mUrgentFragment.deleteListData(selectedListData);
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+            mLoopFragment.deleteListData(selectedListData);
+        } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+            mTimelapseFragment.deleteListData(selectedListData);
         }
     }
 
@@ -505,19 +443,8 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             mLinearLayoutTab.setVisibility(View.GONE);
             mEditLayout.setVisibility(View.VISIBLE);
 
-            if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
-                mDownLoadBtn.setVisibility(View.GONE);
-                mLLAll.setVisibility(View.VISIBLE);
-            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
-                mDownLoadBtn.setVisibility(View.VISIBLE);
-                mLLAll.setVisibility(View.GONE);
-            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
-                mDownLoadBtn.setVisibility(View.VISIBLE);
-                mLLAll.setVisibility(View.GONE);
-            } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
-                mDownLoadBtn.setVisibility(View.VISIBLE);
-                mLLAll.setVisibility(View.GONE);
-            }
+            mDownLoadBtn.setVisibility(View.VISIBLE);
+            mLLAll.setVisibility(View.GONE);
         }
     }
 

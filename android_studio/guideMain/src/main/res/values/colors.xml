@@ -100,6 +100,7 @@
     <color name="photoalbum_wonderful_txt_color">#ee6051</color>
     <color name="photoalbum_urgent_txt_color">#0080ff</color>
     <color name="photoalbum_loop_txt_color">#6ac1ee</color>
+    <color name="photoalbum_reduce_txt_color">#52B77E</color>
     
     <!-- 行车记录仪设置颜色 -->
     <color name="setting_black_color">#000000</color>

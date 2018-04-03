@@ -18,6 +18,8 @@
 
     <string name="str_ipc_update_success_t1s">固件升级成功</string>
     <string name="capture_failed">抓拍失败</string>
+
+    <string name="reduce">缩时</string>
     <!-- Array -->
     <!-- 视频清晰度 -->
     <array name="video_res">

@@ -41,6 +41,8 @@ public class FileUtil {
     public static final String URGENT_VIDEO_PREFIX = "EMER";
     /* 循环视频文件前缀 */
     public static final String LOOP_VIDEO_PREFIX = "FILE";
+    /* 缩时视频文件前缀 */
+    public static final String TIMELAPSE_VIDEO_PREFIX = "PARK";
 
     /* 精彩视频 */
     public static final int VIDEO_TYPE_WONDERFUL = 1;

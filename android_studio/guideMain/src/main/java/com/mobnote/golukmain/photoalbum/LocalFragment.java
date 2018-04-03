@@ -267,7 +267,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             }
 
             if (!mFragmentAlbum.parentViewIsMainActivity) {
-                if (type != 3) {// 不是循环视频
+                if (type != PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {// 不是循环视频
                     GolukUtils.startPhotoAlbumPlayerActivity(getActivity(), type, "local", path, filename, createTime, videoHP, size,
                             (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
                     return;
@@ -294,6 +294,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         // 循环/紧急/精彩视频轨迹为.NMEA文件
         if (path.contains(FileUtil.URGENT_VIDEO_PREFIX) ||
                 path.contains(FileUtil.LOOP_VIDEO_PREFIX) ||
+                path.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX) ||
                 path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
             String gpsPath = path.replace("MP4", "NMEA");
             File gpsFile = new File(gpsPath);
@@ -304,13 +305,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     public int getVideoType(String name) {
-        if (name.contains("WND") || name.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
-            return 1;
-        } else if (name.contains("URG") || name.contains(FileUtil.URGENT_VIDEO_PREFIX)) {
-            return 2;
-        } else {
-            return 3;
-        }
+        return PhotoAlbumConfig.getVideoTypeByName(name);
     }
 
     @Override
