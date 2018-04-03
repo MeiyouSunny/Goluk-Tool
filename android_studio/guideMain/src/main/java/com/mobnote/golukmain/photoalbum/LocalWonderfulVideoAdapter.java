@@ -202,7 +202,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         } else if(type == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
             holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.reduce));
-            holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+            holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_reduce_txt_color));
             holder.mPreView1.setVisibility(View.GONE);
         }
 
@@ -239,7 +239,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             } else if(type2 == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
                 holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
                 holder.mVide2Type.setText(mContext.getResources().getString(R.string.reduce));
-                holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+                holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_reduce_txt_color));
                 holder.mPreView2.setVisibility(View.GONE);
             }
         }
