@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -73,7 +74,9 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                GolukDebugUtils.e(Const.LOG_TAG, errorMessage);
+                if (!TextUtils.isEmpty(errorMessage))
+                    GolukDebugUtils.e(Const.LOG_TAG, errorMessage);
+                finish();
             }
         });
     }
