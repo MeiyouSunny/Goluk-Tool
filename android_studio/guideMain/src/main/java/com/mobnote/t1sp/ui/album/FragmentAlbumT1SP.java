@@ -302,7 +302,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         } else if (id == R.id.tab_urgent) {
             mViewPager.setCurrentItem(1);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_URG;
-        } else if (id == R.id.tab_local) {
+        } else if (id == R.id.tab_timelapse) {
             mViewPager.setCurrentItem(2);
             mCurrentType = PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE;
         } else if (id == R.id.tab_loop) {
