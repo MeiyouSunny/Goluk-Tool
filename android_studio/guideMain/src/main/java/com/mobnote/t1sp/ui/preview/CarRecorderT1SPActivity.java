@@ -588,7 +588,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             getPresenter().captureVideo();
         } else if (id == R.id.mSettingBtn) {
-            if (m_bIsFullScreen || mIsInCapture) {
+            if (m_bIsFullScreen || mIsInCapture || !mConnectedIpc) {
                 return;
             }
             // 进入设置模式
@@ -630,7 +630,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 gotoPlayVideo(videoName);
             }
         } else if (id == R.id.image3) {
-            if (mIsInCapture)
+            if (mIsInCapture || !mConnectedIpc)
                 return;
             // 进入回放模式
             mCurrentMode = MODE_PLAYBACK;
@@ -682,7 +682,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
      * @date 2015年3月8日
      */
     public void showLoading() {
-        if (!NetUtil.isWifiConnected(this))
+        if (!NetUtil.isWifiConnected(this) || !mConnectedIpc)
             return;
         mLoadingText.setText(this.getResources().getString(R.string.str_video_loading));
         mLoadingLayout.setVisibility(View.VISIBLE);
@@ -718,6 +718,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mFullScreen.setVisibility(View.GONE);
         mBtnRotate.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
+        mVideoResolutions.setVisibility(View.GONE);
         if (mApp.isBindSucess()) {
             mPalyerLayout.setVisibility(View.GONE);
             mNotconnected.setVisibility(View.GONE);
@@ -742,6 +743,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mNotconnected.setVisibility(View.VISIBLE);
         mConncetLayout.setVisibility(View.GONE);
         mSettingBtn.setVisibility(View.GONE);
+        mVideoResolutions.setVisibility(View.GONE);
 
         disableCaptureButton();
     }
@@ -749,7 +751,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private void ipcConnSucess() {
         mConnectedIpc = true;
         if (isShowPlayer || isConnecting) {
-            showLoading();
+            //showLoading();
             hidePlayer();
             mRtspPlayerView.removeCallbacks(retryRunnable);
             isConnecting = true;
@@ -763,6 +765,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mConncetLayout.setVisibility(View.GONE);
         mConnectTip.setText(getCurrentIpcSsid());
         mSettingBtn.setVisibility(View.VISIBLE);
+        mVideoResolutions.setVisibility(View.VISIBLE);
         mCanSwitchMode = true;
     }
 
@@ -1112,6 +1115,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onOpenLoopModeSuccess() {
+        if (!mConnectedIpc)
+            return;
         GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord success");
         $.toast().text(R.string.recovery_to_record).show();
         mCanSwitchMode = true;
@@ -1121,6 +1126,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onOpenLoopModeFailed() {
+        if (!mConnectedIpc)
+            return;
         GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord failed");
         $.toast().text("进入录像模式失败").show();
         finish();
