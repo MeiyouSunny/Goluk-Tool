@@ -23,7 +23,7 @@ public class GolukVideoUtils {
 
             int currType = PhotoAlbumConfig.getVideoTypeByName(fileName);
 
-            String[] videoPaths = {"", "wonderful/", "urgent/", "loop/"};
+            String[] videoPaths = {"", "wonderful/", "urgent/", "reduce/", "loop/"};
             String mFilePath = android.os.Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
             String videoPath = mFilePath + videoPaths[currType] + fileName;
             String resolution = "1080p"; // 默认1080P
@@ -35,9 +35,9 @@ public class GolukVideoUtils {
             if (videoFileInfoBean == null) {
                 int hp = 0;
                 String hpStr = "";
-                File videoFile = new File(videoPath);
+                //File videoFile = new File(videoPath);
                 // if (videoFile.exists()) {
-                size = String.format("%.1f", videoFile.length() / 1024.f / 1024.f) + "MB";
+                //size = String.format("%.1f", videoFile.length() / 1024.f / 1024.f) + "MB";
 
                 if (fileName.contains("_")) {
                     // 传统视频文件,如 WND3_171101112822_0030.mp4
@@ -95,7 +95,6 @@ public class GolukVideoUtils {
                 periodStr = videoFileInfoBean.period;
                 size = videoFileInfoBean.filesize;
                 resolution = videoFileInfoBean.resolution;
-
             }
 
             //String time = FileInfoManagerUtils.countFileDateToString(dateStr);
@@ -103,6 +102,10 @@ public class GolukVideoUtils {
             if (!TextUtils.isEmpty(periodStr) && TextUtils.isDigitsOnly(periodStr)) {
                 period = Integer.valueOf(periodStr);
             }
+
+            File videoFile = new File(videoPath);
+            if (videoFile.exists())
+                size = String.format("%.1f", videoFile.length() / 1024.f / 1024.f) + "MB";
             VideoInfo mVideoInfo = new VideoInfo();
             mVideoInfo.videoCreateDate = dateStr;
             mVideoInfo.videoSize = size;

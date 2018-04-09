@@ -55,6 +55,8 @@ public class SortByDate implements Comparator<String> {
 				startIndex = FileUtil.URGENT_VIDEO_PREFIX.length();
 			} else if (fileName.contains(FileUtil.LOOP_VIDEO_PREFIX)) {
 				startIndex = FileUtil.LOOP_VIDEO_PREFIX.length();
+			} else if (fileName.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX)) {
+				startIndex = FileUtil.TIMELAPSE_VIDEO_PREFIX.length();
 			}
 			date = fileName.substring(startIndex, fileName.indexOf("F."));
 			date = "20" + date;

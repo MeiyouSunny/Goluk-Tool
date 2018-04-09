@@ -353,9 +353,12 @@ public class DownloaderT1spImpl implements DownloaderT1sp {
     private void addRetryCount() {
         if (mRetryMap == null)
             mRetryMap = new HashMap<>();
-        int count = mRetryMap.get(mCurrentTask);
-        count++;
-        mRetryMap.put(mCurrentTask, count);
+        Integer countObj = mRetryMap.get(mCurrentTask);
+        if (countObj != null) {
+            int count = mRetryMap.get(mCurrentTask);
+            count++;
+            mRetryMap.put(mCurrentTask, count);
+        }
     }
 
     private static final int MSG_TYPE_START = 1;

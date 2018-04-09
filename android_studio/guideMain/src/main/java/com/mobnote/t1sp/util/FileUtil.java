@@ -32,6 +32,8 @@ public class FileUtil {
     public static final String URGENT_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/urgent/";
     /* 循环视频路径 */
     public static final String LOOP_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/loop/";
+    /* 缩时视频路径 */
+    public static final String REDUCE_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/reduce/";
     /* 视频缩略图缓存路径 */
     public static final String THUMB_CACHE_DIR = EXTERNAL_SD_PATH + "/goluk/goluk_carrecorder/image/";
 
@@ -56,6 +58,8 @@ public class FileUtil {
         dir = new File(URGENT_VIDEO_PATH);
         dir.mkdirs();
         dir = new File(LOOP_VIDEO_PATH);
+        dir.mkdirs();
+        dir = new File(REDUCE_VIDEO_PATH);
         dir.mkdirs();
         dir = new File(THUMB_CACHE_DIR);
         dir.mkdirs();

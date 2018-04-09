@@ -553,7 +553,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
                 return FileUtil.LOOP_VIDEO_PATH + videoName;
             case PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE:
-                return FileUtil.LOOP_VIDEO_PATH + videoName;
+                return FileUtil.REDUCE_VIDEO_PATH + videoName;
         }
         return "";
     }

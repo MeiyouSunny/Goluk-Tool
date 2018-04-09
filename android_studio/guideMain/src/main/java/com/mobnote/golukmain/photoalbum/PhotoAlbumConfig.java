@@ -37,6 +37,7 @@ public class PhotoAlbumConfig {
     public static final String LOCAL_LOOP_VIDEO_PATH = "fs1:/video/loop/";
     public static final String LOCAL_WND_VIDEO_PATH = "fs1:/video/wonderful/";
     public static final String LOCAL_URG_VIDEO_PATH = "fs1:/video/urgent/";
+    public static final String LOCAL_REDUCE_VIDEO_PATH = "fs1:/video/reduce/";
 
     /* 视频文件名前缀 */
     public static final String PREFIX_LOOP = "NRM";
