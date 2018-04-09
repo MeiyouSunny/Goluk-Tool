@@ -448,7 +448,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         // 获取视频水印
         boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
         GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
-        if (IPCControlManager.T1U_SIGN.equals(mIPCName) || IPCControlManager.T2U_SIGN.equals(mIPCName)) {
+        if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
             GolukApplication.getInstance().getIPCControlManager().getT1SW();
         }
 //		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
