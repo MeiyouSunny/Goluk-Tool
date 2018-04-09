@@ -62,43 +62,6 @@
                 android:textColor="#ffffff"/>
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/RelativeLayout_videoinfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/relativelayout_title"
-            android:layout_marginTop="20dp"
-            android:paddingBottom="2dp"
-            android:paddingTop="2dp"
-            android:visibility="gone">
-
-            <TextView
-                android:id="@+id/tv_resolution"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:background="@drawable/bg_resolution"
-                android:paddingBottom="1dp"
-                android:paddingLeft="6dp"
-                android:paddingRight="6dp"
-                android:paddingTop="1dp"
-                android:text="1080p"
-                android:textColor="#333333"
-                android:textSize="16sp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/tv_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="9dp"
-                android:textColor="#b8b8b8"
-                android:textSize="13sp"/>
-        </RelativeLayout>
-
         <!-- 视频 -->
         <FrameLayout
             android:id="@+id/video_frame_layout"
@@ -283,6 +246,38 @@
                     </RelativeLayout>
                 </RelativeLayout>
 
+            </RelativeLayout>
+
+            <!-- 视频分辨率,大小 -->
+            <RelativeLayout
+                android:id="@+id/RelativeLayout_videoinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="6dp"
+                android:layout_below="@+id/relativelayout_title">
+
+                <TextView
+                    android:id="@+id/tv_resolution"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="8dp"
+                    android:paddingBottom="1dp"
+                    android:paddingLeft="6dp"
+                    android:paddingRight="6dp"
+                    android:paddingTop="1dp"
+                    android:textColor="#b8b8b8"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/tv_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="9dp"
+                    android:textColor="#b8b8b8"
+                    android:textSize="14sp"/>
             </RelativeLayout>
 
             <!-- 进度条 -->
