@@ -140,6 +140,9 @@ public class SharedPrefUtil {
      **/
     public static final String USER_PASSWORD = "user_password";
 
+    /* IPC 异常日志最后获取ID信息 */
+    public static final String IPC_EXCEPTION_INFO = "ipc_exception_info";
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Android config, by Micle
     public static final String PROPERTY_Config_Server_Flag = "property_config_serverflag";
@@ -855,6 +858,16 @@ public class SharedPrefUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public static void saveIpcExceptionInfo(String ipcExceptionJson) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("UnbindActivity", Activity.MODE_PRIVATE);
+        preference.edit().putString(IPC_EXCEPTION_INFO, ipcExceptionJson).commit();
+    }
+
+    public static String getIpcExceptionInfo() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("UnbindActivity", Activity.MODE_PRIVATE);
+        return preference.getString(IPC_EXCEPTION_INFO, "");
     }
 
 }

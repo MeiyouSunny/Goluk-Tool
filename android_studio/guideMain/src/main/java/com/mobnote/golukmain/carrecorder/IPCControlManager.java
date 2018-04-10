@@ -728,11 +728,11 @@ public class IPCControlManager implements IPCManagerFn {
     /**
      * 获取设备异常日志
      */
-    public boolean getExceptionList() {
+    public boolean getExceptionList(int fromId, int count) {
         JSONObject json = new JSONObject();
         try {
-            json.put("id", 5);
-            json.put("count", 5);
+            json.put("id", fromId);
+            json.put("count", count);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -76,6 +76,8 @@ import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
+import com.mobnote.golukmain.ipclog.IpcExceptionOperater;
+import com.mobnote.golukmain.ipclog.IpcExceptionOperaterImpl;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
@@ -398,8 +400,17 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
 
+    /* 获取IPC日志 */
+    private static final int MSG_TYPE_QUERY_IPC_EXCEPTION_LIST = 11;
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
+            if (msg.what == MSG_TYPE_QUERY_IPC_EXCEPTION_LIST) {
+                // 获取设备Exception信息
+                IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(GolukApplication.getInstance().getApplicationContext());
+                ipcExceptionOperater.getIpcExceptionList();
+                return;
+            }
+
             if (isExit()) {
                 return;
             }
@@ -1404,6 +1415,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
                     // 保存ipc版本号
                     SharedPrefUtil.saveIPCVersion(ipcVersion);
+
+                    // 获取设备Exception信息
+                    mHandler.removeMessages(MSG_TYPE_QUERY_IPC_EXCEPTION_LIST);
+                    mHandler.sendEmptyMessageDelayed(MSG_TYPE_QUERY_IPC_EXCEPTION_LIST, 6000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -1,34 +1,5 @@
 package com.mobnote.golukmain;
 
-import com.alibaba.fastjson.JSON;
-import com.bumptech.glide.Glide;
-import com.elvishew.xlog.LogLevel;
-import com.elvishew.xlog.printer.file.backup.FileSizeBackupStrategy;
-import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventBindPhoneNum;
-import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.multicast.NetUtil;
-import com.mobnote.golukmain.userlogin.CancelResult;
-import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
-import com.mobnote.golukmain.xdpush.GolukNotification;
-import com.mobnote.manager.MessageManager;
-import com.mobnote.user.DataCleanManage;
-import com.mobnote.user.IpcUpdateManage;
-import com.mobnote.user.UserInterface;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukFileUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -51,6 +22,34 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.bumptech.glide.Glide;
+import com.elvishew.xlog.LogLevel;
+import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventBindPhoneNum;
+import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
+import com.mobnote.golukmain.ipclog.IpcExceptionOperater;
+import com.mobnote.golukmain.ipclog.IpcExceptionOperaterImpl;
+import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.userlogin.CancelResult;
+import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
+import com.mobnote.golukmain.xdpush.GolukNotification;
+import com.mobnote.manager.MessageManager;
+import com.mobnote.user.DataCleanManage;
+import com.mobnote.user.IpcUpdateManage;
+import com.mobnote.user.UserInterface;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukFileUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
 
 import java.io.File;
 
@@ -378,6 +377,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
             }
         }).execute();
 
+        // 上传IPC日志
+        IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(this);
+        ipcExceptionOperater.uploadExceptionFile();
     }
 
     @Override
