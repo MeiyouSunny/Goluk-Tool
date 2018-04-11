@@ -20,6 +20,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
 import com.elvishew.xlog.XLog;
+import com.elvishew.xlog.flattener.PatternFlattener;
 import com.elvishew.xlog.printer.AndroidPrinter;
 import com.elvishew.xlog.printer.ConsolePrinter;
 import com.elvishew.xlog.printer.Printer;
@@ -439,6 +440,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 .Builder(new File(Environment.getExternalStorageDirectory(), GolukFileUtils.GOLUK_LOG_PATH).getPath())// Specify the path to save log file
                 .fileNameGenerator(new DateFileNameGenerator())        // Default: ChangelessFileNameGenerator("log")
                 .backupStrategy(new NeverBackupStrategy())             // Default: FileSizeBackupStrategy(1024 * 1024)
+                .logFlattener(new PatternFlattener("{d yyyy/MM/dd hh:mm:ss} |{l}|{t}| {m}"))
                 .build();
 
         XLog.init(                                                 // Initialize XLog
