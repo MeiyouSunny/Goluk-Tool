@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.ipclog;
+package com.mobnote.log.ipc;
 
 /**
  * 记录Ipc最后请求的Exception ID

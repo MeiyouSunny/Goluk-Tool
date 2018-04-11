@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.ipclog;
+package com.mobnote.log.ipc;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.model.ZipParameters;

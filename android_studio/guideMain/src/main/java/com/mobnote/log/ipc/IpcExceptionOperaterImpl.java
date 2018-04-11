@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.ipclog;
+package com.mobnote.log.ipc;
 
 import android.content.Context;
 import android.os.Environment;

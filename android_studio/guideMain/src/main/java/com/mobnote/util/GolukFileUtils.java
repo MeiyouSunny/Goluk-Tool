@@ -1,5 +1,14 @@
 package com.mobnote.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Environment;
+
+import com.mobnote.application.GolukApplication;
+import com.umeng.socialize.utils.Log;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -12,21 +21,11 @@ import java.io.StreamCorruptedException;
 import java.util.List;
 import java.util.Properties;
 
-import com.mobnote.application.GolukApplication;
-import com.umeng.socialize.utils.Log;
-
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.nfc.Tag;
-import android.os.Environment;
-
 public class GolukFileUtils {
     public static String APP_PREF_KEY = "goluk_android";
     public static String CAR_BRAND_PATH = "goluk/CarBrands";
     public static String CAR_BRAND_OBJECT = "objectList";
-    public static String GOLUK_LOG_PATH = "goluk_log";
+    public static String GOLUK_LOG_PATH = "goluk/log";
 
     /**
      * 是否显示活动提示

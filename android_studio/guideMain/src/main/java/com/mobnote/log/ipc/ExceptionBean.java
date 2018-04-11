@@ -1,4 +1,4 @@
-package com.mobnote.golukmain.ipclog;
+package com.mobnote.log.ipc;
 
 /**
  * IPC exception
