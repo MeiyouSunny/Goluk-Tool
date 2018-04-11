@@ -25,8 +25,6 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
-import com.elvishew.xlog.LogLevel;
-import com.elvishew.xlog.printer.file.naming.DateFileNameGenerator;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
@@ -39,6 +37,8 @@ import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.userlogin.CancelResult;
 import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
 import com.mobnote.golukmain.xdpush.GolukNotification;
+import com.mobnote.log.app.AppLogOpreater;
+import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.log.ipc.IpcExceptionOperater;
 import com.mobnote.log.ipc.IpcExceptionOperaterImpl;
 import com.mobnote.manager.MessageManager;
@@ -55,7 +55,6 @@ import java.io.File;
 
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.api.Const;
-import cn.com.tiros.api.Tapi;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -350,32 +349,32 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
     }
 
     /**
-     * upload today`s log only
-     *
+     * 上传日志
      */
     private void uploadLog() {
         if (!UserUtils.isNetDeviceAvailable(this)) {
             showToast(R.string.network_error);
             return;
         }
-        String today = new DateFileNameGenerator().generateFileName(LogLevel.ALL, System.currentTimeMillis());
-        String logPath = Environment.getExternalStorageDirectory() + File.separator + GolukFileUtils.GOLUK_LOG_PATH + File.separator + today;
-        File file = new File(logPath);
-        if (!file.exists()) {
-            Toast.makeText(this, R.string.no_log_file, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        new LogUploadTask(logPath, GolukApplication.getInstance().mCurrentUId, Tapi.getMobileId(), new LogUploadTask.CallbackLogUpload() {
+
+        // 上传APP日志
+        AppLogOpreater appLogOpreater = new AppLogOpreaterImpl();
+        appLogOpreater.uploadLogFile(new AppLogOpreater.CallbackLogUpload() {
             @Override
-            public void onUploadLogSuccess() {
-                Toast.makeText(UserSetupActivity.this, R.string.upload_success, Toast.LENGTH_SHORT).show();
+            public void onNoLogFileFound() {
+                Toast.makeText(UserSetupActivity.this, R.string.no_log_file, Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onUploadLogFail() {
-                Toast.makeText(UserSetupActivity.this, R.string.upload_fail, Toast.LENGTH_SHORT).show();
+            public void onUploadSuccess() {
+                Toast.makeText(UserSetupActivity.this, R.string.upload_success, Toast.LENGTH_LONG).show();
             }
-        }).execute();
+
+            @Override
+            public void onUploadFailed() {
+                Toast.makeText(UserSetupActivity.this, R.string.upload_fail, Toast.LENGTH_LONG).show();
+            }
+        });
 
         // 上传IPC日志
         IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(this);
@@ -442,7 +441,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0, 0);
         GolukNotification.getInstance().clearAllNotification(this);
     }
-
 
     /**
      * 同步获取用户信息
