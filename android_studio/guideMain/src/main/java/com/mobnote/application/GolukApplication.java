@@ -69,6 +69,7 @@ import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifimanage.WifiApAdmin;
 import com.mobnote.golukmain.xdpush.GolukNotification;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.log.ipc.IpcExceptionOperater;
 import com.mobnote.log.ipc.IpcExceptionOperaterImpl;
 import com.mobnote.map.LngLat;
@@ -979,7 +980,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                     }
 
-                    XLog.tag("Download").i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
+                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
                             mDownLoadFileList.size(), filename, percent);
                 } else if (0 == success) {
                     // 下载完成
@@ -1014,7 +1015,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                         GlobalWindow.getInstance().topWindowSucess(
                                 this.getResources().getString(R.string.str_video_transfer_success));
-                        XLog.tag("Download").i("Download complete");
+                        XLog.tag(LogConst.TAG_DOWNLOAD).i("Download complete");
                         // 发送Event
                         EventUtil.sendDownloadCompleteEvent();
                     }
@@ -1033,7 +1034,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     }
                     // 下载文件失败，删除数据库中的信息
                     GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
-                    XLog.tag("Download").i("Download video %s failed", filename);
+                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Download video %s failed", filename);
 
                     GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail====" + mNoDownLoadFileList.size());
                     if (checkDownloadCompleteState()) {
@@ -1252,7 +1253,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (null != mMainActivity) {
                     mMainActivity.wiFiLinkStatus(3);
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state idel");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state idel");
                 break;
             case ConnectionStateMsg_Connecting:
                 GolukDebugUtils
@@ -1268,7 +1269,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //                        mMainActivity.wiFiLinkStatus(1);
 //                    }
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state connecting");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state connecting");
                 break;
             case ConnectionStateMsg_Connected:
                 // 只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
@@ -1289,7 +1290,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (mPageSource == "WiFiLinkList") {
                     ((WiFiLinkListActivity) mContext).ipcFailedCallBack();
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state disconnected");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state disconnected");
                 break;
         }
     }
@@ -1316,7 +1317,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             ((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
         }
 
-        XLog.tag("Connection").i("Ipc connection success");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Ipc connection success");
 
         if (isBindSucess() || getEnableSingleWifi()) {
             GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
@@ -1364,7 +1365,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             mIPCControlManager.setProduceName(ipcInfo.productname);
             // 保存设备型号
             SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
-            XLog.tag("Connection").i("Ipc info: %s %s %s",ipcInfo.productname, ipcInfo.serial, ipcInfo.version);
+            XLog.tag(LogConst.TAG_CONNECTION).i("Ipc info: %s %s %s",ipcInfo.productname, ipcInfo.serial, ipcInfo.version);
         }
     }
 

@@ -24,6 +24,7 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventUtil;
@@ -33,6 +34,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -105,6 +107,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+
+        XLog.tag(LogConst.TAG_ALUMB).i("Enter video alumb page.");
     }
 
     @Override
@@ -354,6 +358,11 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
                 //相册页面-批量下载到本地
                 ZhugeUtils.eventAlbumBatchDownload(getActivity(), mCurrentType);
+                XLog.tag(LogConst.TAG_DOWNLOAD).i("Download list size: " + selectedListData.size());
+                for (String download : selectedListData) {
+                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Video: " + download);
+                }
+
                 if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                     mWonderfulFragment.downloadVideoFlush(selectedListData);
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
@@ -363,7 +372,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
                     mLoopFragment.downloadVideoFlush(selectedListData);
                 }
-
             }
         } else {
             GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_check_ipc_state));
@@ -534,6 +542,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
                 mCancelDonalodDialog.dismiss();
                 mCancelDonalodDialog = null;
             }
+
+            XLog.tag(LogConst.TAG_DOWNLOAD).i("Download video list success.");
         }
     }
 
@@ -541,6 +551,10 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
 
         //相册页面-批量删除视频
         ZhugeUtils.eventAlbumBatchDelete(getActivity(), mCurrentType);
+        XLog.tag(LogConst.TAG_DOWNLOAD).i("Delete list size: " + selectedListData.size());
+        for (String video : selectedListData) {
+            XLog.tag(LogConst.TAG_DOWNLOAD).i("Video: " + video);
+        }
 
         if (mCurrentType != PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {

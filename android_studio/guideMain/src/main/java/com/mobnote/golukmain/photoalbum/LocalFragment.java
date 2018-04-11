@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.elvishew.xlog.XLog;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
@@ -22,6 +23,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.veuisdk.SdkEntry;
@@ -264,6 +266,9 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 default:
                     break;
             }
+
+            XLog.tag(LogConst.TAG_ALUMB).i("Click local video, info:\n" +
+                    "FileName:%s, Path:%s, HP:%s, Size:%s, Type:%s", filename, path, videoHP, size, type + "");
 
             if (!mFragmentAlbum.parentViewIsMainActivity) {
                 if (type != 3) {// 不是循环视频

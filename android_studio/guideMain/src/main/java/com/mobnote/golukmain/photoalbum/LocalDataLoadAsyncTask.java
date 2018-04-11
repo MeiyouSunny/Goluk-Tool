@@ -3,11 +3,13 @@ package com.mobnote.golukmain.photoalbum;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.Utils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.SortByDate;
 
 import java.io.File;
@@ -48,6 +50,11 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 		}
 
 		Collections.sort(files, new SortByDate());
+
+		XLog.tag(LogConst.TAG_ALUMB).i("Local album video list loaded:");
+		for (String video : files) {
+			XLog.tag(LogConst.TAG_ALUMB).i("Video: " + video);
+		}
 
 		int fLen = files.size();
 		for (int i = 0 ; i < fLen; i++) {

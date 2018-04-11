@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAdasConfigStatus;
 import com.mobnote.eventbus.EventBindFinish;
@@ -39,6 +40,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -231,6 +233,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
 		}
 		firstRequest();
+
+		XLog.tag(LogConst.TAG_SETTING).i("Enter IPC setting page.");
 	}
 
 	// 刚进入界面请求
@@ -1282,6 +1286,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			mRestartDialog = null;
 		}
 		super.onDestroy();
+		XLog.tag(LogConst.TAG_SETTING).i("Leave IPC setting page.");
 	}
 
 	@Override
@@ -1289,6 +1294,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("jyf", "YYYYYYY----IPCManage_CallBack-----------event:" + event + " msg:" + msg + "  param1:"
 				+ param1 + "==data:" + (String) param2);
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+
+			XLog.tag(LogConst.TAG_SETTING).i("IPCManage_CallBack. msg:%s, param1:%s, param2:%s", msg, param1, (String) param2);
+
 			if (msg == IPC_VDCP_Msg_GetRecordState) {// 获取IPC行车影像录制状态
 				getRecordState = true;
 				checkGetState();

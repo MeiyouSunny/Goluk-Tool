@@ -17,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elvishew.xlog.XLog;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.FloatWindowPermissionUtil;
 import com.mobnote.application.GolukApplication;
@@ -33,6 +34,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -458,6 +460,9 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                     getString(R.string.str_zhuge_video_player_wonderful));
             GolukUtils.startPhotoAlbumPlayerActivity(WonderfulFragment.this.getContext(), PhotoAlbumConfig.PHOTO_BUM_IPC_WND, "ipc", path,
                     filename, createTime, videoHP, size, (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
+
+            XLog.tag(LogConst.TAG_ALUMB).i("Click remote wonderful video, info:\n" +
+                    "FileName:%s, Path:%s, HP:%s, Size:%s", filename, path, videoHP, size);
         }
     }
 
@@ -637,6 +642,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                     }
                     isGetFileListDataing = false;
                     GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
+                    XLog.tag(LogConst.TAG_ALUMB).i("Query remote wonderful video list: param1%s,\nData%s", param1, (String) param2);
                     if (RESULE_SUCESS == param1) {
                         if (TextUtils.isEmpty((String) param2)) {
                             return;

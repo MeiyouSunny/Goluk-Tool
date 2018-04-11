@@ -61,6 +61,7 @@ import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
@@ -758,7 +759,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
                 collectLog("RD Rtsp Player Error, what id[" + String.valueOf(what) + "],extra id[" + String.valueOf(extra) + "],Errorinfo is:[" + strErrorInfo + "]");
-                XLog.tag("Preview").i("Rtsp play error: whet:%d, errorInfo:%s", what, strErrorInfo);
+                XLog.tag(LogConst.TAG_Preview).i("Rtsp play error: whet:%d, errorInfo:%s", what, strErrorInfo);
                 rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
@@ -948,8 +949,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             collectLog("IPCVERSION=" + mBaseApp.mIpcVersion);
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
-            XLog.tag("Preview").i("Rtsp:%s", url);
-            XLog.tag("Preview").i("Ipc:%s, Ipc Version:%s", mApp.mIPCControlManager.mProduceName, mBaseApp.mIpcVersion);
+            XLog.tag(LogConst.TAG_Preview).i("Rtsp:%s", url);
+            XLog.tag(LogConst.TAG_Preview).i("Ipc:%s, Ipc Version:%s", mApp.mIPCControlManager.mProduceName, mBaseApp.mIpcVersion);
             if (TextUtils.isEmpty(url)) {
                 return;
             }

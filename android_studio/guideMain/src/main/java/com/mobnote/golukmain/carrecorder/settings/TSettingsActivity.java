@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAdasConfigStatus;
 import com.mobnote.eventbus.EventBindFinish;
@@ -42,6 +43,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -260,6 +262,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         EventBus.getDefault().register(this);
         requestIPCList();
         requestInfo();
+
+        XLog.tag(LogConst.TAG_SETTING).i("Enter IPC setting page.");
     }
 
     @Override
@@ -643,6 +647,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         GolukDebugUtils.e("", "TSettingsActivity---------------IPCManage_CallBack-------msg: " + msg
                 + "-------param1: " + param1 + "---------param2: " + param2);
         if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+
+            XLog.tag(LogConst.TAG_SETTING).i("IPCManage_CallBack. msg:%s, param1:%s, param2:%s", msg, param1, (String) param2);
+
             if (msg == IPC_VDCP_Msg_GetCapacityList) {// 获取列表
                 callback_getCapacityList(event, msg, param1, param2);
             } else if (msg == IPC_VDCP_Msg_RecPicUsage) {//存储容量查询
@@ -1767,6 +1774,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             mRestartDialog.dismiss();
             mRestartDialog = null;
         }
+
+        XLog.tag(LogConst.TAG_SETTING).i("Leave IPC setting page.");
     }
 
     private void loadRes() {

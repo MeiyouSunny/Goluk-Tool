@@ -9,6 +9,7 @@ import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
@@ -143,7 +144,7 @@ public abstract class GolukFastjsonRequest<T> {
 				}
 
                 // XLog
-                XLog.tag("HTTP").i("URL request error:%s", error.getMessage());
+                XLog.tag(LogConst.TAG_HTTP).i("URL request error:%s", error.getMessage());
             }
 
 		});
@@ -157,7 +158,7 @@ public abstract class GolukFastjsonRequest<T> {
 
 		// XLog
         String method = (type == Method.GET) ? "Get" : "Post";
-        XLog.tag("HTTP").i("URL(%s): %s", method, url);
-        XLog.tag("HTTP").i("Params:%s", mParams);
+        XLog.tag(LogConst.TAG_HTTP).i("URL(%s): %s", method, url);
+        XLog.tag(LogConst.TAG_HTTP).i("Params:%s", mParams);
     }
 }
