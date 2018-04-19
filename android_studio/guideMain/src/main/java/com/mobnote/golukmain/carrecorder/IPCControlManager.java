@@ -1311,7 +1311,7 @@ public class IPCControlManager implements IPCManagerFn {
         if (T1_SIGN.equals(ipcType) || T1U_SIGN.equals(ipcType) || T2_SIGN.equals(ipcType) || T2U_SIGN.equals(ipcType))
             return bigThan(ipcVersion, "1.7");
         if (T3_SIGN.equals(ipcType) || T3U_SIGN.equals(ipcType))
-            return bigThan(ipcVersion, "1.4");
+            return bigThan(ipcVersion, "1.5");
 
         return false;
     }
