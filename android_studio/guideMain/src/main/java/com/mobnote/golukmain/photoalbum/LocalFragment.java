@@ -291,17 +291,17 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
      * T1SP的视频并且包含GPS文件
      */
     private boolean isT1spVideoAndHaveGpsFile(String path) {
-        // 循环/紧急/精彩视频轨迹为.NMEA文件
+        // 循环/紧急/缩时视频轨迹为.NMEA文件
         if (path.contains(FileUtil.URGENT_VIDEO_PREFIX) ||
                 path.contains(FileUtil.LOOP_VIDEO_PREFIX) ||
-                path.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX) ||
-                path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX)) {
+                path.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX)) {
             String gpsPath = path.replace("MP4", "NMEA");
             File gpsFile = new File(gpsPath);
             return gpsFile.exists();
         }
 
-        return false;
+        // 精彩视频轨迹在视频文件中
+        return path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
     }
 
     public int getVideoType(String name) {
