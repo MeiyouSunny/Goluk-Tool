@@ -145,6 +145,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
      * @return
      */
     public boolean isConnectedT1sWifi() {
+        if (!NetUtil.isWifiConnected(context))
+            return false;
+
         WifiRsBean result = wifiSupport.getConnResult(WIFI_NAME_T1s);
         return result != null && result.getIpc_ssid().startsWith(WIFI_NAME_T1s);
     }

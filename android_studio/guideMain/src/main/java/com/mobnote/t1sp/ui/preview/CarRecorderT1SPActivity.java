@@ -59,6 +59,7 @@ import com.mobnote.t1sp.util.ThumbUtil;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
+import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
@@ -133,6 +134,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     private AlertDialog mExitAlertDialog;
 
     private GolukApplication mApp;
+    private WifiManager mWifiManager;
+    private WifiConnectManager mWifiConnectManager;
     private boolean isShowPlayer;
     private boolean isBackGroundStart = true;
     /* 是否发起预览链接 */
@@ -162,6 +165,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         T1SPConnecter.instance().mRecordActivity = this;
 
         mApp = (GolukApplication) getApplication();
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        mWifiConnectManager = new WifiConnectManager(mWifiManager, this);
 
         mHandlerCapture = new Handler() {
             @Override
@@ -320,7 +325,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mIsReEnter = true;
-        exitOtherMode();
+
+        if (mWifiConnectManager.isConnectedT1sWifi())
+            exitOtherMode();
     }
 
     /**
@@ -795,12 +802,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         // 获取当前模式
         showLoading();
 
-        exitOtherMode();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
+        if (mWifiConnectManager.isConnectedT1sWifi())
+            exitOtherMode();
     }
 
     @Override
@@ -826,10 +829,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (mApp.isIpcLoginSuccess && T1SPConnecter.instance().needDisconnectWIFI()) {
             mApp.mIPCControlManager.setVdcpDisconnect();
             mApp.setIpcLoginOut();
-            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+            WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
             if (wifiInfo != null) {
-                wifiManager.disableNetwork(wifiInfo.getNetworkId());
+                mWifiManager.disableNetwork(wifiInfo.getNetworkId());
             }
         }
         if (null != mRtspPlayerView) {
@@ -846,6 +848,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 mExitAlertDialog.dismiss();
             }
             mExitAlertDialog = null;
+        }
+        if (mWifiConnectManager != null) {
+            mWifiConnectManager.unbind();
+            mWifiConnectManager = null;
         }
         super.onDestroy();
         T1SPConnecter.instance().removeListener(this);
@@ -1023,11 +1029,12 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //            return;
 //        }
 
-        if (isInSettingMode()) {
-            getPresenter().exitSetMode();
-            mCanSwitchMode = false;
-            GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
-        } else if (isInPlaybackMode()) {
+//        if (isInSettingMode()) {
+//            getPresenter().exitSetMode();
+//            mCanSwitchMode = false;
+//            GolukDebugUtils.e(Const.LOG_TAG, "Exit SetMode");
+//        }
+        if (isInPlaybackMode()) {
             getPresenter().exitPlaybackMode();
             mCanSwitchMode = false;
             GolukDebugUtils.e(Const.LOG_TAG, "Exit PlaybackMode");
@@ -1037,9 +1044,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         }
     }
 
-    private boolean isInSettingMode() {
-        return mCurrentMode == MODE_SETTING;
-    }
+//    private boolean isInSettingMode() {
+//        return mCurrentMode == MODE_SETTING;
+//    }
 
     private boolean isInPlaybackMode() {
         return mCurrentMode == MODE_PLAYBACK;
@@ -1110,8 +1117,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onExitOtherModeFailed() {
+        if (isDestroyed())
+            return;
+
         GolukDebugUtils.e(Const.LOG_TAG, "Exist other mode failed");
-        $.toast().text("进入录像模式失败").show();
+        //$.toast().text("进入录像模式失败").show();
         finish();
     }
 
@@ -1120,7 +1130,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (!mConnectedIpc)
             return;
         GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord success");
-        $.toast().text(R.string.recovery_to_record).show();
+        //$.toast().text(R.string.recovery_to_record).show();
         mCanSwitchMode = true;
         resetCaptureButton();
         //startPlay();
@@ -1128,7 +1138,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onOpenLoopModeFailed() {
-        if (!mConnectedIpc)
+        if (!mConnectedIpc || isDestroyed())
             return;
         GolukDebugUtils.e(Const.LOG_TAG, "Open LoopRecord failed");
         $.toast().text("进入录像模式失败").show();
