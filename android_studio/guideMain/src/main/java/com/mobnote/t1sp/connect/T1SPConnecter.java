@@ -26,6 +26,7 @@ import java.util.List;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import likly.dollar.$;
 
 /**
  * T1SP 连接管理
@@ -129,6 +130,8 @@ public class T1SPConnecter {
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
+                if (errorCode == 503)
+                    $.toast().text("设备已经被其他用户连接!").show();
                 stateCallback(2);
                 setConnected(false);
             }

@@ -1,5 +1,7 @@
 package com.mobnote.t1sp.api;
 
+import likly.reverse.ResponseException;
+
 public abstract class Callback<T> implements likly.reverse.Callback<T> {
 
     public static final int SUCCESS_CODE = 0;
@@ -24,7 +26,12 @@ public abstract class Callback<T> implements likly.reverse.Callback<T> {
 
     @Override
     public void onError(Throwable throwable) {
-        onServerError(-1, throwable.getMessage());
+        if (throwable instanceof ResponseException) {
+            ResponseException exception = (ResponseException) throwable;
+            onServerError(exception.code(), exception.message());
+        } else {
+            onServerError(-1, throwable.getMessage());
+        }
     }
 
     /**
