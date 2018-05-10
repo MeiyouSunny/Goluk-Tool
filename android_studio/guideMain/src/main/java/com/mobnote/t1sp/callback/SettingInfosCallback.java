@@ -2,6 +2,7 @@ package com.mobnote.t1sp.callback;
 
 import android.text.TextUtils;
 
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.util.StringUtil;
@@ -103,7 +104,7 @@ public abstract class SettingInfosCallback extends DataCallback {
             return;
         String[] infos = data.split(":");
         // 型号固定为T1SP
-        settingInfo.deviceModel = "T1SP";
+        settingInfo.deviceModel = IPCControlManager.T1SP_SIGN;
         settingInfo.deviceId = infos[infos.length - 2];
         settingInfo.deviceVersion = infos[infos.length - 1];
 
