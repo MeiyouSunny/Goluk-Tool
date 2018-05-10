@@ -601,6 +601,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 return;
             rotatePreviewVideo();
         } else if (id == R.id.ic_exit_full_screen) {
+            if (mIsInCapture)
+                return;
             setFullScreen(false);
         } else if (id == R.id.mPlayBtn) {
             if (!isShowPlayer) {
@@ -616,13 +618,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.image1) {
-            if (CollectionUtils.isEmpty(mLatestTwoVideos))
+            if (CollectionUtils.isEmpty(mLatestTwoVideos) || mIsInCapture)
                 return;
             new1.setVisibility(View.GONE);
             String videoName = mLatestTwoVideos.get(mLatestTwoVideos.size() == 2 ? 1 : 0);
             videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
             gotoPlayVideo(videoName);
-        } else if (id == R.id.image2) {
+        } else if (id == R.id.image2 || mIsInCapture) {
             new2.setVisibility(View.GONE);
             if (mLatestTwoVideos != null && mLatestTwoVideos.size() == 2) {
                 String videoName = mLatestTwoVideos.get(0);

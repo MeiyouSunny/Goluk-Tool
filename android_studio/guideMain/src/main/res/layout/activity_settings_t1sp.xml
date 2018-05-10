@@ -441,7 +441,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
-                android:layout_marginTop="12dp"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -464,7 +463,8 @@
 
                 </RelativeLayout>
 
-                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+                <View style="@style/LineGrayHorizontalPaddingLeft"
+                    android:visibility="gone"/>
 
                 <RelativeLayout
                     android:id="@+id/language_set"

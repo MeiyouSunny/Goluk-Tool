@@ -59,6 +59,7 @@ import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.t1sp.map.MapTrackView;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.GpsUtil;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -533,6 +534,10 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
         mLayoutMap = (RelativeLayout) findViewById(R.id.video_map_container);
         mBtnPlay.setOnClickListener(this);
         mTvNoGpsHint = (TextView) findViewById(R.id.tv_no_gps_hint);
+
+        // 循环视频隐藏分享按钮
+        if (mFileName.contains(FileUtil.LOOP_VIDEO_PREFIX))
+            mTvShareRightnow.setVisibility(View.GONE);
     }
 
     private boolean videoEditSupport() {
