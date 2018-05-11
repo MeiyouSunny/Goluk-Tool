@@ -131,6 +131,11 @@ public class IPCControlManager implements IPCManagerFn {
         return isG1 || isT1S;
     }
 
+    public boolean isT3Relative() {
+        return IPCControlManager.T3_SIGN.equals(mProduceName)
+                || IPCControlManager.T3U_SIGN.equals(mProduceName);
+    }
+
     /**
      * 直接设置模式
      *

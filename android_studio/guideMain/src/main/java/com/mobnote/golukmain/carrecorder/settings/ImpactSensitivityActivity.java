@@ -34,6 +34,9 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
 
     private int policy = 0;
 
+    // 是否是T系列
+    private boolean mIsT3;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +44,9 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
         setTitle(this.getResources().getString(R.string.pzgy_title));
 
         initView();
+
+        mIsT3 = mBaseApp.getIPCControlManager().isT3Relative();
+
         GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("sensitivity", this);
         if (isSupportTimeslapse()) {
             boolean flag = GolukApplication.getInstance().getIPCControlManager().getGSensorMoreValueCfg();
@@ -112,22 +118,22 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
             mHigherIcon.setVisibility(View.GONE);
         }
 
-        if (0 == policy || policy == IpcSettingUtil.COLLISION_OFF) {
+        if (0 == policy || policy == IpcSettingUtil.COLLISION_OFF || policy == IpcSettingUtil.COLLISION_OFF_T3) {
             mCloseIcon.setVisibility(View.VISIBLE);
             mCloseText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-        } else if (1 == policy || policy == IpcSettingUtil.COLLISION_LOW) {
+        } else if (1 == policy || policy == IpcSettingUtil.COLLISION_LOW || policy == IpcSettingUtil.COLLISION_LOW_T3) {
             mLowIcon.setVisibility(View.VISIBLE);
             mLowText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-        } else if (2 == policy || policy == IpcSettingUtil.COLLISION_MIDDLE) {
+        } else if (2 == policy || policy == IpcSettingUtil.COLLISION_MIDDLE || policy == IpcSettingUtil.COLLISION_MIDDLE_T3) {
             mMiddleIcon.setVisibility(View.VISIBLE);
             mMiddleText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-        } else if (3 == policy || policy == IpcSettingUtil.COLLISION_HIGHT) {
+        } else if (3 == policy || policy == IpcSettingUtil.COLLISION_HIGHT || policy == IpcSettingUtil.COLLISION_HIGHT_T3) {
             mHighIcon.setVisibility(View.VISIBLE);
             mHighText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-        } else if (policy == IpcSettingUtil.COLLISION_LOWER) {
+        } else if (policy == IpcSettingUtil.COLLISION_LOWER || policy == IpcSettingUtil.COLLISION_LOWER_T3) {
             mLowerIcon.setVisibility(View.VISIBLE);
             mLowerText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
-        } else if (policy == IpcSettingUtil.COLLISION_HIGHTER) {
+        } else if (policy == IpcSettingUtil.COLLISION_HIGHTER || policy == IpcSettingUtil.COLLISION_HIGHTER_T3) {
             mHigherIcon.setVisibility(View.VISIBLE);
             mHigherText.setTextColor(getResources().getColor(R.color.setting_text_color_sel));
         }
@@ -140,17 +146,29 @@ public class ImpactSensitivityActivity extends CarRecordBaseActivity implements 
         if (id == R.id.back_btn) {
             exit();
         } else if (id == R.id.rl_1080p_high) {
-            updateSensitivity(isSupportTimeslapse() ? IpcSettingUtil.COLLISION_OFF : 0);
+            int value = 0;
+            if (isSupportTimeslapse())
+                value = mIsT3 ? IpcSettingUtil.COLLISION_OFF_T3 : IpcSettingUtil.COLLISION_OFF;
+            updateSensitivity(value);
         } else if (id == R.id.rl_1080p_middle) {
-            updateSensitivity(isSupportTimeslapse() ? IpcSettingUtil.COLLISION_LOW : 1);
+            int value = 1;
+            if (isSupportTimeslapse())
+                value = mIsT3 ? IpcSettingUtil.COLLISION_LOW_T3 : IpcSettingUtil.COLLISION_LOW;
+            updateSensitivity(value);
         } else if (id == R.id.middle) {
-            updateSensitivity(isSupportTimeslapse() ? IpcSettingUtil.COLLISION_MIDDLE : 2);
+            int value = 2;
+            if (isSupportTimeslapse())
+                value = mIsT3 ? IpcSettingUtil.COLLISION_MIDDLE_T3 : IpcSettingUtil.COLLISION_MIDDLE;
+            updateSensitivity(value);
         } else if (id == R.id.high) {
-            updateSensitivity(isSupportTimeslapse() ? IpcSettingUtil.COLLISION_HIGHT : 3);
+            int value = 3;
+            if (isSupportTimeslapse())
+                value = mIsT3 ? IpcSettingUtil.COLLISION_HIGHT_T3 : IpcSettingUtil.COLLISION_HIGHT;
+            updateSensitivity(value);
         } else if (id == R.id.layout_lower) {
-            updateSensitivity(IpcSettingUtil.COLLISION_LOWER);
+            updateSensitivity(mIsT3 ? IpcSettingUtil.COLLISION_LOWER_T3 : IpcSettingUtil.COLLISION_LOWER);
         } else if (id == R.id.layout_highter) {
-            updateSensitivity(IpcSettingUtil.COLLISION_HIGHTER);
+            updateSensitivity(mIsT3 ? IpcSettingUtil.COLLISION_HIGHTER_T3 : IpcSettingUtil.COLLISION_HIGHTER);
         }
     }
 
