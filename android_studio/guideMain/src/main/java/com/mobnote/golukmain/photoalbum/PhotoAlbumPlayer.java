@@ -899,14 +899,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 String fileName = mFileName;
                 fileName = fileName.replace(".mp4", ".jpg");
                 mImageUrl = filePath + File.separator + fileName;
-                if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType/* 4 == mType */) {
+                if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/wonderful/" + mFileName;
-                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType/*
-                                                                     * 2 ==
-																	 * mType
-																	 */) {
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/urgent/" + mFileName;
-                } else {
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE == mType) {
+                    mVideoUrl = "http://" + ip + ":5080/rec/time-lapse/" + mFileName;
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/normal/" + mFileName;
                 }
             }

@@ -1,13 +1,7 @@
 package com.mobnote.golukmain.carrecorder;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.text.TextUtils;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import com.iflytek.speech.Version;
 import com.mobnote.golukmain.carrecorder.entity.DeviceState;
 import com.mobnote.golukmain.carrecorder.entity.ExternalEventsDataInfo;
 import com.mobnote.golukmain.carrecorder.entity.IPCIdentityState;
@@ -15,12 +9,16 @@ import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.entity.VideoFileInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
-import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import android.text.TextUtils;
-import android.util.Log;
 
 public class IpcDataParser {
 
@@ -483,7 +481,7 @@ public class IpcDataParser {
 			type = IPCManagerFn.TYPE_SHORTCUT;
 		} else if (filename.contains("URG")) {
 			type = IPCManagerFn.TYPE_URGENT;
-		} else if (filename.contains("NRM_TL")) {
+		} else if (filename.contains("NRM_TL") || filename.contains("TIM1")) {
 			type = IPCManagerFn.TYPE_TIMESLAPSE;
 		} else if (filename.contains("NRM")) {
 			type = IPCManagerFn.TYPE_CIRCULATE;
