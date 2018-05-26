@@ -50,7 +50,10 @@ import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
-public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWonderfulVideoAdapter.IListViewItemClickColumn {
+/**
+ * 缩时视频(一秒一拍)
+ */
+public class TimeslapseFragment extends Fragment implements IPCManagerFn, LocalWonderfulVideoAdapter.IListViewItemClickColumn {
 
     private View mWonderfulVideoView;
 
@@ -125,13 +128,13 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onCreate------------:");
+        GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----onCreate------------:");
         EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onCreateView------------:");
+        GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----onCreateView------------:");
         if (mWonderfulVideoView == null) {
             if (mWonderfulVideoView == null) {
                 mWonderfulVideoView = inflater.inflate(R.layout.wonderful_listview, (ViewGroup) getActivity()
@@ -160,10 +163,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
 
     public FragmentAlbum getFragmentAlbum() {
         if (mFragmentAlbum == null) {
-            GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----getFragmentAlbum------------: null");
+            GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----getFragmentAlbum------------: null");
             mFragmentAlbum = (FragmentAlbum) getParentFragment();
         }
-        GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----getFragmentAlbum------------: not null");
+        GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----getFragmentAlbum------------: not null");
         return mFragmentAlbum;
 
     }
@@ -180,7 +183,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
      * @param event
      */
     public void onEventMainThread(EventDeletePhotoAlbumVid event) {
-        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
 
             List<String> list = new ArrayList<String>();
             list.add(event.getVidPath());
@@ -198,7 +201,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (null == event) {
             return;
         }
-        if (getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && isListener == true) {
+        if (getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE && isListener == true) {
             switch (event.getmOpCode()) {
 
                 case EventConfig.IPC_DISCONNECT:
@@ -220,7 +223,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
      * @param event
      */
     public void onEventMainThread(EventDownloadIpcVid event) {
-        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+        if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
 
             List<String> list = new ArrayList<String>();
             list.add(event.getVidPath());
@@ -250,7 +253,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             }
 
             // 下载视频文件
-            String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_WND_VIDEO_PATH + filename);
+            String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_LOOP_VIDEO_PATH + filename);
 
             File file = new File(mp4);
             if (!file.exists()) {
@@ -319,11 +322,6 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         mCloudWonderfulVideoAdapter = new CloudWonderfulVideoAdapter(getActivity(),
                 (FragmentAlbum) getParentFragment(), mStickyListHeadersListView, this);
         setListener();
-        if (GolukApplication.getInstance().isIpcLoginSuccess) {
-            loadData(true);
-        } else {
-            loadData(false);
-        }
     }
 
     @Override
@@ -372,10 +370,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             @Override
             public void onScrollStateChanged(AbsListView arg0, int scrollState) {
                 switch (scrollState) {
-                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+                    case OnScrollListener.SCROLL_STATE_FLING:
                         // mCloudWonderfulVideoAdapter.lock();
                         break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+                    case OnScrollListener.SCROLL_STATE_IDLE:
                         // mCloudWonderfulVideoAdapter.unlock();
                         if (mStickyListHeadersListView.getAdapter() == null)
                             break;
@@ -393,7 +391,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                                 GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====44444=");
                                 isGetFileListDataing = true;
                                 boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-                                        .queryFileListInfo(IPCManagerFn.TYPE_SHORTCUT, pageCount, 0, lastTime, "1");
+                                        .queryFileListInfo(IPCManagerFn.TYPE_TIMESLAPSE, pageCount, 0, lastTime, "1");
                                 GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
                                 if (!isSucess) {
                                     isGetFileListDataing = false;
@@ -404,7 +402,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                             }
                         }
                         break;
-                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+                    case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                         // mCloudWonderfulVideoAdapter.lock();
                         break;
 
@@ -458,10 +456,10 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             ZhugeUtils.eventAlbumPlayer(getActivity(),
                     getString(R.string.str_zhuge_video_player_wonderful),
                     getString(R.string.str_zhuge_video_player_wonderful));
-            GolukUtils.startPhotoAlbumPlayerActivity(WonderfulFragment.this.getContext(), PhotoAlbumConfig.PHOTO_BUM_IPC_WND, "ipc", path,
+            GolukUtils.startPhotoAlbumPlayerActivity(TimeslapseFragment.this.getContext(), PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE, "ipc", path,
                     filename, createTime, videoHP, size, (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
 
-            XLog.tag(LogConst.TAG_ALUMB).i("Click remote wonderful video, info:\n" +
+            XLog.tag(LogConst.TAG_ALUMB).i("Click remote reduce video, info:\n" +
                     "FileName:%s, Path:%s, HP:%s, Size:%s", filename, path, videoHP, size);
         }
     }
@@ -510,11 +508,11 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
     public void onResume() {
         super.onResume();
         mIntent2WifiConn = false;
-        GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----onResume------------:");
+        GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----onResume------------:");
         isShowPlayer = false;
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager()
-                    .addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT, this);
+                    .addIPCManagerListener("filemanager" + IPCManagerFn.TYPE_TIMESLAPSE, this);
             isListener = true;
         }
     }
@@ -524,7 +522,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         super.onPause();
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager()
-                    .removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_SHORTCUT);
+                    .removeIPCManagerListener("filemanager" + IPCManagerFn.TYPE_TIMESLAPSE);
             isListener = false;
             if (isGetFileListDataing) {
                 this.removeFooterView();
@@ -535,7 +533,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
 
     @SuppressLint("NewApi")
     public void loadData(boolean flag) {
-        GolukDebugUtils.e("", "crash zh start App ------ WonderfulFragment-----loadData------------:");
+        GolukDebugUtils.e("", "crash zh start App ------ TimeslapseFragment-----loadData------------:");
         if (isGetFileListDataing) {
             return;
         }
@@ -553,7 +551,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             isGetFileListDataing = true;
             mDataList.clear();
             boolean isSucess = GolukApplication.getInstance().getIPCControlManager()
-                    .queryFileListInfo(IPCManagerFn.TYPE_SHORTCUT, pageCount, 0, timeend, "1");
+                    .queryFileListInfo(IPCManagerFn.TYPE_TIMESLAPSE, pageCount, 0, timeend, "1");
             GolukDebugUtils.e("", "YYYYYY=====queryFileListInfo====isSucess=" + isSucess);
             if (!isSucess) {
                 isGetFileListDataing = false;
@@ -636,13 +634,13 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         switch (event) {
             case ENetTransEvent_IPC_VDCP_CommandResp:
                 if (IPC_VDCP_Msg_Query == msg && getFragmentAlbum() != null
-                        && getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+                        && getFragmentAlbum().mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
                     if (mCustomProgressDialog != null && mCustomProgressDialog.isShowing()) {
                         mCustomProgressDialog.close();
                     }
                     isGetFileListDataing = false;
                     GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
-                    XLog.tag(LogConst.TAG_ALUMB).i("Query remote wonderful video list: param1%s,\nData%s", param1, (String) param2);
+                    XLog.tag(LogConst.TAG_ALUMB).i("Query remote reduce video list: param1%s,\nData%s", param1, (String) param2);
                     if (RESULE_SUCESS == param1) {
                         if (TextUtils.isEmpty((String) param2)) {
                             return;
@@ -656,7 +654,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
                         ArrayList<VideoInfo> fileList = IpcDataParser.parseVideoListData((String) param2);
                         if (null != fileList && fileList.size() > 0) {
                             int type = IpcDataParser.parseVideoFileType(fileList.get(0).filename);
-                            if (type != IPCManagerFn.TYPE_SHORTCUT) {
+                            if (type != IPCManagerFn.TYPE_TIMESLAPSE) {
                                 return;
                             }
 
@@ -699,7 +697,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
 
                                 if (tag.contains("IPC_IMAGE")) {
                                     int type = IpcDataParser.parseVideoFileType(filename);
-                                    if (type != IPCManagerFn.TYPE_SHORTCUT) {
+                                    if (type != IPCManagerFn.TYPE_TIMESLAPSE) {
                                         return;
                                     }
 

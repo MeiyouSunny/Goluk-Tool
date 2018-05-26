@@ -21,6 +21,10 @@ public interface IPCManagerFn extends IGolukCommFn {
      * 精彩视频
      */
     int TYPE_SHORTCUT = 4;
+    /**
+     * 一秒一拍
+     */
+    int TYPE_TIMESLAPSE = 8;
 
     /**
      *
@@ -413,6 +417,21 @@ public interface IPCManagerFn extends IGolukCommFn {
     int IPC_VDCP_Msg_SetDeflickerMode = 2224;
     int IPC_VDCP_Msg_GetVoiceTypeList = 2225;
 
+    /* 获取紧急视频声音开关配置 */
+    int IPC_VDCP_Msg_GetUrgentVoiceConf = 2226;
+    /* 设置紧急视频声音开关配置 */
+    int IPC_VDCP_Msg_SetUrgentVoiceConf = 2227;
+    /* 获取碰撞灵敏度阈值配置 */
+    int IPC_VDCP_Msg_GetCollisionValueConf = 2228;
+    /* 设置碰撞灵敏度阈值配置 */
+    int IPC_VDCP_Msg_SetCollisionValueConf = 2229;
+    /* 获取故障信息列表 */
+    int IPC_VDCP_Msg_GetExceptionList = 2230;
+    /* 获取缩时视频开关配置 */
+    int IPC_VDCP_Msg_GetTimelapseConf = 2231;
+    /* 设置缩时视频开关配置 */
+    int IPC_VDCP_Msg_SetTimelapseConf = 2232;
+
     /**
      *
      * 文件数据传输事件下消息ID (用于手机与平板之间发送消息回调)
@@ -779,6 +798,10 @@ public interface IPCManagerFn extends IGolukCommFn {
      */
     int IPC_VDCPCmd_GetIPCLogo = 2218;
     /**
+     * 命令数量
+     */
+    int IPC_VDCPCmd_Msg_COUNT = 2219;
+    /**
      * 获取IPC抗闪烁模式
      */
     int IPC_VDCPCmd_GetDeflickerMode = 2223;
@@ -791,10 +814,20 @@ public interface IPCManagerFn extends IGolukCommFn {
      */
     int IPC_VDCPCmd_GetVoiceTypeList = 2225;
 
-    /**
-     * 命令数量
-     */
-    int IPC_VDCPCmd_Msg_COUNT = 2219;
+    /* 获取紧急视频声音开关配置 */
+    int IPC_VDCPCmd_GetUrgentVoiceConf = 2226;
+    /* 设置紧急视频声音开关配置 */
+    int IPC_VDCPCmd_SetUrgentVoiceConf = 2227;
+    /* 获取碰撞灵敏度阈值配置 */
+    int IPC_VDCPCmd_GetCollisionValueConf = 2228;
+    /* 设置碰撞灵敏度阈值配置 */
+    int IPC_VDCPCmd_SetCollisionValueConf = 2229;
+    /* 获取故障信息列表 */
+    int IPC_VDCPCmd_GetExceptionList = 2230;
+    /* 获取缩时视频开关配置 */
+    int IPC_VDCPCmd_GetTimelapseConf = 2231;
+    /* 设置缩时视频开关配置 */
+    int IPC_VDCPCmd_SetTimelapseConf = 2232;
 
 
     public void IPCManage_CallBack(int event, int msg, int param1, Object param2);

@@ -1,42 +1,5 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONObject;
-
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageRequest;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.eventbus.EventConfig;
-import com.mobnote.eventbus.EventMessageUpdate;
-import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.msg.MessageBadger;
-import com.mobnote.golukmain.msg.MessageCenterActivity;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
-import com.mobnote.golukmain.praised.MyPraisedActivity;
-import com.mobnote.golukmain.profit.MyProfitActivity;
-import com.mobnote.golukmain.watermark.BandCarBrandsRequest;
-import com.mobnote.golukmain.watermark.CarBrandsRequest;
-import com.mobnote.golukmain.watermark.WatermarkSettingActivity;
-import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
-import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
-import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
-import com.mobnote.golukmain.videosuqare.VideoSquareManager;
-import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
-import com.mobnote.golukmain.watermark.bean.CarBrandBean;
-import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
-import com.mobnote.manager.MessageManager;
-import com.mobnote.user.UserInterface;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukFileUtils;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -61,6 +24,44 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageRequest;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
+import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventMessageUpdate;
+import com.mobnote.eventbus.EventUtil;
+import com.mobnote.golukmain.http.HttpManager;
+import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
+import com.mobnote.golukmain.live.ILive;
+import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.msg.MessageBadger;
+import com.mobnote.golukmain.msg.MessageCenterActivity;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
+import com.mobnote.golukmain.praised.MyPraisedActivity;
+import com.mobnote.golukmain.profit.MyProfitActivity;
+import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
+import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
+import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
+import com.mobnote.golukmain.videosuqare.VideoSquareManager;
+import com.mobnote.golukmain.watermark.BandCarBrandsRequest;
+import com.mobnote.golukmain.watermark.CarBrandsRequest;
+import com.mobnote.golukmain.watermark.WatermarkSettingActivity;
+import com.mobnote.golukmain.watermark.bean.BandCarBrandResultBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandBean;
+import com.mobnote.golukmain.watermark.bean.CarBrandsResultBean;
+import com.mobnote.manager.MessageManager;
+import com.mobnote.user.UserInterface;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukFileUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.SharedPrefUtil;
+import com.mobnote.util.ZhugeUtils;
+
+import org.json.JSONObject;
 
 import java.util.List;
 
@@ -317,6 +318,11 @@ public class FragmentMine extends Fragment implements OnClickListener,
         } else {
             mProfitItem.setVisibility(View.GONE);
         }
+    }
+
+    public void onEventMainThread(Event event) {
+        if(EventUtil.isFollowEvent(event))
+            sendGetUserHomeRequest();
     }
 
     public void onEventMainThread(EventMessageUpdate event) {

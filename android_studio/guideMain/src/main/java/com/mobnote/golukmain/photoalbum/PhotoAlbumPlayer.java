@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -57,7 +55,6 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -66,7 +63,6 @@ import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.http.UrlHostManager;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.OrientationManager.IOrientationFn;
 import com.mobnote.golukmain.player.ConfigData;
@@ -78,6 +74,7 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
@@ -338,6 +335,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if (android.provider.Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0) == 0) {
             mOrignManager.clearListener();
         }
+
+        XLog.tag(LogConst.TAG_PLAYER).i("Play video page, info:\n" +
+                "FileName:%s, Path:%s, HP:%s, Size:%s, Date:%s, Type:%s", mFileName, mPath, mHP, mSize, mDate, mType + "");
     }
 
     public void onEventMainThread(EventShareCompleted event) {
@@ -735,6 +735,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @param bFull true:全屏　false:普通
      */
     public void setFullScreen(boolean isAuto, boolean bFull) {
+        XLog.tag(LogConst.TAG_PLAYER).i("Change full screen play: " + bFull);
+
         if (mResolutionHUDViewStub != null) {
             mResolutionHUDViewStub.setVisibility(View.GONE);
         }
@@ -878,7 +880,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 String fileName = mFileName;
                 String[] names = fileName.split("_");
                 if (names.length > 3) {
-                    if (names[0].equals("NRM")) {
+                    if (fileName.contains("NRM_TL")) { // 缩时视频
+                        fileName = names[0] + "_" + names[1] + "_" + names[2];
+                    } else if (names[0].equals("NRM")) { // 循环视频
                         fileName = names[0] + "_" + names[1];
                     } else {
                         fileName = names[0] + "_" + names[2];
@@ -895,14 +899,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 String fileName = mFileName;
                 fileName = fileName.replace(".mp4", ".jpg");
                 mImageUrl = filePath + File.separator + fileName;
-                if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType/* 4 == mType */) {
+                if (PhotoAlbumConfig.PHOTO_BUM_IPC_WND == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/wonderful/" + mFileName;
-                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType/*
-                                                                     * 2 ==
-																	 * mType
-																	 */) {
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_URG == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/urgent/" + mFileName;
-                } else {
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE == mType) {
+                    mVideoUrl = "http://" + ip + ":5080/rec/time-lapse/" + mFileName;
+                } else if (PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP == mType) {
                     mVideoUrl = "http://" + ip + ":5080/rec/normal/" + mFileName;
                 }
             }
@@ -999,6 +1002,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mPlayImg.setVisibility(View.VISIBLE);
         dialog(msg);
 
+        XLog.tag(LogConst.TAG_PLAYER).i("Video play onError: what:%s, extra:%s", what, extra);
         return true;
     }
 
@@ -1744,6 +1748,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         }
+
+        XLog.tag(LogConst.TAG_PLAYER).i("Start edit video, video path:%s", videoPath);
     }
 
 
@@ -1867,6 +1873,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mDialog = new AlertDialog.Builder(PhotoAlbumPlayer.this).setView(v)
                     .show();
             mDialog.setCanceledOnTouchOutside(false);
+
+            XLog.tag(LogConst.TAG_PLAYER).i("Edit video: OnExportStart");
         }
 
         /**
@@ -1882,6 +1890,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 mProgressBar.setMax(max);
                 mProgressBar.setProgress(progress);
             }
+
+            XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExporting");
             return true;
         }
 
@@ -1893,9 +1903,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             if (result >= VirtualVideo.RESULT_SUCCESS) {
                 GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
                         mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
+                XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExportEnd success");
             } else if (result != VirtualVideo.RESULT_SAVE_CANCEL) {
                 Log.e(TAG, "onExportEnd: " + result);
                 Toast.makeText(PhotoAlbumPlayer.this, getString(R.string.export_error) + result, Toast.LENGTH_LONG).show();
+                XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExportEnd failed");
             }
         }
     }

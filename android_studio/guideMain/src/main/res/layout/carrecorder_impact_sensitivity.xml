@@ -1,31 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="42dp"  >
-    
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:paddingTop="42dp">
+
     <RelativeLayout
         android:id="@+id/rl_1080p_high"
         android:layout_width="match_parent"
         android:layout_height="42dp"
         android:layout_marginTop="15dp"
-        android:background="@color/setting_white_color"
-        >
+        android:background="@color/setting_white_color">
 
         <TextView
             android:id="@+id/tv_1080p_high"
-            android:paddingLeft="15dp"
-        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:text="@string/carrecorder_tcaf_close"
             android:textColor="@color/setting_black_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/cRight"
             android:layout_width="20dp"
             android:layout_height="14dp"
@@ -33,41 +31,41 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/setup_icon_hook"
-            android:contentDescription="@string/def" />
-        
-        <TextView 
-        	android:layout_width="match_parent"
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="1px"
             android:background="@color/setting_line_color"/>
-                
-       	<TextView 
-   	      android:layout_width="match_parent"
-          android:layout_height="1px"
-          android:layout_marginLeft="15dp"
-          android:layout_alignParentBottom="true"
-          android:background="@color/setting_line_color"/>
-        
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/setting_line_color"/>
+
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_1080p_middle"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="@color/setting_white_color"
-        >
+        android:background="@color/setting_white_color">
 
         <TextView
             android:id="@+id/tv_1080p_middle"
-            android:paddingLeft="15dp"
-        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:text="@string/str_low"
             android:textColor="@color/setting_black_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/dRight"
             android:layout_width="20dp"
             android:layout_height="14dp"
@@ -75,36 +73,73 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/setup_icon_hook"
-            android:contentDescription="@string/def" />
-        
-        <TextView 
-   	      android:layout_width="match_parent"
-          android:layout_height="1px"
-          android:layout_marginLeft="15dp"
-          android:layout_alignParentBottom="true"
-          android:background="@color/setting_line_color"/>
-        
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/setting_line_color"/>
+
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_lower"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/setting_white_color">
+
+        <TextView
+            android:id="@+id/tv_lower"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/lower"
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/lower_check_icon"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/setting_line_color"/>
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/middle"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="@color/setting_white_color"
-        >
+        android:background="@color/setting_white_color">
 
         <TextView
             android:id="@+id/middleText"
-            android:paddingLeft="15dp"
-        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:text="@string/str_middle"
             android:textColor="@color/setting_black_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/zRight"
             android:layout_width="20dp"
             android:layout_height="14dp"
@@ -112,36 +147,73 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/setup_icon_hook"
-            android:contentDescription="@string/def" />
-        
-        <TextView 
-   	      android:layout_width="match_parent"
-          android:layout_height="1px"
-          android:layout_marginLeft="15dp"
-          android:layout_alignParentBottom="true"
-          android:background="@color/setting_line_color"/>
-        
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/setting_line_color"/>
+
     </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_highter"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:background="@color/setting_white_color">
+
+        <TextView
+            android:id="@+id/tv_highter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:text="@string/highter"
+            android:textColor="@color/setting_black_color"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/higher_check_icon"
+            android:layout_width="20dp"
+            android:layout_height="14dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/setup_icon_hook"
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="15dp"
+            android:background="@color/setting_line_color"/>
+
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/high"
         android:layout_width="match_parent"
         android:layout_height="42dp"
-        android:background="@color/setting_white_color"
-        >
+        android:background="@color/setting_white_color">
 
         <TextView
             android:id="@+id/highText"
-            android:paddingLeft="15dp"
-        	android:paddingRight="15dp" 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
             android:text="@string/str_high"
             android:textColor="@color/setting_black_color"
-            android:textSize="16sp" />
+            android:textSize="16sp"/>
 
         <ImageButton
-            android:visibility="gone"
             android:id="@+id/gRight"
             android:layout_width="20dp"
             android:layout_height="14dp"
@@ -149,14 +221,15 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:background="@drawable/setup_icon_hook"
-            android:contentDescription="@string/def" />
-        
-        <TextView 
-   	      android:layout_width="match_parent"
-          android:layout_height="1px"
-          android:layout_alignParentBottom="true"
-          android:background="@color/setting_line_color"/>
-        
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_alignParentBottom="true"
+            android:background="@color/setting_line_color"/>
+
     </RelativeLayout>
 
 </LinearLayout>

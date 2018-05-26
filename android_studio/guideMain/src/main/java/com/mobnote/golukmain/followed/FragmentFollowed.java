@@ -22,6 +22,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.eventbus.EventUserLoginRet;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserLoginActivity;
@@ -483,6 +484,8 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                     }else{
                         Toast.makeText(getActivity(),getString(R.string.str_usercenter_attention_ok), Toast.LENGTH_SHORT).show();
                     }
+                    // 发送Event,更新个人主页关注人数
+                    EventUtil.sendFollowEvent();
                     //关注页推荐——关注统计
                     ZhugeUtils.eventFollowed(getActivity(), getActivity().getString(R.string.str_zhuge_followed_from_followed_recommed));
                 }

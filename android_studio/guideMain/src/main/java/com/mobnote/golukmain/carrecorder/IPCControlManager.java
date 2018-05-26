@@ -131,6 +131,11 @@ public class IPCControlManager implements IPCManagerFn {
         return isG1 || isT1S;
     }
 
+    public boolean isT3Relative() {
+        return IPCControlManager.T3_SIGN.equals(mProduceName)
+                || IPCControlManager.T3U_SIGN.equals(mProduceName);
+    }
+
     /**
      * 直接设置模式
      *
@@ -298,6 +303,7 @@ public class IPCControlManager implements IPCManagerFn {
      */
     public boolean queryFileListInfo(int filetype, int limitCount, long timestart, long timeend, String resform) {
         String queryParam = IpcDataParser.getQueryMoreFileJson(filetype, limitCount, timestart, timeend, resform);
+        GolukDebugUtils.e("queryFileList", "queryParam= " + queryParam);
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_Query,
                 queryParam);
     }
@@ -666,6 +672,78 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean getMotionCfg() {
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetMotionCfg,
                 "");
+    }
+
+    /**
+     * 获取紧急视频提示音
+     */
+    public boolean getEmgVideoSoundCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCP_Msg_GetUrgentVoiceConf,
+                "");
+    }
+
+    /**
+     * 设置紧急视频提示音
+     */
+    public boolean setEmgVideoSoundCfg(int state) {
+        String json = JsonUtil.getEmgVideoSoundConfigJson_T1(state);
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetUrgentVoiceConf,
+                json);
+    }
+
+    /**
+     * 获取缩时视频录制开关状态
+     */
+    public boolean getTimelapseCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetTimelapseConf,
+                "");
+    }
+
+    /**
+     * 设置缩时视频录制开关
+     */
+    public boolean setTimelapseCfg(int state) {
+        String json = JsonUtil.getTimelapseConfigJson_T1(state);
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_SetTimelapseConf,
+                json);
+    }
+
+    /**
+     * 获取紧急碰撞灵敏配置
+     */
+    public boolean getGSensorMoreValueCfg() {
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_GetCollisionValueConf, "");
+    }
+
+    /**
+     * 设置紧急碰撞灵敏度配置
+     */
+    public boolean setGSensorMoreValueCfg(int collisionValue) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("collisionValue", collisionValue);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager,
+                IPC_VDCPCmd_SetCollisionValueConf, json.toString());
+    }
+
+    /**
+     * 获取设备异常日志
+     */
+    public boolean getExceptionList(int fromId, int count) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("id", fromId);
+            json.put("count", count);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetExceptionList,
+                json.toString());
     }
 
     /**
@@ -1226,6 +1304,28 @@ public class IPCControlManager implements IPCManagerFn {
         } else {
             return false;
         }
+    }
+
+    /**
+     * 是否支持: 缩时视频/紧急视频提示语开关/碰撞灵敏度6个等级设置
+     * 型号及对应最低版本: T1U_1.7 T1_1.7 T2U_1.7 T2_1.7 T3U_1.4 T3_1.4
+     */
+    public boolean isSupportTimeslapse() {
+        final String ipcType = mProduceName;
+        final String ipcVersion = getVersionCode();
+        if (T1_SIGN.equals(ipcType) || T1U_SIGN.equals(ipcType) || T2_SIGN.equals(ipcType) || T2U_SIGN.equals(ipcType))
+            return bigThan(ipcVersion, "1.7");
+        if (T3_SIGN.equals(ipcType) || T3U_SIGN.equals(ipcType))
+            return bigThan(ipcVersion, "1.5");
+
+        return false;
+    }
+
+    /**
+     * 版本比较
+     */
+    private boolean bigThan(String versionOne, String versionTwo) {
+        return !TextUtils.isEmpty(versionOne) && !TextUtils.isEmpty(versionTwo) && versionOne.compareTo(versionTwo) >= 0;
     }
 
     public boolean needShowT3Hint() {

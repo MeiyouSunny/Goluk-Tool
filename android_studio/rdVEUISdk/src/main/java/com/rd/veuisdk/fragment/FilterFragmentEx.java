@@ -138,6 +138,10 @@ public class FilterFragmentEx extends BaseFragment {
 			mNormalColor = res.getColor(R.color.transparent80_white);
 			mCheckedColor = res.getColor(R.color.main_orange);
 		}
+
+		// 默认选中"原片"滤镜
+		mFilter1.setChecked(true);
+		mTv1.setTextColor(mCheckedColor);
 	}
 
 	/**

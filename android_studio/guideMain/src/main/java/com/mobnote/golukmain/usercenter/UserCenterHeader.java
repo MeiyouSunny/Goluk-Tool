@@ -1,18 +1,13 @@
 package com.mobnote.golukmain.usercenter;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserPersonalInfoActivity;
-import com.mobnote.golukmain.usercenter.bean.HomeData;
-import com.mobnote.golukmain.usercenter.bean.HomeUser;
-import com.mobnote.user.UserUtils;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,12 +16,27 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.Target;
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserPersonalInfoActivity;
+import com.mobnote.golukmain.usercenter.bean.HomeData;
+import com.mobnote.golukmain.usercenter.bean.HomeUser;
+import com.mobnote.user.UserUtils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.glideblur.RSBlur;
+
+import java.io.File;
+import java.util.concurrent.TimeUnit;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class UserCenterHeader implements OnClickListener {
 
 	private Context mContext;
-	private ImageView mImageHead, mLogoImage;
+	private ImageView mImageHeadBg, mImageHead, mLogoImage;
 	private TextView mTextName, mTextAttention, mTextFans, mTextContent;
 	private LinearLayout mWonderfulLayout, mRecommendLayout, mHeadlinesLayout;
 	private TextView mWonderfulText, mRecommednText, mHeadlinesText;
@@ -58,6 +68,7 @@ public class UserCenterHeader implements OnClickListener {
 
 	public View createHeader() {
 		View view = LayoutInflater.from(mContext).inflate(R.layout.activity_usercenter_header, null);
+		mImageHeadBg = (ImageView) view.findViewById(R.id.image_user_big);
 		mImageHead = (ImageView) view.findViewById(R.id.iv_usercenter_header_head);
 		mAttentionBtn = (Button) view.findViewById(R.id.btn_usercenter_header_attention);
 		mLogoImage = (ImageView) view.findViewById(R.id.iv_vip_logo);
@@ -79,7 +90,7 @@ public class UserCenterHeader implements OnClickListener {
 		mRecommendLayout.setOnClickListener(this);
 		mHeadlinesLayout.setOnClickListener(this);
 		mImageHead.setOnClickListener(this);
-		
+
 		return view;
 	}
 
@@ -89,6 +100,10 @@ public class UserCenterHeader implements OnClickListener {
 			if (null != user && !"".equals(user.customavatar)) {
 				// 使用网络地址
 				GlideUtils.loadNetHead(mContext, mImageHead, user.customavatar, R.drawable.usercenter_head_default);
+
+				final String headUrl = user.customavatar;
+				blurHeadIcon(headUrl);
+
 			} else {
 				UserUtils.focusHead(mContext, user.avatar, mImageHead);
 			}
@@ -158,7 +173,7 @@ public class UserCenterHeader implements OnClickListener {
 				mLogoImage.setVisibility(View.GONE);
 				mTextContent.setText(user.introduction);
 			}
-			
+
 			if(mUserCenterActivity.testUser()) {
 				//显示修改资料按钮
 				mAttentionBtn.setBackgroundResource(R.drawable.bg_edit);
@@ -170,10 +185,40 @@ public class UserCenterHeader implements OnClickListener {
 			} else {
 				changeAttentionState(mData.user.link);
 			}
-			
+
 		}
 
 	}
+
+	private void blurHeadIcon(final String headUrl) {
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					File result = Glide.with(mContext)
+							.load(headUrl)
+							.downloadOnly(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL)
+							.get(10, TimeUnit.SECONDS);
+					Bitmap bitmapHead = BitmapFactory.decodeFile(result.getAbsolutePath());
+					bitmapHead = RSBlur.blur(mContext, bitmapHead, 1);
+					mUiHandler.obtainMessage(MSG_TYPE_HEAD_ICON, bitmapHead).sendToTarget();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}.start();
+	}
+
+	private static final int MSG_TYPE_HEAD_ICON = 1;
+	private Handler mUiHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			if(msg.what == MSG_TYPE_HEAD_ICON) {
+				Bitmap bitmapHead = (Bitmap) msg.obj;
+				mImageHeadBg.setImageBitmap(bitmapHead);
+			}
+		}
+	};
 
 	@Override
 	public void onClick(View view) {
@@ -288,7 +333,7 @@ public class UserCenterHeader implements OnClickListener {
 			mContext.startActivity(it);
 		}
 	}
-	
+
 	/**
 	 * 修改关注按钮状态
 	 * @param link
@@ -346,5 +391,5 @@ public class UserCenterHeader implements OnClickListener {
 			break;
 		}
 	}
-	
+
 }

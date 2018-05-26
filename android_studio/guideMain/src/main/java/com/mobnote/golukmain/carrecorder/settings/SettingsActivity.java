@@ -1,9 +1,23 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Message;
+import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.KeyEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAdasConfigStatus;
 import com.mobnote.eventbus.EventBindFinish;
@@ -19,37 +33,26 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.entity.RecordStorgeState;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
-import com.mobnote.golukmain.carrecorder.settings.bean.VideoLogoJson;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoDisplay;
+import com.mobnote.golukmain.carrecorder.util.IpcSettingUtil;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
-import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Bundle;
-import android.text.TextUtils;
-import android.os.Message;
-import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -58,7 +61,7 @@ import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3U_SIGN;
 import static com.mobnote.golukmain.carrecorder.IPCControlManager.T3_SIGN;
 
 /**
- * 
+ *
  * IPC设置界面
  *
  * 2015年4月6日
@@ -148,13 +151,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	/** 停车安防模式提示文字 **/
 	private TextView mParkingSecurityHintText = null;
 
-	private TextView mCarrecorderWonderfulLine; 
+	private TextView mCarrecorderWonderfulLine;
 //	mCarrecorderSensitivityLine;
 
 	/**ADAS驾驶安全辅助**/
 	private RelativeLayout mADASAssistanceLayout = null;
 	private Button mADASAssistanceBtn = null;
-	
+
 	/**adas需求变更 暂时拿掉**/
 //	/**向前距离报警灵敏度**/
 //	private RelativeLayout mADASForwardWarningLayout = null;
@@ -207,7 +210,16 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	private String mAntiFlicker = "";
 	/**视频水印参数**/
 	private WonderfulVideoDisplay mDisplay;
-
+	/**紧急视频提示**/
+	private Button mBtnEmergencyVideoHint;
+	private RelativeLayout rLayoutEmergencyVideoTone;
+	/**缩时视频**/
+	private Button mBtnTimeLapse;
+	private RelativeLayout rLayoutTimeLapseVideo;
+	/* 紧急视频提示音开关状态 */
+	private int mEmgVideoSoundState;
+	/* 缩时视频开关状态 */
+	private int mTimeslapseState;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -233,6 +245,8 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("settings", this);
 		}
 		firstRequest();
+
+		XLog.tag(LogConst.TAG_SETTING).i("Enter IPC setting page.");
 	}
 
 	// 刚进入界面请求
@@ -268,7 +282,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		// 获取疲劳驾驶、G1图像自动翻转、停车休眠模式
 		boolean getFunctionMode = GolukApplication.getInstance().getIPCControlManager().getFunctionMode();
 		GolukDebugUtils.e("", "--------------SettingsActivity-----getFunctionMode：" + getFunctionMode);
-		
+
 		// 获取精彩视频类型
 		boolean wonderfulType = GolukApplication.getInstance().getIPCControlManager().getWonderfulVideoType();
 		GolukDebugUtils.e("", "TSettingsActivity-------------------wonderfulType：" + wonderfulType);
@@ -314,6 +328,22 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if(GolukApplication.getInstance().getIPCControlManager().isSupportVideoLogo()){
 			boolean videoLogo = GolukApplication.getInstance().getIPCControlManager().getVideoLogo();
 			GolukDebugUtils.e("", "TSettingsActivity-------------------videoLogo：" + videoLogo);
+		}
+		//获取缩时视频状态
+        boolean flagTimelapse = GolukApplication.getInstance().getIPCControlManager().getTimelapseCfg();
+		GolukDebugUtils.e("", "SettingsActivity-------------------flagTimelapse：" + flagTimelapse);
+		//获取紧急视频提示音状态
+        boolean flagEmergencyHint = GolukApplication.getInstance().getIPCControlManager().getEmgVideoSoundCfg();
+		GolukDebugUtils.e("", "SettingsActivity-------------------flagEmgVideoSound：" + flagEmergencyHint);
+		// 配置灵敏度
+		if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+			boolean flagGSensorValue = GolukApplication.getInstance().getIPCControlManager().getGSensorMoreValueCfg();
+			GolukDebugUtils.e("", "SettingsActivity===getIPCControlManager============getGSensorMoreValueCfg======flag="
+					+ flagGSensorValue);
+		} else {
+			boolean flagGSensorValue = GolukApplication.getInstance().getIPCControlManager().getGSensorControlCfg();
+			GolukDebugUtils.e("", "SettingsActivity===getIPCControlManager============getGSensorControlCfg======flag="
+					+ flagGSensorValue);
 		}
 		showLoading();
 	}
@@ -528,7 +558,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 //			mADASOffsetWarningTextView.setText(R.string.carrecorder_tcaf_close);
 //		}
 //	}
-	@Override 
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		GolukDebugUtils.e("", "SettingsActivity----onActivityResult----requestCode :" + requestCode + "   resultCode:"
@@ -588,7 +618,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 初始化控件
-	 * 
+	 *
 	 * @author xuhw
 	 * @date 2015年4月6日
 	 */
@@ -616,7 +646,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoLogoBtn = (Button) findViewById(R.id.btn_t_settings_video_logo);
 //		mCarrecorderSensitivityLine = (TextView) findViewById(R.id.tv_carrecorder_sensitivity_line);
 
-		mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
+		//mADASAssistanceLayout = (RelativeLayout) findViewById(R.id.layout_adas_assistance);
 		mADASAssistanceBtn = (Button) findViewById(R.id.btn_adas_assistance);
 		/**adas需求变更 暂时拿掉**/
 //		mADASForwardWarningLayout = (RelativeLayout) findViewById(R.id.layout_settings_adas_forward_sensibility);
@@ -633,7 +663,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 		mAutoPhotoItem = (RelativeLayout) findViewById(R.id.ry_setup_autophoto);
 		mAutoPhotoBtn = (ImageButton) findViewById(R.id.ib_setup_autophoto_btn);
-		
+
 		mTextWonderfulVideoQualityText = (TextView) findViewById(R.id.tv_carrecorder_settings_wonderfulvideo_quality_text);
 		mWonderfulVideoQualityLayout = (RelativeLayout) findViewById(R.id.rl_carrecorder_settings_wonderfulvideo_quality);
 		mVolumeText = (TextView) findViewById(R.id.tv_settings_tone_text);
@@ -648,6 +678,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mTvAnti = (TextView) findViewById(R.id.tv_carrecorder_settings_anti_flicker);
 		mMSLayout =  (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
 		mMoveMotionBtn = (Button) findViewById(R.id.btn_t_settings_adas_move_motion);
+		mBtnEmergencyVideoHint = (Button) findViewById(R.id.btn_emergency_switch);
+		rLayoutEmergencyVideoTone = (RelativeLayout) findViewById(R.id.rlayout_emergency_video_tone);
+		mBtnTimeLapse = (Button) findViewById(R.id.btn_time_lapse_video);
+		rLayoutTimeLapseVideo = (RelativeLayout) findViewById(R.id.rlayout_time_lapse_video);
 		// ipc设备型号
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
 			mISPLayout.setVisibility(View.GONE);
@@ -723,11 +757,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		} else {
 			mAutoPhotoBtn.setBackgroundResource(R.drawable.set_close_btn);
 		}
+		if (mBaseApp.mIPCControlManager.isSupportTimeslapse()){
+			rLayoutTimeLapseVideo.setVisibility(View.VISIBLE);
+			rLayoutEmergencyVideoTone.setVisibility(View.VISIBLE);
+		}
 	}
 
 	/**
 	 * 设置监听
-	 * 
+	 *
 	 * @author xuhw
 	 * @date 2015年4月6日
 	 */
@@ -755,7 +793,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mImageFlipBtn.setOnClickListener(this);// 图像自动翻转
 		mParkingSleepBtn.setOnClickListener(this);// 停车休眠模式
 		mHandsetLayout.setOnClickListener(this);// 遥控器按键功能
-		
+
 		mADASAssistanceBtn.setOnClickListener(this);//ADAS驾驶安全辅助
 		/**adas需求变更 暂时拿掉**/
 //		mADASForwardWarningLayout.setOnClickListener(this);//向前距离报警灵敏度
@@ -772,11 +810,13 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mVideoTypeLayout.setOnClickListener(this);// 精彩视频类型
 		mRlAntiFlicker.setOnClickListener(this); //抗闪烁
 		mMoveMotionBtn.setOnClickListener(this);
+		mBtnEmergencyVideoHint.setOnClickListener(this);
+		mBtnTimeLapse.setOnClickListener(this);
 	}
 
 	/**
 	 * 摄像头未连接提示框
-	 * 
+	 *
 	 * @author xuhw
 	 * @date 2015年4月8日
 	 */
@@ -891,7 +931,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							intent.putExtra(AdasVerificationActivity.ADASCONFIGDATA, mAdasConfigParamter);
 							startActivity(intent);
 						}
-						
+
 					});
 					mCustomDialog.show();
 				} else {
@@ -903,7 +943,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						mAdasConfigParamter.enable = 0;
 					}
 					GolukApplication.getInstance().getIPCControlManager()
-							.setT1AdasConfigEnable(mAdasConfigParamter.enable);	
+							.setT1AdasConfigEnable(mAdasConfigParamter.enable);
 				}
 			} else if (id == R.id.btn_settings_forward_car_close_warning) {
 				if (mAdasConfigParamter == null) {
@@ -972,8 +1012,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				itWonderful.putExtra(SettingsItemActivity.TYPE, SettingsItemActivity.TYPE_WONDERFUL_VIDEO_TYPE);
 				itWonderful.putExtra(SettingsItemActivity.PARAM, mVideoType);
 				startActivityForResult(itWonderful, REQUEST_CODE_WONDERFUL_VIDEO_TYPE);
-			} else {
-				
+			} else if (id == R.id.btn_emergency_switch){
+				click_EmergencyVideoSound();
+			}else if (id ==R.id.btn_time_lapse_video){
+				click_Timelapse();
+			}else {
+
 			}
 		} else {
 			dialog();
@@ -989,7 +1033,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 精彩视频拍摄提示音
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_wonderfulVoice() {
@@ -1013,7 +1057,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 开关机提示音
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_opencloseVoice() {
@@ -1036,7 +1080,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * HDR模式
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_hdr() {
@@ -1058,7 +1102,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 恢复出厂设置
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_reset() {
@@ -1086,7 +1130,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 视频质量界面
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_videQuality() {
@@ -1096,7 +1140,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 疲劳驾驶
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_Fatigue() {
@@ -1114,7 +1158,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 图像自动翻转
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_imageFlip() {
@@ -1146,7 +1190,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 停车休眠
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_parkingSleep() {
@@ -1179,7 +1223,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 遥控器按键功能
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void click_handset() {
@@ -1228,6 +1272,107 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		}
 
 	}
+	/**
+	 * 获取紧急视频提示音状态返回
+	 */
+	private void callback_getEmergencyVideoSound(int event, int msg, int param1, Object param2) {
+		GolukDebugUtils.e("", "TSettingsActivity-----------callback_getEmgVideoSound-----param2: " + param2);
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				mEmgVideoSoundState = Integer.parseInt(obj.optString("urgentSwitch"));
+				if (STATE_CLOSE != mEmgVideoSoundState) {
+					mEmgVideoSoundState = STATE_OPEN;
+				}
+				refreshUI_emergencyVideoSound(mEmgVideoSoundState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	/**
+	 * 设置紧急视频提示音状态返回
+	 */
+	private void callback_setEmergencyVideoSound(int param1) {
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getEmgVideoSoundCfg();
+		}
+	}
+
+	private void click_EmergencyVideoSound() {
+		mEmgVideoSoundState = mEmgVideoSoundState == 0 ? 1 : 0;
+		//GolukApplication.getInstance().setT1VideoCfgState(mEmgVideoSoundState);
+		boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setEmgVideoSoundCfg(mEmgVideoSoundState);
+		if (isSuccess) {
+			showLoading();
+		} else {
+			GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+
+	/**
+	 * 更新紧急视频提示语开关显示
+	 */
+	private void refreshUI_emergencyVideoSound(int state) {
+		mBtnEmergencyVideoHint.setBackgroundResource(state == STATE_OPEN ? R.drawable.set_open_btn : R.drawable.set_close_btn);
+	}
+
+	/**
+	 * 更新缩时视频开关显示
+	 */
+	private void refreshUI_timelapse(int state) {
+		mBtnTimeLapse.setBackgroundResource(state == STATE_OPEN ? R.drawable.set_open_btn : R.drawable.set_close_btn);
+	}
+
+	private void click_Timelapse(){
+		mTimeslapseState = mTimeslapseState==0?1:0;
+		boolean isSuccess = GolukApplication.getInstance().getIPCControlManager().setTimelapseCfg(mTimeslapseState);
+		if (isSuccess){
+			showLoading();
+		}else {
+			GolukUtils.showToast(null,getString(R.string.str_carrecoder_setting_failed));
+		}
+	}
+
+	private void callback_getTimelapse(int event, int msg, int param1, Object param2){
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			try {
+				JSONObject obj = new JSONObject((String) param2);
+				mTimeslapseState = Integer.parseInt(obj.optString("timelapse"));
+				if (STATE_CLOSE != mTimeslapseState) {
+					mTimeslapseState = STATE_OPEN;
+				}
+				refreshUI_timelapse(mTimeslapseState);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	/*设置缩时视频返回结果*/
+	private void callback_setTimelapseVideo(int param1) {
+		closeLoading();
+		if (RESULE_SUCESS == param1) {
+			GolukApplication.getInstance().getIPCControlManager().getTimelapseCfg();
+		}
+	}
+	/*获取灵敏度*/
+	private void callback_getCollisionControlCfg(int msg, int param1, Object param2) {
+		if (param1 == RESULE_SUCESS) {
+			try {
+				JSONObject json = new JSONObject((String) param2);
+				int collisionValue = json.optInt("collisionValue");
+				int textResId = IpcSettingUtil.getCollisionTextResIdByValue(collisionValue);
+				if (textResId != -1)
+					mSensitivityText.setText(textResId);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 	@Override
 	protected void onResume() {
@@ -1272,18 +1417,19 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		if (null != GolukApplication.getInstance().getIPCControlManager()) {
 			GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("settings");
 		}
-		EventBus.getDefault().unregister(this);;
+		EventBus.getDefault().unregister(this);
 		closeLoading();
 		if (mCustomDialog != null && mCustomDialog.isShowing()) {
 			mCustomDialog.dismiss();
 		}
 		mCustomDialog = null;
-		
+
 		if (null != mRestartDialog) {
 			mRestartDialog.dismiss();
 			mRestartDialog = null;
 		}
 		super.onDestroy();
+		XLog.tag(LogConst.TAG_SETTING).i("Leave IPC setting page.");
 	}
 
 	@Override
@@ -1291,6 +1437,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		GolukDebugUtils.e("jyf", "YYYYYYY----IPCManage_CallBack-----------event:" + event + " msg:" + msg + "  param1:"
 				+ param1 + "==data:" + (String) param2);
 		if (event == ENetTransEvent_IPC_VDCP_CommandResp) {
+
+			XLog.tag(LogConst.TAG_SETTING).i("IPCManage_CallBack. msg:%s, param1:%s, param2:%s", msg, param1, (String) param2);
+
 			if (msg == IPC_VDCP_Msg_GetRecordState) {// 获取IPC行车影像录制状态
 				getRecordState = true;
 				checkGetState();
@@ -1359,6 +1508,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 								if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
 									mMSLayout.setVisibility(View.VISIBLE);
 								}
+								if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+									rLayoutTimeLapseVideo.setVisibility(View.VISIBLE);
+								}
 								if (1 == dormant) {
 									dormant = 0;
 									// 设置停车休眠
@@ -1368,6 +1520,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 							} else {
 								findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
 								mMSLayout.setVisibility(View.GONE);
+								rLayoutTimeLapseVideo.setVisibility(View.GONE);
 							}
 						}
 					} catch (JSONException e) {
@@ -1382,6 +1535,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 						if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
 							mMSLayout.setVisibility(View.VISIBLE);
 						}
+						if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
+							rLayoutTimeLapseVideo.setVisibility(View.VISIBLE);
+						}
 						// TODO 判断休眠是否打开
 						if (1 == dormant) {
 							dormant = 0;
@@ -1392,6 +1548,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 					} else {
 						findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 关闭
 						mMSLayout.setVisibility(View.GONE);
+						rLayoutTimeLapseVideo.setVisibility(View.GONE);
 					}
 				} else {
 					if (1 == enableSecurity) {
@@ -1568,8 +1725,20 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				if (param1 == RESULE_SUCESS) {
 					GolukApplication.getInstance().getIPCControlManager().getAntiFlicker();
 				}
+			}else if (msg == IPC_VDCP_Msg_GetUrgentVoiceConf){//获取紧急视频开关状态
+				callback_getEmergencyVideoSound(event, msg, param1, param2);
+			}else if (msg == IPC_VDCP_Msg_SetUrgentVoiceConf){//设置紧急视频开关状态
+				callback_setEmergencyVideoSound(param1);
+			}else if (msg == IPC_VDCP_Msg_GetTimelapseConf){//获取缩时录影开关状态
+				callback_getTimelapse(event, msg, param1, param2);
+			}else if (msg == IPC_VDCP_Msg_SetTimelapseConf){//设置缩时录影开关状态
+				callback_setTimelapseVideo(param1);
+			}else if (msg == IPC_VDCPCmd_GetCollisionValueConf){//获取碰撞感应灵敏度
+				callback_getCollisionControlCfg(msg,param1,param2);
+			}else if (msg == IPC_VDCP_Msg_SetCollisionValueConf){//设置碰撞感应灵敏度
+				GolukApplication.getInstance().getIPCControlManager().getGSensorMoreValueCfg();
 			}
-			} else if (msg == IPC_VDCP_Msg_Reboot) {// 重启IPC
+		} else if (msg == IPC_VDCP_Msg_Reboot) {// 重启IPC
 				GolukDebugUtils.e("", "SettingsActivity-----------IPC_VDCP_Msg_Reboot-----param2: " + param2);
 			}
 		}
@@ -1595,7 +1764,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 恢复出厂回调
-	 * 
+	 *
 	 * @author jyf
 	 */
 	private void IPCCallBack_Restore(int msg, int param1, Object param2) {
@@ -1746,7 +1915,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 获取HDR模式
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -1776,7 +1945,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 设置HDR模式
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2109,7 +2278,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 容量大小转字符串
-	 * 
+	 *
 	 * @param size
 	 *            容量大小
 	 * @return
@@ -2216,10 +2385,10 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		mAdasConfigParamter = event.getData();
 		switchAdasEnableUI(true);
 	}
-	
+
 	/**
 	 * 获取精彩视频质量
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2243,7 +2412,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 设置精彩视频质量
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2263,7 +2432,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 获取提示音音量大小
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2286,7 +2455,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 设置提示音音量大小
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2303,7 +2472,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 获取关机时间
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2326,7 +2495,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 设置关机时间
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2343,7 +2512,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 获取语言类型
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2366,7 +2535,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 
 	/**
 	 * 设置语言类型
-	 * 
+	 *
 	 * @param event
 	 * @param msg
 	 * @param param1
@@ -2380,7 +2549,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			GolukApplication.getInstance().getIPCControlManager().getVoiceType();
 		}
 	}
-	
+
 	/**
 	 * 精彩视频类型
 	 * @param event
@@ -2410,7 +2579,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	private void callback_setWonderfulVideoType(int event, int msg, int param1, Object param2) {
 		GolukDebugUtils.e("", "SettingsActivity-----------callback_setWonderfulVideoType-----param2: " + param2);
 		if (RESULE_SUCESS == param1) {
@@ -2426,7 +2595,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新精彩视频质量
 	 */
@@ -2438,7 +2607,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新提示音音量大小
 	 */
@@ -2450,7 +2619,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新关机时间
 	 */
@@ -2463,7 +2632,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 	/**
 	 * 更新语言设置
 	 */
@@ -2476,5 +2645,5 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 	}
-	
+
 }

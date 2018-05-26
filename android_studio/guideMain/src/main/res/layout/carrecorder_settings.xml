@@ -241,6 +241,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/setting_line_color" />
             </RelativeLayout>
+
             
             <!-- 精彩视频类型 -->
 
@@ -559,6 +560,48 @@
 
                 <Button
                     android:id="@+id/kgjtsy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 紧急视频提示音 -->
+
+            <RelativeLayout
+                android:id="@+id/rlayout_emergency_video_tone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/btn_emergency_switch"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/emg_video_sound"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/btn_emergency_switch"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -966,7 +1009,50 @@
                 android:text="@string/pzgy_text"
                 android:textColor="#999999"
                 android:textSize="12sp" />
+            <!--缩时录影-->
+            <RelativeLayout
+                android:id="@+id/rlayout_time_lapse_video"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/setting_white_color"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentTop="true"
+                    android:background="@color/setting_line_color" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_toLeftOf="@+id/btn_time_lapse_video"
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:text="@string/timelapse"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
 
+                <Button
+                    android:id="@+id/btn_time_lapse_video"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="6dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/set_open_btn" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
+                    android:background="@color/setting_line_color" />
+            </RelativeLayout>
             <!-- 移动侦测 -->
 
             <RelativeLayout

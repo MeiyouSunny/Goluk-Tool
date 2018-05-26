@@ -186,18 +186,23 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
         loadImage(mVideoInfo1.filename, holder.image1);
         int type = getVideoType(mVideoInfo1.filename);
-        if (type == 1) {
+        if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
             holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
             holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-        } else if (type == 2) {
+        } else if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
             holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
             holder.mPreView1.setImageResource(R.drawable.photo_share_icon);
-        } else {
+        } else if(type == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
             holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_loop_title));
             holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+            holder.mPreView1.setVisibility(View.GONE);
+        } else if(type == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+            holder.mPreView1.setImageResource(R.drawable.photo_preview_icon);
+            holder.mVide1Type.setText(mContext.getResources().getString(R.string.reduce));
+            holder.mVide1Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_reduce_txt_color));
             holder.mPreView1.setVisibility(View.GONE);
         }
 
@@ -218,18 +223,23 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //			}
 
             int type2 = getVideoType(mVideoInfo2.filename);
-            if (type2 == 1) {
+            if (type2 == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
                 holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
                 holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
                 holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_wonderful_txt_color));
-            } else if (type2 == 2) {
+            } else if (type2 == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
                 holder.mPreView2.setImageResource(R.drawable.photo_share_icon);
                 holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_urgent_title));
                 holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_urgent_txt_color));
-            } else {
+            } else if (type2 == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP){
                 holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
                 holder.mVide2Type.setText(mContext.getResources().getString(R.string.str_loop_title));
                 holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_loop_txt_color));
+                holder.mPreView2.setVisibility(View.GONE);
+            } else if(type2 == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                holder.mPreView2.setImageResource(R.drawable.photo_preview_icon);
+                holder.mVide2Type.setText(mContext.getResources().getString(R.string.reduce));
+                holder.mVide2Type.setBackgroundColor(mContext.getResources().getColor(R.color.photoalbum_reduce_txt_color));
                 holder.mPreView2.setVisibility(View.GONE);
             }
         }
@@ -332,13 +342,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     }
 
     private int getVideoType(String name) {
-        if (name.indexOf("WND") >= 0) {
-            return 1;
-        } else if (name.indexOf("URG") >= 0) {
-            return 2;
-        } else {
-            return 3;
-        }
+        return PhotoAlbumConfig.getVideoTypeByName(name);
     }
 
     /**

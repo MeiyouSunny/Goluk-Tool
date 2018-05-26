@@ -1,16 +1,5 @@
 package com.mobnote.application;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -22,27 +11,16 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
-
-import cn.com.mobnote.logic.GolukLogic;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
-import cn.com.mobnote.module.location.GolukPosition;
-import cn.com.mobnote.module.location.ILocationFn;
-import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.tiros.api.Const;
-import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.baidu.BaiduLocation;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
 import com.elvishew.xlog.LogConfiguration;
 import com.elvishew.xlog.LogLevel;
 import com.elvishew.xlog.XLog;
+import com.elvishew.xlog.flattener.PatternFlattener;
 import com.elvishew.xlog.printer.AndroidPrinter;
 import com.elvishew.xlog.printer.ConsolePrinter;
 import com.elvishew.xlog.printer.Printer;
@@ -54,6 +32,7 @@ import com.mobnote.eventbus.EventIpcConnState;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
@@ -76,12 +55,12 @@ import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
 import com.mobnote.golukmain.livevideo.VdcpLiveBean;
 import com.mobnote.golukmain.player.SdkHandler;
 import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.userlogin.UserData;
+import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.wifibind.IpcConnSuccessInfo;
@@ -91,6 +70,11 @@ import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifimanage.WifiApAdmin;
 import com.mobnote.golukmain.xdpush.GolukNotification;
+import com.mobnote.log.app.AppLogOpreater;
+import com.mobnote.log.app.AppLogOpreaterImpl;
+import com.mobnote.log.app.LogConst;
+import com.mobnote.log.ipc.IpcExceptionOperater;
+import com.mobnote.log.ipc.IpcExceptionOperaterImpl;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
@@ -107,19 +91,34 @@ import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
-
-import de.greenrobot.event.EventBus;
-
-import android.support.multidex.MultiDexApplication;
-
-import com.mobnote.golukmain.userlogin.UserResult;
 import com.rd.veuisdk.SdkEntry;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1U_SIGN;
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T1_SIGN;
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2U_SIGN;
-import static com.mobnote.golukmain.carrecorder.IPCControlManager.T2_SIGN;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import cn.com.mobnote.logic.GolukLogic;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.GolukPosition;
+import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.tiros.api.Const;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
+
 import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
@@ -397,8 +396,17 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
 
+    /* 获取IPC日志 */
+    private static final int MSG_TYPE_QUERY_IPC_EXCEPTION_LIST = 11;
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
+            if (msg.what == MSG_TYPE_QUERY_IPC_EXCEPTION_LIST) {
+                // 获取设备Exception信息
+                IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(GolukApplication.getInstance().getApplicationContext());
+                ipcExceptionOperater.getIpcExceptionList();
+                return;
+            }
+
             if (isExit()) {
                 return;
             }
@@ -420,6 +428,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     };
 
     private void initXLog() {
+        AppLogOpreater appLogOpreater = new AppLogOpreaterImpl();
+        appLogOpreater.deleteSurplusLogFile();
+
         LogConfiguration config = new LogConfiguration.Builder()
                 .logLevel(LogLevel.ALL)            // Specify log level, logs below this level won't be printed, default: LogLevel.ALL
                 .tag("goluk")                                         // Specify TAG, default: "X-LOG"
@@ -434,6 +445,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 .Builder(new File(Environment.getExternalStorageDirectory(), GolukFileUtils.GOLUK_LOG_PATH).getPath())// Specify the path to save log file
                 .fileNameGenerator(new DateFileNameGenerator())        // Default: ChangelessFileNameGenerator("log")
                 .backupStrategy(new NeverBackupStrategy())             // Default: FileSizeBackupStrategy(1024 * 1024)
+                .logFlattener(new PatternFlattener("{d yyyy/MM/dd hh:mm:ss}|{l}|{t}| {m}"))
                 .build();
 
         XLog.init(                                                 // Initialize XLog
@@ -975,7 +987,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                     }
 
-                    XLog.tag("Download").i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
+                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
                             mDownLoadFileList.size(), filename, percent);
                 } else if (0 == success) {
                     // 下载完成
@@ -1010,7 +1022,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                         GlobalWindow.getInstance().topWindowSucess(
                                 this.getResources().getString(R.string.str_video_transfer_success));
-                        XLog.tag("Download").i("Download complete");
+                        XLog.tag(LogConst.TAG_DOWNLOAD).i("Download complete");
+                        // 发送Event
+                        EventUtil.sendDownloadCompleteEvent();
                     }
 
                     resetSDCheckState();
@@ -1027,7 +1041,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     }
                     // 下载文件失败，删除数据库中的信息
                     GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
-                    XLog.tag("Download").i("Download video %s failed", filename);
+                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Download video %s failed", filename);
 
                     GolukDebugUtils.e("xuhw", "BBBBBBB=======down==fail====" + mNoDownLoadFileList.size());
                     if (checkDownloadCompleteState()) {
@@ -1246,7 +1260,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (null != mMainActivity) {
                     mMainActivity.wiFiLinkStatus(3);
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state idel");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state idel");
                 break;
             case ConnectionStateMsg_Connecting:
                 GolukDebugUtils
@@ -1262,7 +1276,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 //                        mMainActivity.wiFiLinkStatus(1);
 //                    }
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state connecting");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state connecting");
                 break;
             case ConnectionStateMsg_Connected:
                 // 只是,ipc信号连接了,初始化的东西还没完成,所以要等到ipc初始化成功,才能把isIpcLoginSuccess=true
@@ -1283,7 +1297,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 if (mPageSource == "WiFiLinkList") {
                     ((WiFiLinkListActivity) mContext).ipcFailedCallBack();
                 }
-                XLog.tag("Connection").i("IPC_VDCP_Connect_CallBack: state disconnected");
+                XLog.tag(LogConst.TAG_CONNECTION).i("IPC_VDCP_Connect_CallBack: state disconnected");
                 break;
         }
     }
@@ -1310,7 +1324,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             ((WiFiLinkCompleteActivity) mContext).ipcLinkWiFiCallBack(param2);
         }
 
-        XLog.tag("Connection").i("Ipc connection success");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Ipc connection success");
 
         if (isBindSucess() || getEnableSingleWifi()) {
             GolukDebugUtils.e("", "=========IPC_VDCP_Command_Init_CallBack：" + param2);
@@ -1358,7 +1372,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             mIPCControlManager.setProduceName(ipcInfo.productname);
             // 保存设备型号
             SharedPrefUtil.saveIpcModel(mIPCControlManager.mProduceName);
-            XLog.tag("Connection").i("Ipc info: %s %s %s",ipcInfo.productname, ipcInfo.serial, ipcInfo.version);
+            XLog.tag(LogConst.TAG_CONNECTION).i("Ipc info: %s %s %s",ipcInfo.productname, ipcInfo.serial, ipcInfo.version);
         }
     }
 
@@ -1401,6 +1415,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
                     // 保存ipc版本号
                     SharedPrefUtil.saveIPCVersion(ipcVersion);
+
+                    // 获取设备Exception信息
+                    mHandler.removeMessages(MSG_TYPE_QUERY_IPC_EXCEPTION_LIST);
+                    mHandler.sendEmptyMessageDelayed(MSG_TYPE_QUERY_IPC_EXCEPTION_LIST, 6000);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -1,14 +1,5 @@
 package com.mobnote.golukmain.special;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,10 +18,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
@@ -47,6 +37,19 @@ import com.mobnote.golukmain.videodetail.ZTHead;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
+import de.greenrobot.event.EventBus;
 
 public class SpecialListActivity extends BaseActivity implements OnClickListener, VideoSuqareManagerFn {
     private SpecialListViewAdapter specialListViewAdapter = null;
@@ -92,6 +95,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.special_list);
+        EventBus.getDefault().register(this);
 
         sdf = new SimpleDateFormat(this.getString(R.string.str_date_formatter));
 
@@ -143,6 +147,12 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
         super.onActivityResult(requestCode, resultCode, data);
         if (null != sharePlatform) {
             sharePlatform.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    public void onEventMainThread(Event event) {
+        if (EventUtil.isCommentSuccessEvent(event)) {
+            httpPost(false, ztid);
         }
     }
 
@@ -203,6 +213,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
         closeProgressDialog();
         GlideUtils.clearMemory(this);
         super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
@@ -285,6 +296,7 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
         }
     }
 
+    private View mHeaderView, mFooterView;
     @Override
     public void VideoSuqare_CallBack(int event, int msg, int param1, Object param2) {
         if (event == VSquare_Req_List_Topic_Content) {
@@ -324,10 +336,14 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
 
                         GlideUtils.loadImage(this, image, headdata.imagepath, R.drawable.tacitly_pic);
 
+                        if (mHeaderView != null)
+                            lv.removeHeaderView(mHeaderView);
                         lv.addHeaderView(view);
 
                         image.setOnClickListener(new SpecialCommentListener(this, null, headdata.imagepath,
                                 headdata.videopath, "suqare", headdata.videotype, headdata.videoid));
+
+                        mHeaderView = view;
                     }
 
                     Map<String, Object> map = sdm.getComments(param2.toString());
@@ -380,7 +396,10 @@ public class SpecialListActivity extends BaseActivity implements OnClickListener
                         view.findViewById(R.id.message).setOnClickListener(this);
                         view.findViewById(R.id.send).setOnClickListener(this);
 
+                        if (mFooterView != null)
+                            lv.removeFooterView(mFooterView);
                         lv.addFooterView(view);
+                        mFooterView = view;
 
                         List<CommentInfo> comments = (List<CommentInfo>) map.get("comments");
                         if (comments != null && comments.size() > 0) {

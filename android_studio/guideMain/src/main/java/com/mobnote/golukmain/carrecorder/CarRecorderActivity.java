@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -16,7 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -28,10 +26,12 @@ import android.widget.TextView;
 
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -61,12 +61,11 @@ import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukFastJsonUtil;
-import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.util.JsonUtil;
-import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiRsBean;
@@ -354,11 +353,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private boolean isRecVideo = false;
     private boolean canReceiveFailed = true;
 
-    private ImageView mAdasImg = null;
+    //private ImageView mAdasImg = null;
 
-    private RelativeLayout mAdasStatusLayout = null;
+    //private RelativeLayout mAdasStatusLayout = null;
 
-    private ImageView mAdasIcon = null;
+    //private ImageView mAdasIcon = null;
     private AlertDialog mExitAlertDialog;
     public static final String ADAS_LINE_ST_LEFT = "adas_line_st_left";
     public static final String ADAS_LINE_ST_RIGHT = "adas_line_st_right";
@@ -422,9 +421,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         wonderfulVideoDownloadShow();
                         break;
                     case CLOSE_ADAS_VIEW:
-                        if (mAdasStatusLayout != null) {
-                            mAdasStatusLayout.setVisibility(View.GONE);
-                        }
+//                        if (mAdasStatusLayout != null) {
+//                            mAdasStatusLayout.setVisibility(View.GONE);
+//                        }
                         break;
                     default:
                         break;
@@ -446,22 +445,22 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (null != GolukApplication.getInstance().getIPCControlManager()) {
             GolukApplication.getInstance().getIPCControlManager().addIPCManagerListener("main", this);
         }
-        firstShowHint();
+        //firstShowHint();
     }
 
-    private void firstShowHint() {
-        if (!SharedPrefUtil.isShowChangeIpc()) {
-            SharedPrefUtil.setShowChangeIpc(true);
-            final ViewStub stub = (ViewStub) findViewById(R.id.stub_change);
-            View view = stub.inflate();
-            view.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    stub.setVisibility(View.GONE);
-                }
-            });
-        }
-    }
+//    private void firstShowHint() {
+//        if (!SharedPrefUtil.isShowChangeIpc()) {
+//            SharedPrefUtil.setShowChangeIpc(true);
+//            final ViewStub stub = (ViewStub) findViewById(R.id.stub_change);
+//            View view = stub.inflate();
+//            view.setOnClickListener(new OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    stub.setVisibility(View.GONE);
+//                }
+//            });
+//        }
+//    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -693,9 +692,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
         new1 = (ImageView) findViewById(R.id.new1);
         new2 = (ImageView) findViewById(R.id.new2);
-        mAdasImg = (ImageView) findViewById(R.id.adas_status_img);
-        mAdasStatusLayout = (RelativeLayout) findViewById(R.id.adas_status);
-        mAdasIcon = (ImageView) findViewById(R.id.adas_icon);
+        // mAdasImg = (ImageView) findViewById(R.id.adas_status_img);
+        //mAdasStatusLayout = (RelativeLayout) findViewById(R.id.adas_status);
+        //mAdasIcon = (ImageView) findViewById(R.id.adas_icon);
 
         mRtspPlayerView.setAudioMute(true);
         mRtspPlayerView.setZOrderMediaOverlay(true);
@@ -760,7 +759,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 rpv.removeCallbacks(retryRunnable);
                 showLoading();
                 collectLog("RD Rtsp Player Error, what id[" + String.valueOf(what) + "],extra id[" + String.valueOf(extra) + "],Errorinfo is:[" + strErrorInfo + "]");
-                XLog.tag("Preview").i("Rtsp play error: whet:%d, errorInfo:%s", what, strErrorInfo);
+                XLog.tag(LogConst.TAG_Preview).i("Rtsp play error: whet:%d, errorInfo:%s", what, strErrorInfo);
                 rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
@@ -950,8 +949,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             collectLog("IPCVERSION=" + mBaseApp.mIpcVersion);
             GolukDebugUtils.e("xuhw", "CarrecorderActivity-------start--YYYYYY======url==" + url + "   "
                     + mApp.mIPCControlManager.mProduceName);
-            XLog.tag("Preview").i("Rtsp:%s", url);
-            XLog.tag("Preview").i("Ipc:%s, Ipc Version:%s", mApp.mIPCControlManager.mProduceName, mBaseApp.mIpcVersion);
+            XLog.tag(LogConst.TAG_Preview).i("Rtsp:%s", url);
+            XLog.tag(LogConst.TAG_Preview).i("Ipc:%s, Ipc Version:%s", mApp.mIPCControlManager.mProduceName, mBaseApp.mIpcVersion);
             if (TextUtils.isEmpty(url)) {
                 return;
             }
@@ -1362,10 +1361,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         if (mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T1_SIGN)
                 || mApp.mIPCControlManager.mProduceName.equals(IPCControlManager.T2_SIGN)) {
             mVideoResolutions.setVisibility(View.GONE);
-            setAdasIconState(true);
+            //setAdasIconState(true);
         } else {
             mVideoResolutions.setVisibility(View.VISIBLE);
-            setAdasIconState(false);
+            //setAdasIconState(false);
         }
 
         if (isShowPlayer) {
@@ -2068,40 +2067,40 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     }
                 }
                 break;
-            case IPC_VDCP_Msg_PushEvent_ADAS://adas的警报
-                GFileUtils.writeIPCLog("============行车记录仪=======adas推送成功========222222=====param1=" + param1
-                        + "=====param2=" + param2);
-                if (param1 == RESULE_SUCESS) {
-                    try {
-                        JSONObject data = new JSONObject(param2.toString());
-                        String topic = data.optString("topic");
-                        if (ADAS_LINE_ST_LEFT.equals(topic)) {//车靠左太近
-                            setAdasStatusImage(true, 1);
-                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-                        } else if (ADAS_LINE_ST_RIGHT.equals(topic)) {//靠右太近
-                            setAdasStatusImage(true, 2);
-                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-                        } else if (ADAS_DISTANCE_ST_LEFT.equals(topic)) {
-                            //预留扩展
-                        } else if (ADAS_DISTANCE_ST_RIGHT.equals(topic)) {
-                            //预留扩展
-                        } else if (ADAS_TARGET_STATE.equals(topic)) {//距离前车近
-                            setAdasStatusImage(true, 3);
-                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-                        } else if (ADAS_TARGET_DISTANCE.equals(topic)) {//距离前车太近
-                            setAdasStatusImage(true, 4);
-                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-                        } else if (ADAS_TARGET_SPEED.equals(topic)) {
-                            //预留扩展
-                        } else if (ADAS_FONT_STARTUP.equals(topic)) {
-                            setAdasStatusImage(true, 5);
-                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
+//            case IPC_VDCP_Msg_PushEvent_ADAS://adas的警报
+//                GFileUtils.writeIPCLog("============行车记录仪=======adas推送成功========222222=====param1=" + param1
+//                        + "=====param2=" + param2);
+//                if (param1 == RESULE_SUCESS) {
+//                    try {
+//                        JSONObject data = new JSONObject(param2.toString());
+//                        String topic = data.optString("topic");
+//                        if (ADAS_LINE_ST_LEFT.equals(topic)) {//车靠左太近
+//                            setAdasStatusImage(true, 1);
+//                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
+//                        } else if (ADAS_LINE_ST_RIGHT.equals(topic)) {//靠右太近
+//                            setAdasStatusImage(true, 2);
+//                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
+//                        } else if (ADAS_DISTANCE_ST_LEFT.equals(topic)) {
+//                            //预留扩展
+//                        } else if (ADAS_DISTANCE_ST_RIGHT.equals(topic)) {
+//                            //预留扩展
+//                        } else if (ADAS_TARGET_STATE.equals(topic)) {//距离前车近
+//                            setAdasStatusImage(true, 3);
+//                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
+//                        } else if (ADAS_TARGET_DISTANCE.equals(topic)) {//距离前车太近
+//                            setAdasStatusImage(true, 4);
+//                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
+//                        } else if (ADAS_TARGET_SPEED.equals(topic)) {
+//                            //预留扩展
+//                        } else if (ADAS_FONT_STARTUP.equals(topic)) {
+//                            setAdasStatusImage(true, 5);
+//                            mHandler.sendEmptyMessageDelayed(CLOSE_ADAS_VIEW, ADASTIMER);
+//                        }
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                break;
             case IPC_VDCP_Msg_GetVideoTimeConf:
                 GolukDebugUtils.e("", "CarRecorderActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
                 if (RESULE_SUCESS == param1) {
@@ -2352,7 +2351,18 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         mExitAlertDialog.show();
         mExitAlertDialog.setCancelable(true);
         mExitAlertDialog.setCanceledOnTouchOutside(true);
+    }
 
+    /**
+     * 下载完成Event
+     */
+    public void onEventMainThread(Event event) {
+        if (EventUtil.isDownloadCompleteEvent(event)) {
+            if (mExitAlertDialog != null && mExitAlertDialog.isShowing()) {
+                mExitAlertDialog.dismiss();
+                mExitAlertDialog = null;
+            }
+        }
     }
 
     private void exit() {
@@ -2578,52 +2588,52 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
     }
 
-    /**
-     * 设置adas的显示和隐藏  以及 adas的显示图片
-     *
-     * @param flog
-     * @param status
-     */
-    public void setAdasStatusImage(boolean flog, int status) {
-        if (flog) {
-            mAdasStatusLayout.setVisibility(View.VISIBLE);
-        } else {
-            mAdasStatusLayout.setVisibility(View.GONE);
-        }
+//    /**
+//     * 设置adas的显示和隐藏  以及 adas的显示图片
+//     *
+//     * @param flog
+//     * @param status
+//     */
+//    public void setAdasStatusImage(boolean flog, int status) {
+//        if (flog) {
+//            mAdasStatusLayout.setVisibility(View.VISIBLE);
+//        } else {
+//            mAdasStatusLayout.setVisibility(View.GONE);
+//        }
+//
+//        if (status == 1) {
+//            mAdasImg.setImageResource(R.drawable.recorder_carleft_img);//车向左偏移
+//        } else if (status == 2) {
+//            mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右偏移
+//        } else if (status == 3) {
+//            AnimationDrawable photoAnimation;
+//            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_nearby);//距前车进
+//            photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
+//            photoAnimation.start();
+//        } else if (status == 4) {
+//            mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
+//        } else if (status == 5) {
+//            AnimationDrawable photoAnimation;
+//            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_startup);//前车起步
+//            photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
+//            photoAnimation.start();
+//        }
+//    }
 
-        if (status == 1) {
-            mAdasImg.setImageResource(R.drawable.recorder_carleft_img);//车向左偏移
-        } else if (status == 2) {
-            mAdasImg.setImageResource(R.drawable.recorder_carright_img);//车向右偏移
-        } else if (status == 3) {
-            AnimationDrawable photoAnimation;
-            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_nearby);//距前车进
-            photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
-            photoAnimation.start();
-        } else if (status == 4) {
-            mAdasImg.setImageResource(R.drawable.recorder_verynear_img);//距前车过进
-        } else if (status == 5) {
-            AnimationDrawable photoAnimation;
-            mAdasImg.setBackgroundResource(R.drawable.adas_warning_animation_front_startup);//前车起步
-            photoAnimation = (AnimationDrawable) mAdasImg.getBackground();
-            photoAnimation.start();
-        }
-    }
-
-    /**
-     * 设置adas的icon
-     */
-    public void setAdasIconState(boolean isT1) {
-        if (isT1) {
-            mAdasIcon.setVisibility(View.VISIBLE);
-            int flag = GolukFileUtils.loadInt(GolukFileUtils.ADAS_FLAG, 0);//0 关   1：开
-            if (GolukApplication.getInstance().getIpcIsLogin() && flag == 1) {
-                mAdasIcon.setImageResource(R.drawable.recorder_adas_on);
-            } else {
-                mAdasIcon.setImageResource(R.drawable.recorder_adas_off);
-            }
-        } else {
-            mAdasIcon.setVisibility(View.GONE);
-        }
-    }
+//    /**
+//     * 设置adas的icon
+//     */
+//    public void setAdasIconState(boolean isT1) {
+//        if (isT1) {
+//            mAdasIcon.setVisibility(View.VISIBLE);
+//            int flag = GolukFileUtils.loadInt(GolukFileUtils.ADAS_FLAG, 0);//0 关   1：开
+//            if (GolukApplication.getInstance().getIpcIsLogin() && flag == 1) {
+//                mAdasIcon.setImageResource(R.drawable.recorder_adas_on);
+//            } else {
+//                mAdasIcon.setImageResource(R.drawable.recorder_adas_off);
+//            }
+//        } else {
+//            mAdasIcon.setVisibility(View.GONE);
+//        }
+//    }
 }

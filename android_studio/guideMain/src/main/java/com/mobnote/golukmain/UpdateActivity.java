@@ -18,12 +18,14 @@ import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.user.DataCleanManage;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.IpcUpdateManage;
@@ -274,11 +276,15 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
                     mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
                     mBtnDownload.setEnabled(true);
+
+                    XLog.tag(LogConst.TAG_UPGRADE).i(getString(R.string.str_ipc_update_download_file_fail));
                 } else {
                     mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_downloading));
                     mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_ellipsis) + progressSetup + this.getResources().getString(R.string.str_ipc_update_percent_unit));
                     mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS;
                     mBtnDownload.setEnabled(false);
+
+                    XLog.tag(LogConst.TAG_UPGRADE).i("Downloading " + progressSetup + "%");
                 }
             } else {
                 boolean b = false;
@@ -297,6 +303,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                     mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
                     mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
                     mBtnDownload.setEnabled(true);
+
+                    XLog.tag(LogConst.TAG_UPGRADE).i("Firmware not download");
                 }
             }
         } else if (mSign == 1) {
@@ -310,6 +318,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                 mtfCardImage.setVisibility(View.VISIBLE);
                 mtfCardText.setVisibility(View.VISIBLE);
             }
+
+            XLog.tag(LogConst.TAG_UPGRADE).i("Firmware is downloaded");
         }
         EventBus.getDefault().register(this);
 
@@ -335,6 +345,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                     + mPercent
                                     + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
                         }
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading stage 1: " + mPercent + "%");
                         break;
                     case UPDATE_TRANSFER_OK:
                         UserUtils.dismissUpdateDialog(mSendDialog);
@@ -345,6 +357,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mSendOk = UserUtils.showDialogUpdate(UpdateActivity.this, mApp.getContext().getResources()
                                 .getString(R.string.str_ipc_update_transfer_file_success));
                         mIsSendFileOk = true;
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading file transfered success");
                         break;
                     case UPDATE_UPGRADEING:
                         UserUtils.dismissUpdateDialog(mSendOk);
@@ -364,6 +378,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                     + mPercent
                                     + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
                         }
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading stage 2: " + mPercent + "%");
                         break;
                     case UPDATE_UPGRADE_OK:
                         mIsUpgrading = false;
@@ -384,6 +400,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                     .getString(R.string.str_ipc_update_success));
                         }
                         isNewVersion();
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Ipc upgrade success!");
                         break;
                     case UPDATE_UPGRADE_FAIL:
                         mIsUpgrading = false;
@@ -408,6 +426,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 .getResources().getString(R.string.str_ipc_update_fail));
                         mNoBreakImage.setVisibility(View.GONE);
                         mNoBreakText.setVisibility(View.GONE);
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Ipc upgrade failed!");
                         break;
                     case UPDATE_UPGRADE_CHECK:
                         mIsUpgrading = false;
@@ -418,6 +438,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 .getResources().getString(R.string.str_ipc_update_check_fail));
                         mNoBreakImage.setVisibility(View.GONE);
                         mNoBreakText.setVisibility(View.GONE);
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading: fireware check Not pass!");
                         break;
                     case UPDATE_IPC_DISCONNECT:
                         mIsUpgrading = false;
@@ -434,6 +456,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 .getString(R.string.str_ipc_update_disconnect));
                         mNoBreakImage.setVisibility(View.GONE);
                         mNoBreakText.setVisibility(View.GONE);
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Ipc disconnected!");
                         break;
                     case UPDATE_IPC_FIRST_DISCONNECT:
                         mIsUpgrading = false;
@@ -455,6 +479,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                             mtfCardImage.setVisibility(View.VISIBLE);
                             mtfCardText.setVisibility(View.VISIBLE);
                         }
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Ipc disconnected in stage 1!");
                         break;
                     case UPDATE_IPC_SECOND_DISCONNECT:
                         mIsUpgrading = false;
@@ -465,6 +491,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mIsDisConnect = true;
                         showUpdateSecondDisconnect(mApp.getContext().getResources()
                                 .getString(R.string.str_ipc_update_second_period_disconnect));
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Ipc disconnected in stage 2!");
                         break;
                     default:
                         break;
@@ -472,6 +500,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                 super.handleMessage(msg);
             }
         };
+
+        XLog.tag(LogConst.TAG_UPGRADE).i("Enter IPC upgrade page.");
     }
 
     public void onEventMainThread(EventIPCUpdate event) {
@@ -625,6 +655,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mApp.mIpcUpdateManage.dismissLoadingDialog();
                     }
                 }
+
+                XLog.tag(LogConst.TAG_UPGRADE).i("Click download file button");
             } else if (mSign == 1) {
                 // TODO 判断摄像头是否连接 判断是否是最新版本
                 if (!mApp.getIpcIsLogin()) {
@@ -658,6 +690,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         }
                     }
                 }
+
+                XLog.tag(LogConst.TAG_UPGRADE).i("Click upgrade file button");
             }
         } else if (id == R.id.rl_update_voice) {
             mVoiceLayout.setVisibility(View.GONE);
@@ -679,6 +713,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             GolukDebugUtils.i("lily", "======下载文件progress=====" + progress);
             mBtnDownload.setEnabled(false);
             mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_downloading_omit) + progress + this.getResources().getString(R.string.str_ipc_update_percent_unit));
+
+            XLog.tag(LogConst.TAG_UPGRADE).i("File downloading: " + progress + "%");
         } else if (state == IpcUpdateManage.DOWNLOAD_STATUS_SUCCESS) {
             mTextDowload.setText(this.getResources().getString(R.string.ipc_download_text));
             mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_install));
@@ -693,6 +729,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             mSign = 1;
             // 下载成功删除文件
             // mApp.mIpcUpdateManage.downIpcSucess();
+
+            XLog.tag(LogConst.TAG_UPGRADE).i("File download success!");
         } else if (state == IpcUpdateManage.DOWNLOAD_STATUS_FAIL) {
             GolukUtils.showToast(mApp.getContext(),
                     this.getResources().getString(R.string.str_ipc_update_download_file_fail));
@@ -700,6 +738,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
             mBtnDownload.setEnabled(true);
             mSign = 0;
+
+            XLog.tag(LogConst.TAG_UPGRADE).i("File download failed!");
         }
     }
 
@@ -797,6 +837,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                                         }
                                                     }).show();
                                 }
+
+                                XLog.tag(LogConst.TAG_UPGRADE).i("Upgrade failed: check SD card!");
                                 return;
                             }
                         }
@@ -873,6 +915,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                 if (mStage.equals("1")) {
                     if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
                         mUpdateHandler.sendEmptyMessage(UPDATE_IPC_FIRST_DISCONNECT);
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrade 1 stage wait timeout 3min !");
                     }
                 }
             }
@@ -893,6 +937,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                 if (mStage.equals("2") && !mPercent.equals("100")) {
                     if (null == mUpdateDialogFail || !mUpdateDialogFail.isShowing()) {
                         mUpdateHandler.sendEmptyMessage(UPDATE_IPC_SECOND_DISCONNECT);
+
+                        XLog.tag(LogConst.TAG_UPGRADE).i("Upgrade 2 stage wait timeout 3min !");
                     }
                 }
             }
@@ -947,6 +993,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
             GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener(TAG);
         }
         EventBus.getDefault().unregister(this);
+
+        XLog.tag(LogConst.TAG_UPGRADE).i("Leave updage page.");
     }
 
     /**

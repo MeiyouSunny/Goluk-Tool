@@ -41,6 +41,7 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -172,7 +173,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // 写日志，表示绑定失败
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType("2");
         collectLog("onCreate", "---1");
-        XLog.tag(TAG).i("Enter device connect page");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Enter device connect page");
 
         getIntentData();
         //IPC-待连接页面
@@ -308,24 +309,24 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
         WifiRsBean bean = mWac.getConnResult();
         collectLog("isGetWifiBean", "-----1");
-        XLog.tag(TAG).i("Get current WIFI info");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Get current WIFI info");
         if (null == bean) {
             showToast(getString(R.string.no_wifi_selected));
             GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed2  :");
             collectLog("isGetWifiBean", "-----2");
-            XLog.tag(TAG).i("Current WIFI info is null");
+            XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI info is null");
             connFailed();
             return false;
         }
         collectLog("dealAutoConn", "-----5 NOT  NULL");
-        XLog.tag(TAG).i("Current WIFI info not null");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI info not null");
         mWillConnName = bean.getIpc_ssid();
         mWillConnMac = bean.getIpc_bssid();
         if (mWillConnName == null || mWillConnName.length() <= 0) {
             showToast(getString(R.string.no_wifi_selected));
             GolukDebugUtils.e("", "bindbind-------------isGetWifiBean---failed3  :");
             collectLog("isGetWifiBean", "-----3");
-            XLog.tag(TAG).i("Current WIFI name is null");
+            XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI name is null");
             // 连接失败
             connFailed();
             return false;
@@ -333,7 +334,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if(!mWillConnName.startsWith("Goluk")){
             showToast(getString(R.string.not_goluk_device));
             collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
-            XLog.tag(TAG).i("Current WIFI is not Goluk WIFI: %s", mWillConnName);
+            XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI is not Goluk WIFI: %s", mWillConnName);
             // 连接失败
             connFailed();
             return false;
@@ -343,7 +344,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
 
         collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
-        XLog.tag(TAG).i("Current WIFI info: WIFI Name:%s, macAddress:%s", mWillConnName, mWillConnMac);
+        XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI info: WIFI Name:%s, macAddress:%s", mWillConnName, mWillConnMac);
         saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
         setIpcMode(mWillConnName);
         collectLog(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 selected wifi :" + mWillConnName);
@@ -408,7 +409,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         boolean b = mApp.mIPCControlManager.setIPCWifiState(true, CONNECT_IPC_IP);
         GolukDebugUtils.e("", "bindbind-------------sendLogicLinkIpc  :" + b);
         collectLog("sendLogicLinkIpc", "--------3------: " + b);
-        XLog.tag(TAG).i("Send logic to connect IPS, setIPCWifiState, result: " + b);
+        XLog.tag(LogConst.TAG_CONNECTION).i("Send logic to connect IPS, setIPCWifiState, result: " + b);
         if (b) {
             collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.2 setIpcWifiState return true");
             this.showLoadingDialog();
@@ -423,7 +424,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private void connFailed() {
         collectLog("connFailed", "--------1------: ");
-        XLog.tag(TAG).i("Connect device failed");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Connect device failed");
         this.dimissLoadingDialog();
         mApp.mIPCControlManager.setVdcpDisconnect();
         mApp.isIpcConnSuccess = false;
@@ -452,7 +453,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     int POST_FAILED_DELAY = 10*1000;
     public void ipcFailedCallBack() {
         collectLog("ipcLinkFailedCallBack", "--------1");
-        XLog.tag(TAG).i("Connect device failed");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Connect device failed");
         GolukDebugUtils.e("", "WiFiLinkListActivity  通知logic连接ipc---dealAutoConn--------ipcLinkFailedCallBack：");
         mApp.mIPCControlManager.setVdcpDisconnect();
         // if (!mIsCanAcceptIPC) {
@@ -481,7 +482,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return true;
         }
         collectLog("ipcLinkedCallBack", "ipc Conn----sucess!!!: ");
-        XLog.tag(TAG).i("Connect device success");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Connect device success");
         GolukDebugUtils.e("", "bindbind-------------ipcSucessCallBack  :");
         mIsCanAcceptIPC = false;
         // isAutoConn = false;
@@ -507,7 +508,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 String version = json.optString("version");
                 String model = json.optString("productname");
                 WiFiInfo.IPC_MODEL = model;
-                XLog.tag(TAG).i("Connect IPC info: model:%s, version:%s", model, version);
+                XLog.tag(LogConst.TAG_CONNECTION).i("Connect IPC info: model:%s, version:%s", model, version);
                 int regionType = GolukUtils.judgeIPCDistrict(model, version);
                 if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
                     mApp.isIpcConnSuccess = false;
@@ -542,7 +543,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return;
         }
         collectLog("onResume", "----1:");
-        XLog.tag(TAG).i("Device connect page onResume()");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Device connect page onResume()");
         if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
             autoConnWifi();
         mIsCanAcceptNetState = true;
@@ -587,7 +588,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (isWifiConnected(this)) {
                 GolukDebugUtils.e("", "WifiLinkList------------wifi Change wifi");
                 collectLog("onEventMainThread", "wifi-----222");
-                XLog.tag(TAG).i("Net type changed, WIFI is connected");
+                XLog.tag(LogConst.TAG_CONNECTION).i("Net type changed, WIFI is connected");
                 this.autoConnWifi();
             }
         }
@@ -628,7 +629,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             toNextView();
         } else if (STATE_FAILED == mCurrentState) {
             collectLog("dialogManagerCallBack", "-Jump----System WifiLIst");
-            XLog.tag(TAG).i("Go to system WIFI list page");
+            XLog.tag(LogConst.TAG_CONNECTION).i("Go to system WIFI list page");
             mStartSystemWifi = true;
             GolukUtils.startSystemWifiList(this);
         }
@@ -760,7 +761,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         super.onDestroy();
         GolukDebugUtils.e("", "jyf-----WifiBind-----List-----onDestroy----");
         collectLog("onDestroy", "onDestroy--1");
-        XLog.tag(TAG).i("Leave device connect page");
+        XLog.tag(LogConst.TAG_CONNECTION).i("Leave device connect page");
         if (null != mWac) {
             mWac.unbind();
             mWac = null;

@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.usercenter;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
@@ -49,14 +51,15 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 public class NewUserCenterActivity extends BaseActivity implements IRequestResultListener, OnClickListener,
-        OnItemClickListener, ForbidBack {
+        OnItemClickListener, ForbidBack, AbsListView.OnScrollListener {
 
     private static final String OPERATOR_FIRST = "0";
     private static final String OPERATOR_DOWN = "1";
     private static final String OPERATOR_UP = "2";
 
-    private ImageButton mBackBtn, mMoreBtn;
-    private TextView mTitleText = null;
+    private RelativeLayout mTitleLayout;
+    private ImageButton mMoreBtn;
+    private TextView mBackBtn;
     private PullToRefreshHeaderGridView mGridView = null;
     private RelativeLayout mRefreshLayout = null;
     private NewUserCenterAdapter mAdapter = null;
@@ -117,11 +120,11 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
 
         initView();
 
-        if (testUser()) {
-            mTitleText.setText(this.getString(R.string.user_personal_home_title));
-        } else {
-            mTitleText.setText(this.getString(R.string.str_his_homepage));
-        }
+//        if (testUser()) {
+//            mTitleText.setText(this.getString(R.string.user_personal_home_title));
+//        } else {
+//            mTitleText.setText(this.getString(R.string.str_his_homepage));
+//        }
 
         EventBus.getDefault().register(this);
 
@@ -142,9 +145,9 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
     }
 
     private void initView() {
+        mTitleLayout = (RelativeLayout) findViewById(R.id.ry_usercenter_title);
         mGridView = (PullToRefreshHeaderGridView) findViewById(R.id.gv_usercenter);
-        mBackBtn = (ImageButton) findViewById(R.id.ib_usercenter_back);
-        mTitleText = (TextView) findViewById(R.id.tv_usercenter_title);
+        mBackBtn = (TextView) findViewById(R.id.ib_usercenter_back);
         mMoreBtn = (ImageButton) findViewById(R.id.ib_usercenter_more);
         mRefreshLayout = (RelativeLayout) findViewById(R.id.ry_usercenter_refresh);
         mFooterView = LayoutInflater.from(this).inflate(R.layout.activity_usercenter_footer, null);
@@ -191,6 +194,8 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
             }
 
         });
+
+        mGridView.setOnScrollListener(this);
 
         mIsFirst = true;
     }
@@ -534,4 +539,17 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
             mSharePlatform.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        if(firstVisibleItem <= 0)
+            mTitleLayout.setBackgroundColor(Color.parseColor("#00000000"));
+        else
+            mTitleLayout.setBackgroundColor(Color.parseColor("#404246"));
+    }
+
 }

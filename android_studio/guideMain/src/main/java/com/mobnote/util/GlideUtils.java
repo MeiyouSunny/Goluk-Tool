@@ -6,7 +6,6 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class GlideUtils {
 
@@ -17,9 +16,9 @@ public class GlideUtils {
 			} else {
 				Glide.with(context)
 						.load(headUrl)
-						.diskCacheStrategy(DiskCacheStrategy.NONE)
-						.skipMemoryCache(true)
-						.placeholder(placeholder)
+						//.diskCacheStrategy(DiskCacheStrategy.NONE)
+						.skipMemoryCache(false)
+						//.placeholder(placeholder)
 						.transform(new GlideCircleTransform(context))
 						.into(view);
 			}
@@ -33,8 +32,8 @@ public class GlideUtils {
 		try {
 			Glide.with(context)
 					.load(headId)
-					.diskCacheStrategy(DiskCacheStrategy.NONE)
-					.skipMemoryCache(true)
+					//.diskCacheStrategy(DiskCacheStrategy.NONE)
+					.skipMemoryCache(false)
 					.transform(new GlideCircleTransform(context)).into(view);
 		} catch (Exception e) {
 
