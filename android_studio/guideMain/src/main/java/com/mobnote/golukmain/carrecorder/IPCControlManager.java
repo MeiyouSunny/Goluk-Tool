@@ -852,6 +852,8 @@ public class IPCControlManager implements IPCManagerFn {
      * @date 2015年3月21日
      */
     public void addIPCManagerListener(String from, IPCManagerFn fn) {
+        if (mIpcManagerListener.containsKey(from))
+            this.mIpcManagerListener.remove(from);
         this.mIpcManagerListener.put(from, fn);
     }
 
@@ -863,7 +865,8 @@ public class IPCControlManager implements IPCManagerFn {
      * @date 2015年3月21日
      */
     public void removeIPCManagerListener(String from) {
-        this.mIpcManagerListener.remove(from);
+        if (mIpcManagerListener.containsKey(from))
+            this.mIpcManagerListener.remove(from);
     }
 
     /**

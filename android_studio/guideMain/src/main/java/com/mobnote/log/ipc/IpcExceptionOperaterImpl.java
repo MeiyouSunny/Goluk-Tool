@@ -230,7 +230,7 @@ public class IpcExceptionOperaterImpl implements IpcExceptionOperater, IPCManage
                 saveIpcException(list, getCurrentIpcLogFile());
             }
 
-            GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("IpcException");
+            //GolukApplication.getInstance().getIPCControlManager().removeIPCManagerListener("IpcException");
         }
     }
 
