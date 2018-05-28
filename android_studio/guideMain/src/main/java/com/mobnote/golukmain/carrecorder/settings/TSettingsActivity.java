@@ -36,6 +36,7 @@ import com.mobnote.golukmain.carrecorder.settings.bean.VideoLogoJson;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoDisplay;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoJson;
 import com.mobnote.golukmain.carrecorder.util.IpcSettingUtil;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
@@ -1548,6 +1549,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                     }
                 });
         mCustomDialog.show();
+
+        // 事件同步恢复成自动同步
+        SettingUtils.getInstance().putBoolean("systemtime", true);
+        SettingUtils.getInstance().putInt("ipctime", 1);
     }
 
     private void switchAdasEnableUI(boolean isEnable) {
