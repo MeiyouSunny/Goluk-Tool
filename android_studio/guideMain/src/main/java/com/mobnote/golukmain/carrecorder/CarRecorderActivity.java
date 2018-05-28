@@ -1052,7 +1052,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 }
             }
         } else if (id == R.id.mSettingBtn) {
-            if (m_bIsFullScreen) {
+            if (m_bIsFullScreen || GolukUtils.isFastDoubleClick()) {
                 return;
             }
             if (GolukApplication.getInstance().getIpcIsLogin()) {
