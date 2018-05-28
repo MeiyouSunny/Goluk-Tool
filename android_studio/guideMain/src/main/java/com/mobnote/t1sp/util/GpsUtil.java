@@ -24,18 +24,18 @@ public class GpsUtil {
         return data == null ? 0 : (int) (data.speed * 3.6);
     }
 
-    public static int totalTime(List<GPSData> list) {
+    public static long totalTime(List<GPSData> list) {
         if (list == null || list.size() == 0) {
             return 0;
         }
-        int start = 0;
+        long start = 0;
         for (GPSData data : list) {
             if (data.time != 0) {
                 start = data.time;
                 break;
             }
         }
-        int end = 0;
+        long end = 0;
         for (int i = list.size() - 1; i >= 0; i--) {
             if (list.get(i).time != 0) {
                 end = list.get(i).time;

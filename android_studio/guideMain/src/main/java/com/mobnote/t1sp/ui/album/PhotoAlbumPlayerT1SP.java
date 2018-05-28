@@ -71,6 +71,7 @@ import com.rd.veuisdk.manager.CameraConfiguration;
 import com.rd.veuisdk.manager.ExportConfiguration;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.manager.VEOSDBuilder;
+import com.rd.veuisdk.utils.DateTimeUtils;
 
 import net.sf.marineapi.bean.GPSData;
 import net.sf.marineapi.task.T1spGpsTask;
@@ -275,6 +276,11 @@ public class PhotoAlbumPlayerT1SP extends BaseActivity implements OnClickListene
 
         mTvTotalMails.setText(GpsUtil.totalMails(list));
         updateAvgSpeed();
+
+        // 打印Gps信息
+        for (GPSData gpsData : list) {
+            Log.e("T1SPGPS", "[" + gpsData.latitude + "," + gpsData.longitude + "]" + " Time:" + DateTimeUtils.getTimeStringSplitWith$(gpsData.time));
+        }
     }
 
     private void loadMedia() {
