@@ -42,6 +42,7 @@ import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoShareInfo;
 import com.mobnote.golukmain.carrecorder.settings.SettingsActivity;
 import com.mobnote.golukmain.carrecorder.settings.TSettingsActivity;
+import com.mobnote.golukmain.carrecorder.settings.bean.TSettingsJson;
 import com.mobnote.golukmain.carrecorder.settings.bean.WonderfulVideoJson;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
@@ -1055,17 +1056,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 return;
             }
             if (GolukApplication.getInstance().getIpcIsLogin()) {
-                ZhugeUtils.eventIpcSettings(this);
-                Intent setting = null;
-                if (IPCControlManager.T1_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
-                        || IPCControlManager.T2_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
-                        || IPCControlManager.T1U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)
-                        || IPCControlManager.T2U_SIGN.equals(GolukApplication.getInstance().getIPCControlManager().mProduceName)) {
-                    setting = new Intent(CarRecorderActivity.this, TSettingsActivity.class);
-                    startActivity(setting);
+                if (mBaseApp.getIPCControlManager().isT1OrT2()) {
+                    // 先获取T系列设置选项
+                    boolean flagGetSettingList = GolukApplication.getInstance().getIPCControlManager().getCapacityList();
                 } else {
-                    setting = new Intent(CarRecorderActivity.this, SettingsActivity.class);
-                    startActivity(setting);
+                    Intent intentSettings = new Intent(this, SettingsActivity.class);
+                    startActivity(intentSettings);
                 }
             }
         } else if (id == R.id.mFullScreen) {
@@ -1907,6 +1903,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             callBack_VDTP(msg, param1, param2);
         }
 
+        // 设置项配置列表
+        if (msg == IPC_VDCP_Msg_GetCapacityList) {// 获取列表
+            callback_getCapacityList(event, msg, param1, param2);
+        }
+
     }
 
     /**
@@ -2586,6 +2587,27 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             }
         }
 
+    }
+
+    /**
+     * 获取全设置列表
+     */
+    private void callback_getCapacityList(int event, int msg, int param1, Object param2) {
+        GolukDebugUtils.e("", "TSettingsActivity-----------callback_getCapacityList-----param2: " + param2);
+        if (RESULE_SUCESS == param1) {
+            try {
+                TSettingsJson tJson = GolukFastJsonUtil.getParseObj((String) param2, TSettingsJson.class);
+                if (null != tJson && null != tJson.data) {
+                    String[] settingList = tJson.data.list;
+                    // 跳转到设置
+                    Intent intentSettings = new Intent(CarRecorderActivity.this, TSettingsActivity.class);
+                    intentSettings.putExtra("settingList", settingList);
+                    startActivity(intentSettings);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 //    /**

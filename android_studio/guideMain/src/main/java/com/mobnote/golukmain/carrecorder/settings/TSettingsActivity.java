@@ -280,11 +280,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
     }
 
     private void requestIPCList() {
-        boolean capacityList = GolukApplication.getInstance().getIPCControlManager().getCapacityList();
-        GolukDebugUtils.e("", "TSettingsActivity-----------requestIPCList-------capacityList: " + capacityList);
-        if (!capacityList) {
-            // 显示基础列表
-        }
+        mIPCList = getIntent().getStringArrayExtra("settingList");
+        if (mIPCList != null && mIPCList.length > 0)
+            matchDataToRefreshUI();
     }
 
     private void initView() {

@@ -120,6 +120,14 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
+     * 是否T1/T2
+     */
+    public boolean isT1OrT2() {
+        return T1_SIGN.equals(mProduceName) || T1U_SIGN.equals(mProduceName)
+                || T2_SIGN.equals(mProduceName) || T2U_SIGN.equals(mProduceName);
+    }
+
+    /**
      * 判断是否是G1与T1S，两个处理流程是一样的
      *
      * @return
