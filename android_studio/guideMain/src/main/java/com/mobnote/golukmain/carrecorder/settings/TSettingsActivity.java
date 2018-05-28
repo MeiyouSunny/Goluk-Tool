@@ -636,6 +636,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
             mLayoutEmgVideoSound.setVisibility(View.VISIBLE);
             mLayoutTimesplase.setVisibility(View.VISIBLE);
+            // 隐藏移动侦测,跟一秒一拍互斥
+            mMSLayout.setVisibility(View.GONE);
         }
 
         // 隐藏ADAS
@@ -1340,7 +1342,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                     snapInterval = json.getInt("snapInterval");
                     if (1 == enableSecurity) {
                         if (mBaseApp.getIPCControlManager().isSupportMoveDection()) {
-                            mMSLayout.setVisibility(View.VISIBLE);
+                            if (!mBaseApp.mIPCControlManager.isSupportTimeslapse())
+                                mMSLayout.setVisibility(View.VISIBLE);
                         }
                         if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
                             mLayoutTimesplase.setVisibility(View.VISIBLE);
@@ -1370,7 +1373,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             if (1 == enableSecurity) {
                 mAFBtn.setBackgroundResource(R.drawable.set_open_btn);// 打开
                 if (mBaseApp.getIPCControlManager().isSupportMoveDection()) {
-                    mMSLayout.setVisibility(View.VISIBLE);
+                    if (!mBaseApp.mIPCControlManager.isSupportTimeslapse())
+                        mMSLayout.setVisibility(View.VISIBLE);
                 }
                 if (mBaseApp.mIPCControlManager.isSupportTimeslapse()) {
                     mLayoutTimesplase.setVisibility(View.VISIBLE);
