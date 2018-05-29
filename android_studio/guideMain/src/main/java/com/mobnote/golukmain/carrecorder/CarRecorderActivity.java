@@ -49,6 +49,7 @@ import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveSettingBean;
@@ -1059,6 +1060,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 if (mBaseApp.getIPCControlManager().isT1OrT2()) {
                     // 先获取T系列设置选项
                     boolean flagGetSettingList = GolukApplication.getInstance().getIPCControlManager().getCapacityList();
+                    if (flagGetSettingList)
+                        showDialog();
                 } else {
                     Intent intentSettings = new Intent(this, SettingsActivity.class);
                     startActivity(intentSettings);
@@ -2593,6 +2596,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * 获取全设置列表
      */
     private void callback_getCapacityList(int event, int msg, int param1, Object param2) {
+        closeDialog();
         GolukDebugUtils.e("", "TSettingsActivity-----------callback_getCapacityList-----param2: " + param2);
         if (RESULE_SUCESS == param1) {
             try {
@@ -2607,6 +2611,22 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private CustomLoadingDialog mLoadingsDialog;
+
+    private void showDialog() {
+        if (mLoadingsDialog == null)
+            mLoadingsDialog = new CustomLoadingDialog(this, null);
+        if (!mLoadingsDialog.isShowing()) {
+            mLoadingsDialog.show();
+        }
+    }
+
+    private void closeDialog() {
+        if (mLoadingsDialog != null && mLoadingsDialog.isShowing()) {
+            mLoadingsDialog.close();
         }
     }
 
