@@ -253,7 +253,7 @@ public class TimeslapseFragment extends Fragment implements IPCManagerFn, LocalW
             }
 
             // 下载视频文件
-            String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_LOOP_VIDEO_PATH + filename);
+            String mp4 = FileUtils.libToJavaPath(PhotoAlbumConfig.LOCAL_REDUCE_VIDEO_PATH + filename);
 
             File file = new File(mp4);
             if (!file.exists()) {

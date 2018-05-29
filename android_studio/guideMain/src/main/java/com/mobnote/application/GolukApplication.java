@@ -775,8 +775,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             return mVideoSavePath + "wonderful/";
         } else if (IPCManagerFn.TYPE_URGENT == type) {
             return mVideoSavePath + "urgent/";
-        } else {
+        } else if (IPCManagerFn.TYPE_CIRCULATE == type) {
             return mVideoSavePath + "loop/";
+        } else {
+            return mVideoSavePath + "reduce/";
         }
     }
 
