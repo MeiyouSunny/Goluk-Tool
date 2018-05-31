@@ -1081,4 +1081,20 @@
     <string name="exporting">ビデオをエクスポート中です。お待ちください...</string>
     <string name="signature_is_empty">署名は空白にできません</string>
     <string name="sina_weibo_low_version">Weibo がインストールされていません</string>
+    <string name="capture_time_5_7">ハイライトキャプチャ(5+7)</string>
+    <string name="enter_album_mode_hint">アルバムモード、ダッシュカメラは録音を停止する</string>
+    <string name="cancel_downloading_videos_hin">ビデオをダウンロードしています。 今すぐ終了すると、ダウンロードはキャンセルされます</string>
+    <string name="enter_setting_mode_hint">設定モードでは、ダッシュカメラは録音を停止します</string>
+    <string name="recovery_to_record">録音を再開するレコーダー</string>
+    <string name="capture_success_hint">ビデオキャプチャ成功</string>
+    <string name="hint_pk_mode">イグニッションがオフになると、Golukのタイムラプスビデオモードが有効になり、車両が24時間監視されていることを確認します。 パーキングセキュリティモードを有効にするには、ハードワイヤリングキットが必要です。</string>
+    <string name="hint_gsensor">運転中に異常な衝突が発生した場合、作動させると、車両は自動的に12秒（最初の5秒はプリバッファーされた）の緊急ビデオ画像を保存します。 十分なスペースがない場合、以前に記録されたファイルは自動的に上書きされます。</string>
+    <string name="t1sp_ipc_hint_text">ファームウェアのアップグレードをインストールする前に、カメラが正しく接続されていることを確認してください。アップグレードが完了するまで電源は切らないでください。アップグレードが完了したら、電源プラグを抜き、デバイスを再起動してください。</string>
+    <string name="str_ipc_update_success_t1s">デバイスのアップグレードが完了しました。電源を抜いてデバイスを再起動してください。</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">ハイライトキャプチャ（5+7）：[KIT]ボタンを押して、最初の5+7（12）秒のハイライトビデオセクションの録画を有効にします。クラシックモード：[KIT]ボタンを押して、ハイライトビデオの30秒の録画を有効にします。</string>
+    <string name="emg_video_sound">緊急ビデオプロンプト</string>
+    <string name="timelapse">時間経過</string>
+    <string name="lower">中低</string>
+    <string name="highter">ミディアムハイ</string>
+    <string name="reduce">タイムラプス</string>
 </resources>

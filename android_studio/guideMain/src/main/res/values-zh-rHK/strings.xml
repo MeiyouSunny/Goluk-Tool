@@ -1082,4 +1082,21 @@
     <string name="exporting">正在匯出影片，請耐心等待…</string>
     <string name="signature_is_empty">個性簽名不能為空</string>
     <string name="sina_weibo_low_version">尚未安裝新浪微博或版本太低</string>
+    <string name="capture_time_5_7">精彩連拍(5+7)</string>
+    <string name="storage_left">可用空間</string>
+    <string name="enter_album_mode_hint">進入相冊模式，記錄儀將停止錄像</string>
+    <string name="cancel_downloading_videos_hin">視頻正在下載，退出將取消下載</string>
+    <string name="enter_setting_mode_hint">進入設置模式，記錄儀將停止錄像</string>
+    <string name="recovery_to_record">記錄儀恢復錄像</string>
+    <string name="capture_success_hint">抓拍成功</string>
+    <string name="hint_pk_mode">當車輛熄火後，極路客會開啟一秒一拍的縮時錄影，確保車輛24小時監控。開啟停車安防需搭配降壓線使用。</string>
+    <string name="hint_gsensor">啟動後，車輛在行車中如果發生異常的碰撞，極路客會自動保存12秒(碰撞時刻的前5秒和後7秒)緊急視頻影像。當存儲空間不足時，將自動覆蓋早期錄製的文件。</string>
+    <string name="t1sp_ipc_hint_text">安裝韌體更新前，請確保已正確連接相機。在更新完成前請勿關閉電源。升級成功後，請拔插電源重新開機。</string>
+    <string name="str_ipc_update_success_t1s">設備升級成功，請拔插電源重新開機</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">精彩連拍（5+7）：按下遙控器（KIT）鍵，錄製前後 5 秒 + 7 秒共 12 秒的精彩影片。 經典模式：按下遙控器（KIT）鍵，錄製 30 秒精彩影片</string>
+    <string name="emg_video_sound">緊急視頻拍攝提示音</string>
+    <string name="timelapse">縮時錄像</string>
+    <string name="lower">較低</string>
+    <string name="highter">較高</string>
+    <string name="reduce">缩时</string>
 </resources>

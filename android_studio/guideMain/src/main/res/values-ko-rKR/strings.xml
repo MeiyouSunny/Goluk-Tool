@@ -1079,4 +1079,20 @@
     <string name="exporting">동영상 내보내는 중. 잠시만 기다리세요...</string>
     <string name="signature_is_empty">서명드는 반드시 입력해야 합니다</string>
     <string name="sina_weibo_low_version">Weibo을 설치하지 않았습니다</string>
+    <string name="capture_time_5_7">캡처 하이라이트 (5+7)</string>
+    <string name="enter_album_mode_hint">앨범 모드, dashcam이 녹음을 중지합니다.</string>
+    <string name="cancel_downloading_videos_hin">비디오 다운로드 중. 지금 종료하면 다운로드가 취소됩니다.</string>
+    <string name="enter_setting_mode_hint">설정 모드, dashcam이 녹음을 중지합니다.</string>
+    <string name="recovery_to_record">레코더에서 레코딩 다시 시작</string>
+    <string name="capture_success_hint">성공적인 비디오 캡처</string>
+    <string name="hint_pk_mode">점화가 꺼지면 Goluk 저속 비디오 모드가 활성화되어 차량이 연중 무휴로 모니터링되는지 확인합니다. 주차 보안 모드를 사용하려면 하드 와이어 링 키트가 필요합니다.</string>
+    <string name="hint_gsensor">운전 중에 비정상적인 충돌이 발생하면 차량은 비상 비디오 이미지를 12 초 (사전에 버퍼 된 처음 5 초)로 자동 저장합니다. 공간이 충분하지 않으면 이전에 기록 된 파일이 자동으로 덮어 쓰기됩니다.</string>
+    <string name="t1sp_ipc_hint_text">펌웨어 업그레이드 설치 전, 카메라가 제대로 연결되어 있는지 확인하세요. 업그레이드가 완료될 때까지 전원을 끄지 마세요.업그레이드가 완료되면 전원 플러그를 뽑고 장치를 재부팅하십시오.</string>
+    <string name="str_ipc_update_success_t1s">장치 업그레이드가 완료되었습니다. 전원을 분리하고 장치를 재부팅하십시오.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">캡처 하이라이트 (5+7)：첫 5+7 (12)초의 하이라이트 동영상 부분 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.클래식 모드：30초 동안의 하이라이트 동영상 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.</string>
+    <string name="emg_video_sound">긴급 비디오 프롬프트</string>
+    <string name="timelapse">저속</string>
+    <string name="lower">중간 낮음</string>
+    <string name="highter">중간 높이</string>
+    <string name="reduce">저속</string>
 </resources>

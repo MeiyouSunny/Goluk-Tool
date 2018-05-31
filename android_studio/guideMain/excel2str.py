@@ -46,7 +46,7 @@ sheet = workbook.sheet_by_index(0)
 
 #����ַ���
 for col_index in range(sheet.ncols):
-	if col_index > 1:
+	if col_index > 0:
 		#�½�xml�ĵ�
 		xml_doc = minidom.Document()
 		#��Ӹ�Ԫ��

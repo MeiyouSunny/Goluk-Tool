@@ -1081,4 +1081,21 @@
     <string name="exporting">Идет экспорт видео, подождите...</string>
     <string name="signature_is_empty">Необходимо указать подпись</string>
     <string name="sina_weibo_low_version">Вы не установили Weibo</string>
+    <string name="capture_time_5_7">12 сек.</string>
+    <string name="storage_left">Доступное хранилище</string>
+    <string name="enter_album_mode_hint">В режиме «Альбом» видеозапись будет приостановлена</string>
+    <string name="cancel_downloading_videos_hin">Загрузка видео. При выходе, загрузка будет отменена</string>
+    <string name="enter_setting_mode_hint">Захват видео успешно завершен</string>
+    <string name="recovery_to_record">Идет видеозапись</string>
+    <string name="capture_success_hint">Захват видео успешно завершен</string>
+    <string name="hint_pk_mode">Когда зажигание выключено, будет активирован режим таймлапс для круглосуточного наблюдения за автомобилем. Для обеспечения безопасности на парковкe необходим блок питания.</string>
+    <string name="hint_gsensor">При активации автомобиль автоматически сохраняет аварийное видео в течение 12 секунд  (5 секунд до столкновения), если во время вождения происходит столкновение. Файлы будут автоматически перезаписаны.</string>
+    <string name="t1sp_ipc_hint_text">Перед установкой новой прошивки убедитесь, что видеорегистратор подключен правильно. Не отключайте его до конца обновления.После успешного обновления, отключите питание и перезагрузите устройство.</string>
+    <string name="str_ipc_update_success_t1s">Обновление завершено, отключите питание и перезагрузите устройство.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Захват особого момента (5+7)：Нажмите кнопку KIT, чтобы включить запись первых 5+7 (12) сек. видео особого момента.Классический режим：Нажмите кнопку KIT, чтобы включить запись 30 секунд видео особого момента.</string>
+    <string name="emg_video_sound">Звук аварийного видео</string>
+    <string name="timelapse">Таймлапс </string>
+    <string name="lower">Средне-низкая</string>
+    <string name="highter">Средне-высокая</string>
+    <string name="reduce">ТЛ</string>
 </resources>
