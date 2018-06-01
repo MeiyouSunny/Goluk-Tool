@@ -1533,7 +1533,7 @@
     <string name="str_ipc_update_success_t1s">Device upgrade is completed, please unplug the power and reboot the device.</string>
     <string name="str_settings_wonderful_video_type_ts1p_hint_text">12S：Press the remote control (KIT), recording 12 seconds of the wonderful video (5 seconds before press and 7 seconds after press). 30S：Press the remote control (KIT), recording 30 seconds of the wonderful video.</string>
     <string name="emg_video_sound">Emergency video prompt</string>
-    <string name="timelapse">Tiime-lapse </string>
+    <string name="timelapse">Time-lapse </string>
     <string name="lower">Medium-low</string>
     <string name="highter">Medium-high</string>
     <string name="reduce">TL</string>
