@@ -25,10 +25,12 @@ public class CheckUpgradeRequest extends GolukFastjsonRequest<UpgradeResultbean>
         return "upgradeIPC";
     }
 
-    public void get(String vapp, String vipc) {
+    // isn: 设备SN号
+    public void get(String vapp, String vipc, String isn) {
         Map<String, String> headerParams = getHeader();
         headerParams.put("vapp", vapp);
         headerParams.put("vipc", vipc);
+        headerParams.put("isn", isn);
         headerParams.put("commhdtype", SharedPrefUtil.getIpcModel());
         get();
     }
