@@ -192,6 +192,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private void isNewest() {
         mTextVersion.setText(R.string.newest_firmware);
         mUpdateLayout.setEnabled(false);
+        mApplication.mIpcUpdateManage.resetState();
     }
 
     private void downloadLater(IPCInfo ipcInfo) {

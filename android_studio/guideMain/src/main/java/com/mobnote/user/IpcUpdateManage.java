@@ -142,6 +142,10 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         this.mApp = mApp;
     }
 
+    public void resetState() {
+        mState = -1;
+    }
+
     /**
      * 升级 将appVersion和ipcVersion信息请求给服务器
      */
