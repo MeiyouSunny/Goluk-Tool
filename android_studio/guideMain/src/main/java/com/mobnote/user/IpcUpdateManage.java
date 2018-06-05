@@ -164,8 +164,8 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
 //                    IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 //            GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
             String vApp = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVersion, VERSION_PATH);
-            String SN = GolukApplication.getInstance().mIPCControlManager.mDeviceSn;
-//            checkRequest.get(vApp, vIpc, "ZZRH01722400999G");
+            //String SN = GolukApplication.getInstance().mIPCControlManager.mDeviceSn;
+            String SN = SharedPrefUtil.getIPCNumber();
             checkRequest.get(vApp, vIpc, SN);
             mState = -1; //每次重新下载就重置状态
             mFunction = function;
