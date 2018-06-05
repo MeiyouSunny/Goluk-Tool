@@ -60,6 +60,11 @@ public class GolukVideoUtils {
                         periodStr = names[7];
                         periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
                         dateStr = names[1];
+                    } else if (names.length == 9 && currType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                        hpStr = names[7];
+                        periodStr = names[8];
+                        periodStr = periodStr.substring(0, periodStr.lastIndexOf("."));
+                        dateStr = names[2];
                     }
 
                     if (TextUtils.isDigitsOnly(hpStr)) {
@@ -127,7 +132,7 @@ public class GolukVideoUtils {
 
     // 20180214120000 --> 2018-02-14 12:00:00
     private static String parseDateString(String dateString) {
-        if (TextUtils.isEmpty(dateString) && dateString.length() != 14)
+        if (TextUtils.isEmpty(dateString) || dateString.length() != 14)
             return dateString;
         String date = dateString.substring(0, 4) + "-"
                 + dateString.substring(4, 6) + "-"
