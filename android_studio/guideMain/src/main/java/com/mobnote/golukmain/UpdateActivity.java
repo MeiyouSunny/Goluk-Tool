@@ -2,8 +2,10 @@ package com.mobnote.golukmain;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,8 +23,10 @@ import android.widget.TextView;
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.eventbus.EventWifiConnect;
+import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.log.app.LogConst;
@@ -33,6 +37,9 @@ import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
+import com.mobnote.wifibind.WifiConnCallBack;
+import com.mobnote.wifibind.WifiConnectManager;
+import com.mobnote.wifibind.WifiRsBean;
 
 import org.json.JSONObject;
 
@@ -48,7 +55,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author mobnote
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
+public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, WifiConnCallBack {
     /**
      * 下载 / 安装按钮
      **/
@@ -349,6 +356,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading stage 1: " + mPercent + "%");
                         break;
                     case UPDATE_TRANSFER_OK:
+                        mIsUpgrading = false;
                         UserUtils.dismissUpdateDialog(mSendDialog);
                         mSendDialog = null;
                         if (mIsExit) {
@@ -400,6 +408,12 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                     .getString(R.string.str_ipc_update_success));
                         }
                         isNewVersion();
+
+                        // 保存ipc版本号
+                        SharedPrefUtil.saveIPCVersion(mIpcVersion);
+
+                        // 发送Event
+                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW));
 
                         XLog.tag(LogConst.TAG_UPGRADE).i("Ipc upgrade success!");
                         break;
@@ -682,7 +696,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         String file = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
                         boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
                         if (b) {
-                            mIsUpgrading = true;
+                            //mIsUpgrading = true;
                             mtfCardImage.setVisibility(View.GONE);
                             mtfCardText.setVisibility(View.GONE);
                             mNoBreakImage.setVisibility(View.VISIBLE);
@@ -1114,4 +1128,21 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         }
         super.onBackPressed();
     }
+
+    public void onEventMainThread(EventWifiState event) {
+        if (event != null && event.getOpCode() == EventConfig.WIFI_STATE && event.getMsg()) {
+            WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            WifiConnectManager wac = new WifiConnectManager(wifiManager, this);
+            WifiRsBean wifiResult = wac.getConnResult();
+            if (wifiResult != null && wifiResult.getIpc_ssid().startsWith("Goluk")) {
+                String type = GolukUtils.getIpcTypeFromName(wifiResult.getIpc_ssid());
+                mApp.mIPCControlManager.setIpcMode(type);
+                boolean flag = mApp.mIPCControlManager.setIPCWifiState(true, "192.168.62.1");
+            }
+        }
+    }
+
+    public void wifiCallBack(int type, int state, int process, String message, Object arrays) {
+    }
+
 }
