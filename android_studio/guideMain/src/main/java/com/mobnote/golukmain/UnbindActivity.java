@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
+import com.mobnote.eventbus.IpcInfoUpdate;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
@@ -273,6 +274,10 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY) {
             installLater(event.ipcInfo);
         }
+    }
+
+    public void onEventMainThread(IpcInfoUpdate event) {
+        initViewData();
     }
 
     @Override

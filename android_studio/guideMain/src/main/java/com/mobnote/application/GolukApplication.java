@@ -33,6 +33,7 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.eventbus.EventUtil;
+import com.mobnote.eventbus.IpcInfoUpdate;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
@@ -1417,6 +1418,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     GolukDebugUtils.i("lily", "=====保存当前的ipcVersion=====" + ipcVersion);
                     // 保存ipc版本号
                     SharedPrefUtil.saveIPCVersion(ipcVersion);
+                    // 发送更新Event
+                    EventBus.getDefault().post(new IpcInfoUpdate());
 
                     // 获取设备Exception信息
                     mHandler.removeMessages(MSG_TYPE_QUERY_IPC_EXCEPTION_LIST);
@@ -1658,6 +1661,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             if (null != mVersionState && null != mIPCControlManager) {
                 mIPCControlManager.mDeviceSn = mVersionState.name;
                 SharedPrefUtil.saveIPCNumber(mIPCControlManager.mDeviceSn);
+                // 发送更新Event
+                EventBus.getDefault().post(new IpcInfoUpdate());
+
                 mIPCControlManager.reportBindMsg();
             }
         }
