@@ -750,6 +750,9 @@ public class IPCControlManager implements IPCManagerFn {
             e.printStackTrace();
         }
 
+        if (mApplication.mGoluk == null)
+            return false;
+
         return mApplication.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_IPCManager, IPC_VDCPCmd_GetExceptionList,
                 json.toString());
     }
