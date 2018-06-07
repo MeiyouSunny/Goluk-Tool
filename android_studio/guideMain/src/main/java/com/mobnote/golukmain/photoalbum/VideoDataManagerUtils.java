@@ -1,8 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import android.text.TextUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
@@ -12,7 +10,10 @@ import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.Utils;
 
-import android.text.TextUtils;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -104,11 +105,13 @@ public class VideoDataManagerUtils {
 			VideoInfo _videoInfo1 = null;
 			VideoInfo _videoInfo2 = null;
 			_videoInfo1 = datalist.get(i);
-			groupname1 = _videoInfo1.videoCreateDate.substring(0, 10);
+			if (_videoInfo1.videoCreateDate.length() >= 10)
+				groupname1 = _videoInfo1.videoCreateDate.substring(0, 10);
 
 			if ((i + 1) < datalist.size()) {
 				_videoInfo2 = datalist.get(i + 1);
-				groupname2 = _videoInfo2.videoCreateDate.substring(0, 10);
+				if (_videoInfo2.videoCreateDate.length() >= 10)
+					groupname2 = _videoInfo2.videoCreateDate.substring(0, 10);
 			}
 
 			if (groupname1.equals(groupname2)) {
