@@ -144,7 +144,8 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
 
                 mDataList.addAll(mLocalListData);
                 mDoubleDataList = VideoDataManagerUtils.videoInfo2Double(mLocalListData);
-                mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
+                if (mWonderfulVideoAdapter != null)
+                    mWonderfulVideoAdapter.setData(mGroupListName, mDoubleDataList);
                 mStickyListHeadersListView.setAdapter(mWonderfulVideoAdapter);
                 try {
                     if (null != mCustomProgressDialog && mCustomProgressDialog.isShowing()) {
