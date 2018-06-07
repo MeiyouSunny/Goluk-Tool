@@ -1097,4 +1097,7 @@
     <string name="lower">Medio-bassa</string>
     <string name="highter">Media altezza</string>
     <string name="reduce">TL</string>
+    <string name="desc_parking">Quando il veicolo è fermo, Goluk abiliterà la modalità di rilevamento delle vibrazioni (catturerà 8 secondi di video prima e dopo l\'attivazione) e la modalità video accelerata. È necessario un kit di cablaggio per abilitare la modalità di sicurezza del parcheggio.</string>
+    <string name="desc_timelapse">Quando l\'accensione è disattivata, la modalità video time-lapse di Goluk verrà attivata per garantire che il veicolo sia monitorato 24 ore su 24, 7 giorni su 7.</string>
+    <string name="desc_collision">Una volta attivato, Goluk  salverà automaticamente un video d\'emergenza da 16 secondi in caso di urto anomalo durante il tuo viaggio (8 secondi prima dell\'impatto e 8 secondi dopo). In caso di spazio d\'archiviazione insufficiente, questo nuovo video d\'emergenza verrà automaticamente sovrascritto ai video registrati in precedenza.</string>
 </resources>

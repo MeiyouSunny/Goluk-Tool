@@ -874,45 +874,60 @@
 
             <!-- 缩时录影 -->
 
-            <RelativeLayout
+            <LinearLayout
                 android:id="@+id/layout_timelapse"
                 android:layout_width="match_parent"
-                android:layout_height="42dp"
-                android:layout_marginTop="15dp"
-                android:background="@color/setting_white_color"
-                android:visibility="gone">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-                <Button
-                    android:id="@+id/btn_timelapse"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/set_open_btn"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="42dp"
+                    android:background="@color/setting_white_color">
+
+                    <Button
+                        android:id="@+id/btn_timelapse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/set_open_btn"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_toLeftOf="@id/btn_timelapse"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="15dp"
+                        android:paddingRight="15dp"
+                        android:text="@string/timelapse"
+                        android:textColor="@color/setting_black_color"
+                        android:textSize="16sp"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:background="@color/setting_line_color"/>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1px"
+                        android:layout_alignParentBottom="true"
+                        android:background="@color/setting_line_color"/>
+                </RelativeLayout>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_toLeftOf="@id/btn_timelapse"
-                    android:gravity="center_vertical"
+                    android:layout_height="wrap_content"
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
-                    android:text="@string/timelapse"
-                    android:textColor="@color/setting_black_color"
-                    android:textSize="16sp"/>
+                    android:paddingTop="10dp"
+                    android:text="@string/desc_timelapse"
+                    android:textColor="#999999"
+                    android:textSize="12sp"/>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:background="@color/setting_line_color"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1px"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/setting_line_color"/>
-            </RelativeLayout>
+            </LinearLayout>
 
             <!-- 移动侦测 -->
 

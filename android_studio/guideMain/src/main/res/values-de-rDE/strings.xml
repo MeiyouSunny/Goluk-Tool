@@ -1097,4 +1097,7 @@
     <string name="lower">Mittel-niedrig</string>
     <string name="highter">Mittel-hoch</string>
     <string name="reduce">TL</string>
+    <string name="desc_parking">Wenn das Fahrzeug angehalten wird, aktiviert Goluk den Vibrationserkennungsmodus (wird 8 Sekunden Video vor und nach dem Triggern aufnehmen) und den Zeitraffer-Videomodus. Ein Kit zur Festverdrahtung ist erforderlich, um den Parksicherheitsmodus zu aktivieren.</string>
+    <string name="desc_timelapse">Wenn die Zündung ausgeschaltet ist, wird der Goluk-Zeitraffer-Videomodus aktiviert, um sicherzustellen, dass das Fahrzeug rund um die Uhr überwacht wird.</string>
+    <string name="desc_collision">Sobald aktiviert, speichert Goluk automatisch ein 16 Sekunden langes Notfallvideo (8 Sekunden vor der Kollision und 8 Sekunden nach), wenn auf deiner Reise eine ungewöhnlich Kollision auftritt. Wenn nicht genügend Speicher verfügbar ist, überschreibt dieses neue Notfallvideo automatisch die vorher aufgenommenen Dateien.</string>
 </resources>

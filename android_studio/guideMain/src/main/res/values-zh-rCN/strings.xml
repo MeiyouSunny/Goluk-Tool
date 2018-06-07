@@ -1261,4 +1261,7 @@
     <string name="lower">较低</string>
     <string name="highter">较高</string>
     <string name="reduce">缩时</string>
+    <string name="desc_parking">当车辆处于停车状态极路客会打开振动侦测(触发前8秒+后8秒视频)和缩时录像功能。开启停车安防需搭配降压线使用。</string>
+    <string name="desc_timelapse">当车辆熄火后，极路客会开启一秒一拍的缩时录像，确保车辆24小时监控。</string>
+    <string name="desc_collision">启动后，车辆在行车中如果发生异常的碰撞，极路客会自动保存16秒（碰撞时刻的前8秒和后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。</string>
 </resources>

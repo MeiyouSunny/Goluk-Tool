@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -77,9 +78,10 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             mWonderfulTakephtotLayout, mImageFlipLayout, mVideoLogoLayout, mFatigueLayout, mUrgentCrashLayout,
             mParkingsleepLayout, mAFLayout, mAdasAssistanceLayout, mMSLayout,
             mShutdownTimeLayout, mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout,
-            mLayoutEmgVideoSound, mLayoutTimesplase;
+            mLayoutEmgVideoSound;
+    private LinearLayout mLayoutTimesplase;
     private TextView mSDDesc, mRecycleQualityDesc, mWonderfulTypeDesc, mWonderfulQualityDesc, mVolumeDesc,
-            mUrgentCrashDesc, mShutdownTimeDesc, mLanguageDesc;
+            mUrgentCrashDesc, mShutdownTimeDesc, mLanguageDesc, mTvParkDesc;
     private Button mAutoRecycleBtn, mVoiceRecordBtn, mAutophotoBtn, mKgjtsyBtn, mWonderfulTakephotoBtn, mImageFlipBtn,
             mVideoLogoBtn, mFatigueBtn, mParkingsleepBtn, mAFBtn,
             mBtnEmgVideoSound, mBtnTimeslapse;
@@ -114,7 +116,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
      **/
     public static final int REQUEST_CODE_WONDERFUL_VIDEO_TYPE = 37;
     private String[] mIPCList = null;
-    private RelativeLayout[] mLayoutList = null;
+    private View[] mLayoutList = null;
     private CustomLoadingDialog mCustomProgressDialog = null;
 
     /**
@@ -331,15 +333,16 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         mShutdownTimeDesc = (TextView) findViewById(R.id.tv_t_settings_shutdown_desc);
         mLanguageLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_language);
         mLanguageDesc = (TextView) findViewById(R.id.tv_t_settings_language_desc);
+        mTvParkDesc = (TextView) findViewById(R.id.tv_t_settings_security_desc);
         mTimeSetupLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_time);
         mVersionLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_version);
         mRestoreLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_restore);
         mLayoutEmgVideoSound = (RelativeLayout) findViewById(R.id.layout_emg_video_sound);
-        mLayoutTimesplase = (RelativeLayout) findViewById(R.id.layout_timelapse);
+        mLayoutTimesplase = (LinearLayout) findViewById(R.id.layout_timelapse);
         mMSLayout = (RelativeLayout) findViewById(R.id.ry_t_settings_adas_move_motion);
         mBtnEmgVideoSound = (Button) findViewById(R.id.btn_emg_video_sound);
         mBtnTimeslapse = (Button) findViewById(R.id.btn_timelapse);
-        mLayoutList = new RelativeLayout[]{mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout,
+        mLayoutList = new View[]{mSdLayout, mRecycleQualityLayout, mAutoRecycleLayout,
                 mWonderfulTypeLayout, mWonderfulQualityLayout, mVolumeLayout, mKgjtsyLayout, mImageFlipLayout,
                 mVideoLogoLayout, mUrgentCrashLayout, mParkingsleepLayout, mAdasAssistanceLayout, mShutdownTimeLayout,
                 mLanguageLayout, mTimeSetupLayout, mVersionLayout, mRestoreLayout,
@@ -454,11 +457,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
             GolukApplication.getInstance().getIPCControlManager().getT1SW();
         }
-//		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
-//			mMSLayout.setVisibility(View.VISIBLE);
-//		}else{
-//			mMSLayout.setVisibility(View.GONE);
-//		}
+		if(mBaseApp.getIPCControlManager().isSupportMoveDection()){
+			mTvParkDesc.setText(R.string.desc_parking);
+		}
         if (!mBaseApp.isMainland()) {
             GolukApplication.getInstance().getIPCControlManager().getTxLanguage();
         }

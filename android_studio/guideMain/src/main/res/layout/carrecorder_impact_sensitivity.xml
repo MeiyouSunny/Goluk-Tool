@@ -232,4 +232,14 @@
 
     </RelativeLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:text="@string/desc_collision"
+        android:textColor="#999999"
+        android:textSize="12sp" />
+
 </LinearLayout>
