@@ -1,8 +1,5 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +14,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewStub;
-import android.view.ViewStub.OnInflateListener;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -31,19 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
 import android.widget.Toast;
-
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
-import cn.com.mobnote.module.location.LocationNotifyAdapter;
-import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.page.PageNotifyAdapter;
-import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.module.talk.TalkNotifyAdapter;
-import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
-import cn.com.tiros.api.Tapi;
-import cn.com.tiros.baidu.LocationAddressDetailBean;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.widget.FragmentTabHost;
@@ -75,10 +55,10 @@ import com.mobnote.golukmain.followed.FragmentFollowed;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
+import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
+import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.livevideo.IsLiveRequest;
 import com.mobnote.golukmain.livevideo.IsLiveRetBean;
 import com.mobnote.golukmain.msg.MessageBadger;
@@ -111,6 +91,21 @@ import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
+import cn.com.mobnote.module.location.LocationNotifyAdapter;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.page.PageNotifyAdapter;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.mobnote.module.talk.TalkNotifyAdapter;
+import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
+import cn.com.tiros.api.Tapi;
+import cn.com.tiros.baidu.LocationAddressDetailBean;
+import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint({"HandlerLeak", "NewApi"})
@@ -175,7 +170,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     private FragmentTabHost mTabHost;
 
     private ImageView mCarrecorderIv;
-    private ViewStub mGuideMainViewStub;
+    //private ViewStub mGuideMainViewStub;
     private SharePlatformUtil mSharePlatform = null;
 
     private void playDownLoadedSound() {
@@ -227,17 +222,17 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.mCurrentAid = userInfo.aid;
         }
 
-        // 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
-        SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
-        // 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-        boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
-        if (isFirstIndex) { // 如果是第一次启动
-            mGuideMainViewStub.inflate();
-            Editor editor = preferences.edit();
-            editor.putBoolean("isFirstIndex", false);
-            // 提交修改
-            editor.commit();
-        }
+//        // 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
+//        SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
+//        // 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
+//        boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
+//        if (isFirstIndex) { // 如果是第一次启动
+//            mGuideMainViewStub.inflate();
+//            Editor editor = preferences.edit();
+//            editor.putBoolean("isFirstIndex", false);
+//            // 提交修改
+//            editor.commit();
+//        }
 
         // 为了兼容以前的版本， 把旧的绑定信息读取出来
         mWac = new WifiConnectManager(mWifiManager, this);
@@ -312,20 +307,20 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
     }
 
     private void initView() {
-        mGuideMainViewStub = (ViewStub) findViewById(R.id.viewstub_guide_main);
-        mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
-
-            @Override
-            public void onInflate(ViewStub stub, View inflated) {
-                inflated.setOnTouchListener(new OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        mGuideMainViewStub.setVisibility(View.GONE);
-                        return false;
-                    }
-                });
-            }
-        });
+//        mGuideMainViewStub = (ViewStub) findViewById(R.id.viewstub_guide_main);
+//        mGuideMainViewStub.setOnInflateListener(new OnInflateListener() {
+//
+//            @Override
+//            public void onInflate(ViewStub stub, View inflated) {
+//                inflated.setOnTouchListener(new OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        mGuideMainViewStub.setVisibility(View.GONE);
+//                        return false;
+//                    }
+//                });
+//            }
+//        });
 
         LayoutInflater inflater = LayoutInflater.from(this);
         mTabHost = (FragmentTabHost) findViewById(android.R.id.tabhost);
