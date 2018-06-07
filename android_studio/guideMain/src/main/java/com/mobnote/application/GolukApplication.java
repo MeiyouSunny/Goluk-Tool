@@ -401,12 +401,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     private static final int MSG_TYPE_QUERY_IPC_EXCEPTION_LIST = 11;
     public Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
-            if (msg.what == MSG_TYPE_QUERY_IPC_EXCEPTION_LIST) {
-                // 获取设备Exception信息
-                IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(GolukApplication.getInstance().getApplicationContext());
-                ipcExceptionOperater.getIpcExceptionList();
-                return;
-            }
+//            if (msg.what == MSG_TYPE_QUERY_IPC_EXCEPTION_LIST) {
+//                // 获取设备Exception信息
+//                IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(GolukApplication.getInstance().getApplicationContext());
+//                ipcExceptionOperater.getIpcExceptionList();
+//                return;
+//            }
 
             if (isExit()) {
                 return;

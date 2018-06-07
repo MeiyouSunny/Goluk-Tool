@@ -39,8 +39,6 @@ import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
-import com.mobnote.log.ipc.IpcExceptionOperater;
-import com.mobnote.log.ipc.IpcExceptionOperaterImpl;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.user.DataCleanManage;
 import com.mobnote.user.IpcUpdateManage;
@@ -377,8 +375,8 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         });
 
         // 上传IPC日志
-        IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(this);
-        ipcExceptionOperater.uploadExceptionFile();
+//        IpcExceptionOperater ipcExceptionOperater = new IpcExceptionOperaterImpl(this);
+//        ipcExceptionOperater.uploadExceptionFile();
     }
 
     @Override
