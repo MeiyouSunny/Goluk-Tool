@@ -457,9 +457,9 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         if (GolukApplication.getInstance().mIPCControlManager.isSupportMoveDection()) {
             GolukApplication.getInstance().getIPCControlManager().getT1SW();
         }
-		if(mBaseApp.getIPCControlManager().isSupportTimeslapse()){
-			mTvParkDesc.setText(R.string.desc_parking);
-		}
+//		if(mBaseApp.getIPCControlManager().isSupportTimeslapse()){
+//			mTvParkDesc.setText(R.string.desc_parking);
+//		}
         if (!mBaseApp.isMainland()) {
             GolukApplication.getInstance().getIPCControlManager().getTxLanguage();
         }
