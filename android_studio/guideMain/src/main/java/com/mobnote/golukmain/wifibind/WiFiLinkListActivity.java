@@ -381,6 +381,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                     .setTitle(R.string.wifi_link_conn_failed)
                     .setMessage(R.string.connect_fail_hint_msg)
                     .setNegativeButton(R.string.wifi_link_ok, null)
+                    .setCancelable(false)
                     .create();
         }
         connectFailedDialog.show();
@@ -476,6 +477,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (null != mConnectingDialog) {
             return;
         }
+        hideConnectFailedDialog();
         mConnectingDialog = new CustomLoadingDialog(this, getResources().getString(R.string.wifi_link_38_text));
         mConnectingDialog.setListener(this);
         mConnectingDialog.show();
