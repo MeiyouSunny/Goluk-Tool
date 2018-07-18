@@ -301,7 +301,7 @@ public class WifiConnectManagerSupport {
         WifiInfo info = wifiManager.getConnectionInfo();
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;
-        if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>")) {
+        if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>") && !info.getSSID().equals("0x")) {
 
             String tmpSsid = info.getSSID().replace("\"", "");
             ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "info true :ssid " + tmpSsid));
