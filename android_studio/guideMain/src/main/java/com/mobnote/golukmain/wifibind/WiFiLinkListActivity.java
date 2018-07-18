@@ -1,5 +1,6 @@
 package com.mobnote.golukmain.wifibind;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -147,13 +148,15 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     public static final String ACTION_FROM_CAM_SETTING = "action_from_cam_setting";
     public static final String ACTION_FROM_MANAGER = "action_from_cam_manager";
     public static final String ACTION_GO_To_ALBUM = "action_go_to_album";
-    public static final String ACTION_FROM_REMOTE_ALBUM= "action_from_remote_album";
-    public static final String ACTION_FROM_CAM= "action_from_cam";
+    public static final String ACTION_FROM_REMOTE_ALBUM = "action_from_remote_album";
+    public static final String ACTION_FROM_CAM = "action_from_cam";
     private boolean mIsFromUpgrade;
     private boolean mIsFromRemoteAlbum;
     private boolean mAutoConn;
     private boolean mIsFromManagerToUpgrade;
     private IPCInfo mIpcInfo;
+
+    private boolean isBackFromWifiListPage;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -205,7 +208,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
             mGotoAlbum = intent.getBooleanExtra(ACTION_GO_To_ALBUM, false);
             mAutoConn = intent.getBooleanExtra(ACTION_FROM_CAM, true);
-            mIsFromManagerToUpgrade = intent.getBooleanExtra(ACTION_FROM_MANAGER,false);
+            mIsFromManagerToUpgrade = intent.getBooleanExtra(ACTION_FROM_MANAGER, false);
             mIpcInfo = (IPCInfo) intent.getSerializableExtra(UpdateActivity.UPDATE_DATA);
         }
     }
@@ -331,9 +334,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             connFailed();
             return false;
         }
-        if(!mWillConnName.startsWith("Goluk")){
+        if (!mWillConnName.startsWith("Goluk")) {
             showToast(getString(R.string.not_goluk_device));
-            collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnMac);
+            collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnName);
             XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI is not Goluk WIFI: %s", mWillConnName);
             // 连接失败
             connFailed();
@@ -349,6 +352,43 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         setIpcMode(mWillConnName);
         collectLog(GolukDebugUtils.CHOOSE_WIFI_LOG_TAG, "1.2 selected wifi :" + mWillConnName);
         return true;
+    }
+
+    private boolean isGolukDeviceWifi() {
+        if (null == mWac) {
+            return false;
+        }
+        WifiRsBean bean = mWac.getConnResult();
+        if (null == bean) {
+            return false;
+        }
+        String currentWifiName = bean.getIpc_ssid();
+        if (TextUtils.isEmpty(currentWifiName)) {
+            return false;
+        }
+        if (!currentWifiName.startsWith("Goluk")) {
+            return false;
+        }
+        return true;
+    }
+
+    private AlertDialog connectFailedDialog;
+
+    private void showConnectFailedDialog() {
+        if (connectFailedDialog == null) {
+            connectFailedDialog = new AlertDialog
+                    .Builder(this)
+                    .setTitle(R.string.wifi_link_conn_failed)
+                    .setMessage(R.string.connect_fail_hint_msg)
+                    .setNegativeButton(R.string.wifi_link_ok, null)
+                    .create();
+        }
+        connectFailedDialog.show();
+    }
+
+    private void hideConnectFailedDialog() {
+        if (connectFailedDialog != null)
+            connectFailedDialog.dismiss();
     }
 
     private void setIpcMode(String wifiSsid) {
@@ -449,8 +489,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     }
 
 
+    int POST_FAILED_DELAY = 1  * 1000;
 
-    int POST_FAILED_DELAY = 10*1000;
     public void ipcFailedCallBack() {
         collectLog("ipcLinkFailedCallBack", "--------1");
         XLog.tag(LogConst.TAG_CONNECTION).i("Connect device failed");
@@ -465,8 +505,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("ipcLinkFailedCallBack", "--------2");
         mIsCanAcceptIPC = false;
         this.dimissLoadingDialog();
-        if(mAutoConn) {
-            mBaseHandler.sendEmptyMessageDelayed(SHOW_TOAST,POST_FAILED_DELAY);
+        if (mAutoConn) {
+            mBaseHandler.sendEmptyMessageDelayed(SHOW_TOAST, POST_FAILED_DELAY);
         }
         mCurrentState = STATE_FAILED;
         this.setStateSwitch();
@@ -536,10 +576,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
-        if(!mAutoConn){
+        if (!mAutoConn) {
             mStartSystemWifi = true;
+            isBackFromWifiListPage = true;
             GolukUtils.startSystemWifiList(this);
             mAutoConn = true;
+            return;
+        }
+        if (!isBackFromWifiListPage && !isGolukDeviceWifi()) {
             return;
         }
         collectLog("onResume", "----1:");
@@ -547,6 +591,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
             autoConnWifi();
         mIsCanAcceptNetState = true;
+        isBackFromWifiListPage = false;
     }
 
     @Override
@@ -631,6 +676,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             collectLog("dialogManagerCallBack", "-Jump----System WifiLIst");
             XLog.tag(LogConst.TAG_CONNECTION).i("Go to system WIFI list page");
             mStartSystemWifi = true;
+            isBackFromWifiListPage = true;
             GolukUtils.startSystemWifiList(this);
         }
     }
@@ -686,9 +732,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 finish();
                 return;
             }
-            if(mGotoAlbum) {
+            if (mGotoAlbum) {
                 Intent photoalbum = new Intent(this, PhotoAlbumActivity.class);
-                photoalbum.putExtra(PhotoAlbumActivity.CLOSE_WHEN_EXIT,true);
+                photoalbum.putExtra(PhotoAlbumActivity.CLOSE_WHEN_EXIT, true);
                 photoalbum.putExtra("from", "cloud");
                 startActivity(photoalbum);
                 finish();
@@ -831,8 +877,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             mApp.disableWiFiAndLogOutDevice();
             finish();
-        }else if(SHOW_TOAST  == msg.what){
-            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+        } else if (SHOW_TOAST == msg.what) {
+//            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
+            showConnectFailedDialog();
         }
     }
 
