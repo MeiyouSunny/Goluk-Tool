@@ -554,8 +554,8 @@
     <string name="videolist_edit">編集</string>
     <string name="user_personal_info_title">編集</string>
     <string name="user_login_title_text">ログイン</string>
-    <string name="live_str_look_default">0.0</string>
-    <string name="live_str_default_timer">0.0</string>
+    <string name="live_str_look_default">0</string>
+    <string name="live_str_default_timer">00:00</string>
     <string name="photoalbum_default_title">アルバム</string>
     <string name="str_comment_title">コメント</string>
     <string name="str_comment_send">送信</string>
@@ -569,7 +569,7 @@
     <string name="str_colon_english">:</string>
     <string name="str_recorder_time1">0.0</string>
     <string name="str_recorder_time2">0.0</string>
-    <string name="zero">0.0</string>
+    <string name="zero">0</string>
     <string name="str_new">new</string>
     <string name="wifi_link_29_text">Goluk Wi-Fi</string>
     <string name="video_square">ビデオ広場</string>
@@ -670,7 +670,7 @@
     <string name="mv_text">MV</string>
     <string name="wifi_link_22_text">goluk123456</string>
     <string name="wifi_link_37_text">Connected successfully Goluk3213</string>
-    <string name="bubble_count">2000.0</string>
+    <string name="bubble_count">2000</string>
     <string name="user_personal_edit_weibo">Sina Weibo</string>
     <string name="str_omit">...</string>
     <string name="str_comma">,</string>
@@ -688,8 +688,8 @@
     <string name="str_bracket_left">(</string>
     <string name="str_bracket_rigth">)</string>
     <string name="str_slash">/</string>
-    <string name="like_num_text">56.0</string>
-    <string name="wifibind_defaultpassword">123456789.0</string>
+    <string name="like_num_text">56</string>
+    <string name="wifibind_defaultpassword">123456789</string>
     <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
@@ -1076,7 +1076,7 @@
     <string name="str_wifi_success">Wi-Fi の名前が設定されました</string>
     <string name="str_wifi_name_fail">Wi-Fi の名前が設定できません</string>
     <string name="not_goluk_device">あなたは、現在非GOLUK Wi-Fi接続され、スイッチGOLUK Wi-Fiをやり直してください。</string>
-    <string name="no_wifi_selected">GOLUK Wi-Fiをつないでください。あなたが接続している場合は、ブルートゥースとvpnをオフにして、もう一度ためしてください</string>
+    <string name="no_wifi_selected">GOLUK Wi-Fiをつないでください。</string>
     <string name="export_error">エクスポートできませんでした...</string>
     <string name="exporting">ビデオをエクスポート中です。お待ちください...</string>
     <string name="signature_is_empty">署名は空白にできません</string>
@@ -1100,4 +1100,5 @@
     <string name="desc_parking">車両が停止すると、Golukは振動検出モード（トリガ前後の8秒のビデオをキャプチャします）とタイムラプスビデオモードを有効にします。 パーキングセキュリティモードを有効にするには、ハードワイヤリングキットが必要です。</string>
     <string name="desc_timelapse">イグニッションがオフになると、Golukのタイムラプスビデオモードが有効になり、車両が24時間監視されていることを確認します。</string>
     <string name="desc_collision">アクティベートした後、走行中に異常な衝突が発生した場合、Golukは緊急ビデオを16秒間（衝突前後8秒間ずつ）記録します。記録に十分なストレージ容量がない場合は、自動的に以前記録されたファイルに上書きされます。衝突感度設定には低、中、高の3段階があります。</string>
+    <string name="connect_fail_hint_msg">携帯データ、Bluetooth、VPNをオフにしてもう一度お試しください</string>
 </resources>

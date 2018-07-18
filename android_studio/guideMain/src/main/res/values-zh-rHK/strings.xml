@@ -554,8 +554,8 @@
     <string name="videolist_edit">編輯</string>
     <string name="user_personal_info_title">編輯</string>
     <string name="user_login_title_text">登入</string>
-    <string name="live_str_look_default">0.0</string>
-    <string name="live_str_default_timer">0.0</string>
+    <string name="live_str_look_default">0</string>
+    <string name="live_str_default_timer">00:00</string>
     <string name="photoalbum_default_title">相簿</string>
     <string name="str_comment_title">評論</string>
     <string name="str_comment_send">發送</string>
@@ -569,7 +569,7 @@
     <string name="str_colon_english">:</string>
     <string name="str_recorder_time1">0.0</string>
     <string name="str_recorder_time2">0.0</string>
-    <string name="zero">0.0</string>
+    <string name="zero">0</string>
     <string name="str_new">new</string>
     <string name="wifi_link_29_text">Goluk Wi-Fi</string>
     <string name="video_square">视频广场</string>
@@ -670,7 +670,7 @@
     <string name="mv_text">MV</string>
     <string name="wifi_link_22_text">goluk123456</string>
     <string name="wifi_link_37_text">Connected successfully Goluk3213</string>
-    <string name="bubble_count">2000.0</string>
+    <string name="bubble_count">2000</string>
     <string name="user_personal_edit_weibo">Sina Weibo</string>
     <string name="str_omit">...</string>
     <string name="str_comma">,</string>
@@ -688,8 +688,8 @@
     <string name="str_bracket_left">(</string>
     <string name="str_bracket_rigth">)</string>
     <string name="str_slash">/</string>
-    <string name="like_num_text">56.0</string>
-    <string name="wifibind_defaultpassword">123456789.0</string>
+    <string name="like_num_text">56</string>
+    <string name="wifibind_defaultpassword">123456789</string>
     <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
@@ -1076,7 +1076,7 @@
     <string name="str_wifi_success">已設定 Wi-Fi名稱</string>
     <string name="str_wifi_name_fail">無法設定Wi-Fi名稱</string>
     <string name="not_goluk_device">你正在連接到非GOLUK Wi-Fi，請切換到GOLUK Wi-Fi後再試一次</string>
-    <string name="no_wifi_selected">請連接到GOLUK Wi-Fi。如果您已連接，請關閉藍牙和VPN，然後再試一次</string>
+    <string name="no_wifi_selected">請連接到GOLUK Wi-Fi</string>
     <string name="no_log_file">暫無日誌數據</string>
     <string name="export_error">匯出失敗…</string>
     <string name="exporting">正在匯出影片，請耐心等待…</string>
@@ -1102,4 +1102,5 @@
     <string name="desc_parking">當車輛處於停車狀態極路客會打開振動偵測(觸發前8秒+後8秒視頻)和縮時錄像功能。開啟停車安防需搭配降壓線使用。</string>
     <string name="desc_timelapse">當車輛進入安防模式後，會開啟一秒一拍的縮時錄像，確保車輛24小時監控。</string>
     <string name="desc_collision">一旦啟用，在行車期間如遇不正常碰撞，極路客會自動儲存 16 秒 (碰撞前後 8 秒) 作危急情況紀錄。如果儲存空間不足，新的危急情況紀錄影片會自動蓋過早前錄製的檔案。</string>
+    <string name="connect_fail_hint_msg">請嘗試關閉手機蜂窩移動網絡，藍牙和VPN後重試</string>
 </resources>

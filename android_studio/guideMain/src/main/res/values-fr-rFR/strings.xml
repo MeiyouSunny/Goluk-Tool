@@ -554,8 +554,8 @@
     <string name="videolist_edit">Modifier</string>
     <string name="user_personal_info_title">Modifier</string>
     <string name="user_login_title_text">Se connecter</string>
-    <string name="live_str_look_default">0.0</string>
-    <string name="live_str_default_timer">0.0</string>
+    <string name="live_str_look_default">0</string>
+    <string name="live_str_default_timer">00:00</string>
     <string name="photoalbum_default_title">Albums</string>
     <string name="str_comment_title">Commentaire</string>
     <string name="str_comment_send">Envoyer</string>
@@ -569,7 +569,7 @@
     <string name="str_colon_english">:</string>
     <string name="str_recorder_time1">0.0</string>
     <string name="str_recorder_time2">0.0</string>
-    <string name="zero">0.0</string>
+    <string name="zero">0</string>
     <string name="str_new">new</string>
     <string name="wifi_link_29_text">Goluk Wi-Fi</string>
     <string name="video_square">Carré vidéo</string>
@@ -670,7 +670,7 @@
     <string name="mv_text">MV</string>
     <string name="wifi_link_22_text">goluk123456</string>
     <string name="wifi_link_37_text">Connected successfully Goluk3213</string>
-    <string name="bubble_count">2000.0</string>
+    <string name="bubble_count">2000</string>
     <string name="user_personal_edit_weibo">Sina Weibo</string>
     <string name="str_omit">...</string>
     <string name="str_comma">,</string>
@@ -688,8 +688,8 @@
     <string name="str_bracket_left">(</string>
     <string name="str_bracket_rigth">)</string>
     <string name="str_slash">/</string>
-    <string name="like_num_text">56.0</string>
-    <string name="wifibind_defaultpassword">123456789.0</string>
+    <string name="like_num_text">56</string>
+    <string name="wifibind_defaultpassword">123456789</string>
     <string name="version_bottom_copyright">Copyright©2016 Goluk.All Rights Reserved</string>
     <string name="pwd_digits">[] {}:;,./~!@#$%^*()_+=-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
     <string name="wifi_pwd_digits">0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLIMNOPQRSTUVWXYZ</string>
@@ -1076,7 +1076,7 @@
     <string name="str_wifi_success">Wi-Fi nom a été défini</string>
     <string name="str_wifi_name_fail">Impossible de définir Wi-Fi nom</string>
     <string name="not_goluk_device">Vous êtes actuellement connectés au Wi-Fi non GOLUK , veuillez passer à GOLUK  Wi-Fi et essayer de nouveau.</string>
-    <string name="no_wifi_selected">Bitte verbinden sie mich mit GOLUK Wi-Fi.wenn sie verbunden sind, wenden sie sich bitte an bluetooth - und versuchen sie es erneut.</string>
+    <string name="no_wifi_selected">Bitte verbinden sie mich mit GOLUK Wi-Fi.</string>
     <string name="export_error">Échec de l\'exportation...</string>
     <string name="exporting">Exportation de la vidéo, veuillez patienter...</string>
     <string name="signature_is_empty">Signature ne peuvent pas être vides</string>
@@ -1100,4 +1100,5 @@
     <string name="desc_parking">Lorsque le véhicule est à l\'arrêt, Goluk activera le mode de détection de vibration (capture 8 secondes de vidéo avant et après le déclenchement) et le mode vidéo Time-lapse. Un kit de câblage est nécessaire pour activer le mode de sécurité de stationnement.</string>
     <string name="desc_timelapse">Lorsque le contact est coupé, le mode vidéo accéléré de Goluk sera activé pour s\'assurer que le véhicule est surveillé 24h / 24 et 7j / 7. </string>
     <string name="desc_collision">Une fois activée, Goluk enregistra automatiquement 16 secondes (8 secondes avant la collision et 8 secondes après la collision) de vidéo d\'urgence si une collision anormale a lieu durant vos trajets. S\'il n\'y a pas assez d\'espace de stockage libre, cette nouvelle vidéo d\'urgence écrasera automatiquement les fichiers enregistrés précédemment.</string>
+    <string name="connect_fail_hint_msg">Veuillez désactiver les données cellulaires, Bluetooth et VPN et réessayer.</string>
 </resources>

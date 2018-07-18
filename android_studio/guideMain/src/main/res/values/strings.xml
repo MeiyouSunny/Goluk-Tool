@@ -1480,8 +1480,8 @@
     <string name="str_wifi_title">Wi-Fi name</string>
     <string name="str_wifi_success">Wi-Fi successfully renamed</string>
     <string name="str_wifi_name_fail">Unable to rename Wi-Fi</string>
-    <string name="not_goluk_device">Please connect to GOLUK Wi-Fi. If you are connected, please turn off Bluetooth and VPN and try again;</string>
-    <string name="no_wifi_selected">You are currently connected to non-GOLUK Wi-Fi, please switch to GOLUK Wi-Fi and try again.</string>
+    <string name="not_goluk_device">You are currently connected to non-GOLUK Wi-Fi, please switch to GOLUK Wi-Fi and try again.</string>
+    <string name="no_wifi_selected">Please connect to GOLUK Wi-Fi.</string>
     <string name="no_log_file">no log file in today!</string>
     <string name="sepcial_setting_for_ssss">高级配置</string>
     <string name="special_desc">车辆品牌销售水印配置</string>
@@ -1540,4 +1540,5 @@
     <string name="desc_parking">When the vehicle is stopped, Goluk will enable the Vibration Detection Mode ( will capture 8 seconds of video both before and after triggering) and  Time-lapse video mode. A hardwiring kit is needed to enable parking security mode.</string>
     <string name="desc_timelapse">When the ignition is off, Goluk time-lapse video mode will be activated to make sure the vehicle is monitored 24/7.</string>
     <string name="desc_collision">Once activated, Goluk will automatically save 16 seconds (8 seconds before the collision and 8 seconds after) of Emergency Video if an abnormal collision occurs during your travels. If there is insufficient storage space, this new Emergency Video will automatically overwrite the earlier recorded files.</string>
+    <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN and try again</string>
 </resources>
