@@ -305,7 +305,8 @@ public class UserRegistAndRepwdManage implements IRequestResultListener {
 			if (urr == null) {
 				return;
 			}
-			int code = Integer.parseInt(urr.code);
+			//bugly #398200
+			int code = Integer.parseInt(urr.code == null ? "-1" : urr.code);
 				try {
 					switch (code) {
 						case 200:
