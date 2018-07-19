@@ -180,7 +180,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
         holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
         holder.mTMLayout2.setTag("");
         //holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
-        holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
+        holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.length()>11?mVideoInfo1.videoCreateDate.substring(11):"");
 //		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
         displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
