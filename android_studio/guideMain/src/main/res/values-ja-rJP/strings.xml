@@ -1100,5 +1100,5 @@
     <string name="desc_parking">車両が停止すると、Golukは振動検出モード（トリガ前後の8秒のビデオをキャプチャします）とタイムラプスビデオモードを有効にします。 パーキングセキュリティモードを有効にするには、ハードワイヤリングキットが必要です。</string>
     <string name="desc_timelapse">イグニッションがオフになると、Golukのタイムラプスビデオモードが有効になり、車両が24時間監視されていることを確認します。</string>
     <string name="desc_collision">アクティベートした後、走行中に異常な衝突が発生した場合、Golukは緊急ビデオを16秒間（衝突前後8秒間ずつ）記録します。記録に十分なストレージ容量がない場合は、自動的に以前記録されたファイルに上書きされます。衝突感度設定には低、中、高の3段階があります。</string>
-    <string name="connect_fail_hint_msg">携帯データ、Bluetooth、VPNをオフにしてもう一度お試しください</string>
+    <string name="connect_fail_hint_msg">携帯データ、Bluetooth、VPNを無効にしてからもう一度お試しください</string>
 </resources>

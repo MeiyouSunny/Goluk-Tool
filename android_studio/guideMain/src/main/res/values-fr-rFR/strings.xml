@@ -1100,5 +1100,5 @@
     <string name="desc_parking">Lorsque le véhicule est à l\'arrêt, Goluk activera le mode de détection de vibration (capture 8 secondes de vidéo avant et après le déclenchement) et le mode vidéo Time-lapse. Un kit de câblage est nécessaire pour activer le mode de sécurité de stationnement.</string>
     <string name="desc_timelapse">Lorsque le contact est coupé, le mode vidéo accéléré de Goluk sera activé pour s\'assurer que le véhicule est surveillé 24h / 24 et 7j / 7. </string>
     <string name="desc_collision">Une fois activée, Goluk enregistra automatiquement 16 secondes (8 secondes avant la collision et 8 secondes après la collision) de vidéo d\'urgence si une collision anormale a lieu durant vos trajets. S\'il n\'y a pas assez d\'espace de stockage libre, cette nouvelle vidéo d\'urgence écrasera automatiquement les fichiers enregistrés précédemment.</string>
-    <string name="connect_fail_hint_msg">Veuillez désactiver les données cellulaires, Bluetooth et VPN et réessayer.</string>
+    <string name="connect_fail_hint_msg">Veuillez désactiver les données cellulaires, Bluetooth et VPN, puis réessayer.</string>
 </resources>

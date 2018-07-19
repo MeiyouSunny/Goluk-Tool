@@ -1540,5 +1540,5 @@
     <string name="desc_parking">When the vehicle is stopped, Goluk will enable the Vibration Detection Mode ( will capture 8 seconds of video both before and after triggering) and  Time-lapse video mode. A hardwiring kit is needed to enable parking security mode.</string>
     <string name="desc_timelapse">When the ignition is off, Goluk time-lapse video mode will be activated to make sure the vehicle is monitored 24/7.</string>
     <string name="desc_collision">Once activated, Goluk will automatically save 16 seconds (8 seconds before the collision and 8 seconds after) of Emergency Video if an abnormal collision occurs during your travels. If there is insufficient storage space, this new Emergency Video will automatically overwrite the earlier recorded files.</string>
-    <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN and try again</string>
+    <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN then try again</string>
 </resources>
