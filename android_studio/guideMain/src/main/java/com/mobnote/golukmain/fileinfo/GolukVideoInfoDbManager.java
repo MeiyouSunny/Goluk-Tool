@@ -141,7 +141,7 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 			final String[] selectArg = {fileName};
 			cursor = db.rawQuery(selectSql, selectArg);
 			if (null == cursor || cursor.getCount() == 0) {
-				if (null != cursor) {
+				if (null != cursor && !cursor.isClosed()) {
 					cursor.close();
 				}
 				return null;
