@@ -101,10 +101,12 @@ public class AppLogOpreaterImpl implements AppLogOpreater {
                 boolean success = parseUploadResult(result);
                 if (success) {
                     // 上传成功,删除日志文件
-                    for (File logFile : mAppLogDirFile.listFiles()) {
-                        logFile.delete();
+                    if (mAppLogDirFile.listFiles() != null) {
+                        for (File logFile : mAppLogDirFile.listFiles()) {
+                            logFile.delete();
+                        }
+                        mUiHandler.sendEmptyMessage(MSG_TYPE_UPLOAD_LOG_SUCCESS);
                     }
-                    mUiHandler.sendEmptyMessage(MSG_TYPE_UPLOAD_LOG_SUCCESS);
                 } else {
                     mUiHandler.sendEmptyMessage(MSG_TYPE_UPLOAD_LOG_FAILED);
                 }
