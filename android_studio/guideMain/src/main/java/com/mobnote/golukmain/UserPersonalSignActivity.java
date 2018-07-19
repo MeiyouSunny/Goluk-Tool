@@ -16,11 +16,13 @@ import com.mobnote.util.ZhugeUtils;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
@@ -137,7 +139,11 @@ public class UserPersonalSignActivity extends BaseActivity implements OnClickLis
 			} else {
 				String body = mEditBody.getText().toString();
 				if(TextUtils.isEmpty(body)){
-					UserUtils.showDialog(this, this.getResources().getString(R.string.signature_is_empty));
+					try {
+						UserUtils.showDialog(this, this.getResources().getString(R.string.signature_is_empty));
+					} catch (Resources.NotFoundException e) {
+						Log.e(this.getClass().getSimpleName(), e.getLocalizedMessage());
+					}
 					return;
 				}
 				if (body.equalsIgnoreCase(mSignText)) {
