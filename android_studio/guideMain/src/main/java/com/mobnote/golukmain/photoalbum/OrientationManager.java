@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.OrientationEventListener;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -53,7 +54,11 @@ public class OrientationManager {
 				}
 			}
 		};
-		mOrientationListener.enable();
+		try {
+			mOrientationListener.enable();
+		} catch (IllegalStateException e) {
+			Log.e(getClass().getSimpleName(), e.getLocalizedMessage());
+		}
 	}
 
 	public void clearListener() {
