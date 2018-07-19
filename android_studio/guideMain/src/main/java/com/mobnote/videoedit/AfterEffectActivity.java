@@ -1207,7 +1207,7 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         mAERecyclerView.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                mAfterEffect.playPause();
+                if(mAfterEffect!=null)mAfterEffect.playPause();
                 return false;
             }
         });
