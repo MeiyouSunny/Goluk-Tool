@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
@@ -335,7 +336,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return false;
         }
         if (!mWillConnName.startsWith("Goluk")) {
-            showToast(getString(R.string.not_goluk_device));
+            showToast(getString(R.string.not_goluk_device), Toast.LENGTH_LONG);
             collectLog("isGetWifiBean", "-----4 wifiname" + mWillConnName);
             XLog.tag(LogConst.TAG_CONNECTION).i("Current WIFI is not Goluk WIFI: %s", mWillConnName);
             // 连接失败
