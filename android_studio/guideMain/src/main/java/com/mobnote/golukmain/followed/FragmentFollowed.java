@@ -297,6 +297,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
     }
 
     public void startUserLogin() {
+        if (!isAdded())return;
         mApp.isUserLoginSucess = false;
         mApp.loginStatus = 2;
         mApp.autoLoginStatus = 3;
