@@ -705,7 +705,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             beans.setIpc_pass(WiFiInfo.IPC_PWD);
             beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
             beans.setPh_pass(WiFiInfo.MOBILE_PWD);
-            mWac.saveConfiguration(beans);
+            if (mWac != null)
+                mWac.saveConfiguration(beans);
 
             // 保存绑定历史记录
             WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
