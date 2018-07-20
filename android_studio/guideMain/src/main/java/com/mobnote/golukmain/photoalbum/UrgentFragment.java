@@ -309,7 +309,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
                     case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
                         // mCloudWonderfulVideoAdapter.unlock();
                         GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====11111111111=");
-                        if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
+                        if (mStickyListHeadersListView.getAdapter()!=null&&mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
                             GolukDebugUtils.e("", "YYYYYY=====SCROLL_STATE_IDLE====22222222=");
                             final int size = mDataList.size();
                             if (size > 0 && isHasData) {
