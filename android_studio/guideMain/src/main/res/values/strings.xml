@@ -407,7 +407,7 @@
     <string name="str_ipc_update_prompt">Firmware upgrade tips</string>
     <string name="str_update_later">Later</string>
     <string name="wifi_link_2_text">If this is the first time you\'re using Goluk, make sure Wi-Fi is enabled on your phone, and set up a Wi-Fi connection</string>
-    <string name="wifi_link_go_system">Goto Wi-FI Setting</string>
+    <string name="wifi_link_go_system">Go to Wi-FI Setting</string>
     <string name="str_make_live">LIVE</string>
     <string name="str_live_continue">Continue to Live Video (Y/N)</string>
     <string name="keep_on_text">Continue</string>
