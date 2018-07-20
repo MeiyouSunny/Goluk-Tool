@@ -127,7 +127,7 @@ public class GolukVideoUtils {
 
     // 20180214120000 --> 2018-02-14 12:00:00
     private static String parseDateString(String dateString) {
-        if (TextUtils.isEmpty(dateString) && dateString.length() != 14)
+        if (TextUtils.isEmpty(dateString) || dateString.length() != 14)
             return dateString;
         String date = dateString.substring(0, 4) + "-"
                 + dateString.substring(4, 6) + "-"
