@@ -52,25 +52,25 @@
     <string name="music_1_11">悠闲</string>
 
     <!-- 配乐方式二 -->
-    <string name="music_2_0">潮玩</string>
-    <string name="music_2_1">发现</string>
-    <string name="music_2_2">黑白</string>
-    <string name="music_2_3">回忆</string>
-    <string name="music_2_4">街头</string>
-    <string name="music_2_5">旅行</string>
-    <string name="music_2_6">清新</string>
-    <string name="music_2_7">撒野</string>
+    <string name="music_2_0">Wave</string>
+    <string name="music_2_1">Discover</string>
+    <string name="music_2_2">Black and white</string>
+    <string name="music_2_3">Memory</string>
+    <string name="music_2_4">Crowd</string>
+    <string name="music_2_5">Travel</string>
+    <string name="music_2_6">Fresh</string>
+    <string name="music_2_7">Wild</string>
 
     <!-- 极录客使用 (配乐方式二 ) 同上-->
     <string name="sp_music_null">无</string>
-    <string name="sp_music_chaowan">潮玩</string>
-    <string name="sp_music_faxian">发现</string>
-    <string name="sp_music_heibai">黑白</string>
-    <string name="sp_music_huiyi">回忆</string>
-    <string name="sp_music_jietou">街头</string>
-    <string name="sp_music_lvxing">旅行</string>
-    <string name="sp_music_qingxin">清新</string>
-    <string name="sp_music_saye">撒野</string>
+    <string name="sp_music_chaowan">Wave</string>
+    <string name="sp_music_faxian">Discover</string>
+    <string name="sp_music_heibai">Black and white</string>
+    <string name="sp_music_huiyi">Memory</string>
+    <string name="sp_music_jietou">Crowd</string>
+    <string name="sp_music_lvxing">Travel</string>
+    <string name="sp_music_qingxin">Fresh</string>
+    <string name="sp_music_saye">Wild</string>
 
     <!-- 滤镜方式1(多组滤镜) -->
     <string name="filter_1_0">原图</string>
@@ -111,15 +111,15 @@
     <string name="filter_1_39">记忆</string>
 
     <!-- 滤镜方式二 (jlk) -->
-    <string name="sp_filter_1">原片</string>
-    <string name="sp_filter_2">褪色</string>
-    <string name="sp_filter_3">明暗</string>
-    <string name="sp_filter_4">空白</string>
-    <string name="sp_filter_5">光年</string>
-    <string name="sp_filter_6">印记</string>
-    <string name="sp_filter_7">火花</string>
-    <string name="sp_filter_8">流云</string>
-    <string name="sp_filter_9">清欢</string>
-    <string name="sp_filter_10">描摹</string>
+    <string name="sp_filter_1">Original</string>
+    <string name="sp_filter_2">Fade</string>
+    <string name="sp_filter_3">Brightness</string>
+    <string name="sp_filter_4">Blank</string>
+    <string name="sp_filter_5">Lightyear</string>
+    <string name="sp_filter_6">Mark</string>
+    <string name="sp_filter_7">Spark</string>
+    <string name="sp_filter_8">Clouds</string>
+    <string name="sp_filter_9">Tranquil</string>
+    <string name="sp_filter_10">Sketch</string>
 
 </resources>
