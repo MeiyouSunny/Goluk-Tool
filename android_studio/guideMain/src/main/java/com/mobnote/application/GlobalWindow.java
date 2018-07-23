@@ -277,8 +277,8 @@ public class GlobalWindow implements View.OnClickListener {
             return;
         }
         this.dimissDialog();
-        isShowGlobalwindow = false;
         mWindowManager.removeView(mVideoUploadLayout);
+        isShowGlobalwindow = false;
         mStateImg = null;
         mPrompTv = null;
         mPrecentTv = null;
