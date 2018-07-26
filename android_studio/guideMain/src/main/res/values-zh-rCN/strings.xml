@@ -1265,4 +1265,5 @@
     <string name="desc_timelapse">当车辆进入安防模式后，会开启一秒一拍的缩时录像，确保车辆24小时监控。</string>
     <string name="desc_collision">启动后，车辆在行车中如果发生异常的碰撞，极路客会自动保存16秒（碰撞时刻的前8秒和后8秒）紧急视频影像。当存储空间不足时，将自动覆盖早期录制的文件。</string>
     <string name="connect_fail_hint_msg">请尝试关闭手机蜂窝移动网络、蓝牙和 VPN 后重试</string>
+    <string name="compress_video">正在压缩视频...</string>
 </resources>
