@@ -1,5 +1,15 @@
 <?xml version="1.0" ?>
 <resources>
+    <!-- 只有中文才有的 -->
+    <string name="whatsapp_showword">WhatsApp</string>
+    <string name="whatsapp_no_client">未安装有WhatsApp客户端</string>
+    <string name="whatsapp_content">有道云笔记只支持文本，图片</string>
+    <string name="whatsapp_no_content">请设置分享内容</string>
+    <string name="line_showword">LINE</string>
+    <string name="line_no_client">未安装Line客户端</string>
+    <string name="line_content">Line只支持文本，图片</string>
+    <string name="line_no_content">请设置分享内容</string>
+
     <string name="str_zhuge_play_video_event">播放极社视频</string>
     <string name="str_zhuge_play_video_id">视频ID</string>
     <string name="str_zhuge_play_video_desc">是否有人工描述</string>
@@ -1541,4 +1551,5 @@
     <string name="desc_timelapse">When the ignition is off, Goluk time-lapse video mode will be activated to make sure the vehicle is monitored 24/7.</string>
     <string name="desc_collision">Once activated, Goluk will automatically save 16 seconds (8 seconds before the collision and 8 seconds after) of Emergency Video if an abnormal collision occurs during your travels. If there is insufficient storage space, this new Emergency Video will automatically overwrite the earlier recorded files.</string>
     <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN then try again</string>
+    <string name="signature_is_empty">Personality signature cannot be empty</string>
 </resources>

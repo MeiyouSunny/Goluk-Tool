@@ -252,4 +252,26 @@
         <item>@string/anti_flicker_60hz</item>
     </string-array>
 
+    <!-- G1码率 -->
+    <string-array name="list_quality_bitrate1">
+        <item>8192</item>
+        <item>6144</item>
+        <item>4096</item>
+        <item>3072</item>
+    </string-array>
+    <!-- G2码率 -->
+    <string-array name="list_quality_bitrate2">
+        <item>10240</item>
+        <item>8192</item>
+        <item>5120</item>
+        <item>4096</item>
+    </string-array>
+    <!-- T1码率 -->
+    <string-array name="list_quality_bitrate_t1">
+        <item>12288</item>
+        <item>10240</item>
+        <item>6144</item>
+        <item>5120</item>
+    </string-array>
+
 </resources>
