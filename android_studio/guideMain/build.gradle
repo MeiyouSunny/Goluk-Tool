@@ -14,7 +14,7 @@ task generateStrings(type: Exec) {
 
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 26
     buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
 
@@ -102,5 +102,9 @@ dependencies {
     compile files('libs/SocialSDK_facebook.jar')
 
     compile project(':commonGoluk')
+
+    compile 'com.linkedin.dexmaker:dexmaker-mockito:2.12.1'
+    //dynamic permission
+    compile 'pub.devrel:easypermissions:1.0.1'
 }
 

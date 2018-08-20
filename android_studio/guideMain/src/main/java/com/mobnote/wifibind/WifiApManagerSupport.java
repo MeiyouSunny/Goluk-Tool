@@ -3,6 +3,7 @@ package com.mobnote.wifibind;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -14,13 +15,18 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.mobnote.application.GolukApplication;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiApManagerSupport {
@@ -176,15 +182,119 @@ public class WifiApManagerSupport {
 	}
 
 	public boolean setWifiApEnabled(WifiConfiguration configuration, boolean enabled) {
-		boolean result = false;
-		try {
-			Method method = methodMap.get(METHOD_SET_WIFI_AP_ENABLED);
-			result = (Boolean) method.invoke(mWifiManager, configuration, enabled);
-		} catch (Exception e) {
-			Log.e(tag, e.getMessage(), e);
+		Log.e(TAG, "Build.VERSION.SDK_INT = " + Build.VERSION.SDK_INT);
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+			boolean result = false;
+			try {
+				Method method = methodMap.get(METHOD_SET_WIFI_AP_ENABLED);
+				result = (Boolean) method.invoke(mWifiManager, configuration, enabled);
+			} catch (Exception e) {
+				Log.e(tag, e.getMessage(), e);
+			}
+			return result;
+		} else {
+			stopTethering();
+			try {
+				Method method = mWifiManager.getClass().getDeclaredMethod("setWifiApConfiguration", WifiConfiguration.class);
+				Log.e(TAG, "method will invoker:" + method.getName());
+				if (method == null) {
+					Log.e(TAG, "setWifiApConfiguration is null");
+				} else {
+					Log.e(TAG, "method invoked" + method.getName());
+					method.invoke(mWifiManager, configuration);
+				}
+			} catch (NoSuchMethodException e) {
+				Log.e(TAG, "setWifiApConfiguration NoSuchMethodException: " + e);
+			} catch (IllegalAccessException e) {
+				Log.e(TAG, "setWifiApConfiguration IllegalAccessException: " + e);
+			} catch (InvocationTargetException e) {
+				Log.e(TAG, "setWifiApConfiguration InvocationTargetException: " + e);
+			}
+			startTethering();
 		}
-		return result;
+		return false;
 	}
+
+	private static final int TETHERING_WIFI      = 0;
+    @TargetApi(27)
+    private void startTethering() {
+		Log.e(TAG, "startTethering" );
+		MyOnStartTetheringCallback callback = new MyOnStartTetheringCallback() {
+			@Override
+			public void onTetheringStarted() {
+				Log.e(TAG, "onTetheringStarted" );
+			}
+
+			@Override
+			public void onTetheringFailed() {
+				Log.e(TAG, "onTetheringFailed" );
+			}
+		};
+		CallbackMaker cm = new CallbackMaker(GolukApplication.getInstance() ,callback);
+
+		Class<?> mSystemCallbackClazz = cm.getCallBackClass();
+		Object mSystemCallback = null;
+		try {
+			Constructor constructor = mSystemCallbackClazz.getDeclaredConstructor(int.class);
+			mSystemCallback = constructor.newInstance(0);
+
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e){
+			e.printStackTrace();
+		}
+        ConnectivityManager manager = (ConnectivityManager) GolukApplication.getInstance().getSystemService(Context.CONNECTIVITY_SERVICE);
+        Method method = null;
+        Class callbackClass = null;
+        try {
+            try {
+                callbackClass = Class.forName("android.net.ConnectivityManager$OnStartTetheringCallback");
+            } catch (ClassNotFoundException e) {
+                Log.e(TAG, "oreoWifiAp: " + e.getLocalizedMessage());
+            }
+            method = manager.getClass().getDeclaredMethod("startTethering", int.class, boolean.class, callbackClass, Handler.class);
+            if (method == null) {
+                Log.e(TAG, "startTethering Method is null" );
+			} else {
+				Log.e(TAG, "method invoked:" + method.getName());
+				method.invoke(manager, TETHERING_WIFI, false,mSystemCallback, null);
+			}
+
+        } catch (NoSuchMethodException e) {
+			Log.e(TAG, "startTethering:NoSuchMethodException "+e.getLocalizedMessage() );
+		}catch (IllegalAccessException e) {
+			Log.e(TAG, "startTethering:IllegalAccessException "+e.getLocalizedMessage() );
+		} catch (InvocationTargetException e) {
+			Log.e(TAG, "startTethering:InvocationTargetException "+e.getLocalizedMessage());
+		}
+    }
+
+	public void stopTethering() {
+		Log.e(TAG, "stopTethering");
+		ConnectivityManager manager = (ConnectivityManager) GolukApplication.getInstance().getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE );
+
+		try {
+			Method method = manager.getClass().getDeclaredMethod("stopTethering",int.class);
+
+			if (method==null){
+				Log.e(TAG, "stopTetheringMethod is null");
+			} else {
+				method.invoke(manager,TETHERING_WIFI);
+			}
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		}catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+
+
 
 	public boolean isWifiApEnabled() {
 		boolean result = false;
@@ -279,7 +389,7 @@ public class WifiApManagerSupport {
 
 	/**
 	 * 创建wifi ap
-	 * 
+	 *
 	 * @param ssid
 	 * @param password
 	 * @throws NoSuchMethodException
