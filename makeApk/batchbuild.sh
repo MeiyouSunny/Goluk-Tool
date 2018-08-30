@@ -34,7 +34,7 @@ then
 	elif [ $1 = "invd" ];
 	then
 		echo "build invd"
-		cp -f 	version_nvd/version ${project_source_path}/assets/version
+		cp -f 	version_invd/version ${project_source_path}/assets/version
 	elif [ $1 = "txy" ];
 	then
 		echo "build txy"
