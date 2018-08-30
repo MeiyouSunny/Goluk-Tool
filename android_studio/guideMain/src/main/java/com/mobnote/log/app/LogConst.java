@@ -23,5 +23,7 @@ public class LogConst {
     public static final String TAG_UPGRADE = "Upgrade";
     /* HTTP请求 */
     public static final String TAG_HTTP = "Http";
+    /* 分享视频 */
+    public static final String TAG_SHARE_VIDEO = "ShareVideo";
 
 }

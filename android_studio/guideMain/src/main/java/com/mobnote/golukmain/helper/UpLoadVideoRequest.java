@@ -1,10 +1,12 @@
 package com.mobnote.golukmain.helper;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.golukmain.helper.bean.SignBean;
 import com.mobnote.golukmain.helper.bean.SignDataBean;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -54,12 +56,14 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		UpLoadVideoSignRequest request = new UpLoadVideoSignRequest(IPageNotifyFn.PageType_UploadVideo, this);
 		request.setTag(this);
 		request.get();
+		XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Start request upload sign info");
 		return true;
 	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
 		// TODO Auto-generated method stub
+		XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Sign info: %s:", result);
 		if (requestType == IPageNotifyFn.PageType_UploadVideo) {
 			SignBean signBean = (SignBean) result;
 			if(signBean != null && signBean.data != null){
@@ -72,9 +76,11 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 				mSignDataBean = signBean.data;
 				if (!uploadPhotoToCloud()) {
 					mListener.onUploadFailed(-1, "upload photo failed");
+					XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Upload photo failed");
 				}
 			} else {
 				mListener.onUploadFailed(-1, "get sign failed");
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Get sign info failed");
 			}
 		}
 	}
@@ -85,11 +91,13 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 				new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(FileInfo fileInfo) {
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Photo onUploadSucceed");
 				GolukDebugUtils.e("goluk", "上传成功! ret:" + fileInfo);
 				mUrl.put(QCloudHelper.PHOTO_BUCKET, fileInfo.url);
 				mPhotoUploadtask = null;
 				if (!uploadVideoToCloud()) {
 					mListener.onUploadFailed(-1, "upload video failed");
+					XLog.tag(LogConst.TAG_SHARE_VIDEO).i("upload video failed");
 				}
 			}
 
@@ -101,6 +109,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 
 			@Override
 			public void onUploadFailed(int errorCode, String errorMsg) {
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Photo onUploadFailed");
 				mListener.onUploadFailed(-1, "upload photo failed");
 				mPhotoUploadtask = null;
 			}
@@ -132,6 +141,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 				new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(FileInfo fileInfo) {
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadSucceed:%s", fileInfo.url);
 				GolukDebugUtils.e("goluk", "上传成功! ret:" + fileInfo);
 				mUrl.put(QCloudHelper.VIDEO_BUCKET, fileInfo.url);
 				mListener.onUploadSucceed(mUrl);
@@ -142,17 +152,20 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 	  		public void onUploadProgress(long totalSize, long sendSize) {
 	  			int percent = (int) (((sendSize + mCoverFileSize)* 100) / (mTotalSize * 1.0f));
 	  			mListener.onUploadProgress(percent);
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadProgress %d", percent);
 	  		}
 
 			@Override
 			public void onUploadFailed(int errorCode, String errorMsg) {
 				mListener.onUploadFailed(errorCode, errorMsg);
 				mVideoUploadTask = null;
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadFailed %d, %s", errorCode, errorMsg);
 			}
 
 			@Override
 			public void onUploadStateChange(TaskState taskState) {
-				GolukDebugUtils.d("goluk", "上传状态变化! ret:" + taskState);				
+				GolukDebugUtils.d("goluk", "上传状态变化! ret:" + taskState);
+				XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadStateChange: %s", taskState);
 			}
 		});
 
@@ -163,6 +176,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
 		// 上传
 		QCloudHelper helper = QCloudHelper.getInstance();
 		boolean result =  helper.upload(mVideoUploadTask);
+		XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Start upload video to cloud");
 		return result;
 	}
 

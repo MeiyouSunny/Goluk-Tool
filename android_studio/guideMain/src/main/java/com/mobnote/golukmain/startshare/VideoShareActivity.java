@@ -27,6 +27,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventGetShareSignTokenInvalid;
 import com.mobnote.eventbus.EventShareCompleted;
@@ -52,6 +53,7 @@ import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.thirdshare.ThirdShareTool;
 import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukFileUtils;
@@ -573,6 +575,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         }
         mShareLoading.showLoadingLayout();
         mShareLoading.switchState(ShareLoading.STATE_UPLOAD);
+
+        XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Start upload share video");
     }
 
     private void refreshLocationUI() {
@@ -682,6 +686,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
 
         request.get(t_vid, t_type, desc, selectTypeJson, isSquare, videoCreateTime, t_signTime, activityid,
                 t_location, "", tagId, "", mVideoQuality, "");
+
+        XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Request share short url info");
     }
 
     private void exit() {
@@ -764,6 +770,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 break;
             case IPageNotifyFn.PageType_Share:
                 VideoSaveRetBean shareDataFull = (VideoSaveRetBean) result;
+                XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Share short url info:%s", shareDataFull);
                 if (shareDataFull == null) {
                     videoShareCallBack(null);
                     return;
@@ -854,6 +861,8 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         if (mSharePlatformAdapter != null && mSharePlatformAdapter.getCurrSelectedPlatformType() != SharePlatform.SHARE_PLATFORM_NULL) {
             mSharePlatformAdapter.getCurrSelectedPlatformzBean().startShare(this, new SharePlatformUtil(this), bean);
         }
+
+        XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Open share way list");
     }
 
     private class SpacesItemDecoration extends RecyclerView.ItemDecoration {
