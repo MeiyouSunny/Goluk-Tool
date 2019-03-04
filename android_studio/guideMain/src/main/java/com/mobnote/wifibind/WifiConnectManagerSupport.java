@@ -10,6 +10,7 @@ import android.net.wifi.WifiConfiguration.AuthAlgorithm;
 import android.net.wifi.WifiConfiguration.KeyMgmt;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -315,14 +316,39 @@ public class WifiConnectManagerSupport {
                 bean.setIpc_ip(int2ip(info.getIpAddress()));
             //}
         }
-        String msg ;
-        if(bean == null){
+        String msg;
+        if (bean == null) {
             msg = "bean Result: is null ";
-        }else{
-            msg = "bean Result: "+ bean.toString();
+            // Android 8 9
+            if (Build.VERSION.SDK_INT >= 27) {
+                bean = new WifiRsBean();
+                bean.setIpc_ssid(getSSIDByNetWorkId());
+            }
+        } else {
+            msg = "bean Result: " + bean.toString();
         }
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", msg));
         return bean;
+    }
+
+    /**
+     * 先获取当前WIFI的NetWorkId,在获取当前扫描到的WIFI列表,对比NetWorkId,获取对应的SSID
+     * @return
+     */
+    private String getSSIDByNetWorkId() {
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo != null) {
+            int netId = wifiInfo.getNetworkId();
+            List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+            for (WifiConfiguration wifiConfiguration : list) {
+                if (netId == wifiConfiguration.networkId) {
+                    String ssid = wifiConfiguration.SSID;
+                    return ssid;
+                }
+            }
+        }
+
+        return "";
     }
 
     /**
