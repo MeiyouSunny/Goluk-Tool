@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.view.Gravity;
@@ -121,7 +122,13 @@ public class GlobalWindow implements View.OnClickListener {
         // 获取的是CompatModeWrapper对象
         mWindowManager = (WindowManager) mApplication.getApplicationContext().getSystemService(Context.WINDOW_SERVICE);
 
-        mWMParams.type = LayoutParams.TYPE_SYSTEM_ERROR;
+        // 适配悬浮窗, Android 8之后需要用 TYPE_APPLICATION_OVERLAY
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            mWMParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            mWMParams.type = LayoutParams.TYPE_SYSTEM_ALERT;
+        }
+
         // mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
         mWMParams.format = PixelFormat.RGBA_8888;
         // mWMParams.flags = LayoutParams.FLAG_FULLSCREEN |
