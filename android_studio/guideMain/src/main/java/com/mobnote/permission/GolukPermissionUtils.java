@@ -48,7 +48,6 @@ public class GolukPermissionUtils {
     }
 
 
-
     @SuppressLint("RestrictedApi")
     public static void requestPermissions(Object target, String[] permissions) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
@@ -81,13 +80,16 @@ public class GolukPermissionUtils {
         boolean isPermissionPermanentlyDenied = false;
         GolukSettingDialog.Builder builder = null;
         if (host instanceof Activity) {
-            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((Activity) host, perms.toArray(new String[]{}));
+            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((Activity) host, perms.toArray(new String[]{}))
+                    || EasyPermissions.somePermissionPermanentlyDenied((Activity) host, perms);
             builder = new GolukSettingDialog.Builder((Activity) host);
         } else if (host instanceof Fragment) {
-            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((Fragment) host, perms.toArray(new String[]{}));
+            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((Fragment) host, perms.toArray(new String[]{}))
+                    || EasyPermissions.somePermissionPermanentlyDenied((Fragment) host, perms);
             builder = new GolukSettingDialog.Builder((Fragment) host);
         } else if (host instanceof android.app.Fragment) {
-            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((android.app.Fragment) host, perms.toArray(new String[]{}));
+            isPermissionPermanentlyDenied = EasyPermissions.somePermissionDenied((android.app.Fragment) host, perms.toArray(new String[]{}))
+                    || EasyPermissions.somePermissionPermanentlyDenied((android.app.Fragment) host, perms);
             builder = new GolukSettingDialog.Builder((android.app.Fragment) host);
         } else {
 //            throw new IllegalArgumentException("host must be a sub Class of Activity or Fragment");

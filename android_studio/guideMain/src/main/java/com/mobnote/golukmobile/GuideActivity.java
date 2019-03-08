@@ -255,8 +255,12 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION) {
 			if (resultCode == Activity.RESULT_CANCELED) {
 				finish();
-			} else if (resultCode ==Activity.RESULT_OK&&!shouldRequestUserPermission()){
-				init();
+			} else if (resultCode ==Activity.RESULT_OK){
+				if (shouldRequestUserPermission()) {
+					finish();
+				} else {
+					init();
+				}
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
