@@ -353,7 +353,7 @@ public class SensorDetector implements SensorEventListener {
 		mLastX = x;
 		mLastY = y;
 		mLastZ = z;
-		float delta = FloatMath.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) / diffTime * 10000;
+		float delta = (float) (Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ) / diffTime * 10000);
 		if (delta > shakeThreshold) { // 当加速度的差值大于指定的阈值，认为这是一个摇晃
 			for (SensorListener listener : mShake_Listeners.values()) {
 				SensorChanged(listener.puser_handler, listener.pfn_handler, ST_SHAKE, x, y, z);
