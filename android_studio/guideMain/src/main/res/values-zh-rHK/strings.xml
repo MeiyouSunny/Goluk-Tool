@@ -1103,4 +1103,5 @@
     <string name="desc_timelapse">當車輛進入安防模式後，會開啟一秒一拍的縮時錄像，確保車輛24小時監控。</string>
     <string name="desc_collision">一旦啟用，在行車期間如遇不正常碰撞，極路客會自動儲存 16 秒 (碰撞前後 8 秒) 作危急情況紀錄。如果儲存空間不足，新的危急情況紀錄影片會自動蓋過早前錄製的檔案。</string>
     <string name="connect_fail_hint_msg">請嘗試關閉手機蜂窩移動網絡，藍牙和VPN後重試</string>
+    <string name="permission_hint_msg">為了避免App無法使用，請開啟存儲、定位等系統許可權</string>
 </resources>

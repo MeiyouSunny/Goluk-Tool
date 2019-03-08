@@ -92,4 +92,5 @@
     <string name="cancel_export">Export unvollständig, abbrechen?</string>
     <string name="video_speed_duration_too_short_to_change">Nicht die geschwindigkeit, video ist zu kurz.</string>
     <string name="import_duration_limit">Videolänge übersteigt 90 Sekunden</string>
+    <string name="setting">Einstellungen</string>
 </resources>

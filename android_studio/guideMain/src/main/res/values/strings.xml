@@ -1552,4 +1552,5 @@
     <string name="desc_collision">Once activated, Goluk will automatically save 16 seconds (8 seconds before the collision and 8 seconds after) of Emergency Video if an abnormal collision occurs during your travels. If there is insufficient storage space, this new Emergency Video will automatically overwrite the earlier recorded files.</string>
     <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN then try again</string>
     <string name="signature_is_empty">Personality signature cannot be empty</string>
+    <string name="permission_hint_msg">To avoid the unavailability of App, please open system permissions such as storage, location, etc.</string>
 </resources>

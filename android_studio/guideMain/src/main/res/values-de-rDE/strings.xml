@@ -1101,4 +1101,5 @@
     <string name="desc_timelapse">Wenn die Zündung ausgeschaltet ist, wird der Goluk-Zeitraffer-Videomodus aktiviert, um sicherzustellen, dass das Fahrzeug rund um die Uhr überwacht wird.</string>
     <string name="desc_collision">Sobald aktiviert, speichert Goluk automatisch ein 16 Sekunden langes Notfallvideo (8 Sekunden vor der Kollision und 8 Sekunden nach), wenn auf deiner Reise eine ungewöhnlich Kollision auftritt. Wenn nicht genügend Speicher verfügbar ist, überschreibt dieses neue Notfallvideo automatisch die vorher aufgenommenen Dateien.</string>
     <string name="connect_fail_hint_msg">Bitte deaktivieren Sie Mobilfunkdaten, Bluetooth und VPN und versuchen Sie es erneut</string>
+    <string name="permission_hint_msg">Um zu vermeiden, dass die app nicht mit der Lagerung und ORIENTIERUNG, öffnen sie bitte DAS privileg</string>
 </resources>
