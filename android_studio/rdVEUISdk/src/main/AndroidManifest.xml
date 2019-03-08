@@ -2,10 +2,6 @@
           package="com.rd.veuisdk">
 
 
-    <uses-sdk
-        android:minSdkVersion="16"
-        android:targetSdkVersion="19"/>
-
     <permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <permission android:name="android.permission.CAMERA"/>
     <permission android:name="android.permission.RECORD_AUDIO"/>

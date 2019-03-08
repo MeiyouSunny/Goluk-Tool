@@ -14,12 +14,12 @@ task generateStrings(type: Exec) {
 //}
 
 android {
-    compileSdkVersion 23
+    compileSdkVersion 26
     buildToolsVersion '25.0.2'
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 23
+        targetSdkVersion 26
         versionCode 1
         versionName "1.0"
     }
@@ -65,6 +65,6 @@ dependencies {
     compile 'com.squareup.okio:okio:1.13.0'
     compile 'com.squareup.okhttp3:okhttp:3.8.1'
 
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:recyclerview-v7:26.1.0'
 }

@@ -4,8 +4,6 @@
     android:versionCode="101"
     android:versionName="V1.0.1_dev">
 
-    <uses-sdk android:minSdkVersion="14" />
-
     <application
         android:name="com.mobnote.application.GolukApplication"
         android:allowBackup="true"
@@ -531,6 +529,11 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"></activity>
+        <activity
+            android:name="com.mobnote.permission.GolukSettingsDialogHolderActivity"
+            android:exported="false"
+            android:label=""
+            android:theme="@style/EasyPermissions.Transparent"></activity>
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
