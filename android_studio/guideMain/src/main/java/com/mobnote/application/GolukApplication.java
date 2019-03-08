@@ -358,6 +358,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         return mIsExit;
     }
 
+    private boolean isInitializeSDK = false;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -369,24 +371,29 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
         if (isMainProcess()) {
             HttpManager.getInstance();
-            SDKInitializer.initialize(this);
-            // 初始化绑定信息的数据保存
-            WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
-            GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
-            GolukUmConfig.UmInit();
-            initXLog();
-            GolukMobUtils.initMob(this);
-            ZhugeSDK.getInstance().init(getApplicationContext());
-            initializeSDK();
+
+//            initializeSDK();
         }
 
         // TODO 此处不要做初始化相关的工作
     }
 
     /**
-     * 锐动SDK文档
+     * 初始化SDK
      */
-    private void initializeSDK() {
+    public void initializeSDK() {
+        if (isInitializeSDK) return;
+        //百度sdk
+        SDKInitializer.initialize(this);
+        // 初始化绑定信息的数据保存
+        WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
+        GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
+        GolukUmConfig.UmInit();
+        initXLog();
+        GolukMobUtils.initMob(this);
+        ZhugeSDK.getInstance().init(getApplicationContext());
+
+        //锐动SDK
         SdkEntry.enableDebugLog(true);
         String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
         if (isMainland()) {
@@ -394,6 +401,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         } else {
             SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
         }
+        isInitializeSDK = true;
     }
 
 

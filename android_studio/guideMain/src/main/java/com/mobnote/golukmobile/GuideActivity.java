@@ -1,11 +1,14 @@
 package com.mobnote.golukmobile;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.Window;
 import android.view.WindowManager;
@@ -13,30 +16,33 @@ import android.widget.RelativeLayout;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventStartApp;
-import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
 import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
 import com.mobnote.guide.GolukGuideManage;
+import com.mobnote.permission.GolukPermissionUtils;
+
+import java.util.List;
 
 import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
- * 
+ *
  * @ 功能描述:Goluk引导页
- * 
+ *
  * @author 陈宣宇
- * 
+ *
  */
 @SuppressLint("HandlerLeak")
-public class GuideActivity extends BaseActivity {
+public class GuideActivity extends FragmentActivity implements EasyPermissions.PermissionCallbacks {
+
 	public static final String KEY_WEB_START = "web_start_app";
-	/** 上下文 */
-	private Context mContext = null;
+
 	/** 引导页管理类 */
 	private GolukGuideManage mGolukGuideManage = null;
 
@@ -53,26 +59,15 @@ public class GuideActivity extends BaseActivity {
 		GolukDebugUtils.e("", "start App: GuideActivity:------------: taskid: " + this.getTaskId());
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		mApp = (GolukApplication) getApplication();
+		mApp = GolukApplication.getInstance();
 		mPreExist = mApp.isExit();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
-		mContext = this;
-		GolukApplication.getInstance().setContext(this, "GuideActivity");
-		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);
-		getIntentData();
-		boolean isExit = getWebStartData();
-		if (isExit) {
+		if (shouldRequestUserPermission()){
+			requestUserPermission();
 			return;
 		}
-//		BaiduLocation.mServerFlag = GolukApplication.getInstance().isMainland();
-		GolukDebugUtils.e("", "-------------GuideActivity-------------isMainland: "
-				+ GolukApplication.getInstance().isMainland() + "--------------BaiduLocation.mServerFlag: "
-				+ BaiduLocation.mServerFlag);
-		((GolukApplication) this.getApplication()).initLogic();
-		// 注册信鸽的推送
-		GolukNotification.getInstance().createXG();
-		((GolukApplication) this.getApplication()).startUpgrade();
+
 		// 初始化
 		init();
 	}
@@ -124,7 +119,7 @@ public class GuideActivity extends BaseActivity {
 
 	/**
 	 * 当启动主界面的时候，添加推送标志，用于在主界面执行推送动作
-	 * 
+	 *
 	 * @param intent
 	 *            启动主界面的动作
 	 * @author jyf
@@ -148,6 +143,23 @@ public class GuideActivity extends BaseActivity {
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
+		if (mApp == null) return;
+		mApp.initializeSDK();
+		mApp.setContext(this, "GuideActivity");
+		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);
+		getIntentData();
+		boolean isExit = getWebStartData();
+		if (isExit) {
+			return;
+		}
+//		BaiduLocation.mServerFlag = GolukApplication.getInstance().isMainland();
+		GolukDebugUtils.e("", "-------------GuideActivity-------------isMainland: "
+				+ GolukApplication.getInstance().isMainland() + "--------------BaiduLocation.mServerFlag: "
+				+ BaiduLocation.mServerFlag);
+		mApp.initLogic();
+		// 注册信鸽的推送
+		GolukNotification.getInstance().createXG();
+		mApp.startUpgrade();
 		// 判断程序是否第一次启动
 		if (!isFirstStart()) {// 启动过
 			// 读取SharedPreference中用户的信息
@@ -177,7 +189,7 @@ public class GuideActivity extends BaseActivity {
 	 * 初始化ViewPager
 	 */
 	public void initViewPager() {
-		this.mGolukGuideManage = new GolukGuideManage(mContext);
+		this.mGolukGuideManage = new GolukGuideManage(this);
 		this.mGolukGuideManage.initGolukGuide();
 		mBackground.setBackgroundColor(Color.WHITE);
 	}
@@ -193,14 +205,60 @@ public class GuideActivity extends BaseActivity {
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			if (null != mBaseApp) {
-				mBaseApp.setExit(true);
-				mBaseApp.destroyLogic();
-				mBaseApp.appFree();
+			if (null != mApp) {
+				mApp.setExit(true);
+				mApp.destroyLogic();
+				mApp.appFree();
 			}
 			finish();
 		}
 		return false;
 	}
 
+	private boolean shouldRequestUserPermission() {
+		return !GolukPermissionUtils.hasExternalStoragePermission(this)
+				|| !GolukPermissionUtils.hasLocationPermission(this)
+				|| !GolukPermissionUtils.hasReadPhoneStatePermission(this)
+				|| !GolukPermissionUtils.hasCameraPermission(this);
+	}
+
+	private void requestUserPermission() {
+		GolukPermissionUtils.requestPermissions(this, new String[]{
+				Manifest.permission.WRITE_EXTERNAL_STORAGE,
+				Manifest.permission.ACCESS_COARSE_LOCATION,
+				Manifest.permission.ACCESS_FINE_LOCATION,
+				Manifest.permission.CAMERA,
+				Manifest.permission.READ_PHONE_STATE,
+		});
+	}
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+    }
+
+	@Override
+	public void onPermissionsGranted(int requestCode, List<String> perms) {
+		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION && !shouldRequestUserPermission()) {
+			init();
+		}
+	}
+
+	@Override
+	public void onPermissionsDenied(int requestCode, List<String> perms) {
+		GolukPermissionUtils.handlePermissionPermanentlyDenied(this, perms);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION) {
+			if (resultCode == Activity.RESULT_CANCELED) {
+				finish();
+			} else if (resultCode ==Activity.RESULT_OK&&!shouldRequestUserPermission()){
+				init();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
+	}
 }
