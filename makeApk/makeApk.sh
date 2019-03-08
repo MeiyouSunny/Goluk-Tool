@@ -14,7 +14,10 @@ echo "调用gradle打包"
 gradle assembleInternal
 
 echo "拷贝APK文件"
-cp golukMobile/build/outputs/apk/*-release.apk  ../AndroidCDC/$1
+cp golukMobile/build/outputs/apk/internal/release/*-release.apk  ../AndroidCDC/$1
+cp golukMobile/build/outputs/apk/internal/debug/*-debug.apk  ../AndroidCDC/$1
+cp golukMobile/build/outputs/apk/international/release/*-release.apk  ../AndroidCDC/$1
+cp golukMobile/build/outputs/apk/international/debug/*-debug.apk  ../AndroidCDC/$1
 
 echo "回到版本库目录，删除修改和未纳入版本库的文件"
 
