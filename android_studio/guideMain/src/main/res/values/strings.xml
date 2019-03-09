@@ -1334,6 +1334,7 @@
     <string name="str_third_share_fail">Third party share failed</string>
     <string name="str_others">Say something else</string>
     <string name="str_qq_low_version">You have not installed QQ or QQ version is too low</string>
+    <string name="sina_weibo_low_version">You have not installed WeiBo or WeiBo version is too low</string>
     <string name="str_get_share_links">Requesting share link</string>
     <string name="str_uploading_videos_is_interrupted">Uploading Video. Do you want to stop it (Y/N)</string>
     <string name="str_upload_fail">Video upload is not successful</string>
