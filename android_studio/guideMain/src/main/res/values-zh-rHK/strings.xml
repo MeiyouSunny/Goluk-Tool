@@ -1105,4 +1105,5 @@
     <string name="connect_fail_hint_msg">請嘗試關閉手機蜂窩移動網絡，藍牙和VPN後重試</string>
     <string name="permission_hint_msg">為了避免App無法使用，請開啟存儲、定位等系統許可權</string>
     <string name="need_camera_permission_msg">請在設定頁面中開啟相機許可權</string>
+    <string name="setting">設定</string>
 </resources>

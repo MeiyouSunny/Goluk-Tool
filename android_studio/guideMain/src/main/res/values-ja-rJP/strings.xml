@@ -1102,5 +1102,6 @@
     <string name="desc_collision">アクティベートした後、走行中に異常な衝突が発生した場合、Golukは緊急ビデオを16秒間（衝突前後8秒間ずつ）記録します。記録に十分なストレージ容量がない場合は、自動的に以前記録されたファイルに上書きされます。衝突感度設定には低、中、高の3段階があります。</string>
     <string name="connect_fail_hint_msg">携帯データ、Bluetooth、VPNを無効にしてからもう一度お試しください</string>
     <string name="permission_hint_msg">Appは使用できないように、格納、位置決めなどのシステム権限を開いてください。</string>
-    <string name="need_camera_permission_msg">Пожалуйста, откройте, пожалуйста, права на камеру в настройках.</string>
+    <string name="setting">設定</string>
+    <string name="need_camera_permission_msg">設定ページにカメラの権限を開いてください。</string>
 </resources>

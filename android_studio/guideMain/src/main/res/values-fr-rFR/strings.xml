@@ -1103,4 +1103,5 @@
     <string name="connect_fail_hint_msg">Veuillez désactiver les données cellulaires, Bluetooth et VPN, puis réessayer.</string>
     <string name="permission_hint_msg">Pour éviter que abpp ne puisse pas être utilisé, ouvrir un système de stockage, de localisation, etc.</string>
     <string name="need_camera_permission_msg">S\' il vous plaît, ouvrir un accès à l \'appareil photo dans la page</string>
+    <string name="setting">Créer</string>
 </resources>

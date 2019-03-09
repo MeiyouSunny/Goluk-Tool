@@ -1101,4 +1101,5 @@
     <string name="connect_fail_hint_msg">셀룰러 데이터, 블루투스 및 VPN을 끄고 다시 시도하십시오.</string>
     <string name="permission_hint_msg">App 을 사용하지 않기 위해서 메모리, 위치 지정 등 시스템 권한을 켜십시오</string>
     <string name="need_camera_permission_msg">페이지 설정 중 카메라 권한을 켜십시오</string>
+    <string name="setting">설치</string>
 </resources>

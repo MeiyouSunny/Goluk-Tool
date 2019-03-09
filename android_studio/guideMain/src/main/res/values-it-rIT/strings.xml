@@ -1103,4 +1103,5 @@
     <string name="connect_fail_hint_msg">Spegni Cellular Data, Bluetooth e VPN e riprova</string>
     <string name="permission_hint_msg">Al Fine di evitare l\'uso di App non può, per favore Apri il deposito di posizionamento del Sistema dei permessi, ecc.</string>
     <string name="need_camera_permission_msg">Per favore, accendi la telecamera permessi in impostazioni Pagina</string>
+    <string name="setting">Настройка</string>
 </resources>

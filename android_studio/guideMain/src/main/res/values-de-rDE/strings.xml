@@ -1103,4 +1103,5 @@
     <string name="connect_fail_hint_msg">Bitte deaktivieren Sie Mobilfunkdaten, Bluetooth und VPN und versuchen Sie es erneut</string>
     <string name="permission_hint_msg">Um zu vermeiden, dass die app nicht mit der Lagerung und ORIENTIERUNG, öffnen sie bitte DAS privileg</string>
     <string name="need_camera_permission_msg">Bitte schalten sie die Kamera in die Seite einstellungen.</string>
+    <string name="setting">Einstellungen</string>
 </resources>
