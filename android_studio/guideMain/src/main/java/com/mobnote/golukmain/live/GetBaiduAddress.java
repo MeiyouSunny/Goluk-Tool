@@ -32,8 +32,12 @@ public class GetBaiduAddress implements OnGetGeoCoderResultListener {
 	private GetBaiduAddress() {
 		if (GolukApplication.getInstance().isMainland()) {
 			// 初始化搜索模块，注册事件监听
-			mSearch = GeoCoder.newInstance();
-			mSearch.setOnGetGeoCodeResultListener(this);
+			try {
+				mSearch = GeoCoder.newInstance();
+				mSearch.setOnGetGeoCodeResultListener(this);
+			} catch (Exception e) {
+				GolukDebugUtils.e("baidu SDK",e.getLocalizedMessage());
+			}
 		}
 
 		GolukDebugUtils.e("", "GetBaiduAddress------------------init");
