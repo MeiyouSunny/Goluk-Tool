@@ -24,6 +24,15 @@ public class GolukPermissionUtils {
 
     public static final int CODE_REQUEST_PERMISSION = 8000;
 
+    public static final int CODE_REQUEST_CAMERA_PERMISSION = 8001;
+    public static final int CODE_REQUEST_SETTING_CAMERA_PERMISSION = 8002;
+
+
+    public static boolean hasIndispensablePermission(Context context){
+        return GolukPermissionUtils.hasExternalStoragePermission(context)
+                && GolukPermissionUtils.hasLocationPermission(context)
+                && GolukPermissionUtils.hasReadPhoneStatePermission(context);
+    }
 
     public static boolean hasExternalStoragePermission(Context context) {
         return EasyPermissions.hasPermissions(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -42,11 +51,6 @@ public class GolukPermissionUtils {
     public static boolean hasReadPhoneStatePermission(Context context) {
         return EasyPermissions.hasPermissions(context, Manifest.permission.READ_PHONE_STATE);
     }
-
-    public static boolean hasWriteSettingsPermission(Context context) {
-        return EasyPermissions.hasPermissions(context, Manifest.permission.WRITE_SETTINGS);
-    }
-
 
     @SuppressLint("RestrictedApi")
     public static void requestPermissions(Object target, String[] permissions) {
@@ -69,6 +73,28 @@ public class GolukPermissionUtils {
         }
     }
 
+    @SuppressLint("RestrictedApi")
+    public static void requestCameraPermission(Object target) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        if (target instanceof Activity) {
+            PermissionHelper
+                    .newInstance((Activity) target)
+                    .directRequestPermissions(CODE_REQUEST_CAMERA_PERMISSION, Manifest.permission.CAMERA);
+        } else if (target instanceof Fragment) {
+            PermissionHelper
+                    .newInstance((Fragment) target)
+                    .directRequestPermissions(CODE_REQUEST_CAMERA_PERMISSION, Manifest.permission.CAMERA);
+        } else if (target instanceof android.app.Fragment) {
+            PermissionHelper
+                    .newInstance((android.app.Fragment) target)
+                    .directRequestPermissions(CODE_REQUEST_CAMERA_PERMISSION, Manifest.permission.CAMERA);
+        }
+    }
+
+    public static void handlePermissionPermanentlyDenied(Object host, List<String> perms) {
+        handlePermissionPermanentlyDenied(host, perms, R.string.permission_hint_msg);
+    }
+
     /**
      * Android系统权限提示，第一次拒绝后，第二次提示权限才会出现“不再提示”的选项。
      * 勾选不再提示，host的shouldShowRequestPermissionRationale返回false，由此判断用户是否勾选“不再提示选项”；
@@ -76,7 +102,7 @@ public class GolukPermissionUtils {
      * @param host
      * @param perms
      */
-    public static void handlePermissionPermanentlyDenied(Object host, List<String> perms) {
+    public static void handlePermissionPermanentlyDenied(Object host, List<String> perms,@StringRes int msgRes) {
         boolean isPermissionPermanentlyDenied = false;
         GolukSettingDialog.Builder builder = null;
         if (host instanceof Activity) {
@@ -98,7 +124,7 @@ public class GolukPermissionUtils {
         if (isPermissionPermanentlyDenied) {
             builder.setRequestCode(CODE_REQUEST_PERMISSION)
                     .setTitle(" ")
-                    .setRationale(R.string.permission_hint_msg)
+                    .setRationale(msgRes)
                     .setNegativeButton(R.string.cancel)
                     .setPositiveButton(R.string.setting)
                     .build()

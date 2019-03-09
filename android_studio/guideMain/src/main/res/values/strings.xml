@@ -1554,4 +1554,5 @@
     <string name="connect_fail_hint_msg">Please turn off Cellular Data, Bluetooth and VPN then try again</string>
     <string name="signature_is_empty">Personality signature cannot be empty</string>
     <string name="permission_hint_msg">To avoid the unavailability of App, please open system permissions such as storage, location, etc.</string>
+    <string name="need_camera_permission_msg">Please open the camera permission in the settings page</string>
 </resources>

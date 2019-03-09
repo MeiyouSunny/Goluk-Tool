@@ -216,10 +216,7 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 	}
 
 	private boolean shouldRequestUserPermission() {
-		return !GolukPermissionUtils.hasExternalStoragePermission(this)
-				|| !GolukPermissionUtils.hasLocationPermission(this)
-				|| !GolukPermissionUtils.hasReadPhoneStatePermission(this)
-				|| !GolukPermissionUtils.hasCameraPermission(this);
+		return !GolukPermissionUtils.hasIndispensablePermission(this);
 	}
 
 	private void requestUserPermission() {
@@ -227,7 +224,6 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 				Manifest.permission.WRITE_EXTERNAL_STORAGE,
 				Manifest.permission.ACCESS_COARSE_LOCATION,
 				Manifest.permission.ACCESS_FINE_LOCATION,
-				Manifest.permission.CAMERA,
 				Manifest.permission.READ_PHONE_STATE,
 		});
 	}

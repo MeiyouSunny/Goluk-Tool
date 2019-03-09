@@ -1103,4 +1103,5 @@
     <string name="desc_collision">После включения, если во время поездки произойдет столкновение, Goluk автоматически сохранит 16 секунд аварийной записи (8 секунд до столкновения и 8 секунд после него). Если будет недостаточно места в памяти, это новое аварийное видео автоматически перезапишет более ранние файлы. Есть три настройки чувствительности к столкновению: низкая, средняя и высокая.</string>
     <string name="connect_fail_hint_msg">Отключите сотовые данные, Bluetooth и VPN, затем повторите попытку.</string>
     <string name="permission_hint_msg">Al Fine di evitare l\'uso di App non può, per favore Apri il deposito di posizionamento del Sistema dei permessi, ecc.</string>
+    <string name="need_camera_permission_msg">設定ページにカメラの権限を開いてください。</string>
 </resources>

@@ -1102,4 +1102,5 @@
     <string name="desc_collision">Una volta attivato, Goluk  salverà automaticamente un video d\'emergenza da 16 secondi in caso di urto anomalo durante il tuo viaggio (8 secondi prima dell\'impatto e 8 secondi dopo). In caso di spazio d\'archiviazione insufficiente, questo nuovo video d\'emergenza verrà automaticamente sovrascritto ai video registrati in precedenza.</string>
     <string name="connect_fail_hint_msg">Spegni Cellular Data, Bluetooth e VPN e riprova</string>
     <string name="permission_hint_msg">Al Fine di evitare l\'uso di App non può, per favore Apri il deposito di posizionamento del Sistema dei permessi, ecc.</string>
+    <string name="need_camera_permission_msg">Per favore, accendi la telecamera permessi in impostazioni Pagina</string>
 </resources>

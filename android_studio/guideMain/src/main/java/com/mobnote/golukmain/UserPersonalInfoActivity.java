@@ -8,6 +8,7 @@ import com.mobnote.eventbus.EventRefreshUserInfo;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.permission.GolukPermissionUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SettingImageView;
@@ -18,6 +19,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -29,17 +31,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import java.util.List;
+
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import pub.devrel.easypermissions.EasyPermissions;
 
 /**
  * 个人资料
- * 
+ *
  * @author mobnote
- * 
+ *
  */
-public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener {
+public class UserPersonalInfoActivity extends BaseActivity implements OnClickListener, EasyPermissions.PermissionCallbacks {
 
 	/** application **/
 	private GolukApplication mApplication = null;
@@ -85,7 +91,7 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.user_personal_info);
 		mContext = this;
@@ -162,11 +168,13 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 			@Override
 			public void onClick(View v) {
 				ad.dismiss();
-				boolean isSucess = siv.getCamera();
-				if (!isSucess) {
-					GolukUtils.showToast(UserPersonalInfoActivity.this,
-							mContext.getResources().getString(R.string.str_start_camera_fail));
+
+				// 相机权限
+				if (!hasCameraPermission()){
+					handlerCameraPermission();
+					return;
 				}
+				openCamera();
 			}
 		});
 
@@ -204,6 +212,21 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 		});
 
 	}
+
+	private boolean hasCameraPermission(){
+		return GolukPermissionUtils.hasCameraPermission(this);
+	}
+
+	private void handlerCameraPermission() {
+		GolukPermissionUtils.requestCameraPermission(this);
+	}
+
+    private void openCamera() {
+        if (!siv.getCamera())
+            GolukUtils.showToast(UserPersonalInfoActivity.this,
+                    mContext.getResources().getString(R.string.str_start_camera_fail));
+
+    }
 
 	/**
 	 * 初始化用户信息
@@ -321,6 +344,13 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 				sex = "0";
 			}
 			break;
+            case GolukPermissionUtils.CODE_REQUEST_PERMISSION:
+                  if(resultCode ==RESULT_OK){
+                    if (hasCameraPermission()) {
+                        openCamera();
+                    }
+                }
+                break;
 		default:
 			break;
 		}
@@ -341,5 +371,24 @@ public class UserPersonalInfoActivity extends BaseActivity implements OnClickLis
 //		}
 		this.finish();
 	}
+
+	@Override
+	public void onPermissionsGranted(int requestCode, List<String> perms) {
+		if (requestCode == GolukPermissionUtils.CODE_REQUEST_CAMERA_PERMISSION && hasCameraPermission()) {
+			openCamera();
+		}
+	}
+
+	@Override
+	public void onPermissionsDenied(int requestCode, List<String> perms) {
+        GolukPermissionUtils.handlePermissionPermanentlyDenied(this, perms,R.string.need_camera_permission_msg);
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+		EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+	}
+
 
 }

@@ -1267,4 +1267,5 @@
     <string name="connect_fail_hint_msg">请尝试关闭手机蜂窝移动网络、蓝牙和 VPN 后重试</string>
     <string name="compress_video">正在压缩视频...</string>
     <string name="permission_hint_msg">为了避免App无法使用，请开启存储、定位等系统权限</string>
+    <string name="need_camera_permission_msg">请在设置页面中开启相机权限</string>
 </resources>

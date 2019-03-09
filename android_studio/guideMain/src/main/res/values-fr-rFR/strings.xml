@@ -1102,4 +1102,5 @@
     <string name="desc_collision">Une fois activée, Goluk enregistra automatiquement 16 secondes (8 secondes avant la collision et 8 secondes après la collision) de vidéo d\'urgence si une collision anormale a lieu durant vos trajets. S\'il n\'y a pas assez d\'espace de stockage libre, cette nouvelle vidéo d\'urgence écrasera automatiquement les fichiers enregistrés précédemment.</string>
     <string name="connect_fail_hint_msg">Veuillez désactiver les données cellulaires, Bluetooth et VPN, puis réessayer.</string>
     <string name="permission_hint_msg">Pour éviter que abpp ne puisse pas être utilisé, ouvrir un système de stockage, de localisation, etc.</string>
+    <string name="need_camera_permission_msg">S\' il vous plaît, ouvrir un accès à l \'appareil photo dans la page</string>
 </resources>
