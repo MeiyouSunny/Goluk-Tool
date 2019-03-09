@@ -24,6 +24,8 @@ public class GolukVideoUtils {
 
             int currType = PhotoAlbumConfig.getVideoTypeByName(fileName);
 
+            if (currType == 0) return null;
+
             String[] videoPaths = {"", "wonderful/", "urgent/", "reduce/", "loop/"};
             String mFilePath = Environment.getExternalStorageDirectory().getPath() + "/goluk/video/";
             String videoPath = mFilePath + videoPaths[currType] + fileName;
