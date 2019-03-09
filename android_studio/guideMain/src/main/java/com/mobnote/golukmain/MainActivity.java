@@ -186,10 +186,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
     }
 
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        // super.onSaveInstanceState(outState);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

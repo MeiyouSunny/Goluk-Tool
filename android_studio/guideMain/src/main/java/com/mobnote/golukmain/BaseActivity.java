@@ -20,6 +20,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.thirdshare.FacebookShareHelper;
+import com.mobnote.golukmobile.GuideActivity;
 import com.umeng.analytics.MobclickAgent;
 
 /**
@@ -52,6 +53,11 @@ public class BaseActivity extends FragmentActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (savedInstanceState!=null){
+            Intent intent = new Intent(this, GuideActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        }
         mBaseApp = (GolukApplication) getApplication();
         mBaseApp.initLogic();
     }
