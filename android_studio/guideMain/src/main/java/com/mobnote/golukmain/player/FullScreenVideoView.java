@@ -1,10 +1,11 @@
 package com.mobnote.golukmain.player;
 
-import com.mobnote.golukmain.player.factory.TextureVideoView;
-
 import android.content.Context;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.widget.VideoView;
+
+import com.mobnote.golukmain.player.factory.TextureVideoView;
 
 /**
  * 自动全屏的VideoView
@@ -54,5 +55,14 @@ public class FullScreenVideoView extends TextureVideoView {
 	public void setVideoHeight(int videoHeight) {
 		this.videoHeight = videoHeight;
 	}
+
+    // Fix the following bug
+    // java.lang.UnsupportedOperationException:TextureView doesn't support displaying a background drawable
+    @Override
+    public void setBackgroundDrawable(Drawable background) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N && background != null) {
+            setBackgroundDrawable(background);
+        }
+    }
 
 }

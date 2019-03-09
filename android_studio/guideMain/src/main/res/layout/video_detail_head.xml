@@ -95,8 +95,7 @@
             android:id="@+id/video_detail_videoview"
             android:layout_width="match_parent"
             android:layout_height="205dp"
-            android:layout_centerInParent="true"
-            android:background="#0000" />
+            android:layout_centerInParent="true" />
 
         <RelativeLayout
             android:id="@+id/mImageLayout"
