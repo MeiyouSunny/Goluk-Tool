@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -1167,6 +1169,10 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         dialog.dismiss();
+                        //允许写设置权限
+//                        Intent goToSettings = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+//                        goToSettings.setData(Uri.parse("package:" + getPackageName()));
+//                        startActivity(goToSettings);
                     }
                 });
                 dialog.show();
