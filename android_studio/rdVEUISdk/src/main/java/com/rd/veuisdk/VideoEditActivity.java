@@ -2477,6 +2477,7 @@ public class VideoEditActivity extends BaseActivity implements
                                                         int which) {
                                         if (epdExport != null) {
                                             epdExport.cancel();
+                                            epdExport = null;
                                         }
                                     }
                                 });
