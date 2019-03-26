@@ -1102,4 +1102,5 @@
     <string name="permission_hint_msg">App 을 사용하지 않기 위해서 메모리, 위치 지정 등 시스템 권한을 켜십시오</string>
     <string name="need_camera_permission_msg">페이지 설정 중 카메라 권한을 켜십시오</string>
     <string name="setting">설치</string>
+    <string name="cloud_save_tip">공유하는 영상은 1년 밖에 안 남았어요.</string>
 </resources>

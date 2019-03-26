@@ -1104,4 +1104,5 @@
     <string name="permission_hint_msg">Al Fine di evitare l\'uso di App non può, per favore Apri il deposito di posizionamento del Sistema dei permessi, ecc.</string>
     <string name="need_camera_permission_msg">Per favore, accendi la telecamera permessi in impostazioni Pagina</string>
     <string name="setting">Настройка</string>
+    <string name="cloud_save_tip">La condivisione di Video Solo per salvare un anno</string>
 </resources>

@@ -1104,4 +1104,5 @@
     <string name="permission_hint_msg">Appは使用できないように、格納、位置決めなどのシステム権限を開いてください。</string>
     <string name="setting">設定</string>
     <string name="need_camera_permission_msg">設定ページにカメラの権限を開いてください。</string>
+    <string name="cloud_save_tip">共有ビデオは1年だけ保存します</string>
 </resources>

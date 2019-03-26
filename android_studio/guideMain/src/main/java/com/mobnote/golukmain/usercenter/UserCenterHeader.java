@@ -14,6 +14,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -41,6 +42,8 @@ public class UserCenterHeader implements OnClickListener {
 	private LinearLayout mWonderfulLayout, mRecommendLayout, mHeadlinesLayout;
 	private TextView mWonderfulText, mRecommednText, mHeadlinesText;
 	private Button mAttentionBtn;
+	private RelativeLayout mLayoutCloudTip;
+	private ImageView mIcCloudClose;
 	/** 取消关注 **/
 	private static final String TYPE_ATTENTION_CANCLE = "0";
 	/** 关注 **/
@@ -66,8 +69,9 @@ public class UserCenterHeader implements OnClickListener {
 		}
 	}
 
+	View view;
 	public View createHeader() {
-		View view = LayoutInflater.from(mContext).inflate(R.layout.activity_usercenter_header, null);
+		view = LayoutInflater.from(mContext).inflate(R.layout.activity_usercenter_header, null);
 		mImageHeadBg = (ImageView) view.findViewById(R.id.image_user_big);
 		mImageHead = (ImageView) view.findViewById(R.id.iv_usercenter_header_head);
 		mAttentionBtn = (Button) view.findViewById(R.id.btn_usercenter_header_attention);
@@ -82,6 +86,8 @@ public class UserCenterHeader implements OnClickListener {
 		mWonderfulText = (TextView) view.findViewById(R.id.tv_usercenter_header_wonderful_count);
 		mRecommednText = (TextView) view.findViewById(R.id.tv_usercenter_header_recommendcount);
 		mHeadlinesText = (TextView) view.findViewById(R.id.tv_usercenter_header_headlines_count);
+		mLayoutCloudTip = (RelativeLayout) view.findViewById(R.id.layout_cloud_tip);
+		mIcCloudClose = (ImageView) view.findViewById(R.id.ic_cloud_close);
 
 		mAttentionBtn.setOnClickListener(this);
 		mTextAttention.setOnClickListener(this);
@@ -90,6 +96,7 @@ public class UserCenterHeader implements OnClickListener {
 		mRecommendLayout.setOnClickListener(this);
 		mHeadlinesLayout.setOnClickListener(this);
 		mImageHead.setOnClickListener(this);
+		mIcCloudClose.setOnClickListener(this);
 
 		return view;
 	}
@@ -299,7 +306,9 @@ public class UserCenterHeader implements OnClickListener {
 			intentToCategory(UserVideoCategoryActivity.COLLECTION_HEADLINES_VIDEO);
 		} else if(id == R.id.iv_usercenter_header_head) {
 			showLargeHead();
-		} else {
+		} else if (id == R.id.ic_cloud_close) {
+			mLayoutCloudTip.setVisibility(View.GONE);
+			mUserCenterActivity.refresh();
 		}
 	}
 

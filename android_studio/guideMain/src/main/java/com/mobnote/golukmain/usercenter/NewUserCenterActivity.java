@@ -134,7 +134,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
     protected void onResume() {
         super.onResume();
         activityHidden = false;
-        httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
+        httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "", true);
         ZhugeUtils.eventUserCenter(this);
     }
 
@@ -181,7 +181,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
                 pullToRefreshBase.getLoadingLayoutProxy(true, false).setLastUpdatedLabel(
                         getResources().getString(R.string.updating)
                                 + GolukUtils.getCurrentFormatTime(NewUserCenterActivity.this));
-                httpRequestData(mUserId, mCurrentUid, OPERATOR_DOWN, "");
+                httpRequestData(mUserId, mCurrentUid, OPERATOR_DOWN, "", true);
             }
 
             @Override
@@ -190,7 +190,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
                 mIsFirst = false;
                 pullToRefreshBase.getLoadingLayoutProxy(false, true).setLastUpdatedLabel(
                         getResources().getString(R.string.goluk_pull_to_refresh_footer_pull_label));
-                httpRequestData(mUserId, mCurrentUid, OPERATOR_UP, mLastIndex);
+                httpRequestData(mUserId, mCurrentUid, OPERATOR_UP, mLastIndex, true);
             }
 
         });
@@ -207,8 +207,12 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
         }
     }
 
-    private void httpRequestData(String otheruid, String currentuid, String operation, String index) {
-        if (OPERATOR_FIRST.equals(operation)) {
+    public void refresh() {
+        httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "", false);
+    }
+
+    private void httpRequestData(String otheruid, String currentuid, String operation, String index, boolean showLoading) {
+        if (OPERATOR_FIRST.equals(operation) && showLoading) {
             showLoadingDialog();
         }
         if (operation.equals(OPERATOR_DOWN)) {
@@ -400,7 +404,7 @@ public class NewUserCenterActivity extends BaseActivity implements IRequestResul
             mMoreDialog = new UserMoreDialog(this);
             mMoreDialog.show();
         } else if (id == R.id.ry_usercenter_refresh) {
-            httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "");
+            httpRequestData(mUserId, mCurrentUid, OPERATOR_FIRST, "", true);
         } else {
         }
     }

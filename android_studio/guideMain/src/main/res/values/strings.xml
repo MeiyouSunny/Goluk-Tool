@@ -1556,4 +1556,5 @@
     <string name="permission_hint_msg">To avoid the unavailability of App, please open system permissions such as storage, location, etc.</string>
     <string name="need_camera_permission_msg">Please open the camera permission in the settings page</string>
     <string name="setting">Setting</string>
+    <string name="cloud_save_tip">Shared videos are only kept for one year</string>
 </resources>

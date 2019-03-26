@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/white"
+              android:background="#F0F2F3"
               android:orientation="vertical">
 
     <FrameLayout
@@ -115,6 +115,7 @@
     <!-- 视频分类 -->
 
     <LinearLayout
+        android:background="@color/white"
         android:id="@+id/layout_usercenter_header_category"
         android:layout_width="match_parent"
         android:layout_height="51dp"
@@ -223,5 +224,31 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#e6e6e6"/>
+
+    <!-- 腾讯云提示 -->
+    <RelativeLayout
+        android:id="@+id/layout_cloud_tip"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginTop="6dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#FA370B"
+            android:gravity="center"
+            android:text="@string/cloud_save_tip"
+            android:textColor="@color/white"
+            android:textSize="14sp"/>
+
+        <ImageView
+            android:id="@+id/ic_cloud_close"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/index_close_btn"/>
+
+    </RelativeLayout>
 
 </LinearLayout>
