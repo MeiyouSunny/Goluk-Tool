@@ -1105,4 +1105,6 @@
     <string name="need_camera_permission_msg">Per favore, accendi la telecamera permessi in impostazioni Pagina</string>
     <string name="setting">Настройка</string>
     <string name="cloud_save_tip">La condivisione di Video Solo per salvare un anno</string>
+    <string name="not_in_china_alert">L\'applicazione in uso in aree limitate</string>
+    <string name="close_app">L\'App di uscita</string>
 </resources>

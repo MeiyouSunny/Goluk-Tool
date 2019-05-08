@@ -1557,4 +1557,6 @@
     <string name="need_camera_permission_msg">Please open the camera permission in the settings page</string>
     <string name="setting">Setting</string>
     <string name="cloud_save_tip">Shared videos are only kept for one year</string>
+    <string name="not_in_china_alert">This application is limited to use in China.</string>
+    <string name="close_app">Quit App</string>
 </resources>

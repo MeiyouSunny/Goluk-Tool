@@ -1106,4 +1106,6 @@
     <string name="need_camera_permission_msg">Пожалуйста, откройте, пожалуйста, права на камеру в настройках.</string>
     <string name="setting">Настройка</string>
     <string name="cloud_save_tip">видео, которое делится, хранится только в течение одного года.</string>
+    <string name="not_in_china_alert">это приложение ограничивает использование в китае</string>
+    <string name="close_app">выход из App</string>
 </resources>

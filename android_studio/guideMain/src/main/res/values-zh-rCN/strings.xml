@@ -1270,4 +1270,6 @@
     <string name="need_camera_permission_msg">请在设置页面中开启相机权限</string>
     <string name="setting">设置</string>
     <string name="cloud_save_tip">分享的视频仅保存一年</string>
+    <string name="not_in_china_alert">本应用限定在中国地区使用，您不在中国地区，不能使用本应用</string>
+    <string name="close_app">关闭程序</string>
 </resources>

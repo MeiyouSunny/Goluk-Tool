@@ -1105,4 +1105,6 @@
     <string name="need_camera_permission_msg">S\' il vous plaît, ouvrir un accès à l \'appareil photo dans la page</string>
     <string name="setting">Créer</string>
     <string name="cloud_save_tip">La vidéo partagée n \'est enregistrée qu\' une année.</string>
+    <string name="not_in_china_alert">Application limitée en Chine</string>
+    <string name="close_app">Quitter app</string>
 </resources>

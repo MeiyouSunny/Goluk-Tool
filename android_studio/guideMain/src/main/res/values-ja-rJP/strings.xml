@@ -1105,4 +1105,6 @@
     <string name="setting">設定</string>
     <string name="need_camera_permission_msg">設定ページにカメラの権限を開いてください。</string>
     <string name="cloud_save_tip">共有ビデオは1年だけ保存します</string>
+    <string name="not_in_china_alert">この応用は中国地区に限定されています。</string>
+    <string name="close_app">終了</string>
 </resources>

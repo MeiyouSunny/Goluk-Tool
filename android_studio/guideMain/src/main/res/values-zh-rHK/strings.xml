@@ -1107,4 +1107,6 @@
     <string name="need_camera_permission_msg">請在設定頁面中開啟相機許可權</string>
     <string name="setting">設定</string>
     <string name="cloud_save_tip">分享的視頻僅保存一年</string>
+    <string name="not_in_china_alert">本應用限定在中國地區使用</string>
+    <string name="close_app">退出App</string>
 </resources>

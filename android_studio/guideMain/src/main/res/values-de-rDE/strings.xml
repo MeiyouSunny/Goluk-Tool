@@ -1105,4 +1105,6 @@
     <string name="need_camera_permission_msg">Bitte schalten sie die Kamera in die Seite einstellungen.</string>
     <string name="setting">Einstellungen</string>
     <string name="cloud_save_tip">Video - Halten nur ein Jahr.</string>
+    <string name="not_in_china_alert">Diese Anwendung MIT in der chinesischen region</string>
+    <string name="close_app">Aus der app</string>
 </resources>

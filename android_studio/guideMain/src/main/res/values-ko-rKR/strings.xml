@@ -1103,4 +1103,6 @@
     <string name="need_camera_permission_msg">페이지 설정 중 카메라 권한을 켜십시오</string>
     <string name="setting">설치</string>
     <string name="cloud_save_tip">공유하는 영상은 1년 밖에 안 남았어요.</string>
+    <string name="not_in_china_alert">본 응용은 중국 지역에서 사용하도록 한정한다</string>
+    <string name="close_app">물러나다</string>
 </resources>
