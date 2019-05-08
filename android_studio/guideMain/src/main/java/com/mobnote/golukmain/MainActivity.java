@@ -1,7 +1,9 @@
 package com.mobnote.golukmain;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -11,6 +13,7 @@ import android.media.SoundPool;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.Process;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -29,6 +32,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.widget.FragmentTabHost;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventBindFinish;
 import com.mobnote.eventbus.EventBindResult;
 import com.mobnote.eventbus.EventConfig;
@@ -39,6 +43,7 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateDate;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventUserLoginRet;
+import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.EventWifiAuto;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.eventbus.EventWifiState;
@@ -104,6 +109,7 @@ import cn.com.mobnote.module.talk.ITalkFn;
 import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
 import cn.com.tiros.api.Tapi;
+import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
@@ -300,6 +306,35 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         //msgRequest();
         mSharePlatform = new SharePlatformUtil(this);
+
+        BaiduLocation.getInstance().startLocation();
+    }
+
+    public void onEventMainThread(Event event) {
+        if (EventUtil.isNotInChinaEvent(event)  && GolukApplication.getInstance().isMainland()) {
+            // 显示国内App无法在海外使用提示
+            showChinaAppInOverseasAlert();
+        }
+    }
+
+    AlertDialog mDialogNotInChina;
+
+    private synchronized void showChinaAppInOverseasAlert() {
+        if (mDialogNotInChina == null)
+            mDialogNotInChina = new AlertDialog.Builder(this)
+                    .setMessage(R.string.not_in_china_alert)
+                    .setPositiveButton(R.string.close_app, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int arg1) {
+                            dialog.dismiss();
+                            // 结束应用
+                            Process.killProcess(Process.myPid());
+                        }
+                    })
+                    .setCancelable(false)
+                    .create();
+        if (!mDialogNotInChina.isShowing())
+            mDialogNotInChina.show();
     }
 
     private void initView() {

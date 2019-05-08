@@ -1,10 +1,14 @@
 package cn.com.tiros.location;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.location.LocationClientOption.LocationMode;
+import com.mobnote.eventbus.EventUtil;
 
 import cn.com.tiros.api.Const;
 import cn.com.tiros.baidu.BaiduLocation;
@@ -64,6 +68,16 @@ public class UseBaidu implements BDLocationListener {
     }
 
     private void onLocated(BDLocation location) {
+        // 判断是否国内App在海外使用
+        String countryCode = "-1";
+        countryCode = location.getCountryCode();
+        Log.e("LocationInfo", countryCode + "");
+        if (!TextUtils.isEmpty(countryCode)
+                && !TextUtils.equals(countryCode, "-1")
+                && !TextUtils.equals(countryCode, "0")) {
+            EventUtil.sendNotInChinaEvent();
+        }
+
         mTryCount++;
         if (null == location) {
             if (mTryCount > BaiduLocation.LOCATION_TRY_LIMIT) {

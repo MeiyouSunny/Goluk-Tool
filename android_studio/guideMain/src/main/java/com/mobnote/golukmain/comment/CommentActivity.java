@@ -759,7 +759,7 @@ public class CommentActivity extends BaseActivity implements OnClickListener, On
 						mEditInput.setHint(this.getString(R.string.str_comment_input_hit));
 						mCommentTime = System.currentTimeMillis();
 
-						EventUtil.sendCommentSuccessEvent(bean);
+						EventUtil.sendCommentSuccessEvent();
 					} else if ("1".equals(bean.result)) {
 						GolukDebugUtils.e("", this.getString(R.string.str_parameter_error));
 					} else if ("2".equals(bean.result)) {// 重复评论
