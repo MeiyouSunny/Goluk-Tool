@@ -15,9 +15,8 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.elvishew.xlog.XLog;
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.util.JsonUtil;
 
 import org.json.JSONObject;
@@ -290,21 +289,24 @@ public class WifiConnectManagerSupport {
      * 获得匹配连接wifi的信息是否有效
      */
     public WifiRsBean getConnResult(String title) {
-        String regEx = "^" + title;
+        //String regEx = "^" + title;
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "before getConnectionInfo"));
 
         // 先判断当前WIFI是否已经连接上
-        boolean isWifiConnected = NetUtil.isWIFIConnected(GolukApplication.getInstance().getApplicationContext());
-        if (!isWifiConnected) {
-            return null;
-        }
+//        boolean isWifiConnected = NetUtil.isWIFIConnected(GolukApplication.getInstance().getApplicationContext());
+//        if (!isWifiConnected) {
+//            return null;
+//        }
 
         WifiInfo info = wifiManager.getConnectionInfo();
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;
         if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>") && !info.getSSID().equals("0x")) {
 
+            XLog.tag(LogConst.TAG_CONNECTION).i("info.getSSID():" + info.getSSID());
             String tmpSsid = info.getSSID().replace("\"", "");
+            XLog.tag(LogConst.TAG_CONNECTION).i("tmpSsid:" + tmpSsid);
+
             ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "info true :ssid " + tmpSsid));
             //Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
             //if (matcher != null && matcher.find()) {
@@ -318,6 +320,7 @@ public class WifiConnectManagerSupport {
         }
         String msg;
         if (bean == null) {
+            XLog.tag(LogConst.TAG_CONNECTION).i("bean == null");
             msg = "bean Result: is null ";
             // Android 8 9
             if (Build.VERSION.SDK_INT >= 27) {
@@ -340,11 +343,14 @@ public class WifiConnectManagerSupport {
      * @return
      */
     private String getSSIDByNetWorkId() {
+        XLog.tag(LogConst.TAG_CONNECTION).i("getSSIDByNetWorkId");
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo != null) {
             int netId = wifiInfo.getNetworkId();
+            XLog.tag(LogConst.TAG_CONNECTION).i("netId:" + netId);
             List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
             for (WifiConfiguration wifiConfiguration : list) {
+                XLog.tag(LogConst.TAG_CONNECTION).i("netId:" + wifiConfiguration.networkId + "ssid:" + wifiConfiguration.SSID);
                 if (netId == wifiConfiguration.networkId) {
                     String ssid = wifiConfiguration.SSID;
                     return ssid;
