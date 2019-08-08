@@ -1308,6 +1308,10 @@ public class IPCControlManager implements IPCManagerFn {
                 if (mApplication.mIpcVersion.startsWith(T1U_SIGN) || mApplication.mIpcVersion.startsWith(T2U_SIGN)) {
                     return true;
                 }
+                // T1/T2 1.6
+                if (getVersionCode().compareTo("1.6") >= 0) {
+                    return true;
+                }
             }
         }
         //t3u从 1.2版本开始支持移动探测
