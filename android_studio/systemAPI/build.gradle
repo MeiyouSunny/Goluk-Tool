@@ -24,11 +24,8 @@ android {
 }
 
 dependencies {
-    //compile files('libs/AirtalkeeSDK-V2.3.3.jar')
     compile files('libs/BaiduLBS_Android.jar')
     compile files('libs/eventbus-2.4.0.jar')
-    //compile files('libs/HciCloud_SDK_Java_3.0.jar')
-    //compile files('libs/SpeechApi.jar')
     compile files('libs/umeng-analytics-7.4.0.jar')
-    compile files('libs/bugly_crash_release.jar')
+    compile 'com.tencent.bugly:crashreport:latest.release'
 }

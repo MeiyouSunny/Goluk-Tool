@@ -34,6 +34,7 @@ import com.mobnote.eventbus.EventPhotoUpdateLoginState;
 import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.IpcInfoUpdate;
+import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
@@ -74,8 +75,6 @@ import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.log.app.LogConst;
-import com.mobnote.log.ipc.IpcExceptionOperater;
-import com.mobnote.log.ipc.IpcExceptionOperaterImpl;
 import com.mobnote.map.LngLat;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
@@ -93,6 +92,7 @@ import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.veuisdk.SdkEntry;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONException;
@@ -401,6 +401,11 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         } else {
             SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
         }
+
+        // Bugly
+        String buglyId = isMainland() ? "900012751" : "900021946";
+        CrashReport.initCrashReport(getApplicationContext(), buglyId, BuildConfig.DEBUG);
+
         isInitializeSDK = true;
     }
 
