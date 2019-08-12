@@ -68,6 +68,8 @@ public class UseBaidu implements BDLocationListener {
     }
 
     private void onLocated(BDLocation location) {
+        if (location == null)
+            return;
         // 判断是否国内App在海外使用
         String countryCode = "-1";
         countryCode = location.getCountryCode();
