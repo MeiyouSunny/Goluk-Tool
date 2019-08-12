@@ -45,7 +45,6 @@ dependencies {
     compile project(':rdVEUISdk')
 
     compile project(':emojicon')
- //   compile project(':vitamio')
 
     // 仅调用依赖
     provided files('../systemAPI/libs/BaiduLBS_Android.jar')
@@ -61,7 +60,6 @@ dependencies {
     compile 'net.lingala.zip4j:zip4j:1.3.2'
 
     compile files('libs/mid-sdk-2.20.jar')
-  //  compile files('libs/bolts-android-1.1.4.jar')
     compile files('libs/com.rd.car.player.jar')
     compile files('libs/com.rd.car.sdk.jar')
     compile files('libs/download_1.1.4.1.jar')
@@ -81,7 +79,6 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
     compile files('libs/Zhuge_SDK_v2.3.0.jar')
-//    compile files('libs/bugly_crash_release.jar')
     compile 'com.android.support:recyclerview-v7:26.1.0'
     compile 'com.elvishew:xlog:1.3.0'
     compile files('libs/MobCommons-2017.0321.1624.jar')

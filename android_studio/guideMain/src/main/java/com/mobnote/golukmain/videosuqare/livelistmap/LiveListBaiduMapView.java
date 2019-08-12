@@ -1,7 +1,14 @@
 package com.mobnote.golukmain.videosuqare.livelistmap;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMapOptions;
@@ -21,19 +28,13 @@ import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.Button;
-import android.widget.RelativeLayout;
 
 @SuppressLint("InflateParams")
 public class LiveListBaiduMapView implements ILiveListMapView {
@@ -143,6 +144,11 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 				isFirstLoc = false;
 
 				GolukDebugUtils.e("", "jyf----VideoCategoryActivity----LiveListBaiduMapView--onMapStatusChangeStart ----: ");
+			}
+
+			@Override
+			public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
 			}
 
 			@Override
