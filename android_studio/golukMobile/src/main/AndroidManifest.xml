@@ -569,60 +569,6 @@
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- 信鸽 -->
-
-        <!-- 【必须】 信鸽receiver广播接收 -->
-        <receiver
-            android:name="com.tencent.android.tpush.XGPushReceiver"
-            android:process=":xg_service_v2">
-            <intent-filter android:priority="0x7fffffff">
-
-                <!-- 【必须】 信鸽SDK的内部广播 -->
-                <action android:name="com.tencent.android.tpush.action.SDK" />
-                <action android:name="com.tencent.android.tpush.action.INTERNAL_PUSH_MESSAGE" />
-                <!-- 【必须】 系统广播：开屏和网络切换 -->
-                <!-- 屏幕解锁 -->
-                <action android:name="android.intent.action.USER_PRESENT" />
-                <!-- 网络切换 -->
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
-                <!-- 【可选】 一些常用的系统广播，增强信鸽service的复活机会，请根据需要选择。当然，你也可以添加APP自定义的一些广播让启动service -->
-                <!-- 蓝牙模块被打开或者关闭 -->
-                <action android:name="android.bluetooth.adapter.action.STATE_CHANGED" />
-                <!-- 充电器连接 -->
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
-                <!-- 充电器移除 -->
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
-            </intent-filter>
-        </receiver>
-
-        <!-- 【必须】 (2.30及以上版新增)展示通知的activity -->
-        <!-- 【注意】 如果被打开的activity是启动模式为SingleTop，SingleTask或SingleInstance，请根据通知的异常自查列表第8点处理 -->
-        <activity
-            android:name="com.tencent.android.tpush.XGPushActivity"
-            android:exported="true">
-            <intent-filter>
-
-                <!-- 若使用AndroidStudio，请设置android:name="android.intent.action" -->
-                <action android:name="android.intent.action" />
-            </intent-filter>
-        </activity>
-
-        <!-- 【必须】 信鸽service -->
-        <service
-            android:name="com.tencent.android.tpush.service.XGPushService"
-            android:exported="true"
-            android:persistent="true"
-            android:process=":xg_service_v2" />
-
-        <!-- 【必须】 通知service，此选项有助于提高抵达率 -->
-        <service
-            android:name="com.tencent.android.tpush.rpc.XGRemoteService"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="cn.com.mobnote.golukmobile.PUSH_ACTION" />
-            </intent-filter>
-        </service>
-
         <!-- 添加百度地图key -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

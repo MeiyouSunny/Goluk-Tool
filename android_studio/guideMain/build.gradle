@@ -59,7 +59,6 @@ dependencies {
     // 文件压缩
     compile 'net.lingala.zip4j:zip4j:1.3.2'
 
-    compile files('libs/mid-sdk-2.20.jar')
     compile files('libs/com.rd.car.player.jar')
     compile files('libs/com.rd.car.sdk.jar')
     compile files('libs/download_1.1.4.1.jar')
@@ -68,13 +67,10 @@ dependencies {
     compile files('libs/glide-3.6.1.jar')
     compile files('libs/glide-volley-integration-1.3.1.jar')
     compile files('libs/httpmime-4.1.3.jar')
-    compile files('libs/jg_filter_sdk_1.1.jar')
     compile files('libs/jsr305-3.0.0.jar')
     compile files('libs/library-2.4.0.jar')
     compile files('libs/stickylistheaderslibrary.jar')
     compile files('libs/upload_1.1.4.1.jar')
-    compile files('libs/wup-1.0.0-SNAPSHOT.jar')
-    compile files('libs/Xg_sdk_v2.39_20150915_1121.jar')
     compile files('libs/after-effect.jar')
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
@@ -97,6 +93,15 @@ dependencies {
     compile files('libs/SocialSDK_WeChat_Simplify.jar')
     compile files('libs/SocialSDK_whatsapp.jar')
     compile files('libs/SocialSDK_facebook.jar')
+
+    // 信鸽jar
+    compile 'com.tencent.xinge:xinge:3.2.3-release'
+    //jg包
+    //compile'com.tencent.jg:jg:1.1'
+    // 信鸽wup包(信鸽和云存储都需要此包)
+    compile 'com.tencent.wup:wup:1.0.0.E-release'
+    // 信鸽mid包
+    compile 'com.tencent.mid:mid:4.0.6-release'
 
     compile project(':commonGoluk')
 }
