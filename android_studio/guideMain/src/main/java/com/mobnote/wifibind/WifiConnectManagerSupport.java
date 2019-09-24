@@ -333,8 +333,11 @@ public class WifiConnectManagerSupport {
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", msg));
 
         // 有些机型获取到的WIFI名称用引号包围了,需要去掉双引号/单引号如, Goluk_T1_xxx -> "Goluk_T1_xxx"
-        bean.ipc_ssid = bean.ipc_ssid.replaceAll("\"", "");
-        bean.ipc_ssid = bean.ipc_ssid.replaceAll("'", "");
+        if (bean != null) {
+            bean.ipc_ssid = bean.ipc_ssid.replaceAll("\"", "");
+            bean.ipc_ssid = bean.ipc_ssid.replaceAll("'", "");
+        }
+
         return bean;
     }
 
