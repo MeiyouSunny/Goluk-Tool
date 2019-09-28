@@ -42,4 +42,8 @@ public abstract class CommonCallback extends Callback<String> {
         }
     }
 
+    @Override
+    public boolean isNetworkAvailable() {
+        return true;
+    }
 }

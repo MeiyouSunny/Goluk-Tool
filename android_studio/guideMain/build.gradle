@@ -104,10 +104,10 @@ dependencies {
 
     //T1SP libs
     compile 'com.hmcx:mvp:1.0.3'
-    compile 'likly.reverse:rxandroid:0.0.2'
+    compile 'com.hmcx:rxandroid:1.0.6'
     compile 'com.hmcx:dialogger:1.0.3'
     compile 'com.hmcx:repeatview:1.0.3'
-    compile 'likly.dollar:dollar:0.0.3'
+    compile 'com.hmcx:dollar:1.0.1'
     compile 'com.kyleduo.switchbutton:library:1.4.6'
     // butterknife
     compile 'com.jakewharton:butterknife:8.8.1'

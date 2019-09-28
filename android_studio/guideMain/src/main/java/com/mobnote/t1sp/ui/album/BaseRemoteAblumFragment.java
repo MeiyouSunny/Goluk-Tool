@@ -379,6 +379,11 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private static final int FILE_COUNT_ONE_TIME = 20;
     private FileListCallback mFileCallback = new FileListCallback() {
         @Override
+        public boolean isNetworkAvailable() {
+            return true;
+        }
+
+        @Override
         public void onStart() {
             isGetFileListDataing = true;
             if (mDataList.isEmpty())
