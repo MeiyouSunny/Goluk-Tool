@@ -15,4 +15,9 @@ public class Const {
     // 错误码,无SdCard
     public static final int ERROR_CODE_NO_SD_CARD = 716;
 
+    public static final String DIR_LOOP = "loop";
+    public static final String DIR_WONDERFUL = "wonderful";
+    public static final String DIR_URGENT = "urgent";
+    public static final String DIR_TIMESLAPSE = "reduce";
+
 }

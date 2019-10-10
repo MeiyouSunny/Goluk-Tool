@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -13,8 +14,10 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
+import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
@@ -36,6 +39,9 @@ import com.mobnote.t1sp.download.DownloaderT1sp;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
 import com.mobnote.t1sp.download.ThumbDownloader;
+import com.mobnote.t1sp.download2.IpcDownloadListener;
+import com.mobnote.t1sp.download2.IpcDownloader;
+import com.mobnote.t1sp.download2.IpcDownloaderImpl;
 import com.mobnote.t1sp.file.IpcFileDelete;
 import com.mobnote.t1sp.file.IpcFileListener;
 import com.mobnote.t1sp.util.CollectionUtils;
@@ -521,17 +527,72 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         if (CollectionUtils.isEmpty(selectedList))
             return;
 
-        List<Task> downloadTasks = new ArrayList<>();
-        Task task = null;
-        String savePath = "";
+        List<VideoInfo> videoInfos = new ArrayList<>(selectedList.size());
         for (String videoPath : selectedList) {
-            savePath = videoPath.substring(videoPath.lastIndexOf("/") + 1);
-            savePath = getSavePath(savePath);
-            task = new Task(videoPath, savePath);
-            downloadTasks.add(task);
+            for (VideoInfo videoInfo : mDataList) {
+                if (TextUtils.equals(videoPath, videoInfo.relativePath)) {
+                    videoInfos.add(videoInfo);
+                }
+            }
         }
 
-        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks, this);
+//        List<Task> downloadTasks = new ArrayList<>();
+//        Task task = null;
+//        String savePath = "";
+//        for (String videoPath : selectedList) {
+//            savePath = videoPath.substring(videoPath.lastIndexOf("/") + 1);
+//            savePath = getSavePath(savePath);
+//            task = new Task(videoPath, savePath);
+//            downloadTasks.add(task);
+//        }
+//
+//        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks, this);
+
+        final IpcDownloader ipcDownloader = new IpcDownloaderImpl();
+        ipcDownloader.addDownloadFileList(videoInfos);
+        ipcDownloader.setListener(new IpcDownloadListener() {
+            @Override
+            public void onDownloadCountUpdate(int currentDownload, int total) {
+                // 更新下载: 当前下载第几个/总个数
+                Log.e("IpcDownloader", currentDownload + "/" + total);
+                final String showTxt = getString(R.string.str_video_transfer_ongoing)
+                        + currentDownload + getString(R.string.str_slash) + total;
+                if (!GlobalWindow.getInstance().isShow()) {
+                    GlobalWindow.getInstance().createVideoUploadWindow(showTxt);
+                } else {
+                    GlobalWindow.getInstance().updateText(showTxt);
+                }
+            }
+
+            @Override
+            public void onProgressUpdate(String fileName, int progress) {
+                // 当前文件下载进度
+                Log.e("IpcDownloader", fileName + ": " + progress + "%");
+                GlobalWindow.getInstance().refreshPercent(progress);
+            }
+
+            @Override
+            public void onSingleFileDownloadResult(String fileName, boolean isSuccess, String msg) {
+                // 当前文件下载最后状态
+                Log.e("IpcDownloader", fileName + " Result:" + isSuccess);
+            }
+
+            @Override
+            public void onDownloadedComplete(int countSuccess, int countfailed, int countTotal) {
+                // 所有文件下载完成
+                Log.e("IpcDownloader", "onAllDownloaded");
+                Toast.makeText(getContext(), "下载完成", Toast.LENGTH_SHORT).show();
+                GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
+            }
+
+            @Override
+            public void onSDNoEnoughError(int countSuccess, int countfailed, int countTotal) {
+
+            }
+
+        });
+        // 开始下载
+        ipcDownloader.start();
     }
 
     /**

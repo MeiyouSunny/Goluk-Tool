@@ -204,4 +204,30 @@ public class GolukUtils {
         return 1;
     }
 
+    /**
+     * 获取视频保存路径
+     *
+     * @param fileName 视频名称
+     * @return
+     */
+    public static String getVideoSavePath(String fileName) {
+        String dir = "";
+        if (fileName.contains("WND")) {
+            dir = Const.DIR_WONDERFUL;
+        } else if (fileName.contains("URG")) {
+            dir = Const.DIR_URGENT;
+        } else if (fileName.contains("NRM_TL")) {
+            dir = Const.DIR_TIMESLAPSE;
+        } else if (fileName.contains("NRM")) {
+            dir = Const.DIR_LOOP;
+        }
+
+        String videoPath = Environment.getExternalStorageDirectory() + File.separator
+                + "goluk" + File.separator
+                + "video" + File.separator
+                + dir + File.separator
+                + fileName;
+        return videoPath;
+    }
+
 }
