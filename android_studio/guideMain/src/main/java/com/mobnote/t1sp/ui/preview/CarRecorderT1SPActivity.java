@@ -54,6 +54,7 @@ import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ViewUtil;
+import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.wifibind.WifiConnectManager;
@@ -659,6 +660,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mVideoResolutions.setVisibility(View.GONE);
 
         disableCaptureButton();
+        hideLoading();
     }
 
     private void ipcConnSucess() {

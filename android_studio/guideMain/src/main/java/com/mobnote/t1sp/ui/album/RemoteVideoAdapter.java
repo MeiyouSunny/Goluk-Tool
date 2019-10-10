@@ -161,7 +161,7 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
         holder.mVideoLayout2.setVisibility(View.GONE);
         VideoInfo mVideoInfo1 = mDataList.get(position).getVideoInfo1();
         VideoInfo mVideoInfo2 = mDataList.get(position).getVideoInfo2();
-        holder.mTMLayout1.setTag(mVideoInfo1.videoPath);
+        holder.mTMLayout1.setTag(mVideoInfo1.relativePath);
         holder.mTMLayout2.setTag("");
 //		holder.mVideoCountTime1.setText(mVideoInfo1.countTime);
         holder.mVideoCreateTime1.setText(mVideoInfo1.videoCreateDate.substring(11));
@@ -180,7 +180,7 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
 //			holder.mAsycnedFlag1.setVisibility(View.GONE);
 //		}
         if (null != mVideoInfo2) {
-            holder.mTMLayout2.setTag(mVideoInfo2.videoPath);
+            holder.mTMLayout2.setTag(mVideoInfo2.relativePath);
             holder.mVideoLayout2.setVisibility(View.VISIBLE);
 //			holder.mVideoCountTime2.setText(mVideoInfo2.countTime);
             holder.mVideoCreateTime2.setText(mVideoInfo2.videoCreateDate.substring(11));

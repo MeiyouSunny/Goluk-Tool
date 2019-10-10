@@ -559,6 +559,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 saveT2SInfo();
                 // 页面跳转
                 goNextAfterT1SPConnected();
+                GolukApplication.getInstance().setIpcLoginState(true);
             }
 
             @Override

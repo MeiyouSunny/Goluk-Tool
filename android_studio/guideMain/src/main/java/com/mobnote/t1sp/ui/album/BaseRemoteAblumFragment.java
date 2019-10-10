@@ -31,15 +31,14 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.photoalbum.VideoDataManagerUtils;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.download.DownloaderT1sp;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
 import com.mobnote.t1sp.download.ThumbDownloader;
+import com.mobnote.t1sp.file.IpcFileDelete;
+import com.mobnote.t1sp.file.IpcFileListener;
 import com.mobnote.t1sp.util.CollectionUtils;
-import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t2s.files.IpcFileQueryF4;
 import com.mobnote.t2s.files.IpcFileQueryListener;
@@ -55,7 +54,7 @@ import likly.dollar.$;
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
  */
-public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener, DownloaderT1sp.IDownloadSuccess, IpcFileQueryListener {
+public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener, DownloaderT1sp.IDownloadSuccess, IpcFileQueryListener, IpcFileListener {
 
     private View mWonderfulVideoView;
 
@@ -86,6 +85,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
     private boolean isInitLoadData;
 
+    private IpcFileDelete mIpcDeleteOption;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +108,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             mDataList = new ArrayList<>();
             mDoubleDataList = new ArrayList<>();
             mGroupListName = new ArrayList<>();
+
+            mIpcDeleteOption = new IpcFileDelete(this);
 
             initView();
         }
@@ -603,12 +606,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
         // 删除文件
         // http://192.72.1.1/SD/Share/F/SHARE171113-151216F.MP4 --> /SD/Share/F/SHARE171113-151216F.MP4
-        String filelPath = selectedList.get(0);
-        if (filelPath.contains(Const.HTTP_SCHEMA_ADD_IP)) {
-            filelPath = filelPath.substring(Const.HTTP_SCHEMA_ADD_IP.length());
-        }
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.deleteFileParam(filelPath), mDeleteCallback);
+//        String filelPath = selectedList.get(0);
+//        if (filelPath.contains(Const.HTTP_SCHEMA_ADD_IP)) {
+//            filelPath = filelPath.substring(Const.HTTP_SCHEMA_ADD_IP.length());
+//        }
+//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.deleteFileParam(filelPath), mDeleteCallback);
 
+        mIpcDeleteOption.deleteRemoteFiles(selectedList);
         showLoading();
     }
 
@@ -662,10 +666,18 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         VideoInfo tempInfo = null;
         for (int i = 0; i < size; i++) {
             tempInfo = mDataList.get(i);
-            if (tempInfo != null && tempInfo.videoPath.contains(videoPath)) {
+            if (tempInfo != null && TextUtils.equals(tempInfo.relativePath, videoPath)) {
                 mDataList.remove(i);
                 return;
             }
+        }
+    }
+
+    private void removeFromVideoList(List<String> selectedList) {
+        if (CollectionUtils.isEmpty(selectedList))
+            return;
+        for (String path : selectedList) {
+            deleteFromDataByVideoName(path);
         }
     }
 
@@ -737,4 +749,18 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     public void onQueryVideoListFailed() {
 
     }
+
+    @Override
+    public void onRemoteFileDeleted(boolean success) {
+        closeLoading();
+        GolukUtils.showToast(getActivity(), getResources().getString(R.string.str_photo_delete_ok));
+        removeFromVideoList(getFragmentAlbum().getSelectedList());
+        getFragmentAlbum().getSelectedList().clear();
+        // 恢复顶部按钮状态
+        getFragmentAlbum().resetTopBar();
+        // 更新显示
+        //checkListState();
+        parseDataAndShow();
+    }
+
 }

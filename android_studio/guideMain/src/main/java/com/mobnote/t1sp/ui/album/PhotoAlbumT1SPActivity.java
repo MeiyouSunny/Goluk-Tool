@@ -15,6 +15,9 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
+
 public class PhotoAlbumT1SPActivity extends BaseActivity {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
 
@@ -28,6 +31,16 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_album_activity);
+
+        ApiUtil.changeToPlaybackMode(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
 
         mShouldClose = getIntent().getBooleanExtra(CLOSE_WHEN_EXIT, false);
         mShowLocal = getIntent().getBooleanExtra(FragmentAlbum.PARENT_VIEW, false);
@@ -92,6 +105,17 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        ApiUtil.changeToMovieMode(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+
         if (mShouldClose && mBaseApp.isIpcLoginSuccess) {
             mBaseApp.setIpcDisconnect();
             WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
