@@ -95,6 +95,12 @@ public class GolukIPCUtils {
         videoInfo.videoCreateDate = fileInfo.time.replaceAll("/", "-");
         videoInfo.time = parseStringToMilli(videoInfo.videoCreateDate);
 
+        String[] nameSplits = fileInfo.name.split("_");
+        if (fileInfo.name.startsWith("NRM_TL"))
+            videoInfo.videoHP = nameSplits[2];
+        else
+            videoInfo.videoHP = nameSplits[1];
+
         return videoInfo;
     }
 

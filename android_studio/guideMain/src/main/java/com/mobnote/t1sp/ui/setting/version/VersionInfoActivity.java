@@ -7,9 +7,10 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.t1sp.base.control.BindTitle;
 import com.mobnote.t1sp.base.ui.BackTitleActivity;
-import com.mobnote.t1sp.bean.SettingInfo;
 
 import butterknife.BindView;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackVersion;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -34,15 +35,26 @@ public class VersionInfoActivity extends BackTitleActivity {
     @Override
     public void onViewCreated() {
         super.onViewCreated();
+        setTitle(R.string.my_version_title_text);
 
-        SettingInfo settingInfo = getIntent().getParcelableExtra("info");
-        if (settingInfo != null) {
-            mDeviceModel.setText(getString(R.string.str_goluk) + settingInfo.deviceModel);
-            mDeviceId.setText(settingInfo.deviceId);
-            mDeviceVersion.setText(settingInfo.deviceVersion);
-        }
+        getVersionInfo();
 
         mDevicePic.setImageResource(R.drawable.connect_t1_icon_1);
+    }
+
+    private void getVersionInfo() {
+        ApiUtil.getVersion(new CallbackVersion() {
+            @Override
+            public void onSuccess(String version) {
+                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
+                //mDeviceId.setText(settingInfo.deviceId);
+                mDeviceVersion.setText(version);
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
     }
 
 }

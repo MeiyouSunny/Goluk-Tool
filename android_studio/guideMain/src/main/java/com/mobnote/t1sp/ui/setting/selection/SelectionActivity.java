@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
-import com.mobnote.t1sp.base.ui.AbsActivity;
+import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingValue;
 
 import java.util.ArrayList;
@@ -19,13 +19,11 @@ import likly.view.repeat.RepeatView;
 
 @MvpBinder(
 )
-public class SelectionActivity extends AbsActivity implements OnHolderClickListener<SettingSelectionViewHolder> {
+public class SelectionActivity extends BackTitleActivity implements OnHolderClickListener<SettingSelectionViewHolder> {
 
     public static final int TYPE_CAPTURE_TIME = 1;
     public static final int TYPE_G_SENSOR = 2;
 
-    //    @BindView(R2.id.title)
-//    TextView mTitle;
     @BindView(R2.id.tv_wonderful_video_capture_hint_desc)
     TextView mTvWonderfulCaptureHint;
     @BindView(R2.id.repeater)
@@ -45,9 +43,9 @@ public class SelectionActivity extends AbsActivity implements OnHolderClickListe
         super.onViewCreated();
 
         Intent data = getIntent();
-//        int titleRes = data.getIntExtra("title", -1);
-//        if (titleRes != -1)
-//            setTitle(titleRes);
+        int titleRes = data.getIntExtra("title", -1);
+        if (titleRes != -1)
+            setTitle(titleRes);
 
         String[] lables = getIntent().getStringArrayExtra("values");
         mSelectedLable = getIntent().getStringExtra("selectedLable");

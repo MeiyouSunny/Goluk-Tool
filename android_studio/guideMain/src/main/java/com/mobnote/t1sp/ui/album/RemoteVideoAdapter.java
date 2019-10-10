@@ -261,21 +261,10 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
 
     /**
      * 显示视频质量
-     *
-     * @param videoName 视频名称
-     * @param videoHP   视频分辨率
-     * @param image     显示控件
-     * @author xuhw
-     * @date 2015年6月8日
      */
     private void displayVideoQuality(String videoHP, TextView text) {
-        if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
-        } else if ("720p".equals(videoHP) || "720P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_720));
-        } else if ("480p".equals(videoHP) || "480P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_480));
-        }
+        videoHP = videoHP.toUpperCase();
+        text.setText(videoHP);
     }
 
     @Override

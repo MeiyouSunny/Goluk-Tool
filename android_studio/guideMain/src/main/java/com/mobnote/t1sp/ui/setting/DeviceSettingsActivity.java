@@ -1,7 +1,6 @@
 package com.mobnote.t1sp.ui.setting;
 
 import android.content.Intent;
-import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
@@ -9,10 +8,8 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
-import com.mobnote.eventbus.CaptureTimeEvent;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
-import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
@@ -21,15 +18,13 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.t1sp.api.setting.IPCConfigListener;
 import com.mobnote.t1sp.api.setting.IpcConfigOption;
 import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
-import com.mobnote.t1sp.base.ui.AbsActivity;
-import com.mobnote.t1sp.bean.SettingInfo;
+import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingValue;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
+import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
 import com.mobnote.t1sp.util.StringUtil;
 import com.mobnote.t1sp.util.ViewUtil;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -42,8 +37,10 @@ import likly.mvp.MvpBinder;
         presenter = DeviceSettingsPresenterImpl.class,
         model = DeviceSettingsModelImpl.class
 )
-public class DeviceSettingsActivity extends AbsActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener {
+public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener {
 
+//    @BindView(R2.id.title)
+//    TextView mTitle;
     @BindView(R2.id.SDCard_storage_value)
     TextView mTvSDCardStorage;
     @BindView(R2.id.video_resolve_value)
@@ -98,6 +95,7 @@ public class DeviceSettingsActivity extends AbsActivity<DeviceSettingsPresenter>
     public void onViewCreated() {
         super.onViewCreated();
         EventBus.getDefault().register(this);
+        setTitle(R.string.setting_title_text);
 
         switchRecordSound.setOnCheckedChangeListener(this);
         switchPowerSound.setOnCheckedChangeListener(this);
@@ -159,6 +157,8 @@ public class DeviceSettingsActivity extends AbsActivity<DeviceSettingsPresenter>
             startSelections(R.string.str_settings_tone_title, mArrayVolumeLevel, ViewUtil.getTextViewValue(mTvVolumeLevel), TYPE_VOLUME_LEVEL);
         } else if (viewId == R.id.reset_factory) {
             showRestFactoryConfirmDialog();
+        } else if (viewId == R.id.version_info) {
+            ViewUtil.goActivity(this, VersionInfoActivity.class);
         }
 //        else if (viewId == R.id.wonderful_video_time) {
 //            startSelections(R.string.str_wonderful_video_type_title, R.array.capture_time, R.array.capture_time_values, mSettingInfo.captureTime, TYPE_SNAP_TIME);

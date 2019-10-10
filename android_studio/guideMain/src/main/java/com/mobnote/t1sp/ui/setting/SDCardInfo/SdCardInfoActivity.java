@@ -1,6 +1,5 @@
 package com.mobnote.t1sp.ui.setting.SDCardInfo;
 
-import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
@@ -10,31 +9,23 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.api.setting.IPCConfigListener;
 import com.mobnote.t1sp.api.setting.IpcConfigOption;
 import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
 import com.mobnote.t1sp.api.setting.SimpleIpcConfigListener;
 import com.mobnote.t1sp.base.control.BindTitle;
-import com.mobnote.t1sp.base.ui.AbsActivity;
-import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.callback.CommonCallback;
-import com.mobnote.t1sp.callback.SettingInfosCallback;
-import com.mobnote.t1sp.listener.OnSettingsListener;
-import com.mobnote.t1sp.service.T1SPUdpService;
+import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
-import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
 )
 @BindTitle(R2.string.rlcx_title)
-public class SdCardInfoActivity extends AbsActivity {
+public class SdCardInfoActivity extends BackTitleActivity {
 
     @BindView(R2.id.mTotalSize)
     TextView mTotalSize;
@@ -52,6 +43,7 @@ public class SdCardInfoActivity extends AbsActivity {
     @Override
     public void onViewCreated() {
         super.onViewCreated();
+        setTitle(R.string.rlcx_title);
 
         getSDCardInfo();
     }
