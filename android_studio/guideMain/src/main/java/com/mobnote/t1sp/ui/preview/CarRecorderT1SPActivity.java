@@ -69,6 +69,8 @@ import java.util.List;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackSetting;
 import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
@@ -111,7 +113,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     /**
      * 视频分辨率显示
      */
-    private ImageView mVideoResolutions;
+    private TextView mVideoResolutions;
 
     private boolean m_bIsFullScreen = false;
     /* 全屏/旋转 */
@@ -172,7 +174,25 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
 //        startPlay();
+    }
 
+    /**
+     * 获取分辨率信息
+     */
+    private void getResolutionInfo() {
+        ApiUtil.getSettingInfo(new CallbackSetting() {
+            @Override
+            public void onGetSettingInfo(goluk.com.t1s.api.bean.SettingInfo settingInfo) {
+                if (settingInfo != null) {
+                    String[] videoQulities = getResources().getStringArray(R.array.video_qulity_lables);
+                    mVideoResolutions.setText(videoQulities[settingInfo.recordSize]);
+                }
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
     }
 
     /**
@@ -291,7 +311,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
         mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
         mBtnRotate = (ImageButton) findViewById(R.id.ic_rotate);
-        mVideoResolutions = (ImageView) findViewById(R.id.mVideoResolutions);
+        mVideoResolutions = (TextView) findViewById(R.id.mVideoResolutions);
         mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
         mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
         mBtnCapture = (Button) findViewById(R.id.btn_capture);
@@ -688,6 +708,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         super.onResume();
 
         startPlay();
+        getResolutionInfo();
 //        if (isShowPlayer) {
 //            if (!isConnecting) {
 //                showLoading();

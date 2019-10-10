@@ -75,14 +75,17 @@
                 android:contentDescription="@string/def"/>
         </LinearLayout>
 
-        <ImageView
+
+        <TextView
             android:id="@+id/mVideoResolutions"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="12dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/carrecorder_liveindex_icon_1080"
-            android:contentDescription="@string/def"/>
+            android:textColor="@color/carrecorder_text_nor_color"
+            android:textSize="12sp"/>
 
         <ImageView
             android:id="@+id/adas_icon"
@@ -126,7 +129,7 @@
                     android:layout_marginBottom="6dp"
                     android:background="@drawable/ic_rotate"
                     android:contentDescription="@string/def"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
 
                 <ImageButton
                     android:id="@+id/mFullScreen"
