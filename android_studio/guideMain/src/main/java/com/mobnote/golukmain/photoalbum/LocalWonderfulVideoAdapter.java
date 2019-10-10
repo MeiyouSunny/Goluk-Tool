@@ -21,9 +21,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ThumbAsyncTask;
-import com.mobnote.t1sp.util.ThumbUtil;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -359,13 +357,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
      * @date 2015年6月8日
      */
     private void displayVideoQuality(String videoHP, TextView text) {
-        if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
-        } else if ("720p".equals(videoHP) || "720P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_720));
-        } else if ("480p".equals(videoHP) || "480P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_480));
-        }
+        videoHP = videoHP.toUpperCase();
+        text.setText(videoHP);
     }
 
     @Override

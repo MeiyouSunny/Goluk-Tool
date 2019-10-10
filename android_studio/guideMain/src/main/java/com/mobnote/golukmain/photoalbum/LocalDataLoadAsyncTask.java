@@ -6,11 +6,12 @@ import android.text.TextUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.t1sp.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
-import com.mobnote.util.SortByDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
@@ -40,7 +41,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 //		List<String> files = FileInfoManagerUtils.getVideoConfigFile(file);
 
         List<String> files = new ArrayList<String>();
-        for(String dir: videoPaths) {
+        for (String dir : videoPaths) {
             files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + dir, "(.+?(mp|MP)4)"));
         }
 
@@ -48,7 +49,7 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
             return null;
         }
 
-        Collections.sort(files, new SortByDate());
+        //Collections.sort(files, new SortByDate());
 
         int fLen = files.size();
         VideoInfo videoInfoTemp;
@@ -66,6 +67,13 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
                 }
             }
         }
+
+        Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
+            @Override
+            public int compare(VideoInfo lhs, VideoInfo rhs) {
+                return (int) (GolukUtils.parseStringToMilli(rhs.videoCreateDate) - GolukUtils.parseStringToMilli(lhs.videoCreateDate));
+            }
+        });
 
         return null;
     }
