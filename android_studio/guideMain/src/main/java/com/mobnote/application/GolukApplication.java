@@ -1252,7 +1252,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * 当前是否是T1SP处于连接状态
      */
     private boolean isT1SPAndConnected() {
-        return mIPCControlManager.isT1SP() && isIpcConnSuccess;
+        return mIPCControlManager.isT2S() && isIpcConnSuccess;
     }
 
     // VDCP 连接状态 回调

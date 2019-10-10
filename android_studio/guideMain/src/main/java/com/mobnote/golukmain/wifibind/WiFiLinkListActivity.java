@@ -40,7 +40,6 @@ import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.t1sp.connect.T1SPConnecter;
-import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.Const;
@@ -60,11 +59,13 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 
 /**
  * Wifi扫描列表
  */
-public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack, IPCManagerFn, T1SPConntectListener {
+public class WiFiLinkListActivity extends BaseActivity implements OnClickListener, WifiConnCallBack, ForbidBack, IPCManagerFn {
 
     private static final String TAG = "WiFiLinkList";
     public static final String CONNECT_IPC_IP = "192.168.62.1";
@@ -367,7 +368,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         // isAutoConn = true;
 
         // T1SP连接
-        connectT1SP();
+        connectT2S();
         // Other
         sendLogicLinkIpc();
     }
@@ -527,12 +528,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
 
-        // T1SP
-        T1SPConnecter.instance().addListener(this);
         // 如果是自动连接并且已经连上Goluk_T1s热点
         if (mAutoConn && mWac.isConnectedT1sWifi()) {
             GolukDebugUtils.e(Const.LOG_TAG, "Current connected WIFI is T1SP type");
-            connectT1SP();
+            connectT2S();
             return;
         }
 
@@ -551,8 +550,21 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     /**
      * T1SP连接
      */
-    private void connectT1SP() {
-        T1SPConnecter.instance().connectToDevice();
+    private void connectT2S() {
+        ApiUtil.sendConnectTest(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                // T2S 连接结果回调
+                // 保存WIFI信息
+                saveT2SInfo();
+                // 页面跳转
+                goNextAfterT1SPConnected();
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
     }
 
     /**
@@ -594,11 +606,11 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     }
 
     /**
-     * 保存T1SP信息
+     * 保存T2S信息
      */
-    private void saveT1SPInfo() {
+    private void saveT2SInfo() {
         // Product
-        getApp().getIPCControlManager().setProduceName(IPCControlManager.T1SP_SIGN);
+        getApp().getIPCControlManager().setProduceName(IPCControlManager.T2S_SIGN);
         // WIFI
         if (null == mWac)
             return;
@@ -639,8 +651,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onStop() {
         super.onStop();
         mIsCanAcceptNetState = false;
-        // T1SP
-        T1SPConnecter.instance().removeListener(this);
     }
 
     protected void autoConnWifi() {
@@ -782,7 +792,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 EventBus.getDefault().post(new EventSingleConnSuccess());
                 return;
             }
-            T1SPConnecter.instance().finishRecordActivity(CarRecorderT1SPActivity.class);
             Intent mainIntent = new Intent(WiFiLinkListActivity.this, CarRecorderActivity.class);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             mainIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -906,25 +915,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             finish();
         } else if (SHOW_TOAST == msg.what) {
             GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
-        }
-    }
-
-    @Override
-    public void onT1SPConnectStart() {
-    }
-
-    @Override
-    public void onT1SPDisconnected() {
-    }
-
-    @Override
-    public void onT1SPConnectResult(boolean success) {
-        if (success) {
-            // T1SP 连接结果回调
-            // 保存WIFI信息
-            saveT1SPInfo();
-            // 页面跳转
-            goNextAfterT1SPConnected();
         }
     }
 

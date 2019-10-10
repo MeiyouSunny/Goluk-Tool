@@ -146,7 +146,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
             mCurrentState = STATE_AUTO;
         }
         // T1SP
-        if (GolukApplication.getInstance().getIPCControlManager().isT1SP() && systemtime) {
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S() && systemtime) {
             mCurrentState = STATE_AUTO;
         }
     }
@@ -243,7 +243,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
      */
     private void getSystemTime() {
         // T1SP 无法获取当前时间
-        if (GolukApplication.getInstance().getIPCControlManager().isT1SP())
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S())
             return;
 
         boolean a = GolukApplication.getInstance().getIPCControlManager().getIPCSystemTime();
@@ -324,7 +324,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
         this.switchUIState();
         if (STATE_AUTO == mCurrentState) {
             // T1SP
-            if (GolukApplication.getInstance().getIPCControlManager().isT1SP()) {
+            if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
                 final String nowTime = DateTimeUtils.getNowTimeStringSplitWith$();
                 setT1SPSystemTime(nowTime, System.currentTimeMillis());
             } else {
@@ -493,7 +493,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
                 GolukDebugUtils.e("xuhw", "YYY=============time==" + time);
                 if (0 != time) {
                     // T1SP
-                    if (GolukApplication.getInstance().getIPCControlManager().isT1SP()) {
+                    if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
                         // 秒转毫秒
                         time = time * 1000;
                         final String timeStr = DateTimeUtils.getTimeStringSplitWith$(time);

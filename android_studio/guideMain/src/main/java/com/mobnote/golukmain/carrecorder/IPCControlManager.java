@@ -48,7 +48,7 @@ public class IPCControlManager implements IPCManagerFn {
     public static final String T2U_SIGN = "T2U";
     public static final String T3_SIGN = "T3";
     public static final String T3U_SIGN = "T3U";
-    public static final String T1SP_SIGN = "T1s";
+    public static final String T2S_SIGN = "T2S";
 
     public static final String MODEL_T = "T";
     public static final String MODEL_G = "G";
@@ -123,8 +123,8 @@ public class IPCControlManager implements IPCManagerFn {
     /**
      * 是否是T1SP设备
      */
-    public boolean isT1SP() {
-        return !TextUtils.isEmpty(mProduceName) && TextUtils.equals(mProduceName, T1SP_SIGN);
+    public boolean isT2S() {
+        return !TextUtils.isEmpty(mProduceName) && TextUtils.equals(mProduceName, T2S_SIGN);
     }
 
     /**

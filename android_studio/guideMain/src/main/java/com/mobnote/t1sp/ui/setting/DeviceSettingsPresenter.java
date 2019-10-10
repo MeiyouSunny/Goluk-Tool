@@ -1,12 +1,5 @@
 package com.mobnote.t1sp.ui.setting;
 
-import android.content.Context;
-import android.support.annotation.ArrayRes;
-
-import com.mobnote.t1sp.bean.SettingValue;
-
-import java.util.ArrayList;
-
 import likly.mvp.Presenter;
 
 public interface DeviceSettingsPresenter extends Presenter<DeviceSettingsModel, DeviceSettingsView> {
@@ -109,20 +102,5 @@ public interface DeviceSettingsPresenter extends Presenter<DeviceSettingsModel, 
      * 恢复出厂设置
      */
     void resetFactory();
-
-    //////
-
-    /**
-     * 生成对应的设置选项列表
-     *
-     * @param context      Context
-     * @param labels       描述Array
-     * @param values       值Array
-     * @param currentValue 当前值
-     * @return ArrayList<SettingValue>
-     */
-    ArrayList<SettingValue> generateSettingValues(Context context, @ArrayRes int labels, @ArrayRes int values, String currentValue);
-
-    String getSettingLabelByValue(Context context, @ArrayRes int labels, @ArrayRes int values, String value);
 
 }

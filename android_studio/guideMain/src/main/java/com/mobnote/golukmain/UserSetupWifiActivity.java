@@ -137,7 +137,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT1SP()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT2S()) {
             int sp = ssid.lastIndexOf("_") + 1;
             part_ssid = ssid.substring(0, sp);
         } else {
@@ -151,7 +151,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return "";
         }
         String part_ssid = "";
-        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT1SP()) {
+        if (mBaseApp.getIPCControlManager().isT1RelativeWifiName() || mBaseApp.getIPCControlManager().isT2S()) {
             part_ssid = ssid.substring(ssid.lastIndexOf("_") + 1);
         } else {
             part_ssid = ssid.substring(5);
@@ -198,7 +198,7 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         }
 
         // T1SP
-        if (mApp.getIPCControlManager().isT1SP()) {
+        if (mApp.getIPCControlManager().isT2S()) {
             enterSettingMode();
             return;
         }

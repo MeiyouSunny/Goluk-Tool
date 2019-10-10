@@ -81,4 +81,17 @@
         <item>60SEC</item>
     </array>
 
+    <!-- T2S -->
+    <!-- 循环视频质量 -->
+    <array name="video_qulity_lables">
+        <item>1600P</item>
+        <item>1440P</item>
+        <item>1080P</item>
+    </array>
+    <!-- 抓拍视频质量 -->
+    <array name="capture_qulity_lables">
+        <item>720P</item>
+        <item>480P</item>
+    </array>
+
 </resources>

@@ -122,7 +122,7 @@ public class T1SPConnecter {
                 // 保存设备ID和版本
                 SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
                 SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
-                SharedPrefUtil.saveIpcModel(IPCControlManager.T1SP_SIGN);
+                SharedPrefUtil.saveIpcModel(IPCControlManager.T2S_SIGN);
 
                 // 开启UDP监听
                 ViewUtil.startService(mContext, T1SPUdpService.class);

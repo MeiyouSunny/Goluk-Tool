@@ -11,8 +11,8 @@ public class PlayUrlManager {
 	/** 其它人看 */
 	public static final String DEFAULT_LIVE_URL = "rtmp://211.103.234.234/live/test100";
 
-	/* T1SP实时预览地址 */
-	public static final String T1SP_RTSP_URL = "rtsp://192.72.1.1/liveRTSP/av4";
+	/* T2S实时预览地址 */
+	public static final String T2S_RTSP_URL = "rtsp://192.168.1.254/xxxx.mov";
 
 	/** G1 及 G2 视频设备地址 */
 	private static final String COMM_URL_PRE = "rtsp://";

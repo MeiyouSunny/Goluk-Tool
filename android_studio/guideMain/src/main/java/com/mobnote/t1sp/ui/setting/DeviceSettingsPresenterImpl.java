@@ -1,20 +1,15 @@
 package com.mobnote.t1sp.ui.setting;
 
-import android.content.Context;
-import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
-import android.text.TextUtils;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.bean.SettingValue;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 import likly.dollar.$;
@@ -47,7 +42,6 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
-                getView().onGetSettingInfos(settingInfo);
             }
 
             @Override
@@ -62,7 +56,6 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
-                getView().onGetSDCardInfo(settingInfo);
             }
 
             @Override
@@ -118,7 +111,7 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
     @Override
     public void setSoundRecord(boolean onOff) {
-        sendSetRequest(ParamsBuilder.setRecordSoundParam(onOff));
+
     }
 
     @Override
@@ -156,7 +149,6 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
 
             @Override
             protected void onSuccess() {
-                getView().onSelectionSetted(type, value);
             }
 
             @Override
@@ -176,12 +168,10 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.resetFactoryParam(), new CommonCallback() {
             @Override
             protected void onSuccess() {
-                getView().onResetFactory(true);
             }
 
             @Override
             protected void onServerError(int errorCode, String errorMessage) {
-                getView().onResetFactory(false);
             }
         });
     }
@@ -215,43 +205,6 @@ public class DeviceSettingsPresenterImpl extends BasePresenter<DeviceSettingsMod
                 getView().hideLoadingDialog();
             }
         });
-    }
-
-    @Override
-    public ArrayList<SettingValue> generateSettingValues(Context context, int labelsId, int valuesId, String currentValue) {
-        ArrayList<SettingValue> settingValues = new ArrayList<>();
-        final Resources resources = context.getResources();
-        final String[] labels = resources.getStringArray(labelsId);
-        final String[] values = resources.getStringArray(valuesId);
-
-        SettingValue settingValue;
-        final int size = labels.length;
-        for (int i = 0; i < size; i++) {
-            settingValue = new SettingValue(values[i], labels[i]);
-            if (!TextUtils.isEmpty(currentValue))
-                settingValue.isSelected = (values[i].toLowerCase().contains(currentValue.toLowerCase()));
-            settingValues.add(settingValue);
-        }
-
-        if (TextUtils.isEmpty(currentValue))
-            settingValues.get(0).isSelected = true;
-
-        return settingValues;
-    }
-
-    @Override
-    public String getSettingLabelByValue(Context context, int labelsId, int valuesId, String value) {
-        final Resources resources = context.getResources();
-        final String[] labels = resources.getStringArray(labelsId);
-        final String[] values = resources.getStringArray(valuesId);
-
-        final int size = labels.length;
-        for (int i = 0; i < size; i++) {
-            if (values[i].contains(value))
-                return labels[i];
-        }
-
-        return labels[0];
     }
 
 }

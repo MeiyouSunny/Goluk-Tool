@@ -1,7 +1,6 @@
 package com.mobnote.t1sp.ui.setting;
 
 import com.mobnote.t1sp.base.ui.LoadingView;
-import com.mobnote.t1sp.bean.SettingInfo;
 
 import likly.mvp.View;
 
@@ -14,13 +13,7 @@ public interface DeviceSettingsView extends View<DeviceSettingsPresenter>, Loadi
     int TYPE_MTD = 5;
     int TYPE_POWER_OFF_DELAY = 6;
     int TYPE_LANGUAGE = 7;
-
-    void onGetSettingInfos(SettingInfo settingInfo);
-
-    void onResetFactory(boolean isSuccess);
-
-    void onGetSDCardInfo(SettingInfo settingInfo);
-
-    void onSelectionSetted(int type, String value);
+    int TYPE_CAPTURE_QULITY = 8;
+    int TYPE_VOLUME_LEVEL = 9;
 
 }

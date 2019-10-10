@@ -73,6 +73,7 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/wonderful_video_time"
                     style="@style/SettingLabelLayout">
 
@@ -94,7 +95,7 @@
                     android:clickable="false">
 
                     <TextView
-                        style="@style/SettingLabel"
+                        style="@style/SettingLabel.Arrow"
                         android:text="@string/str_wonderful_video_quality_title"/>
 
                     <TextView
@@ -158,6 +159,24 @@
                         app:kswThumbMarginLeft="-5dp"
                         app:kswThumbMarginRight="-5dp"
                         app:kswThumbMarginTop="-2.5dp"/>
+
+                </RelativeLayout>
+
+                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+
+                <RelativeLayout
+                    android:id="@+id/volume_level"
+                    style="@style/SettingLabelLayout"
+                    android:clickable="false">
+
+                    <TextView
+                        style="@style/SettingLabel.Arrow"
+                        android:text="@string/str_settings_tone_title"/>
+
+                    <TextView
+                        android:id="@+id/tv_volume_level"
+                        style="@style/SettingLabelValue"
+                        android:text="480P"/>
 
                 </RelativeLayout>
 

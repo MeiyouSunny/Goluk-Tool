@@ -1,13 +1,15 @@
 package com.mobnote.t1sp.ui.setting.selection;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
-import com.mobnote.t1sp.base.ui.BackTitleActivity;
+import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -17,19 +19,20 @@ import likly.view.repeat.RepeatView;
 
 @MvpBinder(
 )
-public class SelectionActivity extends BackTitleActivity implements OnHolderClickListener<SettingSelectionViewHolder> {
+public class SelectionActivity extends AbsActivity implements OnHolderClickListener<SettingSelectionViewHolder> {
 
     public static final int TYPE_CAPTURE_TIME = 1;
     public static final int TYPE_G_SENSOR = 2;
 
-    @BindView(R2.id.title)
-    TextView mTitle;
+    //    @BindView(R2.id.title)
+//    TextView mTitle;
     @BindView(R2.id.tv_wonderful_video_capture_hint_desc)
     TextView mTvWonderfulCaptureHint;
     @BindView(R2.id.repeater)
     RepeatView<SettingValue, SettingSelectionViewHolder> mRepeatView;
 
     private List<SettingValue> mValues;
+    private String mSelectedLable;
     private int mType;
 
     @Override
@@ -42,11 +45,22 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
         super.onViewCreated();
 
         Intent data = getIntent();
-        int titleRes = data.getIntExtra("title", -1);
-        if (titleRes != -1)
-            setTitle(titleRes);
+//        int titleRes = data.getIntExtra("title", -1);
+//        if (titleRes != -1)
+//            setTitle(titleRes);
 
-        mValues = getIntent().getParcelableArrayListExtra("values");
+        String[] lables = getIntent().getStringArrayExtra("values");
+        mSelectedLable = getIntent().getStringExtra("selectedLable");
+        mValues = new ArrayList<>(lables.length);
+        for (int i = 0; i < lables.length; i++) {
+            SettingValue settingValue = new SettingValue();
+            settingValue.value = i;
+            settingValue.description = lables[i];
+            if (TextUtils.equals(mSelectedLable, lables[i]))
+                settingValue.isSelected = true;
+            mValues.add(settingValue);
+        }
+
         if (mValues != null && !mValues.isEmpty()) {
             mRepeatView.viewManager().bind(mValues);
             mRepeatView.layoutAdapterManager().showRepeatView();

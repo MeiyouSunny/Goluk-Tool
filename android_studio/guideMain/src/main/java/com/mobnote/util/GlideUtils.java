@@ -36,7 +36,7 @@ public class GlideUtils {
 	}
 
 	public static void loadImage(Context context, ImageView view, String neturl, int placeholder) {
-		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
+		//Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
 		if (placeholder <= 0) {
 			Glide.with(context).load(neturl).into(view);
 		} else {
@@ -52,7 +52,12 @@ public class GlideUtils {
 		if (placeholder <= 0) {
 			Glide.with(context).load(neturl).diskCacheStrategy(DiskCacheStrategy.ALL).into(view);
 		} else {
-			Glide.with(context).load(neturl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(placeholder).into(view);
+			//Glide.with(context).load(neturl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(placeholder).into(view);
+			Glide.with(context)
+					.load(neturl)
+					.centerCrop()
+					.dontAnimate()
+					.into(view);
 		}
 	}
 

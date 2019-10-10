@@ -1,34 +1,59 @@
 package com.mobnote.golukmain.carrecorder.entity;
 
-import android.graphics.Bitmap;
-
 public class VideoInfo {
-	/** 视频唯一标识 */
-	public long id;
-	/** 视频截图 */
-	public int videoImg;
-	/** 视频截图 */
-	public Bitmap videoBitmap;
-	/** 文件创建时间 */
-	public String videoCreateDate = null;
-	/** 视频大小 */
-	public String videoSize;
-	/** 当前选择中状态 */
-	public boolean isSelect;
-	/** 视频播放路径 */
-	public String videoPath;
-	/** 视频时长 */
-	public String countTime = null;
-	/** 分辨率 1080p 720p 480p*/
-	public String videoHP;
-	/** 释放标识 */
-	public boolean isRecycle = false;
-	/** 视频文件录制起始时间（秒） */
-	public long time;
-	/** 视频文件名称 */
-	public String filename;
-	/** 是否要显示new图标 */
-	public boolean isNew = false;
-//	/** 是否已同步 **/
-//	public boolean isAsync;
+    /**
+     * Video-only mark
+     */
+    public long id;
+    /* 视频封面 */
+    public String thumbUrl;
+    /* 本地视频封面 */
+    public String localThumbUrl;
+    /**
+     * Time created
+     */
+    public String videoCreateDate;
+    /**
+     * Video size
+     */
+    public String videoSize;
+    /**
+     * Currently in selection mode
+     */
+    public boolean isSelect;
+    /**
+     * Video playing method
+     */
+    public String videoPath;
+    /**
+     * Video length
+     */
+    public String countTime = null;
+    /**
+     * Definition: 1080p 720p 480p
+     */
+    public String videoHP;
+    /**
+     * Release mark
+     */
+    public boolean isRecycle = false;
+    /**
+     * Video recording starting time (sec)
+     */
+    public long time;
+    /**
+     * Video name
+     */
+    public String filename;
+    /**
+     * Would you like to display the new icon?
+     */
+    public boolean isNew = false;
+    /* 视频类型 */
+    public int type;
+
+    /* T2S:相对路径(如:A:\DCIM\Normal\2019_0919_110011_000001.MP4) */
+    public String relativePath;
+    /* 远程视频地址 */
+    public String videoUrl;
 }

@@ -174,7 +174,7 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		}
 
 		// T1SP
-		if (mApp.getIPCControlManager().isT1SP()) {
+		if (mApp.getIPCControlManager().isT2S()) {
 			updateWifiPwd(newPwd);
 			return;
 		}

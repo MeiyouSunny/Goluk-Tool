@@ -12,13 +12,18 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
+import com.mobnote.t1sp.api.setting.IPCConfigListener;
+import com.mobnote.t1sp.api.setting.IpcConfigOption;
+import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
+import com.mobnote.t1sp.api.setting.SimpleIpcConfigListener;
 import com.mobnote.t1sp.base.control.BindTitle;
-import com.mobnote.t1sp.base.ui.BackTitleActivity;
+import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.listener.OnSettingsListener;
 import com.mobnote.t1sp.service.T1SPUdpService;
+import com.mobnote.t1sp.util.StringUtil;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -29,12 +34,15 @@ import likly.mvp.MvpBinder;
 @MvpBinder(
 )
 @BindTitle(R2.string.rlcx_title)
-public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsListener {
+public class SdCardInfoActivity extends AbsActivity {
 
     @BindView(R2.id.mTotalSize)
     TextView mTotalSize;
     @BindView(R2.id.mLeftSize)
-    TextView mLeftSize;
+    TextView mUsedSize;
+
+    private IpcConfigOption mConfigOption;
+    private IPCConfigListener mConfigListener;
 
     @Override
     public int initLayoutResId() {
@@ -46,9 +54,6 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
         super.onViewCreated();
 
         getSDCardInfo();
-
-        // 设置UDP监听
-        T1SPUdpService.setSetListener(this);
     }
 
     @OnClick(R2.id.mFormatSDCard)
@@ -81,19 +86,7 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
         confirmDialog.show();
     }
 
-    private void onGetSDCardInfo(String sdCardInfo) {
-        if (TextUtils.isEmpty(sdCardInfo))
-            return;
-
-        String[] infos = sdCardInfo.split("/");
-        if (infos != null || infos.length >= 2) {
-            mTotalSize.setText(infos[1]);
-            mLeftSize.setText(infos[0]);
-        }
-    }
-
-    @Override
-    public void onSdFormat(boolean isFormat) {
+    private void onSdFormated(boolean isFormat) {
         // 取消进度提示框
         if (null != mFormatDialog && mFormatDialog.isShowing())
             mFormatDialog.dismiss();
@@ -113,43 +106,28 @@ public class SdCardInfoActivity extends BackTitleActivity implements OnSettingsL
         EventBus.getDefault().post(new SDCardFormatEvent());
     }
 
-    @Override
-    public void onUpdateFw(boolean isUpdate) {
-    }
-
     private void getSDCardInfo() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
+        mConfigListener = new SimpleIpcConfigListener() {
             @Override
-            public void onGetSettingInfos(SettingInfo settingInfo) {
-                onGetSDCardInfo(settingInfo.SDCardInfo);
+            public void onSDCapacityGet(double total, double free) {
+                mTotalSize.setText(StringUtil.getSize(total));
+                mUsedSize.setText(StringUtil.getSize(total - free));
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                $.toast().text(R.string.str_carrecorder_storage_format_sdcard_fail).show();
+            public void onFormatSDCardResult(boolean success) {
+                onSdFormated(success);
             }
-        });
+        };
+
+        mConfigOption = new IpcConfigOptionF4(mConfigListener);
+        mConfigOption.getSDCapacity();
     }
 
     private void formartSDCard() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.formatSdCardParam(), new CommonCallback() {
-            @Override
-            protected void onSuccess() {
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                if (errorCode != 722) // 没有SD的情况,UDP会返回错误
-                    onSdFormat(false);
-            }
-        });
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // 注销UDP监听
-        T1SPUdpService.setSetListener(null);
+        if (mConfigOption != null) {
+            mConfigOption.formatSD();
+        }
     }
 
 }

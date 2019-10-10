@@ -37,7 +37,7 @@ public abstract class DeviceIDCallback extends DataCallback {
             return;
         String[] infos = data.split(":");
         // 型号固定为T1SP
-        settingInfo.deviceModel = IPCControlManager.T1SP_SIGN;
+        settingInfo.deviceModel = IPCControlManager.T2S_SIGN;
         settingInfo.deviceId = infos[infos.length - 2];
         settingInfo.deviceVersion = infos[infos.length - 1];
 

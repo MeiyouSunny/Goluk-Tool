@@ -338,7 +338,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                             return;
                         }
                         String text = getString(R.string.str_ipc_update_first_period);
-                        if (!mApp.getIPCControlManager().isT1SP()) {
+                        if (!mApp.getIPCControlManager().isT2S()) {
                             text = text + ": " + mPercent + getString(R.string.str_ipc_update_percent_unit);
                         }
                         if (mSendDialog == null) {
@@ -366,7 +366,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         mIsDisConnect = true;
                         String alertMsg = mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period);
                         // 小白无升级进度回调
-                        if (!(mApp.getIPCControlManager().isT1SP()))
+                        if (!(mApp.getIPCControlManager().isT2S()))
                             alertMsg = alertMsg + ": " + mPercent + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit);
                         if (mUpdateDialog == null) {
                             mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, alertMsg);
@@ -388,7 +388,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success_t1));
-                        } else if (mApp.getIPCControlManager().isT1SP()) {
+                        } else if (mApp.getIPCControlManager().isT2S()) {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success_t1s));
                         } else {
@@ -630,7 +630,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mVoiceLayout.setOnClickListener(this);
 
         // T1SP提示文字增加重启提示
-        if (mApp.getIPCControlManager().isT1SP()) {
+        if (mApp.getIPCControlManager().isT2S()) {
             String hint = getString(R.string.ipc_hint_text);
             String hintT1SP = getString(R.string.t1sp_ipc_hint_text);
             SpannableStringBuilder style = new SpannableStringBuilder(hintT1SP);
@@ -686,7 +686,7 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         isNewVersion();
                     } else {
                         String filePath = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
-                        if (mApp.getIPCControlManager().isT1SP()) {
+                        if (mApp.getIPCControlManager().isT2S()) {
                             // T1SP设备
                             File binFile = new File(FileUtil.convertFs1ToRealPath(filePath));
                             mT1SPUpgradeManager = new UpgradeManager(binFile);

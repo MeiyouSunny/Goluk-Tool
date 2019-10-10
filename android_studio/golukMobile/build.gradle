@@ -10,15 +10,15 @@ android {
 
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
-        minSdkVersion 18
+        minSdkVersion 21
         targetSdkVersion 22
         multiDexEnabled true
         ndk {
             abiFilters 'armeabi'
         }
-        jackOptions {
-            enabled true
-        }
+//        jackOptions {
+//            enabled true
+//        }
     }
 
     compileOptions {
@@ -81,4 +81,10 @@ android {
 
 dependencies {
     compile project(':guideMain')
+}
+
+repositories {
+    flatDir {
+        dirs project(':guideMain').file('libs')
+    }
 }

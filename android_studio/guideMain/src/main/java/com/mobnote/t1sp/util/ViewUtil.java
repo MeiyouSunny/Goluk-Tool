@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Parcelable;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 public class ViewUtil {
 
@@ -30,6 +31,10 @@ public class ViewUtil {
     public static void startService(Context context, Class<? extends Service> service) {
         Intent intent = new Intent(context, service);
         context.startService(intent);
+    }
+
+    public static String getTextViewValue(TextView textView) {
+        return textView.getText().toString();
     }
 
 }

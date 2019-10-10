@@ -34,7 +34,6 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
 import com.mobnote.t1sp.callback.CommonCallback;
-import com.mobnote.t1sp.callback.FileListCallback;
 import com.mobnote.t1sp.download.DownloaderT1sp;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
@@ -42,11 +41,13 @@ import com.mobnote.t1sp.download.ThumbDownloader;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
+import com.mobnote.t2s.files.IpcFileQueryF4;
+import com.mobnote.t2s.files.IpcFileQueryListener;
+import com.mobnote.t2s.files.IpcQuery;
 import com.mobnote.util.GolukUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import de.greenrobot.event.EventBus;
 import likly.dollar.$;
@@ -54,7 +55,7 @@ import likly.dollar.$;
 /**
  * T1SP远程相册(精彩/紧急/循环)视频列表BaseFragment
  */
-public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener, DownloaderT1sp.IDownloadSuccess {
+public abstract class BaseRemoteAblumFragment extends Fragment implements LocalWonderfulVideoAdapter.IListViewItemClickColumn, ThumbDownloader.ThumbDownloadListener, DownloaderT1sp.IDownloadSuccess, IpcFileQueryListener {
 
     private View mWonderfulVideoView;
 
@@ -69,16 +70,6 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private RemoteVideoAdapter mRemoteVideoAdapter = null;
     private ThumbDownloader mThumbDownloader;
 
-    // 是否下载了一次数据(刚进入页面时)
-    private boolean isInitLoadData;
-    // 保存列表一个显示项索引
-    private int firstVisible;
-    // 保存列表显示item个数
-    private int visibleCount;
-
-    // 判断服务端是否还有数据
-    private boolean isHasData = true;
-
     // 列表添加页脚标识
     private boolean addFooter = false;
 
@@ -92,6 +83,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     private List<String> mGroupListName = null;
 
     private TextView empty = null;
+
+    private boolean isInitLoadData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -178,7 +171,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
                 // 点击列表左边项,跳转到视频播放页面
                 VideoInfo info1 = d.getVideoInfo1();
-                gotoVideoPlayPage(getVideoType(), info1.videoPath,
+                gotoVideoPlayPage(getVideoType(), info1.videoUrl,
                         info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
                 String filename = d.getVideoInfo1().filename;
                 updateNewState(filename);
@@ -190,7 +183,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 VideoInfo info2 = d.getVideoInfo2();
                 if (null == info2)
                     return;
-                gotoVideoPlayPage(getVideoType(), info2.videoPath,
+                gotoVideoPlayPage(getVideoType(), info2.videoUrl,
                         info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
                 String filename = info2.filename;
                 updateNewState(filename);
@@ -211,16 +204,16 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                         break;
                     case OnScrollListener.SCROLL_STATE_IDLE:
                         // mRemoteVideoAdapter.unlock();
-                        if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
-                            final int size = mDataList.size();
-                            if (size > 0 && isHasData) {
-                                if (isGetFileListDataing) {
-                                    return;
-                                }
-                                // 加载更多
-                                loadData(true);
-                            }
-                        }
+//                        if (mStickyListHeadersListView.getAdapter().getCount() == (firstVisible + visibleCount)) {
+//                            final int size = mDataList.size();
+//                            if (size > 0 && isHasData) {
+//                                if (isGetFileListDataing) {
+//                                    return;
+//                                }
+//                                // 加载更多
+//                                loadData(true);
+//                            }
+//                        }
                         break;
                     case OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
                         // mRemoteVideoAdapter.lock();
@@ -234,8 +227,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 
             @Override
             public void onScroll(AbsListView arg0, int firstVisibleItem, int visibleItemCount, int arg3) {
-                firstVisible = firstVisibleItem;
-                visibleCount = visibleItemCount;
+//                firstVisible = firstVisibleItem;
+//                visibleCount = visibleItemCount;
             }
         });
 
@@ -336,7 +329,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             mStickyListHeadersListView.setVisibility(View.VISIBLE);
 
             // 获取文件列表
-            ApiUtil.apiServiceAit().sendRequest(getRequestParam(), mFileCallback);
+            queryFiles();
 
         } else {
             Drawable drawable = this.getResources().getDrawable(R.drawable.img_no_video);
@@ -348,73 +341,66 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         }
     }
 
-    /**
-     * 根据视频类型返回对应的请求参数
-     */
-    private Map<String, String> getRequestParam() {
-        String type = "";
+    IpcQuery mIpcQuery;
+
+    private void queryFiles() {
+        if (mIpcQuery == null)
+            mIpcQuery = new IpcFileQueryF4(this, getActivity());
         switch (getVideoType()) {
             case PhotoAlbumConfig.PHOTO_BUM_IPC_WND:
-                type = ParamsBuilder.FILE_DIR_TYPE_SHARE;
+                mIpcQuery.queryCaptureVideoList();
                 break;
             case PhotoAlbumConfig.PHOTO_BUM_IPC_URG:
-                type = ParamsBuilder.FILE_DIR_TYPE_EVENT;
+                mIpcQuery.queryUrgentVideoList();
                 break;
             case PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP:
-                type = ParamsBuilder.FILE_DIR_TYPE_NORMAL;
+                mIpcQuery.queryNormalVideoList();
                 break;
             case PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE:
-                type = ParamsBuilder.FILE_DIR_TYPE_PARK;
+                mIpcQuery.queryTimeslapseVideoList();
                 break;
         }
 
-        return ParamsBuilder.getFileListParam(
-                type,
-                mLastFileIndex + "",
-                FILE_COUNT_ONE_TIME + ""
-        );
     }
 
-    private int mLastFileIndex = 0;
-    private static final int FILE_COUNT_ONE_TIME = 20;
-    private FileListCallback mFileCallback = new FileListCallback() {
-        @Override
-        public boolean isNetworkAvailable() {
-            return true;
-        }
-
-        @Override
-        public void onStart() {
-            isGetFileListDataing = true;
-            if (mDataList.isEmpty())
-                showLoading();
-        }
-
-        @Override
-        public void onGetFileList(List<VideoInfo> files) {
-            if (files != null && !files.isEmpty()) {
-                mLastFileIndex += files.size();
-                updateData(files);
-            }
-        }
-
-        @Override
-        protected void onSuccess() {
-        }
-
-        @Override
-        public void onFinish() {
-            isGetFileListDataing = false;
-            closeLoading();
-            checkListState();
-        }
-
-        @Override
-        protected void onServerError(int errorCode, String errorMessage) {
-            empty.setVisibility(View.VISIBLE);
-            mStickyListHeadersListView.setVisibility(View.GONE);
-        }
-    };
+//    private FileListCallback mFileCallback = new FileListCallback() {
+//        @Override
+//        public boolean isNetworkAvailable() {
+//            return true;
+//        }
+//
+//        @Override
+//        public void onStart() {
+//            isGetFileListDataing = true;
+//            if (mDataList.isEmpty())
+//                showLoading();
+//        }
+//
+//        @Override
+//        public void onGetFileList(List<VideoInfo> files) {
+//            if (files != null && !files.isEmpty()) {
+//                mLastFileIndex += files.size();
+//                updateData(files);
+//            }
+//        }
+//
+//        @Override
+//        protected void onSuccess() {
+//        }
+//
+//        @Override
+//        public void onFinish() {
+//            isGetFileListDataing = false;
+//            closeLoading();
+//            checkListState();
+//        }
+//
+//        @Override
+//        protected void onServerError(int errorCode, String errorMessage) {
+//            empty.setVisibility(View.VISIBLE);
+//            mStickyListHeadersListView.setVisibility(View.GONE);
+//        }
+//    };
 
     protected void showLoading() {
         if (mCustomProgressDialog != null && !mCustomProgressDialog.isShowing()) {
@@ -438,12 +424,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             mStickyListHeadersListView.setAdapter(mRemoteVideoAdapter);
         }
         mDataList.addAll(fileList);
-        if (fileList.size() < FILE_COUNT_ONE_TIME) {
-            isHasData = false;
-            removeFooterView();
-        } else {
-            isHasData = true;
-        }
+        removeFooterView();
+//        if (fileList.size() < FILE_COUNT_ONE_TIME) {
+//            isHasData = false;
+//            removeFooterView();
+//        } else {
+//            isHasData = true;
+//        }
 
         parseDataAndShow();
 
@@ -459,9 +446,9 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 //            if (isWonderfulVideoType()) {
 //                thumbUrls.add(videoInfo.videoPath);
 //            } else {
-                if (videoInfo.videoPath.contains("/SD/")) {
-                    thumbUrls.add(videoInfo.videoPath.replace("/SD/", "/thumb/"));
-                }
+            if (videoInfo.videoPath.contains("/SD/")) {
+                thumbUrls.add(videoInfo.videoPath.replace("/SD/", "/thumb/"));
+            }
 //            }
         }
 
@@ -721,4 +708,33 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         return null;
     }
 
+    @Override
+    public void onNormalVideoListQueryed(ArrayList<VideoInfo> fileList) {
+        updateData(fileList);
+    }
+
+    @Override
+    public void onUrgentVideoListQueryed(ArrayList<VideoInfo> fileList) {
+        updateData(fileList);
+    }
+
+    @Override
+    public void onCaptureVideoListQueryed(ArrayList<VideoInfo> fileList) {
+        updateData(fileList);
+    }
+
+    @Override
+    public void onTimeslapseVideoListQueryed(ArrayList<VideoInfo> fileList) {
+        updateData(fileList);
+    }
+
+    @Override
+    public void onGetVideoListIsEmpty() {
+
+    }
+
+    @Override
+    public void onQueryVideoListFailed() {
+
+    }
 }

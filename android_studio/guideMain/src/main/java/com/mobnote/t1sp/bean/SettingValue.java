@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class SettingValue implements Parcelable {
 
     // 值
-    public String value;
+    public int value;
     // 描述
     public String description;
     // 是否选中
@@ -18,20 +18,20 @@ public class SettingValue implements Parcelable {
     public SettingValue() {
     }
 
-    public SettingValue(String value, String description) {
+    public SettingValue(int value, String description) {
         this.value = value;
         this.description = description;
     }
 
     protected SettingValue(Parcel in) {
-        value = in.readString();
+        value = in.readInt();
         description = in.readString();
         isSelected = in.readByte() != 0;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(value);
+        dest.writeInt(value);
         dest.writeString(description);
         dest.writeByte((byte) (isSelected ? 1 : 0));
     }

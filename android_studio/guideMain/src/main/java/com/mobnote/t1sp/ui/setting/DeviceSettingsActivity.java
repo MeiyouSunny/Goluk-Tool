@@ -1,7 +1,6 @@
 package com.mobnote.t1sp.ui.setting;
 
 import android.content.Intent;
-import android.os.Handler;
 import android.support.annotation.ArrayRes;
 import android.support.annotation.StringRes;
 import android.view.Gravity;
@@ -16,39 +15,43 @@ import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
-import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.t1sp.base.control.BindTitle;
-import com.mobnote.t1sp.base.ui.BackTitleActivity;
+import com.mobnote.t1sp.api.setting.IPCConfigListener;
+import com.mobnote.t1sp.api.setting.IpcConfigOption;
+import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
+import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.bean.SettingValue;
-import com.mobnote.t1sp.service.HeartbeatTask;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
-import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
+import com.mobnote.t1sp.util.StringUtil;
 import com.mobnote.t1sp.util.ViewUtil;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
-import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
         presenter = DeviceSettingsPresenterImpl.class,
         model = DeviceSettingsModelImpl.class
 )
-@BindTitle(R2.string.setting_title_text)
-public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPresenter> implements DeviceSettingsView {
+public class DeviceSettingsActivity extends AbsActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener {
 
     @BindView(R2.id.SDCard_storage_value)
     TextView mTvSDCardStorage;
     @BindView(R2.id.video_resolve_value)
     TextView mTvVideoResolve;
+    @BindView(R2.id.wonderful_video_quality_value)
+    TextView mTvCaptureQulity;
+    @BindView(R2.id.tv_volume_level)
+    TextView mTvVolumeLevel;
     @BindView(R2.id.wonderful_video_time_value)
     TextView mTvSnapTime;
     @BindView(R2.id.shutdown_time_value)
@@ -82,9 +85,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     private CustomDialog mCustomDialog;
     private CustomLoadingDialog mDialog;
 
-    private HeartbeatTask mHeartbeatTask;
+    private IpcConfigOption mConfigOption;
 
-    private SettingInfo mSettingInfo;
+    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel;
 
     @Override
     public int initLayoutResId() {
@@ -96,91 +99,121 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         super.onViewCreated();
         EventBus.getDefault().register(this);
 
-        getSettingInfo();
+        switchRecordSound.setOnCheckedChangeListener(this);
+        switchPowerSound.setOnCheckedChangeListener(this);
+        switchCaptureSound.setOnCheckedChangeListener(this);
+        switchAutoRotate.setOnCheckedChangeListener(this);
+        switchWatermark.setOnCheckedChangeListener(this);
+        switchParkingGuard.setOnCheckedChangeListener(this);
+        switchMTD.setOnCheckedChangeListener(this);
+        switchEmgVideoSound.setOnCheckedChangeListener(this);
+        switchDormantMode.setOnCheckedChangeListener(this);
 
+        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables);
+        mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
+        mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
+        mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);
+
+        mConfigOption = new IpcConfigOptionF4(this);
+        mConfigOption.getAllSettingConfig();
+
+        ApiUtil.startRecord(false, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
     }
 
     private void getSettingInfo() {
         mDialog = new CustomLoadingDialog(this, "");
-        mDialog.show();
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                getPresenter().enterOrExitSettingMode(true);
-//                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
-//                mHeartbeatTask.start();
-                getPresenter().getAllInfo();
-            }
-        }, 200);
+//        mDialog.show();
+//        new Handler().postDelayed(new Runnable() {
+//            @Override
+//            public void run() {
+////                getPresenter().enterOrExitSettingMode(true);
+////                mHeartbeatTask = new HeartbeatTask(HeartbeatTask.MODE_TYPE_SETTING);
+////                mHeartbeatTask.start();
+//                getPresenter().getAllInfo();
+//            }
+//        }, 200);
+
     }
 
-    @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_time, R2.id.gsensor_level,
-            R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set})
+    @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
+            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
             ViewUtil.goActivity(this, SdCardInfoActivity.class);
         } else if (viewId == R.id.video_resolve) {
-            startSelections(R.string.spzl_title, R.array.video_res, R.array.video_res_values, mSettingInfo.videoRes, TYPE_VIDEO_RES);
-        } else if (viewId == R.id.wonderful_video_time) {
-            startSelections(R.string.str_wonderful_video_type_title, R.array.capture_time, R.array.capture_time_values, mSettingInfo.captureTime, TYPE_SNAP_TIME);
+            startSelections(R.string.spzl_title, mArrayVideoQulity, ViewUtil.getTextViewValue(mTvVideoResolve), TYPE_VIDEO_RES);
         } else if (viewId == R.id.gsensor_level) {
-            startSelections(R.string.pzgy_title, R.array.gsendor_level, R.array.gsendor_level_values, mSettingInfo.GSensor, TYPE_GSENSOR);
-        } else if (viewId == R.id.shutdown_time) {
-            startSelections(R.string.str_settings_shutdown_title, R.array.power_off_delay, R.array.power_off_delay_values, mSettingInfo.powerOffDelay, TYPE_POWER_OFF_DELAY);
-        } else if (viewId == R.id.language_set) {
-            startSelections(R.string.str_settings_language_title, R.array.list_language_t, R.array.list_language_t_value, mSettingInfo.language, TYPE_LANGUAGE);
+            startSelections(R.string.pzgy_title, mArrayGSensorLevel, ViewUtil.getTextViewValue(mTvGSensor), TYPE_GSENSOR);
+        } else if (viewId == R.id.wonderful_video_quality) {
+            startSelections(R.string.str_wonderful_video_quality_title, mArrayCaptureQulity, ViewUtil.getTextViewValue(mTvCaptureQulity), TYPE_CAPTURE_QULITY);
+        } else if (viewId == R.id.volume_level) {
+            startSelections(R.string.str_settings_tone_title, mArrayVolumeLevel, ViewUtil.getTextViewValue(mTvVolumeLevel), TYPE_VOLUME_LEVEL);
         } else if (viewId == R.id.reset_factory) {
             showRestFactoryConfirmDialog();
-        } else if (viewId == R.id.version_info) {
-            ViewUtil.goActivity(this, VersionInfoActivity.class, "info", mSettingInfo);
-        } else if (viewId == R.id.time_setting) {
-            ViewUtil.goActivity(this, TimeSettingActivity.class);
         }
+//        else if (viewId == R.id.wonderful_video_time) {
+//            startSelections(R.string.str_wonderful_video_type_title, R.array.capture_time, R.array.capture_time_values, mSettingInfo.captureTime, TYPE_SNAP_TIME);
+//        } else if (viewId == R.id.shutdown_time) {
+//            startSelections(R.string.str_settings_shutdown_title, R.array.power_off_delay, R.array.power_off_delay_values, mSettingInfo.powerOffDelay, TYPE_POWER_OFF_DELAY);
+//        } else if (viewId == R.id.language_set) {
+//            startSelections(R.string.str_settings_language_title, R.array.list_language_t, R.array.list_language_t_value, mSettingInfo.language, TYPE_LANGUAGE);
+//        } else if (viewId == R.id.version_info) {
+//            ViewUtil.goActivity(this, VersionInfoActivity.class, "info", mSettingInfo);
+//        } else if (viewId == R.id.time_setting) {
+//            ViewUtil.goActivity(this, TimeSettingActivity.class);
+//        }
     }
 
-    @OnCheckedChanged({R2.id.switch_record_sound, R2.id.switch_power_sound, R2.id.switch_capture_sound, R2.id.switch_auto_rotate,
-            R2.id.switch_watermark, R2.id.switch_parking_guard, R2.id.switch_mtd, R2.id.switch_emg_video_sound, R2.id.switch_dormant_mode})
-    public void onChecked(CompoundButton button, boolean isChecked) {
-        if (mIgnoreSwtich)
-            return;
-        final int viewId = button.getId();
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        final int viewId = buttonView.getId();
         if (viewId == R.id.switch_record_sound) {
-            getPresenter().setSoundRecord(isChecked);
+            mConfigOption.setSoundRecordStatus(isChecked);
+
         } else if (viewId == R.id.switch_power_sound) {
-            getPresenter().setPowerSound(isChecked);
+            mConfigOption.setSoundPowerStatus(isChecked);
+
         } else if (viewId == R.id.switch_capture_sound) {
-            getPresenter().setCaptureSound(isChecked);
+            mConfigOption.setSoundCaptureStatus(isChecked);
+
         } else if (viewId == R.id.switch_emg_video_sound) {
-            getPresenter().setEmgVideoSound(isChecked);
+            mConfigOption.setSoundUrgentStatus(isChecked);
+
         } else if (viewId == R.id.switch_dormant_mode) {
-            getPresenter().setSleepMode(isChecked);
+            mConfigOption.setParkSleepMode(isChecked);
             if (isChecked) {
-                mIgnoreSwtich = true;
-                switchParkingGuard.setChecked(!isChecked);
-                mIgnoreSwtich = false;
+                switchParkingGuard.setChecked(false);
+                mConfigOption.setParkSecurityMode(false);
             }
         } else if (viewId == R.id.switch_parking_guard) {
-            getPresenter().setParkGuard(isChecked);
+            mConfigOption.setParkSecurityMode(isChecked);
             if (isChecked) {
-                mIgnoreSwtich = true;
-                switchDormantMode.setChecked(!isChecked);
-                mIgnoreSwtich = false;
+                switchDormantMode.setChecked(false);
+                mConfigOption.setParkSleepMode(false);
             }
         } else if (viewId == R.id.switch_auto_rotate) {
             //getPresenter().setAutoRotate(isChecked);
         } else if (viewId == R.id.switch_watermark) {
-            getPresenter().setRecStamp(isChecked);
+            mConfigOption.setWatermarkStatus(isChecked);
         } else if (viewId == R.id.switch_mtd) {
-            getPresenter().setMTD(isChecked);
+            //getPresenter().setMTD(isChecked);
         }
     }
 
-    private void startSelections(@StringRes int titleId, @ArrayRes int labelsId, @ArrayRes int valuesId, String currentValue, int requestCode) {
-        ArrayList<SettingValue> values = getPresenter().generateSettingValues(this, labelsId, valuesId, currentValue);
+    private void startSelections(@StringRes int titleId, String[] lables, String selectedLable, int requestCode) {
         Intent intent = new Intent(this, SelectionActivity.class);
         intent.putExtra("title", titleId);
-        intent.putParcelableArrayListExtra("values", values);
+        intent.putExtra("values", lables);
+        intent.putExtra("selectedLable", selectedLable);
         if (requestCode == TYPE_SNAP_TIME) {
             intent.putExtra("type", SelectionActivity.TYPE_CAPTURE_TIME);
         } else if (requestCode == TYPE_GSENSOR) {
@@ -189,33 +222,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         startActivityForResult(intent, requestCode);
     }
 
-    @Override
-    public void onGetSettingInfos(SettingInfo settingInfo) {
-        if (settingInfo == null)
-            return;
-        mSettingInfo = settingInfo;
-
-        mTvSDCardStorage.setText(settingInfo.SDCardInfo);
-        mTvVideoResolve.setText(getPresenter().getSettingLabelByValue(this, R.array.video_res, R.array.video_res_values, settingInfo.videoRes));
-        mTvPowerOffDelay.setText(getPresenter().getSettingLabelByValue(this, R.array.power_off_delay, R.array.power_off_delay_values, settingInfo.powerOffDelay));
-        mTvGSensor.setText(getPresenter().getSettingLabelByValue(this, R.array.gsendor_level, R.array.gsendor_level_values, settingInfo.GSensor));
-        mTvSnapTime.setText(getPresenter().getSettingLabelByValue(this, R.array.capture_time, R.array.capture_time_values, settingInfo.captureTime));
-        mTvLanguage.setText(getPresenter().getSettingLabelByValue(this, R.array.list_language_t, R.array.list_language_t_value, settingInfo.language));
-        switchRecordSound.setChecked(settingInfo.soundRecord);
-        switchPowerSound.setChecked(settingInfo.powerSound);
-        switchCaptureSound.setChecked(settingInfo.snapSound);
-        switchAutoRotate.setChecked(settingInfo.autoRotate);
-        switchWatermark.setChecked(settingInfo.recStamp);
-        switchParkingGuard.setChecked(settingInfo.pkMode);
-        switchDormantMode.setChecked(settingInfo.sleepMode);
-        switchEmgVideoSound.setChecked(settingInfo.emgVideoSound);
-//        switchMTD.setChecked(false);
-//        switchMTD.setEnabled(settingInfo.parkingGuard);
-
-        mIgnoreSwtich = false;
-
-        if (mDialog.isShowing())
-            mDialog.close();
+    private void setSwitchState(SwitchButton switchView, boolean check) {
+        switchView.setOnCheckedChangeListener(null);
+        switchView.setChecked(check);
+        switchView.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -225,8 +235,19 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             return;
 
         final SettingValue settingValue = data.getParcelableExtra("value");
-        final String value = settingValue.value;
-        getPresenter().setSelectionSettingValue(requestCode, value);
+        if (requestCode == TYPE_VIDEO_RES) {
+            mTvVideoResolve.setText(settingValue.description);
+            mConfigOption.setVideoEncodeConfig(settingValue.value);
+        } else if (requestCode == TYPE_CAPTURE_QULITY) {
+            mTvCaptureQulity.setText(settingValue.description);
+            mConfigOption.setCaptureVideoQulity(settingValue.value);
+        } else if (requestCode == TYPE_GSENSOR) {
+            mTvGSensor.setText(settingValue.description);
+            mConfigOption.setCollisionSensity(settingValue.value);
+        } else if (requestCode == TYPE_VOLUME_LEVEL) {
+            mTvVolumeLevel.setText(settingValue.description);
+            mConfigOption.setVolumeValue(settingValue.value);
+        }
     }
 
     private void showRestFactoryConfirmDialog() {
@@ -238,15 +259,15 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 new CustomDialog.OnLeftClickListener() {
                     @Override
                     public void onClickListener() {
-                        getPresenter().resetFactory();
+                        boolean result = mConfigOption.resetFactory();
+                        onResetFactory(result);
                     }
                 });
         mCustomDialog.setRightButton(this.getResources().getString(R.string.dialog_str_cancel), null);
         mCustomDialog.show();
     }
 
-    @Override
-    public void onResetFactory(final boolean isSuccess) {
+    private void onResetFactory(final boolean isSuccess) {
         RestoreFactoryEvent eventFactory = new RestoreFactoryEvent();
         EventBus.getDefault().post(eventFactory);
 
@@ -270,12 +291,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         confirmDialog.show();
     }
 
-    @Override
-    public void onGetSDCardInfo(SettingInfo settingInfo) {
-        if (settingInfo != null)
-            mTvSDCardStorage.setText(settingInfo.SDCardInfo);
-    }
-
     /**
      * SDcard 格式化成功
      */
@@ -288,38 +303,195 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         super.onDestroy();
 
         EventBus.getDefault().unregister(this);
-        if (mHeartbeatTask != null)
-            mHeartbeatTask.stop();
+        ApiUtil.startRecord(true, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
     }
 
     @Override
-    public void onSelectionSetted(int type, String value) {
-        // 选项设置成功返回,更新UI
-        switch (type) {
-            case DeviceSettingsView.TYPE_VIDEO_RES:
-                mSettingInfo.videoRes = value;
-                mTvVideoResolve.setText(getPresenter().getSettingLabelByValue(this, R.array.video_res, R.array.video_res_values, value));
-                // 发送Event给预览页面
-                VideoResEvent eventVideoRes = new VideoResEvent();
-                eventVideoRes.value = value;
-                EventBus.getDefault().post(eventVideoRes);
-                break;
-            case DeviceSettingsView.TYPE_SNAP_TIME:
-                mSettingInfo.captureTime = value;
-                mTvSnapTime.setText(getPresenter().getSettingLabelByValue(this, R.array.capture_time, R.array.capture_time_values, value));
-                // 发送Event给预览页面
-                CaptureTimeEvent eventCaptureTime = new CaptureTimeEvent();
-                eventCaptureTime.value = value;
-                EventBus.getDefault().post(eventCaptureTime);
-                break;
-            case DeviceSettingsView.TYPE_GSENSOR:
-                mSettingInfo.GSensor = value;
-                mTvGSensor.setText(getPresenter().getSettingLabelByValue(this, R.array.gsendor_level, R.array.gsendor_level_values, value));
-                break;
-            case DeviceSettingsView.TYPE_LANGUAGE:
-                mSettingInfo.language = value;
-                mTvLanguage.setText(getPresenter().getSettingLabelByValue(this, R.array.list_language_t, R.array.list_language_t_value, value));
-                break;
-        }
+    public void showLoadingDialog() {
+
     }
+
+    @Override
+    public void hideLoadingDialog() {
+
+    }
+
+    @Override
+    public void onDeviceTimeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onDeviceTimeGet(long timestamp) {
+
+    }
+
+    @Override
+    public void onParkSleepModeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onDriveFatigueSet(boolean success) {
+
+    }
+
+    @Override
+    public void onParkSleepModeGet(boolean enable) {
+        setSwitchState(switchDormantMode, enable);
+    }
+
+    @Override
+    public void onDriveFatigueGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onParkSecurityModeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onParkSecurityModeGet(boolean enable) {
+        setSwitchState(switchParkingGuard, enable);
+    }
+
+    @Override
+    public void onRecordStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onRecordStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundRecordStatusGet(boolean enable) {
+        setSwitchState(switchRecordSound, enable);
+    }
+
+    @Override
+    public void onSoundRecordStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onWatermarkStatusGet(boolean enable) {
+        setSwitchState(switchWatermark, enable);
+    }
+
+    @Override
+    public void onWatermarkStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundPowerStatusGet(boolean enable) {
+        setSwitchState(switchPowerSound, enable);
+    }
+
+    @Override
+    public void onSoundPowerAndCaptureStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundCaptureStatusGet(boolean enable) {
+        setSwitchState(switchCaptureSound, enable);
+    }
+
+    @Override
+    public void onSoundUrgentStatusGet(boolean enable) {
+        setSwitchState(switchEmgVideoSound, enable);
+    }
+
+    @Override
+    public void onSoundUrgentStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onVolumeValueGet(int value) {
+        mTvVolumeLevel.setText(mArrayVolumeLevel[value]);
+    }
+
+    @Override
+    public void onVolumeValueSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCaptureVideoQulityGet(int index) {
+        mTvCaptureQulity.setText(mArrayCaptureQulity[index]);
+    }
+
+    @Override
+    public void onCaptureVideoQulitySet(boolean success) {
+
+    }
+
+    @Override
+    public void onCaptureVideoTypeGet(int value) {
+    }
+
+    @Override
+    public void onCaptureVideoTypeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCollisionSensityGet(int value) {
+        mTvGSensor.setText(mArrayGSensorLevel[value]);
+    }
+
+    @Override
+    public void onCollisionSensitySet(boolean success) {
+
+    }
+
+    @Override
+    public void onVideoEncodeConfigGet(int index) {
+        mTvVideoResolve.setText(mArrayVideoQulity[index]);
+    }
+
+    @Override
+    public void onVideoEncodeConfigSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSDCapacityGet(double total, double free) {
+        String SDInfo = StringUtil.getSize(total) + "/" + StringUtil.getSize(free);
+        mTvSDCardStorage.setText(SDInfo);
+    }
+
+    @Override
+    public void onFormatSDCardResult(boolean success) {
+
+    }
+
+    @Override
+    public void onResetFactoryResult(boolean success) {
+
+    }
+
+    @Override
+    public void onTimeslapseConfigGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onTimeslapseConfigSet(boolean success) {
+
+    }
+
 }

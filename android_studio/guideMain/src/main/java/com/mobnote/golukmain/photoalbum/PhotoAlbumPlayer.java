@@ -74,7 +74,6 @@ import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
 import com.mobnote.t1sp.util.CollectionUtils;
-import com.mobnote.t1sp.util.Const;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
@@ -848,8 +847,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @date 2015年6月5日
      */
     private void getPlayAddr() {
-        // T1SP
-        if (mPath.contains(Const.HTTP_SCHEMA + Const.IP)) {
+        // T2S
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
             mVideoUrl = mPath;
             return;
         }

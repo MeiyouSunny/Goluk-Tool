@@ -23,8 +23,6 @@ import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.photoalbum.LocalWonderfulVideoAdapter;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GlideUtils;
 
 import java.util.ArrayList;
@@ -170,7 +168,7 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
 //		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
         displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
-        loadImage(mVideoInfo1.videoPath, holder.image1);
+        loadImage(mVideoInfo1.thumbUrl, holder.image1);
         // if(mVideoInfo1.isNew) {
         // holder.mNewIcon1.setVisibility(View.VISIBLE);
         // }else {
@@ -189,7 +187,7 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
 //			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
             displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
-            loadImage(mVideoInfo2.videoPath, holder.image2);
+            loadImage(mVideoInfo2.thumbUrl, holder.image2);
 
             // if(mVideoInfo2.isNew) {
             // holder.mNewIcon2.setVisibility(View.VISIBLE);
@@ -249,16 +247,16 @@ public class RemoteVideoAdapter extends BaseAdapter implements StickyListHeaders
     /**
      * 加载并显示预览图片
      *
-     * @param filename 图片名称
+     * @param thumbUrl 封面
      * @param image    显示控件
      * @author xuhw
      * @date 2015年6月8日
      */
-    private void loadImage(String videoPath, ImageView image) {
-        if (TextUtils.isEmpty(videoPath))
+    private void loadImage(String thumbUrl, ImageView image) {
+        if (TextUtils.isEmpty(thumbUrl))
             return;
-        final String thumbPath = FileUtil.getThumbCacheByVideoName(FileUtil.getFileNameFromPath(videoPath));
-        GlideUtils.loadRemoteT1SPImage(mContext, image, thumbPath, R.drawable.album_default_img);
+        //final String thumbPath = FileUtil.getThumbCacheByVideoName(FileUtil.getFileNameFromPath(videoPath));
+        GlideUtils.loadImage(mContext, image, thumbUrl, R.drawable.album_default_img);
     }
 
     /**

@@ -5,18 +5,14 @@ import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.t1sp.api.ApiUtil;
 import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.bean.DeviceMode;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.callback.CommonCallback;
-import com.mobnote.t1sp.callback.DeviceModeCallback;
 import com.mobnote.t1sp.callback.SettingInfosCallback;
 import com.mobnote.t1sp.util.Const;
-import com.mobnote.t1sp.util.FileUtil;
 import com.rd.veuisdk.utils.DateTimeUtils;
 
-import java.util.List;
-
 import cn.com.tiros.debug.GolukDebugUtils;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.dollar.$;
 import likly.mvp.BasePresenter;
 
@@ -27,8 +23,6 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
         ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getSettingInfoParam(), new SettingInfosCallback() {
             @Override
             public void onGetSettingInfos(SettingInfo settingInfo) {
-                getView().onGetVideoSettingInfo(settingInfo, onlySettingInfo);
-                getLatestTwoVideos();
             }
 
             @Override
@@ -40,109 +34,17 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
     @Override
     public void captureVideo() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.captureParam(false), new CommonCallback() {
+        goluk.com.t1s.api.ApiUtil.captureVideo(new CallbackCmd() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess(int i) {
                 getView().onCaptureStart();
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                if (errorCode == Const.ERROR_CODE_NO_SD_CARD) {
-                    $.toast().text("抓拍失败,没有SD卡").show();
-                    return;
-                }
-                $.toast().text(R.string.capture_failed).show();
+            public void onFail(int i, int i1) {
+
             }
         });
-    }
-
-    @Override
-    public void getLatestTwoVideos() {
-        List<String> videos = FileUtil.getLatestTwoVideosWithWonfulAndUrgent();
-        getView().onGetLatestTwoVideos(videos);
-    }
-
-    @Override
-    public void getDeviceMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getCameraModeParam(), new DeviceModeCallback() {
-            @Override
-            public void onGetDeviceModeInfo(final DeviceMode deviceMode) {
-                getView().onGetDeviceModeInfo(deviceMode);
-            }
-
-            @Override
-            public void onError(Throwable throwable) {
-                //getView().onExitOtherModeFailed();
-            }
-        });
-    }
-
-    @Override
-    public void exitPlaybackMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterPlaybackModeParam(false),
-                new CommonCallback() {
-
-                    @Override
-                    protected void onSuccess() {
-                        getView().onExitOtherModeSuccess();
-                    }
-
-                    @Override
-                    protected void onServerError(int errorCode, String errorMessage) {
-                        //getView().onExitOtherModeFailed();
-                    }
-                });
-
-//        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterVideoModeParam(), new CommonCallback() {
-//            @Override
-//            protected void onSuccess() {
-//                $.toast().text(R.string.recovery_to_record).show();
-//            }
-//
-//            @Override
-//            protected void onServerError(int errorCode, String errorMessage) {
-//                $.toast().text(errorMessage).show();
-//            }
-//        });
-
-    }
-
-    @Override
-    public void exitSetMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(false),
-                new CommonCallback() {
-
-                    @Override
-                    protected void onSuccess() {
-                        getView().onExitOtherModeSuccess();
-                    }
-
-                    @Override
-                    protected void onServerError(int errorCode, String errorMessage) {
-                        //getView().onExitOtherModeFailed();
-                    }
-                });
-    }
-
-    @Override
-    public void openLoopMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.openLoopRecordParam(),
-                new CommonCallback() {
-
-                    @Override
-                    protected void onSuccess() {
-                        getView().onOpenLoopModeSuccess();
-                    }
-
-                    @Override
-                    protected void onServerError(int errorCode, String errorMessage) {
-                        if (errorCode == Const.ERROR_CODE_NO_SD_CARD)
-                            getView().onOpenLoopModeErrorNoSdCard();
-                        else
-                            getView().onOpenLoopModeFailed();
-                    }
-                });
     }
 
     @Override

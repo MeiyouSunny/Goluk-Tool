@@ -3,6 +3,7 @@ package com.mobnote.t1sp.ui.album;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -105,7 +106,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         mAlbumRootView = inflater.inflate(R.layout.photo_album_t1sp, container, false);
         editState = false;
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);
-        mViewPager.setOffscreenPageLimit(1);
+        mViewPager.setOffscreenPageLimit(3);
         mTimelapseFragment = new RemoteTimelapseAlbumFragment();
         mWonderfulFragment = new RemoteWonderfulAlbumFragment();
         mLoopFragment = new RemoteLoopAlbumFragment();
@@ -142,7 +143,14 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             public void onPageScrollStateChanged(int arg0) {
             }
         });
+
         return mAlbumRootView;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        loadData();
     }
 
     public void initView() {
