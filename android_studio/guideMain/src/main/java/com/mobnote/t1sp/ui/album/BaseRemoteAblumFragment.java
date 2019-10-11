@@ -180,7 +180,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {
                 // 点击列表左边项,跳转到视频播放页面
                 VideoInfo info1 = d.getVideoInfo1();
-                gotoVideoPlayPage(getVideoType(), info1.videoUrl,
+                gotoVideoPlayPage(getVideoType(), info1.videoUrl, info1.relativePath,
                         info1.filename, info1.videoCreateDate, info1.videoHP, info1.videoSize);
                 String filename = d.getVideoInfo1().filename;
                 updateNewState(filename);
@@ -192,7 +192,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 VideoInfo info2 = d.getVideoInfo2();
                 if (null == info2)
                     return;
-                gotoVideoPlayPage(getVideoType(), info2.videoUrl,
+                gotoVideoPlayPage(getVideoType(), info2.videoUrl, info2.relativePath,
                         info2.filename, info2.videoCreateDate, info2.videoHP, info2.videoSize);
                 String filename = info2.filename;
                 updateNewState(filename);
@@ -270,10 +270,10 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
      *
      * @param path
      */
-    private void gotoVideoPlayPage(int from, String path, String filename, String createTime, String videoHP, String size) {
+    private void gotoVideoPlayPage(int from, String path, String relativePath, String filename, String createTime, String videoHP, String size) {
         if (!isShowPlayer) {
             isShowPlayer = true;
-            GolukUtils.startPhotoAlbumPlayerActivity(BaseRemoteAblumFragment.this.getContext(), getVideoType(), "ipc", path,
+            GolukUtils.startPhotoAlbumPlayerActivityT2S(BaseRemoteAblumFragment.this.getContext(), getVideoType(), "ipc", path, relativePath,
                     filename, createTime, videoHP, size, (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
         }
     }
@@ -635,7 +635,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     public void onEventMainThread(EventDeletePhotoAlbumVid event) {
         if (event != null && event.getType() == getVideoType()) {
             List<String> selectedListData = getFragmentAlbum().getSelectedList();
-            selectedListData.add(event.getVidPath());
+            selectedListData.add(event.getRelativePath());
             deleteListData(selectedListData);
         }
     }

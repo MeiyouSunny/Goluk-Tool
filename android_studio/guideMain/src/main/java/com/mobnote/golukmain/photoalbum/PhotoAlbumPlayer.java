@@ -17,6 +17,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -119,6 +120,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     public static final String VIDEO_FROM = "video_from";
     public static final String PATH = "path";
+    public static final String RELATIVE_PATH = "relativePath";
     public static final String DATE = "date";
     public static final String HP = "hp";
     public static final String SIZE = "size";
@@ -133,7 +135,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private GolukApplication mApp = null;
     private ImageButton mBackBtn = null;
-    private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
+    private String mDate, mHP, mPath, mRelativePath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
     private int mType;
     private RelativeLayout mVideoViewLayout;
     private FullScreenVideoView mVideoView;
@@ -316,6 +318,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mDate = intent.getStringExtra(DATE);
             mHP = intent.getStringExtra(HP);
             mPath = intent.getStringExtra(PATH);
+            mRelativePath = intent.getStringExtra(RELATIVE_PATH);
             Log.i("path", "path:" + mPath);
             mVideoFrom = intent.getStringExtra(VIDEO_FROM);
             mSize = intent.getStringExtra(SIZE);
@@ -325,6 +328,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mDate = savedInstanceState.getString(DATE);
             mHP = savedInstanceState.getString(HP);
             mPath = savedInstanceState.getString(PATH);
+            mRelativePath = savedInstanceState.getString(RELATIVE_PATH);
             mVideoFrom = savedInstanceState.getString(VIDEO_FROM);
             mSize = savedInstanceState.getString(SIZE);
             mFileName = savedInstanceState.getString(FILENAME);
@@ -383,6 +387,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         if (mPath != null) {
             outState.putString(PATH, mPath);
+        }
+        if (mRelativePath != null) {
+            outState.putString(RELATIVE_PATH, mRelativePath);
         }
         if (mVideoFrom != null) {
             outState.putString(VIDEO_FROM, mVideoFrom);
@@ -696,7 +703,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             } else {
                 //相册详情页面-下载到本地
                 ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
-                EventBus.getDefault().post(new EventDownloadIpcVid(mPath, getType()));
+                String path = mApp.getIPCControlManager().isT2S() ? mRelativePath : mPath;
+                EventBus.getDefault().post(new EventDownloadIpcVid(path, getType()));
             }
         } else if (id == R.id.btn_delete) {
 //            String tempPath = "";
@@ -820,7 +828,18 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         } else {
                             //相册详情页面-删除视频
                             ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayer.this);
-                            EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
+
+                            if (mApp.getIPCControlManager().isT2S()) {
+                                mVideoView.stopPlayback();
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                                    }
+                                }, 500);
+                            } else {
+                                EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                            }
                             GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
                         }
 
