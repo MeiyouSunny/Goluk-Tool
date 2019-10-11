@@ -404,9 +404,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             @Override
             public void onPlayerCompletion(RtspPlayerView rpv) {
                 hidePlayer();
-                rpv.removeCallbacks(retryRunnable);
-                showLoading();
-                rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
+//                rpv.removeCallbacks(retryRunnable);
+//                showLoading();
+//                rpv.postDelayed(retryRunnable, RECONNECTIONTIME);
                 if (m_bIsFullScreen) {
                     setFullScreen(false);
                 }
@@ -701,14 +701,18 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mConnectTip.setText(getCurrentIpcSsid());
         mSettingBtn.setVisibility(View.VISIBLE);
         mVideoResolutions.setVisibility(View.VISIBLE);
+
+        resetCaptureButton();
     }
 
     @Override
     public void onResume() {
         super.onResume();
 
-        startPlay();
-        getResolutionInfo();
+        if (GolukApplication.getInstance().getIpcIsLogin()) {
+            startPlay();
+            getResolutionInfo();
+        }
 //        if (isShowPlayer) {
 //            if (!isConnecting) {
 //                showLoading();

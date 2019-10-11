@@ -23,7 +23,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     public static final String TITLE = "Goluk";
-    public static final String WIFI_NAME_T1s = "Goluk_T1s";
+    public static final String WIFI_NAME_T2S = "Goluk_T2S";
     private static final String TAG = "testhan";
     private static final String WIFICONFIG = "wifi.config";
     private WifiConnCallBack callback = null;
@@ -148,8 +148,8 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         if (!NetUtil.isWifiConnected(context))
             return false;
 
-        WifiRsBean result = wifiSupport.getConnResult(WIFI_NAME_T1s);
-        return result != null && result.getIpc_ssid().startsWith(WIFI_NAME_T1s);
+        WifiRsBean result = wifiSupport.getConnResult(WIFI_NAME_T2S);
+        return result != null && result.getIpc_ssid().startsWith(WIFI_NAME_T2S);
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//

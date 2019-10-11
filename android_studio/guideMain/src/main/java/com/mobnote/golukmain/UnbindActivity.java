@@ -34,6 +34,8 @@ import org.json.JSONObject;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackWifiInfo;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
     public static final String TAG = "Unbind";
@@ -154,6 +156,25 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (null != mApplication && mApplication.isIpcLoginSuccess) {
             mApplication.getIPCControlManager().getIpcWifiConfig();
         }
+
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
+            getWifiInfoT2S();
+            return;
+        }
+    }
+
+    private void getWifiInfoT2S() {
+        ApiUtil.queryWifiInfo(new CallbackWifiInfo() {
+            @Override
+            public void onSuccess(String wifiName, String wifiPwd) {
+                mTextCameraName.setText(wifiName);
+                mTextPasswordName.setText(wifiPwd);
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
     }
 
     @Override

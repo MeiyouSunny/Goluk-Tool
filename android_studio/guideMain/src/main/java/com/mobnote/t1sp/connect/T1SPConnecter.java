@@ -10,14 +10,9 @@ import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.multicast.NetUtil;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.bean.SettingInfo;
-import com.mobnote.t1sp.callback.DeviceIDCallback;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
-import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiConnectManager;
 
@@ -26,7 +21,7 @@ import java.util.List;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import likly.dollar.$;
+import goluk.com.t1s.api.callback.CallbackCmd;
 
 /**
  * T1SP 连接管理
@@ -100,19 +95,10 @@ public class T1SPConnecter {
         if (mIsConnecing)
             return;
 
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new DeviceIDCallback() {
-
+        mIsConnecing = true;
+        goluk.com.t1s.api.ApiUtil.sendConnectTest(new CallbackCmd() {
             @Override
-            public void onStart() {
-                mIsConnecing = true;
-                stateCallback(0);
-            }
-
-            @Override
-            public void onGetSettingInfos(SettingInfo settingInfo) {
-                if (settingInfo == null)
-                    return;
-
+            public void onSuccess(int i) {
                 stateCallback(1);
 
                 // T1SP连接成功
@@ -120,18 +106,13 @@ public class T1SPConnecter {
                 GolukApplication.getInstance().setIpcLoginState(true);
 
                 // 保存设备ID和版本
-                SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
-                SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
+                //SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
+                //SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
                 SharedPrefUtil.saveIpcModel(IPCControlManager.T2S_SIGN);
-
-                // 开启UDP监听
-                ViewUtil.startService(mContext, T1SPUdpService.class);
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-                if (errorCode == 503)
-                    $.toast().text("设备已经被其他用户连接!").show();
+            public void onFail(int i, int i1) {
                 stateCallback(2);
                 setConnected(false);
             }

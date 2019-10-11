@@ -18,15 +18,14 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
 import org.json.JSONObject;
 
 import cn.com.tiros.debug.GolukDebugUtils;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.dollar.$;
 
 /**
@@ -197,9 +196,9 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             return;
         }
 
-        // T1SP
+        // T2S
         if (mApp.getIPCControlManager().isT2S()) {
-            enterSettingMode();
+            updateWifiName();
             return;
         }
         // Other
@@ -231,25 +230,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         return json;
     }
 
-    private void enterSettingMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterOrExitSettingModeParam(true), new CommonCallback() {
-            @Override
-            public void onStart() {
-                LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
-            }
-
-            @Override
-            protected void onSuccess() {
-                updateWifiName();
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
-
-            }
-        });
-    }
-
     /**
      * T1SP修改WIFI名称
      */
@@ -258,46 +238,36 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         if (TextUtils.isEmpty(mNewSsid))
             return;
 
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiNameParam(mNewSsid), new CommonCallback() {
+        ApiUtil.modifyWifiName(mNewSsid, new CallbackCmd() {
             @Override
-            public void onStart() {
-                LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupWifiActivity.this, getString(R.string.str_wait));
+            public void onSuccess(int i) {
+                resetT2SNet();
             }
 
             @Override
-            public void onSuccess() {
-                // 必须重启网络才会生效
-                resetT1SPNet();
-            }
-
-            @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onFail(int i, int i1) {
                 $.toast().text(R.string.str_wifi_name_fail).show();
             }
         });
     }
 
     /**
-     * 重启T1SP网络
+     * 重启T2S网络
      */
-    private void resetT1SPNet() {
-        ApiUtil.apiServiceAit().resetNet(new CommonCallback() {
+    private void resetT2SNet() {
+        ApiUtil.reconnectWIFI(new CallbackCmd() {
             @Override
-            protected void onSuccess() {
+            public void onSuccess(int i) {
                 $.toast().text(R.string.str_wifi_success).show();
                 updateSavedIpcInfo();
-
+                LiveDialogManager.getManagerInstance().dissmissCustomDialog();
                 setResult(11);
                 finish();
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onFail(int i, int i1) {
                 $.toast().text(R.string.str_wifi_name_fail).show();
-            }
-
-            @Override
-            public void onFinish() {
                 LiveDialogManager.getManagerInstance().dissmissCustomDialog();
             }
         });

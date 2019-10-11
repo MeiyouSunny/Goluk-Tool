@@ -16,15 +16,14 @@ import android.widget.TextView;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
 import org.json.JSONObject;
 
 import cn.com.tiros.debug.GolukDebugUtils;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.dollar.$;
 
 /**
@@ -218,27 +217,23 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	}
 
 	/**
-	 * T1SP修改WIFI密码
+	 * T2S修改WIFI密码
 	 *
 	 * @param pwd
 	 */
 	private void updateWifiPwd(String pwd) {
 		if (TextUtils.isEmpty(pwd))
 			return;
-		ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setWifiPwdParam(pwd), new CommonCallback() {
+		LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupChangeWifiActivity.this, getString(R.string.str_wait));
+		ApiUtil.modifyWifiPassword(pwd, new CallbackCmd() {
 			@Override
-			public void onStart() {
-				LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupChangeWifiActivity.this, getString(R.string.str_wait));
-			}
-
-			@Override
-			public void onSuccess() {
+			public void onSuccess(int i) {
 				// 必须重启网络才会生效
 				resetT1SPNet();
 			}
 
 			@Override
-			protected void onServerError(int errorCode, String errorMessage) {
+			public void onFail(int i, int i1) {
 				$.toast().text(R.string.str_wifi_change_fail).show();
 			}
 		});
@@ -248,21 +243,18 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	 * 重启T1SP网络
 	 */
 	private void resetT1SPNet() {
-		ApiUtil.apiServiceAit().resetNet(new CommonCallback() {
+		ApiUtil.reconnectWIFI(new CallbackCmd() {
 			@Override
-			protected void onSuccess() {
+			public void onSuccess(int i) {
 				$.toast().text(R.string.str_wifi_change_success).show();
+				LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 				setResult(10);
 				finish();
 			}
 
 			@Override
-			protected void onServerError(int errorCode, String errorMessage) {
+			public void onFail(int i, int i1) {
 				$.toast().text(R.string.str_wifi_change_fail).show();
-			}
-
-			@Override
-			public void onFinish() {
 				LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 			}
 		});
