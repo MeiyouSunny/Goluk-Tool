@@ -166,7 +166,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
 //                    IPageNotifyFn.PageType_CheckUpgrade, ipcString);
 //            GolukDebugUtils.i(TAG, "=====" + b + "===ipcUpdateManage======");
             String vApp = GolukApplication.getInstance().mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_GetVersion, VERSION_PATH);
-            checkRequest.get(vApp, vIpc);
+            checkRequest.get(vApp, "0.3");
             mState = -1; //每次重新下载就重置状态
             mFunction = function;
             if (mFunction == FUNCTION_SETTING_APP || mFunction == FUNCTION_SETTING_IPC) {
@@ -926,7 +926,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     return;
                 }
 
-                IPCInfo ipcInfo = ipcUpdateUtils(ipc);
+                final IPCInfo ipcInfo = ipcUpdateUtils(ipc);
                 if (ipcInfo == null) {
                     // ipc不需要升级
                     if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
@@ -956,7 +956,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                                 .setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY));
+                                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY, ipcInfo));
                                     }
                                 })
                                 .setPositiveButton(mApp.getContext().getResources().getString(R.string.str_button_ok),

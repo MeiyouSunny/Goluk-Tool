@@ -395,6 +395,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             MVP.registerOnViewBindListener(new BaseOnViewBindListener());
             $.initialize(this);
             com.mobnote.t1sp.api.HttpManager.initHttp();
+            goluk.com.t1s.api.HttpManager.initHttp();
             // Downloader
             DownloaderT1spImpl.init(this);
             // Connecter

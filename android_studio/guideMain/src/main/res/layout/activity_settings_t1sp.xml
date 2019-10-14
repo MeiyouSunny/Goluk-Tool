@@ -486,6 +486,7 @@
                     android:visibility="gone"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/language_set"
                     style="@style/SettingLabelLayout">
 
@@ -502,6 +503,7 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/time_setting"
                     style="@style/SettingLabelLayout">
 

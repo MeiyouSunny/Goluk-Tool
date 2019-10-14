@@ -435,7 +435,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 // 隐藏
                 mPalyerLayout.setVisibility(View.GONE);
                 mFullScreen.setVisibility(View.VISIBLE);
-                mBtnRotate.setVisibility(View.VISIBLE);
+                //mBtnRotate.setVisibility(View.VISIBLE);
                 // 抓拍按钮
                 //resetCaptureButton();
             }

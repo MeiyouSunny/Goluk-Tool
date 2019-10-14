@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -295,7 +296,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 11);
         } else if (id == R.id.unbind_layout_update) {
-            if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
+            if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater
+                    || !TextUtils.isEmpty(mApplication.mIpcUpdateManage.isHasIPCFile(mIpcInfo.version))) {
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
             } else if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);

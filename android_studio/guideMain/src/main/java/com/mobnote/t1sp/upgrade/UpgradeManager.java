@@ -1,15 +1,17 @@
 package com.mobnote.t1sp.upgrade;
 
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.callback.CommonCallback;
-import com.mobnote.t1sp.listener.OnSettingsListener;
-import com.mobnote.t1sp.service.T1SPUdpService;
+import android.util.Log;
 
 import java.io.File;
 
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
+import goluk.com.t1s.api.callback.CallbackVersion;
+import goluk.com.t1s.api.firmware.FirmwareUploader;
+import goluk.com.t1s.api.firmware.UploadListener;
+
 /**
- * T1SP 固件升级Manager
+ * T2S 固件升级Manager
  */
 public class UpgradeManager {
 
@@ -25,8 +27,7 @@ public class UpgradeManager {
      * 开始升级流程
      */
     public void start() {
-//        enterUpgradeMode();
-        getFWInfo();
+        getUploadPath();
     }
 
     public void stop() {
@@ -37,64 +38,50 @@ public class UpgradeManager {
         mUploadTask = null;
     }
 
-    private void getFWInfo() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.getDeviceInfoParam(), new CommonCallback() {
+    public void getUploadPath() {
+        // 获取上传路径
+        ApiUtil.getFirmwareUploadPath(new CallbackVersion() {
             @Override
-            protected void onSuccess() {
-                enterUpgradeMode();
+            public void onSuccess(String uploadPath) {
+                uploadFirmware(uploadPath);
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onFail() {
                 if (mListener != null)
-                    mListener.onEnterUpgradeMode(false);
+                    mListener.onUpgradeFinish(false);
             }
         });
     }
 
     /**
-     * 进入固件升级模式
+     * 上传固件
      */
-    private void enterUpgradeMode() {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.enterUpdaetModeParam(), new CommonCallback() {
+    public void uploadFirmware(String uploadPath) {
+        FirmwareUploader firmwareUploader = new FirmwareUploader();
+        firmwareUploader.upload(mBinFile.getAbsolutePath(), uploadPath, new UploadListener() {
             @Override
-            protected void onSuccess() {
+            public void onFail() {
+                Log.e("FirmwareUpload", "onFail");
                 if (mListener != null)
-                    mListener.onEnterUpgradeMode(true);
-                // 进入固件升级模式,开始上传固件
-                uploadUpgradeFile(mBinFile);
+                    mListener.onUploadUpgradeFileResult(false);
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onSuccess() {
+                Log.e("FirmwareUpload", "onSuccess");
                 if (mListener != null)
-                    mListener.onEnterUpgradeMode(false);
-            }
-        });
-    }
-
-    /**
-     * 上传固件到设备
-     */
-    private void uploadUpgradeFile(File binFile) {
-        mUploadTask = new UploadTask();
-        mUploadTask.setListener(new UploadTask.UploadListener() {
-            @Override
-            public void onUploaded(boolean success) {
-                if (mListener != null)
-                    mListener.onUploadUpgradeFileResult(success);
-                // 固件上传完成,开始升级固件
-                if (success)
-                    startUpgrade();
+                    mListener.onUploadUpgradeFileResult(true);
+                updateFirmware();
             }
 
             @Override
-            public void onUploadProgress(int progress) {
+            public void onProgress(int progress) {
+                Log.e("FirmwareUpload", "onProgress: " + progress);
                 if (mListener != null)
                     mListener.onUploadProgress(progress);
             }
-        });
-        mUploadTask.execute(binFile);
+        }, null);
         if (mListener != null)
             mListener.onUploadUpgradeFileStart();
     }
@@ -102,40 +89,29 @@ public class UpgradeManager {
     /**
      * 开始升级固件
      */
-    private void startUpgrade() {
-        ApiUtil.apiServiceAit().updateFirmware(new CommonCallback() {
+    public void updateFirmware() {
+        Log.e("FirmwareUpload", "发送安装指令");
+        ApiUtil.updateFirmware(new CallbackCmd() {
             @Override
-            protected void onSuccess() {
-                if (mListener != null) {
-                    mListener.onUpgradeStart(true);
-                    // UDP监听固件升级回调
-                    T1SPUdpService.setSetListener(mUdpListener);
-                }
+            public void onSuccess(int cmd) {
+                Log.e("FirmwareUpload", "固件更新成功");
+                if (mListener != null)
+                    mListener.onUpgradeFinish(true);
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onFail(int cmd, int status) {
+                Log.e("FirmwareUpload", "固件更新失败");
                 if (mListener != null)
-                    mListener.onUpgradeStart(false);
+                    mListener.onUpgradeFinish(false);
             }
         });
+        if (mListener != null)
+            mListener.onUpgradeStart(true);
     }
 
     public void setListener(UpgradeListener listener) {
         this.mListener = listener;
     }
-
-    // UDP监听
-    private OnSettingsListener mUdpListener = new OnSettingsListener() {
-        @Override
-        public void onSdFormat(boolean isFormat) {
-        }
-
-        @Override
-        public void onUpdateFw(boolean isUpdate) {
-            if (mListener != null)
-                mListener.onUpgradeFinish(isUpdate);
-        }
-    };
 
 }
