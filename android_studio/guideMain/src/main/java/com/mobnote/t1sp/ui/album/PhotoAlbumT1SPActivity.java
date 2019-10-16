@@ -32,13 +32,25 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.photo_album_activity);
 
-        ApiUtil.changeToPlaybackMode(new CallbackCmd() {
+        ApiUtil.startRecord(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
+                System.out.println("");
+                ApiUtil.changeToPlaybackMode(new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        System.out.println("");
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
+                System.out.println("");
             }
         });
 
@@ -109,10 +121,20 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         ApiUtil.changeToMovieMode(new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
+                ApiUtil.startRecord(true, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
+
             }
         });
 

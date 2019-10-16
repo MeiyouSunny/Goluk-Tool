@@ -15,6 +15,8 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     void onCaptureStart();
 
+    void onNoSDCarcChecked();
+
     void showLoading();
 
     void hideLoading();

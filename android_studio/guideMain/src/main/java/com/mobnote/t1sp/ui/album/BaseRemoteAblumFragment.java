@@ -21,6 +21,7 @@ import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -331,6 +332,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
         }
 
         if (null == empty || null == mStickyListHeadersListView) {
+            isInitLoadData = false;
             return;
         }
 
@@ -583,6 +585,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 Log.e("IpcDownloader", "onAllDownloaded");
                 Toast.makeText(getContext(), "下载完成", Toast.LENGTH_SHORT).show();
                 GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
+                // 发送本地更新视频Event
+                EventBus.getDefault().post(new EventDownloadVideoFinish());
             }
 
             @Override

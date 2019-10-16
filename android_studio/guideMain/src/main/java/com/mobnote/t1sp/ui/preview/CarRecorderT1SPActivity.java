@@ -38,6 +38,8 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
+import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
@@ -48,13 +50,16 @@ import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.listener.OnCaptureListener;
+import com.mobnote.t1sp.ui.album.BaseRemoteAblumFragment;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.t1sp.util.ViewUtil;
-import com.mobnote.util.GlideUtils;
+import com.mobnote.t2s.files.IpcFileQueryF4;
+import com.mobnote.t2s.files.IpcFileQueryListener;
+import com.mobnote.t2s.files.IpcQuery;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.wifibind.WifiConnectManager;
@@ -64,6 +69,7 @@ import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
 import com.rd.car.player.RtspPlayerView.RtspPlayerLisener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
@@ -82,7 +88,7 @@ import likly.mvp.MvpBinder;
         model = CarRecorderT1SPModelImpl.class
 )
 @SuppressLint("NewApi")
-public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener {
+public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener, IpcFileQueryListener {
 
     // 抓拍按钮
     private Button mBtnCapture = null;
@@ -143,6 +149,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     // 是否正在抓拍
     private boolean mIsInCapture;
 
+    private IpcQuery mIpcQuery;
+    private ArrayList<VideoInfo> mCaptueList;
+
     @Override
     public int initLayoutResId() {
         return R.layout.activity_car_recorder_t1sp;
@@ -173,6 +182,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         Intent receiveIntent = getIntent();
         isBackGroundStart = receiveIntent.getBooleanExtra("isBackGroundStart", false);
 
+        mIpcQuery = new IpcFileQueryF4(this, this);
 //        startPlay();
     }
 
@@ -225,6 +235,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mHandlerCapture.removeMessages(0);
         mCaptureTime = CAPTURE_TIME_16_COUNT_TIME;
         mHandlerCapture.sendEmptyMessage(0);
+    }
+
+    @Override
+    public void onNoSDCarcChecked() {
+        $.toast().text("没有检测到SD卡").show();
     }
 
     private void resetCaptureButton() {
@@ -563,19 +578,29 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.mNotconnected) {
             click_ConnFailed();
         } else if (id == R.id.image1) {
-            if (CollectionUtils.isEmpty(mLatestTwoVideos) || mIsInCapture)
+//            if (CollectionUtils.isEmpty(mLatestTwoVideos) || mIsInCapture)
+//                return;
+//            new1.setVisibility(View.GONE);
+//            String videoName = mLatestTwoVideos.get(mLatestTwoVideos.size() == 2 ? 1 : 0);
+//            videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
+//            gotoPlayVideo(videoName);
+
+            if (CollectionUtils.isEmpty(mCaptueList))
                 return;
-            new1.setVisibility(View.GONE);
-            String videoName = mLatestTwoVideos.get(mLatestTwoVideos.size() == 2 ? 1 : 0);
-            videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
-            gotoPlayVideo(videoName);
+            VideoInfo videoInfo = mCaptueList.get(0);
+            playCaptureVideo(videoInfo);
         } else if (id == R.id.image2 || mIsInCapture) {
-            new2.setVisibility(View.GONE);
-            if (mLatestTwoVideos != null && mLatestTwoVideos.size() == 2) {
-                String videoName = mLatestTwoVideos.get(0);
-                videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
-                gotoPlayVideo(videoName);
-            }
+//            new2.setVisibility(View.GONE);
+//            if (mLatestTwoVideos != null && mLatestTwoVideos.size() == 2) {
+//                String videoName = mLatestTwoVideos.get(0);
+//                videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
+//                gotoPlayVideo(videoName);
+//            }
+
+            if (CollectionUtils.isEmpty(mCaptueList) || mCaptueList.size() < 2)
+                return;
+            VideoInfo videoInfo = mCaptueList.get(1);
+            playCaptureVideo(videoInfo);
         } else if (id == R.id.image3) {
 //            if (mIsInCapture || !mConnectedIpc)
 //                return;
@@ -607,6 +632,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM, false);
             startActivity(intent);
         }
+    }
+
+    private void playCaptureVideo(VideoInfo videoInfo) {
+        GolukUtils.startPhotoAlbumPlayerActivityT2S(this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, "ipc", videoInfo.videoUrl, videoInfo.relativePath, videoInfo.filename, videoInfo.videoCreateDate, videoInfo.videoHP, videoInfo.videoSize, null);
     }
 
     /**
@@ -712,6 +741,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             startPlay();
             getResolutionInfo();
+            mIpcQuery.queryCaptureVideoList();
         }
 //        if (isShowPlayer) {
 //            if (!isConnecting) {
@@ -976,6 +1006,38 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (success) {
             ipcConnSucess();
         }
+    }
+
+    @Override
+    public void onNormalVideoListQueryed(ArrayList<VideoInfo> fileList) {
+    }
+
+    @Override
+    public void onUrgentVideoListQueryed(ArrayList<VideoInfo> fileList) {
+    }
+
+    @Override
+    public void onCaptureVideoListQueryed(ArrayList<VideoInfo> fileList) {
+        mCaptueList = fileList;
+        if (fileList.size() <= 1) {
+            mLocalAlbumOne.setVisibility(View.VISIBLE);
+            mLocalalbumTwo.setVisibility(View.GONE);
+        } else if (fileList.size() >= 2) {
+            mLocalAlbumOne.setVisibility(View.VISIBLE);
+            mLocalAlbumOne.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
+    public void onTimeslapseVideoListQueryed(ArrayList<VideoInfo> fileList) {
+    }
+
+    @Override
+    public void onGetVideoListIsEmpty() {
+    }
+
+    @Override
+    public void onQueryVideoListFailed() {
     }
 
 }

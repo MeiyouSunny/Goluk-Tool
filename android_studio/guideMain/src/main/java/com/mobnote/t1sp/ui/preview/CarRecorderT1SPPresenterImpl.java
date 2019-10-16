@@ -13,6 +13,7 @@ import com.rd.veuisdk.utils.DateTimeUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import goluk.com.t1s.api.callback.CallbackCmd;
+import goluk.com.t1s.api.callback.CallbackSDCardStatus;
 import likly.dollar.$;
 import likly.mvp.BasePresenter;
 
@@ -34,6 +35,20 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
 
     @Override
     public void captureVideo() {
+        goluk.com.t1s.api.ApiUtil.checkSDCardStatus(new CallbackSDCardStatus() {
+
+            @Override
+            public void onSuccess(int status) {
+                if (status == 1) {
+                    capture();
+                } else {
+                    getView().onNoSDCarcChecked();
+                }
+            }
+        });
+    }
+
+    private void capture() {
         goluk.com.t1s.api.ApiUtil.captureVideo(new CallbackCmd() {
             @Override
             public void onSuccess(int i) {

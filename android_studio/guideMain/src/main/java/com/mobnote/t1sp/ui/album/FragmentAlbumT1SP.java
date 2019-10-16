@@ -2,6 +2,7 @@ package com.mobnote.t1sp.ui.album;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -150,7 +151,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadData();
+        //loadData();
     }
 
     public void initView() {
