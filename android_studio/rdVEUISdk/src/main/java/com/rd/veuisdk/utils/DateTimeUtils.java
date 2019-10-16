@@ -305,4 +305,16 @@ public class DateTimeUtils {
         return formater.format(date);
     }
 
+    public static String getTimeDateString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        return formater.format(date);
+    }
+
+    public static String getTimeHourString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("HH:mm:ss");
+        return formater.format(date);
+    }
+
 }

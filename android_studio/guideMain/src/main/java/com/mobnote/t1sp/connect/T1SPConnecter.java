@@ -13,6 +13,7 @@ import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
+import com.mobnote.t1sp.util.TimeSync;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiConnectManager;
 
@@ -104,6 +105,9 @@ public class T1SPConnecter {
                 // T1SP连接成功
                 setConnected(true);
                 GolukApplication.getInstance().setIpcLoginState(true);
+                // 同步时间
+                TimeSync timeSync = new TimeSync();
+                timeSync.syncTime();
 
                 // 保存设备ID和版本
                 //SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);

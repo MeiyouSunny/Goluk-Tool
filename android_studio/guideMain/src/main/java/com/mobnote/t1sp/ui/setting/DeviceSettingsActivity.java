@@ -12,6 +12,7 @@ import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
+import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
@@ -159,18 +160,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             showRestFactoryConfirmDialog();
         } else if (viewId == R.id.version_info) {
             ViewUtil.goActivity(this, VersionInfoActivity.class);
+        } else if (viewId == R.id.time_setting) {
+            ViewUtil.goActivity(this, TimeSettingActivity.class);
         }
-//        else if (viewId == R.id.wonderful_video_time) {
-//            startSelections(R.string.str_wonderful_video_type_title, R.array.capture_time, R.array.capture_time_values, mSettingInfo.captureTime, TYPE_SNAP_TIME);
-//        } else if (viewId == R.id.shutdown_time) {
-//            startSelections(R.string.str_settings_shutdown_title, R.array.power_off_delay, R.array.power_off_delay_values, mSettingInfo.powerOffDelay, TYPE_POWER_OFF_DELAY);
-//        } else if (viewId == R.id.language_set) {
-//            startSelections(R.string.str_settings_language_title, R.array.list_language_t, R.array.list_language_t_value, mSettingInfo.language, TYPE_LANGUAGE);
-//        } else if (viewId == R.id.version_info) {
-//            ViewUtil.goActivity(this, VersionInfoActivity.class, "info", mSettingInfo);
-//        } else if (viewId == R.id.time_setting) {
-//            ViewUtil.goActivity(this, TimeSettingActivity.class);
-//        }
     }
 
     @Override

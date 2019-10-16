@@ -25,9 +25,6 @@ import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.t1sp.api.ApiUtil;
-import com.mobnote.t1sp.api.ParamsBuilder;
-import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.rd.veuisdk.utils.DateTimeUtils;
@@ -39,6 +36,7 @@ import java.util.Date;
 
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.dollar.$;
 
 /**
@@ -145,7 +143,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
         if (!isT1() && mCurrentState == STATE_GPS_AUTO) {
             mCurrentState = STATE_AUTO;
         }
-        // T1SP
+        // T2S
         if (GolukApplication.getInstance().getIPCControlManager().isT2S() && systemtime) {
             mCurrentState = STATE_AUTO;
         }
@@ -242,7 +240,7 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
      * @date 2015年4月6日
      */
     private void getSystemTime() {
-        // T1SP 无法获取当前时间
+        // T2S 无法获取当前时间
         if (GolukApplication.getInstance().getIPCControlManager().isT2S())
             return;
 
@@ -325,8 +323,10 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
         if (STATE_AUTO == mCurrentState) {
             // T1SP
             if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
-                final String nowTime = DateTimeUtils.getNowTimeStringSplitWith$();
-                setT1SPSystemTime(nowTime, System.currentTimeMillis());
+                long nowMill = System.currentTimeMillis();
+                final String nowDate = DateTimeUtils.getTimeDateString(nowMill);
+                final String nowTime = DateTimeUtils.getTimeHourString(nowMill);
+                setT2SSystemTime(nowDate, nowTime, System.currentTimeMillis());
             } else {
                 // Other
                 long time = System.currentTimeMillis() / 1000;
@@ -338,21 +338,31 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
     }
 
     /**
-     * 同步T1SP系统时间
+     * 同步T2S系统时间
      */
-    private void setT1SPSystemTime(String time, final long milles) {
-        ApiUtil.apiServiceAit().sendRequest(ParamsBuilder.setTimeParam(time), new CommonCallback() {
+    private void setT2SSystemTime(String date, final String time, final long milles) {
+        goluk.com.t1s.api.ApiUtil.setDate(date, new CallbackCmd() {
             @Override
-            protected void onSuccess() {
-                $.toast().text(R.string.str_set_ok).show();
-                // 保存时间
-                $.config().putLong(TAG_LAST_SYNC_TIME, milles);
-                // 更新显示
-                initTimes();
+            public void onSuccess(int i) {
+                goluk.com.t1s.api.ApiUtil.setTime(time, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        $.toast().text(R.string.str_set_ok).show();
+                        // 保存时间
+                        $.config().putLong(TAG_LAST_SYNC_TIME, milles);
+                        // 更新显示
+                        initTimes();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                        $.toast().text(R.string.str_carrecoder_setting_failed).show();
+                    }
+                });
             }
 
             @Override
-            protected void onServerError(int errorCode, String errorMessage) {
+            public void onFail(int i, int i1) {
                 $.toast().text(R.string.str_carrecoder_setting_failed).show();
             }
         });
@@ -496,8 +506,9 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
                     if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
                         // 秒转毫秒
                         time = time * 1000;
-                        final String timeStr = DateTimeUtils.getTimeStringSplitWith$(time);
-                        setT1SPSystemTime(timeStr, time);
+                        final String nowDate = DateTimeUtils.getTimeDateString(time);
+                        final String nowTime = DateTimeUtils.getTimeHourString(time);
+                        setT2SSystemTime(nowDate, nowTime, time);
                     } else {
                         // Other
                         boolean a = GolukApplication.getInstance().getIPCControlManager().setIPCSystemTime(time);

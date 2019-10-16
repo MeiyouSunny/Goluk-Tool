@@ -503,7 +503,6 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     android:id="@+id/time_setting"
                     style="@style/SettingLabelLayout">
 

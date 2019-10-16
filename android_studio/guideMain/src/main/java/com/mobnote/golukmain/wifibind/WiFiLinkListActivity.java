@@ -43,6 +43,7 @@ import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.Const;
+import com.mobnote.t1sp.util.TimeSync;
 import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
@@ -557,6 +558,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 // T2S 连接结果回调
                 // 保存WIFI信息
                 saveT2SInfo();
+                // 同步时间
+                TimeSync timeSync = new TimeSync();
+                timeSync.syncTime();
                 // 页面跳转
                 goNextAfterT1SPConnected();
                 GolukApplication.getInstance().setIpcLoginState(true);
