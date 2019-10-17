@@ -21,6 +21,8 @@ import com.mobnote.t1sp.api.setting.IpcConfigOption;
 import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
 import com.mobnote.t1sp.base.ui.BackTitleActivity;
 import com.mobnote.t1sp.bean.SettingValue;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.ui.setting.SDCardInfo.SdCardInfoActivity;
 import com.mobnote.t1sp.ui.setting.selection.SelectionActivity;
 import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
@@ -38,7 +40,7 @@ import likly.mvp.MvpBinder;
         presenter = DeviceSettingsPresenterImpl.class,
         model = DeviceSettingsModelImpl.class
 )
-public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener {
+public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener, T1SPConntectListener {
 
 //    @BindView(R2.id.title)
 //    TextView mTitle;
@@ -125,6 +127,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             public void onFail(int i, int i1) {
             }
         });
+
+        T1SPConnecter.instance().addListener(this);
     }
 
     private void getSettingInfo() {
@@ -304,6 +308,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             public void onFail(int i, int i1) {
             }
         });
+        T1SPConnecter.instance().removeListener(this);
     }
 
     @Override
@@ -484,6 +489,19 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @Override
     public void onTimeslapseConfigSet(boolean success) {
 
+    }
+
+    @Override
+    public void onT1SPDisconnected() {
+        finish();
+    }
+
+    @Override
+    public void onT1SPConnectStart() {
+    }
+
+    @Override
+    public void onT1SPConnectResult(boolean success) {
     }
 
 }

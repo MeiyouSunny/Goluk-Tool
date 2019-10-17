@@ -16,6 +16,6 @@ public class FileConst {
     /* 精彩视频 */
     public static final String VIDEO_WND = "WND";
     /* 缩时 */
-    public static final String VIDEO_TIMESLAPSE = "NRM_TL";
+    public static final String VIDEO_TIMESLAPSE = "NRMTL";
 
 }

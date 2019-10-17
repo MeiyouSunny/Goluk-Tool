@@ -38,8 +38,6 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
-import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
@@ -50,7 +48,6 @@ import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.listener.OnCaptureListener;
-import com.mobnote.t1sp.ui.album.BaseRemoteAblumFragment;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.setting.DeviceSettingsActivity;
 import com.mobnote.t1sp.util.CollectionUtils;
@@ -76,6 +73,7 @@ import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackSDCardStatus;
 import goluk.com.t1s.api.callback.CallbackSetting;
 import likly.dollar.$;
 import likly.mvp.MvpBinder;
@@ -604,11 +602,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.image3) {
 //            if (mIsInCapture || !mConnectedIpc)
 //                return;
-            // 进入回放模式
-//            mCurrentMode = MODE_PLAYBACK;
-            Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
-            photoalbum.putExtra("from", "cloud");
-            startActivity(photoalbum);
+            enterRemoteAlbumPage();
         } else if (id == R.id.mRtmpPlayerView) {
             if (m_bIsFullScreen) {
                 setFullScreen(false);
@@ -632,6 +626,22 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM, false);
             startActivity(intent);
         }
+    }
+
+    private void enterRemoteAlbumPage() {
+        goluk.com.t1s.api.ApiUtil.checkSDCardStatus(new CallbackSDCardStatus() {
+
+            @Override
+            public void onSuccess(int status) {
+                if (status == 1) {
+                    Intent photoalbum = new Intent(CarRecorderT1SPActivity.this, PhotoAlbumT1SPActivity.class);
+                    photoalbum.putExtra("from", "cloud");
+                    startActivity(photoalbum);
+                } else {
+                    onNoSDCarcChecked();
+                }
+            }
+        });
     }
 
     private void playCaptureVideo(VideoInfo videoInfo) {

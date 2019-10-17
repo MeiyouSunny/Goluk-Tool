@@ -56,7 +56,7 @@ public class PhotoAlbumConfig {
             return PHOTO_BUM_IPC_WND;
         if (videoName.startsWith(PREFIX_URG) || videoName.startsWith(FileUtil.URGENT_VIDEO_PREFIX))
             return PHOTO_BUM_IPC_URG;
-        if (videoName.startsWith(PREFIX_TIMESLAPSE) || videoName.startsWith(FileUtil.TIMELAPSE_VIDEO_PREFIX))
+        if (videoName.startsWith(PREFIX_TIMESLAPSE) || videoName.startsWith("NRMTL") || videoName.startsWith(FileUtil.TIMELAPSE_VIDEO_PREFIX))
             return PHOTO_BUM_IPC_TIMESLAPSE;
         if (videoName.startsWith(PREFIX_LOOP) || videoName.startsWith(FileUtil.LOOP_VIDEO_PREFIX))
             return PHOTO_BUM_IPC_LOOP;

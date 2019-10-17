@@ -216,7 +216,7 @@ public class GolukUtils {
             dir = Const.DIR_WONDERFUL;
         } else if (fileName.contains("URG")) {
             dir = Const.DIR_URGENT;
-        } else if (fileName.contains("NRM_TL")) {
+        } else if (fileName.contains("NRMTL")) {
             dir = Const.DIR_TIMESLAPSE;
         } else if (fileName.contains("NRM")) {
             dir = Const.DIR_LOOP;

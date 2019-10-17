@@ -275,12 +275,12 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             }
 
             // T1SP的紧急视频或循环视频,跳转到PhotoAlbumPlayerT1SP(需要播放轨迹)
-            if (isT1spVideoAndHaveGpsFile(path)) {
-                boolean isShareVideo = path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
-                GolukUtils.startPhotoAlbumPlayerT1spActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
-                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO), isShareVideo);
-                return;
-            }
+//            if (isT1spVideoAndHaveGpsFile(path)) {
+//                boolean isShareVideo = path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
+//                GolukUtils.startPhotoAlbumPlayerT1spActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
+//                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO), isShareVideo);
+//                return;
+//            }
             // 其他视频文件
             GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
                     (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));

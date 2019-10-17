@@ -13,12 +13,14 @@ import android.support.v4.app.FragmentTransaction;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.connect.T1SPConntectListener;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 
 import goluk.com.t1s.api.ApiUtil;
 import goluk.com.t1s.api.callback.CallbackCmd;
 
-public class PhotoAlbumT1SPActivity extends BaseActivity {
+public class PhotoAlbumT1SPActivity extends BaseActivity implements T1SPConntectListener {
     public static final String CLOSE_WHEN_EXIT = "should_close_conn";
 
     private boolean mShouldClose;
@@ -72,6 +74,7 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
         // 开始加载数据
 //        if (mFragmentAlubm != null)
 //            mFragmentAlubm.loadData();
+        T1SPConnecter.instance().addListener(this);
     }
 
     @Override
@@ -146,6 +149,21 @@ public class PhotoAlbumT1SPActivity extends BaseActivity {
                 wifiManager.disableNetwork(wifiInfo.getNetworkId());
             }
         }
+
+        T1SPConnecter.instance().removeListener(this);
+    }
+
+    @Override
+    public void onT1SPDisconnected() {
+        finish();
+    }
+
+    @Override
+    public void onT1SPConnectStart() {
+    }
+
+    @Override
+    public void onT1SPConnectResult(boolean success) {
     }
 
 }
