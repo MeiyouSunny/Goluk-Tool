@@ -42,7 +42,7 @@ import likly.mvp.MvpBinder;
 )
 public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPresenter> implements DeviceSettingsView, IPCConfigListener, CompoundButton.OnCheckedChangeListener, T1SPConntectListener {
 
-//    @BindView(R2.id.title)
+    //    @BindView(R2.id.title)
 //    TextView mTitle;
     @BindView(R2.id.SDCard_storage_value)
     TextView mTvSDCardStorage;
@@ -87,7 +87,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     private IpcConfigOption mConfigOption;
 
-    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel;
+    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel, mArrayLanguages;
 
     @Override
     public int initLayoutResId() {
@@ -114,6 +114,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
         mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
         mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);
+        mArrayLanguages = getResources().getStringArray(R.array.list_language_t);
 
         mConfigOption = new IpcConfigOptionF4(this);
         mConfigOption.getAllSettingConfig();
@@ -166,6 +167,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             ViewUtil.goActivity(this, VersionInfoActivity.class);
         } else if (viewId == R.id.time_setting) {
             ViewUtil.goActivity(this, TimeSettingActivity.class);
+        } else if (viewId == R.id.language_set) {
+            startSelections(R.string.str_settings_language_title, mArrayLanguages, ViewUtil.getTextViewValue(mTvLanguage), TYPE_LANGUAGE);
         }
     }
 
@@ -197,7 +200,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                 mConfigOption.setParkSleepMode(false);
             }
         } else if (viewId == R.id.switch_auto_rotate) {
-            //getPresenter().setAutoRotate(isChecked);
+            mConfigOption.setAutoRotate(isChecked);
         } else if (viewId == R.id.switch_watermark) {
             mConfigOption.setWatermarkStatus(isChecked);
         } else if (viewId == R.id.switch_mtd) {
@@ -243,6 +246,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         } else if (requestCode == TYPE_VOLUME_LEVEL) {
             mTvVolumeLevel.setText(settingValue.description);
             mConfigOption.setVolumeValue(settingValue.value);
+        } else if (requestCode == TYPE_LANGUAGE) {
+            mTvLanguage.setText(settingValue.description);
+            mConfigOption.setLanguage(settingValue.value);
         }
     }
 
@@ -256,7 +262,19 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
                     @Override
                     public void onClickListener() {
                         boolean result = mConfigOption.resetFactory();
-                        onResetFactory(result);
+                        if (result) {
+                            ApiUtil.reconnectWIFI(new CallbackCmd() {
+                                @Override
+                                public void onSuccess(int i) {
+                                    onResetFactory(true);
+                                }
+
+                                @Override
+                                public void onFail(int i, int i1) {
+                                    onResetFactory(false);
+                                }
+                            });
+                        }
                     }
                 });
         mCustomDialog.setRightButton(this.getResources().getString(R.string.dialog_str_cancel), null);
@@ -488,6 +506,25 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onTimeslapseConfigSet(boolean success) {
+
+    }
+
+    @Override
+    public void onLanguageGet(int type) {
+        mTvLanguage.setText(mArrayLanguages[type]);
+    }
+
+    @Override
+    public void onLanguageSet(boolean success) {
+    }
+
+    @Override
+    public void onAutoRotateGet(boolean enable) {
+        setSwitchState(switchAutoRotate, enable);
+    }
+
+    @Override
+    public void onAutoRotateSet(boolean success) {
 
     }
 

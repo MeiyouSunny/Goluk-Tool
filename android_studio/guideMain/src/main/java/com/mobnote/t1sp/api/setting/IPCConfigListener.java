@@ -70,4 +70,12 @@ public interface IPCConfigListener {
 
     void onTimeslapseConfigSet(boolean success);
 
+    void onLanguageGet(int type);
+
+    void onLanguageSet(boolean success);
+
+    void onAutoRotateGet(boolean enable);
+
+    void onAutoRotateSet(boolean success);
+
 }

@@ -170,4 +170,25 @@ public class SimpleIpcConfigListener implements IPCConfigListener {
     public void onTimeslapseConfigSet(boolean success) {
 
     }
+
+    @Override
+    public void onLanguageGet(int type) {
+
+    }
+
+    @Override
+    public void onLanguageSet(boolean success) {
+
+    }
+
+    @Override
+    public void onAutoRotateGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onAutoRotateSet(boolean success) {
+
+    }
+
 }

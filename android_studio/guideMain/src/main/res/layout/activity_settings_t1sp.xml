@@ -230,8 +230,7 @@
 
                 <RelativeLayout
                     style="@style/SettingLabelLayout"
-                    android:clickable="false"
-                    android:visibility="gone">
+                    android:clickable="false">
 
                     <TextView
                         style="@style/SettingLabel"
@@ -486,7 +485,6 @@
                     android:visibility="gone"/>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     android:id="@+id/language_set"
                     style="@style/SettingLabelLayout">
 

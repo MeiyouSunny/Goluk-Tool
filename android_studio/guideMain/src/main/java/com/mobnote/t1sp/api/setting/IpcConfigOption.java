@@ -73,6 +73,10 @@ public interface IpcConfigOption {
 
     boolean setTimelapseConfig(boolean enable);
 
+    boolean setLanguage(int type);
+
+    boolean setAutoRotate(boolean enable);
+
 //    // 获取主录分辨率设置项
 //    String[] getMainRecordSizeOptions();
 //

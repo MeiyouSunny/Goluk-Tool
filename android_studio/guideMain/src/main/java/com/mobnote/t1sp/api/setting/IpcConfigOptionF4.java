@@ -51,6 +51,8 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
         mIpcConfigListener.onVideoEncodeConfigGet(mSettingInfo.recordSize);
         mIpcConfigListener.onSoundUrgentStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundUrgent));
         mIpcConfigListener.onVolumeValueGet(GolukUtils.parseVolumeLevel(mSettingInfo.volumeLevel));
+        mIpcConfigListener.onLanguageGet(mSettingInfo.language);
+        mIpcConfigListener.onAutoRotateGet(GolukUtils.isSwitchOn(mSettingInfo.autoRotate));
 
     }
 
@@ -373,6 +375,42 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     @Override
     public boolean setTimelapseConfig(boolean enable) {
         return false;
+    }
+
+    @Override
+    public boolean setLanguage(int type) {
+        ApiUtil.setLanguage(type, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onLanguageSet(true);
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onLanguageSet(false);
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean setAutoRotate(boolean enable) {
+        ApiUtil.setAutoRotate(enable, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onAutoRotateSet(true);
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onAutoRotateSet(false);
+            }
+        });
+        return true;
     }
 
 //    @Override
