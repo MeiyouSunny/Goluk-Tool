@@ -1,5 +1,24 @@
 package com.mobnote.wifibind;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiConfiguration.AuthAlgorithm;
+import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.util.JsonUtil;
+
+import org.json.JSONObject;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -10,30 +29,11 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import org.json.JSONObject;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.NetworkInfo.State;
-import android.net.wifi.ScanResult;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.net.wifi.WifiConfiguration.AuthAlgorithm;
-import android.net.wifi.WifiConfiguration.KeyMgmt;
-import android.text.TextUtils;
-import android.util.Log;
-
-import com.mobnote.golukmain.reportlog.ReportLogManager;
-import com.mobnote.util.JsonUtil;
 
 public class WifiConnectManagerSupport {
 
@@ -287,33 +287,79 @@ public class WifiConnectManagerSupport {
      * 获得匹配连接wifi的信息是否有效
      */
     public WifiRsBean getConnResult(String title) {
-        String regEx = "^" + title;
+        //String regEx = "^" + title;
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "before getConnectionInfo"));
+
+        // 先判断当前WIFI是否已经连接上
+//        boolean isWifiConnected = NetUtil.isWIFIConnected(GolukApplication.getInstance().getApplicationContext());
+//        if (!isWifiConnected) {
+//            return null;
+//        }
+
         WifiInfo info = wifiManager.getConnectionInfo();
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "after getConnectionInfo"));
         WifiRsBean bean = null;
-        if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>")) {
+        if (info != null && info.getSSID() != null && !info.getSSID().equals("<unknown ssid>") && !info.getSSID().equals("0x")) {
 
+            //XLog.tag(LogConst.TAG_CONNECTION).i("info.getSSID():" + info.getSSID());
             String tmpSsid = info.getSSID().replace("\"", "");
+            //XLog.tag(LogConst.TAG_CONNECTION).i("tmpSsid:" + tmpSsid);
+
             ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "info true :ssid " + tmpSsid));
             //Matcher matcher = Pattern.compile(regEx).matcher(tmpSsid);
             //if (matcher != null && matcher.find()) {
-                ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "matcher.find() true "));
-                bean = new WifiRsBean();
-                bean.setIpc_ssid(tmpSsid);
-                bean.setIpc_bssid(info.getMacAddress());
-                bean.setWifiSignal(getWifiLevel(info.getRssi()));
-                bean.setIpc_ip(int2ip(info.getIpAddress()));
+            ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", "matcher.find() true "));
+            bean = new WifiRsBean();
+            bean.setIpc_ssid(tmpSsid);
+            bean.setIpc_bssid(info.getMacAddress());
+            bean.setWifiSignal(getWifiLevel(info.getRssi()));
+            bean.setIpc_ip(int2ip(info.getIpAddress()));
             //}
         }
-        String msg ;
-        if(bean == null){
+        String msg;
+        if (bean == null) {
+            //XLog.tag(LogConst.TAG_CONNECTION).i("bean == null");
             msg = "bean Result: is null ";
-        }else{
-            msg = "bean Result: "+ bean.toString();
+            // Android 8 9
+            if (Build.VERSION.SDK_INT >= 27) {
+                bean = new WifiRsBean();
+                bean.setIpc_ssid(getSSIDByNetWorkId());
+            }
+        } else {
+            msg = "bean Result: " + bean.toString();
         }
         ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).addLogData(JsonUtil.getReportData(TAG, "getConnResult", msg));
+
+        // 有些机型获取到的WIFI名称用引号包围了,需要去掉双引号/单引号如, Goluk_T1_xxx -> "Goluk_T1_xxx"
+        if (bean != null) {
+            bean.ipc_ssid = bean.ipc_ssid.replaceAll("\"", "");
+            bean.ipc_ssid = bean.ipc_ssid.replaceAll("'", "");
+        }
+
         return bean;
+    }
+
+    /**
+     * 先获取当前WIFI的NetWorkId,在获取当前扫描到的WIFI列表,对比NetWorkId,获取对应的SSID
+     * @return
+     */
+    private String getSSIDByNetWorkId() {
+        //XLog.tag(LogConst.TAG_CONNECTION).i("getSSIDByNetWorkId");
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        if (wifiInfo != null) {
+            int netId = wifiInfo.getNetworkId();
+            //XLog.tag(LogConst.TAG_CONNECTION).i("netId:" + netId);
+            List<WifiConfiguration> list = wifiManager.getConfiguredNetworks();
+            for (WifiConfiguration wifiConfiguration : list) {
+                //XLog.tag(LogConst.TAG_CONNECTION).i("netId:" + wifiConfiguration.networkId + "ssid:" + wifiConfiguration.SSID);
+                if (netId == wifiConfiguration.networkId) {
+                    String ssid = wifiConfiguration.SSID;
+                    return ssid;
+                }
+            }
+        }
+
+        return "";
     }
 
     /**
