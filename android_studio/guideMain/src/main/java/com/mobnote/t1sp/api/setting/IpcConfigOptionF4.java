@@ -229,12 +229,14 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean setVolumeValue(int value) {
-        if (value == 0)
+        if (value == 0) {
             value = 3;
-        if (value == 1)
+        } else if (value == 1) {
             value = 2;
-        if (value == 2)
+        } else if (value == 2) {
             value = 1;
+        }
+
         ApiUtil.setVolumeLevel(value, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {

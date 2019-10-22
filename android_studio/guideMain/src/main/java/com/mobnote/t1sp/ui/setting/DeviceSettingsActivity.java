@@ -309,7 +309,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
      * SDcard 格式化成功
      */
     public void onEventMainThread(SDCardFormatEvent event) {
-        getPresenter().getSDCardInfo();
+        mConfigOption.getSDCapacity();
     }
 
     @Override
