@@ -47,8 +47,18 @@ public class VersionInfoActivity extends BackTitleActivity {
             @Override
             public void onSuccess(String version) {
                 mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
-                //mDeviceId.setText(settingInfo.deviceId);
                 mDeviceVersion.setText(version);
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
+        ApiUtil.getSN(new CallbackVersion() {
+            @Override
+            public void onSuccess(String sn) {
+                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
+                mDeviceId.setText(sn);
             }
 
             @Override
