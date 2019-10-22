@@ -1,12 +1,15 @@
 package com.mobnote.t1sp.ui.setting.version;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.zxing.WriterException;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.R2;
 import com.mobnote.t1sp.base.control.BindTitle;
 import com.mobnote.t1sp.base.ui.BackTitleActivity;
+import com.mobnote.util.QRCodeEncoder;
 
 import butterknife.BindView;
 import goluk.com.t1s.api.ApiUtil;
@@ -26,6 +29,8 @@ public class VersionInfoActivity extends BackTitleActivity {
     TextView mDeviceId;
     @BindView(R2.id.mVersion)
     TextView mDeviceVersion;
+    @BindView(R2.id.iv_qrcode)
+    ImageView mSNQrcode;
 
     @Override
     public int initLayoutResId() {
@@ -59,6 +64,11 @@ public class VersionInfoActivity extends BackTitleActivity {
             public void onSuccess(String sn) {
                 mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceId.setText(sn);
+                try {
+                    mSNQrcode.setImageBitmap(QRCodeEncoder.createQRCode(sn, 800));
+                } catch (WriterException e) {
+                    mSNQrcode.setVisibility(View.GONE);
+                }
             }
 
             @Override
