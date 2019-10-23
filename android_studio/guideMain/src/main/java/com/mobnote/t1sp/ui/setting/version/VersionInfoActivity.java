@@ -64,11 +64,9 @@ public class VersionInfoActivity extends BackTitleActivity {
             public void onSuccess(String sn) {
                 mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceId.setText(sn);
-                try {
-                    mSNQrcode.setImageBitmap(QRCodeEncoder.createQRCode(sn, 800));
-                } catch (WriterException e) {
-                    mSNQrcode.setVisibility(View.GONE);
-                }
+
+                mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));
+
             }
 
             @Override
