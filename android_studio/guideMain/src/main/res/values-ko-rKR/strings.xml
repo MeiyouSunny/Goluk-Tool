@@ -1105,4 +1105,7 @@
     <string name="cloud_save_tip">공유하는 영상은 1년 밖에 안 남았어요.</string>
     <string name="not_in_china_alert">본 응용은 중국 지역에서 사용하도록 한정한다</string>
     <string name="close_app">물러나다</string>
+    <string name="connect_step_3">레코더 WiFi에 연결 한 후에도 여전히 연결할 수 없으면 시도해 볼 수 있습니다</string>
+    <string name="manual_connect">레코더를 수동으로 연결</string>
+    <string name="connect_failed_upload_log">연결에 실패했습니다. 전화기가 레코더 WiFi에 연결되어 있고 올바른 장치 모델이 선택되어 있는지 확인하십시오. 올바른 경우 로그를 제출하고 고객 서비스에 문의하십시오.</string>
 </resources>

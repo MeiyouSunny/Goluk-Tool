@@ -1107,4 +1107,7 @@
     <string name="cloud_save_tip">La vidéo partagée n \'est enregistrée qu\' une année.</string>
     <string name="not_in_china_alert">Application limitée en Chine</string>
     <string name="close_app">Quitter app</string>
+    <string name="connect_step_3">Si vous avez connecté à l\'enregistreur WiFi, vous ne pouvez toujours pas vous connecter, vous pouvez essayer</string>
+    <string name="manual_connect">Connecter manuellement l\'enregistreur</string>
+    <string name="connect_failed_upload_log">La connexion a échoué. Vérifiez que le téléphone est connecté à l\'enregistreur WiFi et que le modèle de périphérique approprié est sélectionné. S\'il est correct, soumettez le journal et contactez le service clientèle.</string>
 </resources>

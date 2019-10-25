@@ -1109,4 +1109,7 @@
     <string name="cloud_save_tip">分享的視頻僅保存一年</string>
     <string name="not_in_china_alert">本應用限定在中國地區使用</string>
     <string name="close_app">退出App</string>
+    <string name="connect_step_3">如果已連上記錄儀WiFi,仍然連不上,可嘗試</string>
+    <string name="manual_connect">手動連接記錄儀</string>
+    <string name="connect_failed_upload_log">連接失敗，請確認手機已連接記錄儀WiFi並選擇了正確的設備型號。如果是正確操作請提交日誌並聯繫客服。</string>
 </resources>

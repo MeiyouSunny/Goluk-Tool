@@ -1107,4 +1107,7 @@
     <string name="cloud_save_tip">共有ビデオは1年だけ保存します</string>
     <string name="not_in_china_alert">この応用は中国地区に限定されています。</string>
     <string name="close_app">終了</string>
+    <string name="connect_step_3">レコーダーWiFiに接続している場合、まだ接続できません。試してみてください。</string>
+    <string name="manual_connect">レコーダーを手動で接続する</string>
+    <string name="connect_failed_upload_log">接続に失敗しました。電話機がレコーダーのWiFiに接続され、正しいデバイスモデルが選択されていることを確認してください。 正しい場合は、ログを送信してカスタマーサービスに連絡してください。</string>
 </resources>

@@ -1107,4 +1107,7 @@
     <string name="cloud_save_tip">La condivisione di Video Solo per salvare un anno</string>
     <string name="not_in_china_alert">L\'applicazione in uso in aree limitate</string>
     <string name="close_app">L\'App di uscita</string>
+    <string name="connect_step_3">Se ti sei connesso al registratore WiFi, non riesci ancora a connetterti, puoi provare</string>
+    <string name="manual_connect">Collegare manualmente il registratore</string>
+    <string name="connect_failed_upload_log">Connessione non riuscita. Conferma che il telefono è collegato al registratore WiFi e che è stato selezionato il modello di dispositivo corretto. Se è corretto, si prega di inviare il registro e contattare il servizio clienti.</string>
 </resources>

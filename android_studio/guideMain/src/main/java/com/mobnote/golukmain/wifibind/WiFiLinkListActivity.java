@@ -380,12 +380,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             connectFailedDialog = new AlertDialog
                     .Builder(this)
                     .setTitle(R.string.wifi_link_conn_failed)
-                    .setMessage(R.string.connect_fail_hint_msg)
+                    .setMessage(R.string.connect_failed_upload_log)
                     .setNegativeButton(R.string.wifi_link_ok, null)
                     .setCancelable(false)
                     .create();
         }
         connectFailedDialog.show();
+
+        GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.connect_fail_hint_msg));
     }
 
     private void hideConnectFailedDialog() {
@@ -579,6 +581,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
+
+        // 选了设备型号并跳转到WIFI页面回来后
+        if (mNeedAutoConnectAfterSelectDeviceType) {
+            sendLogicLinkIpc();
+            return;
+        }
+
         if (!mAutoConn) {
             mStartSystemWifi = true;
             isBackFromWifiListPage = true;
@@ -680,11 +689,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             XLog.tag(LogConst.TAG_CONNECTION).i("Go to system WIFI list page");
             mStartSystemWifi = true;
             isBackFromWifiListPage = true;
-            GolukUtils.startSystemWifiList(this);
+//            GolukUtils.startSystemWifiList(this);
+            showSelectDeviceType(true);
         }
     }
 
     protected void setDefaultInfo() {
+        WifiRsBean wifiInfo = mWac.getConnResult();
+        if (wifiInfo != null) {
+            mWillConnName = wifiInfo.getIpc_ssid();
+            WiFiInfo.IPC_SSID = mWillConnName;
+        }
         // 保存默认的信息
         WiFiInfo.IPC_PWD = IPC_PWD_DEFAULT;
         String wifiName = WiFiInfo.IPC_SSID;
@@ -885,6 +900,32 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
             showConnectFailedDialog();
         }
+    }
+
+    public void selectDeviceType(View view) {
+        showSelectDeviceType(false);
+    }
+
+    private boolean mNeedAutoConnectAfterSelectDeviceType;
+    public void showSelectDeviceType(final boolean needGotoSystemWifiList) {
+        mNeedAutoConnectAfterSelectDeviceType = needGotoSystemWifiList;
+        DeviceTypeSelector typeSelector = new DeviceTypeSelector();
+        typeSelector.showDeviceTypeList(this, new DeviceTypeSelector.OnDeviceTypeSelectListener() {
+            @Override
+            public void onTypeSelected(String type) {
+                System.out.println("");
+                IPCControlManager ipcControlManager = mApp.getIPCControlManager();
+                if (ipcControlManager != null) {
+                    ipcControlManager.setProduceName(type);
+                    ipcControlManager.setIpcMode();
+                    if (!needGotoSystemWifiList) {
+                        sendLogicLinkIpc();
+                    } else {
+                        GolukUtils.startSystemWifiList(WiFiLinkListActivity.this);
+                    }
+                }
+            }
+        });
     }
 
 }

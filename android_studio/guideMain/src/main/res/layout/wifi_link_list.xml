@@ -91,6 +91,33 @@
         android:contentDescription="@string/imgdes" />
 
     <TextView
+        android:id="@+id/tvStep3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
+        android:layout_below="@id/wifilist_img"
+        android:layout_marginTop="30dp"
+        android:drawableLeft="@drawable/ipcbinding_setp_3"
+        android:drawablePadding="10dp"
+        android:gravity="center"
+        android:text="@string/connect_step_3"
+        android:textColor="#595959"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvManualConnect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/wifilist_textView1"
+        android:layout_below="@id/tvStep3"
+        android:gravity="center"
+        android:onClick="selectDeviceType"
+        android:paddingLeft="28dp"
+        android:text="@string/manual_connect"
+        android:textColor="#0587ff"
+        android:textSize="14sp" />
+
+    <TextView
         android:id="@+id/wifilist_textView4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -100,10 +127,10 @@
         android:drawableLeft="@drawable/ipcbinding_setp_3"
         android:drawablePadding="10dp"
         android:gravity="center"
+        android:visibility="gone"
         android:text="@string/wifi_link_37_text"
         android:textColor="#595959"
         android:textSize="14sp" />
-
 
     <Button
         android:id="@+id/next_btn"

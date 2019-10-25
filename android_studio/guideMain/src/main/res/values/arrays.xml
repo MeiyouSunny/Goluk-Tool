@@ -274,4 +274,14 @@
         <item>5120</item>
     </string-array>
 
+    <!-- 设备类型 -->
+    <string-array name="device_type">
+        <item>G1</item>
+        <item>G2</item>
+        <item>T1</item>
+        <item>T1S</item>
+        <item>T2</item>
+        <item>T3</item>
+    </string-array>
+
 </resources>
