@@ -2168,7 +2168,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
         if (wifiInfo != null) {
-            wifiManager.disableNetwork(wifiInfo.getNetworkId());
+            //wifiManager.disableNetwork(wifiInfo.getNetworkId());
+            wifiManager.disconnect();
         }
     }
 
