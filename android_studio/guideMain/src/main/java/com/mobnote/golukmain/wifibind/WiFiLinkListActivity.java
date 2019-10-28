@@ -581,12 +581,17 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void onResume() {
         mApp.setContext(this, "WiFiLinkList");
         super.onResume();
+        XLog.tag(LogConst.TAG_CONNECTION).i("Device connect page onResume()");
 
         // 选了设备型号并跳转到WIFI页面回来后
         if (mNeedAutoConnectAfterSelectDeviceType) {
             sendLogicLinkIpc();
+            mNeedAutoConnectAfterSelectDeviceType = false;
             return;
         }
+
+        // 自动获取WIFI信息,自动连接
+        autoConnWifi();
 
         if (!mAutoConn) {
             mStartSystemWifi = true;
@@ -595,13 +600,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             mAutoConn = true;
             return;
         }
-        if (!isBackFromWifiListPage && !isGolukDeviceWifi()) {
-            return;
-        }
-        collectLog("onResume", "----1:");
-        XLog.tag(LogConst.TAG_CONNECTION).i("Device connect page onResume()");
-        if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
-            autoConnWifi();
+//        if (!isBackFromWifiListPage && !isGolukDeviceWifi()) {
+//            return;
+//        }
+//        collectLog("onResume", "----1:");
+//        if (WifiBindDataCenter.getInstance().isHasDataHistory() || mStartSystemWifi)
+//            autoConnWifi();
         mIsCanAcceptNetState = true;
         isBackFromWifiListPage = false;
     }
