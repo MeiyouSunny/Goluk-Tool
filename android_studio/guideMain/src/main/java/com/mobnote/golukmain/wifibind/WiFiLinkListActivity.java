@@ -591,7 +591,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
 
         // 自动获取WIFI信息,自动连接
-        autoConnWifi();
+        if (mAutoConn) {
+            autoConnWifi();
+        }
 
         if (!mAutoConn) {
             mStartSystemWifi = true;
@@ -907,7 +909,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     }
 
     public void selectDeviceType(View view) {
-        showSelectDeviceType(false);
+        showSelectDeviceType(true);
     }
 
     private boolean mNeedAutoConnectAfterSelectDeviceType;
