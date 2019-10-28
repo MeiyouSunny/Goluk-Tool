@@ -1110,4 +1110,5 @@
     <string name="connect_step_3">レコーダーWiFiに接続している場合、まだ接続できません。試してみてください。</string>
     <string name="manual_connect">レコーダーを手動で接続する</string>
     <string name="connect_failed_upload_log">接続に失敗しました。電話機がレコーダーのWiFiに接続され、正しいデバイスモデルが選択されていることを確認してください。 正しい場合は、ログを送信してカスタマーサービスに連絡してください。</string>
+    <string name="need_disconnect_goluk_wifi">ネットワーク機能を使用するには、レコーダーのWiFiを切断する必要があります！</string>
 </resources>

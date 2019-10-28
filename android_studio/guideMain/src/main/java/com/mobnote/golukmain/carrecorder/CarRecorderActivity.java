@@ -7,11 +7,9 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +68,7 @@ import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.util.JsonUtil;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiRsBean;
@@ -1450,9 +1449,9 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onDestroy() {
         //disable wifi if ipcConnected
-        if (mApp.isIpcLoginSuccess && !mIsLive) {
-            mApp.disableWiFiAndLogOutDevice();
-        }
+//        if (mApp.isIpcLoginSuccess && !mIsLive) {
+//            mApp.disableWiFiAndLogOutDevice();
+//        }
         GolukDebugUtils.e("xuhw", "YYYYYY======onDestroy======");
         if (null != mRtspPlayerView) {
             mRtspPlayerView.removeCallbacks(retryRunnable);
@@ -2376,6 +2375,14 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     }
 
     private void exit() {
+        if (SharedPrefUtil.getGolukWifiAlert()) {
+            showNetworkAlertDialog();
+        } else {
+            finishPage();
+        }
+    }
+
+    private void finishPage() {
         mWonderfulTime = 0;
         reportLog();
         finish();
@@ -2684,4 +2691,21 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 //            mAdasIcon.setVisibility(View.GONE);
 //        }
 //    }
+
+    private void showNetworkAlertDialog() {
+        AlertDialog connectFailedDialog = new AlertDialog
+                .Builder(this)
+                .setMessage(R.string.need_disconnect_goluk_wifi)
+                .setNegativeButton(R.string.wifi_link_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPrefUtil.saveGolukWifiAlert(false);
+                        finishPage();
+                    }
+                })
+                .setCancelable(false)
+                .create();
+        connectFailedDialog.show();
+    }
+
 }

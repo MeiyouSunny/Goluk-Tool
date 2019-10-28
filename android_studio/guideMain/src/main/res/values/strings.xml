@@ -1563,4 +1563,5 @@
     <string name="connect_step_3">If have connected to the recorder WIFI, still can\'t connect, you can try</string>
     <string name="manual_connect">Manually connect the recorder</string>
     <string name="connect_failed_upload_log">Connect failed. Please confirm that has connected to the recorder WiFi and the correct device model is selected. If so, please submit the log and contact customer service.</string>
+    <string name="need_disconnect_goluk_wifi">You need to disconnect the recorder WiFi to use the network function!</string>
 </resources>

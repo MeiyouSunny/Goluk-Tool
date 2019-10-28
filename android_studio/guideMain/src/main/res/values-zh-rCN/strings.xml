@@ -1276,4 +1276,5 @@
     <string name="connect_step_3">如果已连上记录仪WiFi,仍然连不上,可尝试</string>
     <string name="manual_connect">手动连接记录仪</string>
     <string name="connect_failed_upload_log">连接失败，请确认手机已连接记录仪WiFi并选择了正确的设备型号。如果是正确操作请提交日志并联系客服。</string>
+    <string name="need_disconnect_goluk_wifi">需断开记录仪WiFi才能使用网络功能!</string>
 </resources>

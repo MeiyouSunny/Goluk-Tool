@@ -1,19 +1,17 @@
 package com.mobnote.util;
 
-import com.mobnote.application.GolukApplication;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
+import com.mobnote.application.GolukApplication;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -142,6 +140,8 @@ public class SharedPrefUtil {
 
     /* IPC 异常日志最后获取ID信息 */
     public static final String IPC_EXCEPTION_INFO = "ipc_exception_info";
+    /* 提示Goluk WIFI不能上网 */
+    public static final String KEY_FIRST_ALERT_NETWORK = "GolukWifiAlert";
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Android config, by Micle
@@ -812,6 +812,16 @@ public class SharedPrefUtil {
     public static boolean saveCacheCarBrand(boolean value) {
         SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
         return preference.edit().putBoolean(PROPERTY_CACHE_ALL_CAR_BRAND, value).commit();
+    }
+
+    public static boolean getGolukWifiAlert() {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.getBoolean(KEY_FIRST_ALERT_NETWORK, true);
+    }
+
+    public static boolean saveGolukWifiAlert(boolean value) {
+        SharedPreferences preference = GolukApplication.getInstance().getSharedPreferences("MainActivity", Activity.MODE_PRIVATE);
+        return preference.edit().putBoolean(KEY_FIRST_ALERT_NETWORK, value).commit();
     }
 
 
