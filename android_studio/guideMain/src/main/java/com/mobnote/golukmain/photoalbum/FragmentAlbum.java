@@ -433,27 +433,30 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             GolukUtils.setTabHostVisibility(true, getActivity());
         } else if (id == R.id.back_btn) {
             if (parentViewIsMainActivity && !selectMode && !fromCloud) {
-                final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
-                mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
-                mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        mPopMenu.dismiss();
-                        if (item.getItemId() == R.id.action_sd) {
-                            if (GolukApplication.getInstance().getIpcIsLogin()) {
-                                Intent photoalbum = new Intent(FragmentAlbum.this.getActivity(), PhotoAlbumActivity.class);
-                                photoalbum.putExtra("from", "cloud");
-                                startActivity(photoalbum);
-                            } else {
-                                Intent intent = new Intent(getContext(), WiFiLinkListActivity.class);
-                                intent.putExtra(WiFiLinkListActivity.ACTION_GO_To_ALBUM, true);
-                                startActivity(intent);
-                            }
-                        }
-                        return false;
-                    }
-                });
-                mPopMenu.show();
+//                final PopupMenu mPopMenu = new PopupMenu(getContext(), mBackBtn);
+//                mPopMenu.getMenuInflater().inflate(R.menu.menu_album_change, mPopMenu.getMenu());
+//                mPopMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+//                    @Override
+//                    public boolean onMenuItemClick(MenuItem item) {
+//                        mPopMenu.dismiss();
+//                        if (item.getItemId() == R.id.action_sd) {
+//                            if (GolukApplication.getInstance().getIpcIsLogin()) {
+//                                Intent photoalbum = new Intent(FragmentAlbum.this.getActivity(), PhotoAlbumActivity.class);
+//                                photoalbum.putExtra("from", "cloud");
+//                                startActivity(photoalbum);
+//                            } else {
+//                                Intent intent = new Intent(getContext(), WiFiLinkListActivity.class);
+//                                intent.putExtra(WiFiLinkListActivity.ACTION_GO_To_ALBUM, true);
+//                                startActivity(intent);
+//                            }
+//                        }
+//                        return false;
+//                    }
+//                });
+//                mPopMenu.show();
+                Intent photoalbum = new Intent(FragmentAlbum.this.getActivity(), PhotoAlbumActivity.class);
+                photoalbum.putExtra("from", "cloud");
+                startActivity(photoalbum);
             } else {
                 PhotoAlbumActivity activity = (PhotoAlbumActivity) getActivity();
                 activity.onBackPressed();

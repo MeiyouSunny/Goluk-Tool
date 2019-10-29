@@ -900,7 +900,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
-            mApp.disableWiFiAndLogOutDevice();
+            //mApp.disableWiFiAndLogOutDevice();
             finish();
         } else if (SHOW_TOAST == msg.what) {
 //            GolukUtils.showToast(this, getResources().getString(R.string.wifi_link_conn_failed));
