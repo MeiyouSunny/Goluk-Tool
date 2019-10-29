@@ -317,6 +317,21 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         super.onDestroy();
 
         EventBus.getDefault().unregister(this);
+        ApiUtil.saveMenuInfo(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                startRecord();
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+                startRecord();
+            }
+        });
+        T1SPConnecter.instance().removeListener(this);
+    }
+
+    private void startRecord() {
         ApiUtil.startRecord(true, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
@@ -326,7 +341,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             public void onFail(int i, int i1) {
             }
         });
-        T1SPConnecter.instance().removeListener(this);
     }
 
     @Override
