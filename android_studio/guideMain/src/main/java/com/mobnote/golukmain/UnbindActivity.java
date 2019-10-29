@@ -1,9 +1,6 @@
 package com.mobnote.golukmain;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -337,15 +334,15 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (mApplication.getIPCControlManager() != null) {
             mApplication.getIPCControlManager().removeIPCManagerListener(TAG);
         }
-        if (GolukApplication.getInstance().isIpcLoginSuccess) {
-            GolukApplication.getInstance().mIPCControlManager.setVdcpDisconnect();
-            GolukApplication.getInstance().setIpcLoginOut();
-            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-            if (wifiInfo != null) {
-                wifiManager.disableNetwork(wifiInfo.getNetworkId());
-            }
-        }
+//        if (GolukApplication.getInstance().isIpcLoginSuccess) {
+//            GolukApplication.getInstance().mIPCControlManager.setVdcpDisconnect();
+//            GolukApplication.getInstance().setIpcLoginOut();
+//            WifiManager wifiManager = (WifiManager) this.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+//            WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+//            if (wifiInfo != null) {
+//                wifiManager.disableNetwork(wifiInfo.getNetworkId());
+//            }
+//        }
         EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
