@@ -72,6 +72,7 @@ import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiRsBean;
+import com.mobnote.wifibind.WifiUtil;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.car.player.RtspPlayerView;
@@ -941,10 +942,16 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
      * @date 2015年1月28日
      */
     public void start() {
-        WifiRsBean wrb = ReadWifiConfig.readConfig();
-        if (wrb != null && GolukApplication.getInstance().getIpcIsLogin()) {
-            mConnectTip.setText(wrb.getIpc_ssid());
+        if (GolukApplication.getInstance().getIpcIsLogin()) {
+            WifiRsBean wrb = ReadWifiConfig.readConfig();
+            if (wrb == null || TextUtils.isEmpty(wrb.getIpc_ssid())) {
+                WifiUtil wifiUtil = new WifiUtil(this);
+                mConnectTip.setText(wifiUtil.getWifiName());
+            } else {
+                mConnectTip.setText(wrb.getIpc_ssid());
+            }
         }
+
         if (null != mRtspPlayerView) {
             mRtspPlayerView.setVisibility(View.VISIBLE);
             String url = PlayUrlManager.getRtspUrl();
