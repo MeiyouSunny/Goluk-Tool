@@ -321,16 +321,16 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         if (currentType == PhotoAlbumConfig.PHOTO_BUM_LOCAL) {
             mLocalFragment.loadData(true);
             mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE && mTimeslapseFragment != null) {
             mTimeslapseFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabTimeslapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && mWonderfulFragment != null) {
             mWonderfulFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabWonderful.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG && mUrgentFragment != null) {
             mUrgentFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabUrgent.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
-        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+        } else if (currentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && mLoopFragment != null) {
             mLoopFragment.loadData(GolukApplication.getInstance().isIpcLoginSuccess);
             mTabLoop.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color));
         }
