@@ -1028,7 +1028,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             if (m_bIsFullScreen) {
                 return;
             }
-            preExit();
+            exit();
         } else if (id == R.id.m8sBtn) {
             if (m_bIsFullScreen) {
                 return;
@@ -2326,7 +2326,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
             // 全屏时，退出全屏
             setFullScreen(false);
         } else {
-            preExit();
+            exit();
         }
     }
 
