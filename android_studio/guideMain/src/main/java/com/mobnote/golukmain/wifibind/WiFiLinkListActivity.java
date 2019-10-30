@@ -899,6 +899,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     protected void hMessage(Message msg) {
         if (MSG_H_REGION == msg.what) {
             this.dimissLoadingDialog();
+            mApp.setCanNotUse(true);
             GolukUtils.showToast(WiFiLinkListActivity.this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             //mApp.disableWiFiAndLogOutDevice();
             finish();

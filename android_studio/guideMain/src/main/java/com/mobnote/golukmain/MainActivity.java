@@ -423,10 +423,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
         if (mApp.isIpcLoginSuccess) {
-            Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            if (mApp.canNotUse()) {
+                GolukUtils.showToast(this, getResources().getString(R.string.interantion_ban_mainland_goluk));
+            } else {
+                Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(intent);
+            }
             return;
         }
         Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);

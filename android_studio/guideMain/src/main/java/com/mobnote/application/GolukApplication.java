@@ -1247,12 +1247,26 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         }
     }
 
+    // 海外版不能使用国内设备标识
+    private boolean mCanNotUse;
+
+    public void setCanNotUse(boolean canNotUse) {
+        mCanNotUse = canNotUse;
+    }
+
+    public boolean canNotUse() {
+        return mCanNotUse;
+    }
+
     // 设置连接状态
     private void setIpcLoginState(boolean isSucess) {
         isIpcLoginSuccess = isSucess;
         isIpcConnSuccess = isSucess;
         if (isSucess) {
             checkContinueLive();
+        }
+        if (!isSucess) {
+            mCanNotUse = false;
         }
     }
 
