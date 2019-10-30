@@ -170,13 +170,13 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
             @Override
             public void onPageSelected(int position) {
                 GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");
-                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE) {
+                if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_TIMESLAPSE && mTimeslapseFragment != null) {
                     mTimeslapseFragment.removeFooterView();
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND && mWonderfulFragment != null) {
                     mWonderfulFragment.removeFooterView();
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG && mUrgentFragment != null) {
                     mUrgentFragment.removeFooterView();
-                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
+                } else if (mCurrentType == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP && mLoopFragment != null) {
                     mLoopFragment.removeFooterView();
                 }
 
