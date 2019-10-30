@@ -437,7 +437,7 @@ public class FragmentFollowed extends Fragment implements IRequestResultListener
                                 FollowedRecomUserBean tmpBean = userBeanList.get(j);
                                 tmpBean.position = j;
                                 tmpBean.showAllFollow = false;
-                                gotList.add(tmpBean);
+                                //gotList.add(tmpBean);
                             }
                         }
                     }
