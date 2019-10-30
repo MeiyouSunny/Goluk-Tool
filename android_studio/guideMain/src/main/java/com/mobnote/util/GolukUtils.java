@@ -1415,7 +1415,7 @@ public class GolukUtils {
         }
 
         model = model.toLowerCase();
-        if (model.startsWith("g") || model.equals("t1s") || model.equals("t3")) {
+        if (model.startsWith("g") || model.equals("t1s")) {
             return 1;
         }
 
