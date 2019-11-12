@@ -19,7 +19,7 @@ public class UpLoadVideoSignRequest extends GolukFastjsonRequest<SignBean> {
 	@Override
 	protected String getPath() {
 		// TODO Auto-generated method stub
-		return "/navidog4MeetTrans/videosign.htm";
+		return "/navidog4MeetTrans/videosignv2.htm";
 	}
 
 	@Override

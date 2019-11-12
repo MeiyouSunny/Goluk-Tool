@@ -70,7 +70,6 @@ dependencies {
     compile files('libs/jsr305-3.0.0.jar')
     compile files('libs/library-2.4.0.jar')
     compile files('libs/stickylistheaderslibrary.jar')
-    compile files('libs/upload_1.1.4.1.jar')
     compile files('libs/after-effect.jar')
     compile 'com.android.support:multidex:1.0.1'
     compile files('libs/photoview-library-1.2.2.jar')
@@ -102,6 +101,8 @@ dependencies {
     compile 'com.tencent.wup:wup:1.0.0.E-release'
     // 信鸽mid包
     compile 'com.tencent.mid:mid:4.0.6-release'
+    //COS uploader 腾讯云上传
+    implementation 'com.tencent.cos:cos:4.3.2+@aar'
 
     compile project(':commonGoluk')
 }
