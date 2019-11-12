@@ -112,7 +112,7 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
                 XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Photo onUploadSucceed");
                 PutObjectResult result = (PutObjectResult) cosResult;
                 GolukDebugUtils.e("goluk", "上传成功! ret:" + result.code);
-                mUrl.put(QCloudHelper.PHOTO_BUCKET, result.url);
+                mUrl.put(QCloudHelper.PHOTO_BUCKET, result.source_url);
                 mPhotoUploadTask = null;
                 if (!uploadVideoToCloud()) {
                     mListener.onUploadFailed(-1, "upload video failed");
@@ -160,9 +160,9 @@ public class UpLoadVideoRequest extends UpLoadRequest implements IRequestResultL
             @Override
             public void onSuccess(COSRequest cosRequest, COSResult cosResult) {
                 PutObjectResult result = (PutObjectResult) cosResult;
-                XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadSucceed:%s", result.url);
+                XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Video onUploadSucceed:%s", result.source_url);
                 GolukDebugUtils.e("goluk", "上传成功! ret:" + result.code);
-                mUrl.put(QCloudHelper.VIDEO_BUCKET, result.url);
+                mUrl.put(QCloudHelper.VIDEO_BUCKET, result.source_url);
                 mListener.onUploadSucceed(mUrl);
                 mVideoUploadTask = null;
             }
