@@ -3,6 +3,7 @@ package com.mobnote.golukmain.upgrade;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.http.request.GolukFastjsonRequest;
 import com.mobnote.golukmain.upgrade.bean.UpgradeResultbean;
+import com.mobnote.util.SharedPrefUtil;
 
 import java.util.Map;
 
@@ -28,7 +29,7 @@ public class CheckUpgradeRequest extends GolukFastjsonRequest<UpgradeResultbean>
         Map<String, String> headerParams = getHeader();
         headerParams.put("vapp", vapp);
         headerParams.put("vipc", vipc);
-        headerParams.put("commhdtype", "T2S");
+        headerParams.put("commhdtype", SharedPrefUtil.getIpcModel());
         get();
     }
 }

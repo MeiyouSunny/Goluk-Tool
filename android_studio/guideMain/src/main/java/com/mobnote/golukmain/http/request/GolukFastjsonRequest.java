@@ -67,7 +67,6 @@ public abstract class GolukFastjsonRequest<T> {
 		} else {
 			mHeaders.put("commhdtype", "");
 		}
-		mHeaders.put("commhdtype", "T2S");
 		mHeaders.put("commipcversion", SharedPrefUtil.getIPCVersion());
 		mHeaders.put("commdevmodel", android.os.Build.MODEL);
 		mHeaders.put("commlat", "" + LngLat.lat);
