@@ -2,11 +2,17 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.AnimationDrawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -15,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewStub;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -29,12 +36,16 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
+import com.mobnote.eventbus.EventFinishWifiActivity;
 import com.mobnote.eventbus.EventHotSpotSuccess;
 import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.BuildConfig;
+import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IpcDataParser.TriggerRecord;
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.entity.VideoFileInfo;
@@ -51,20 +62,26 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.livevideo.StartLiveActivity;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.videosuqare.RingView;
+import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkCompleteActivity;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
+import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.log.app.LogConst;
+import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.util.GolukFastJsonUtil;
+import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
 import com.mobnote.util.JsonUtil;
@@ -87,6 +104,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -103,6 +121,9 @@ import cn.com.tiros.api.FileUtils;
 import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+
+import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.ACTION_GO_To_ALBUM;
+import static com.mobnote.golukmain.wifibind.WiFiLinkListActivity.isWifiConnected;
 
 /**
  * 行车记录仪处理类
@@ -385,6 +406,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        T1SPConnecter.instance().mRecordActivity = this;
         mLayoutFlater = LayoutInflater.from(this);
         mRootLayout = (RelativeLayout) mLayoutFlater.inflate(R.layout.carrecorder_main, null);
 
@@ -1492,6 +1514,7 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
         // 停止定位
         BaiduLocation.getInstance().stopLocation();
+        T1SPConnecter.instance().needDisconnectWIFI(true);
     }
 
     /**

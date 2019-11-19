@@ -1560,8 +1560,9 @@
     <string name="not_in_china_alert">This application is limited to use in China.</string>
     <string name="close_app">Quit App</string>
 
-    <string name="connect_step_3">If have connected to the recorder WIFI, still can\'t connect, you can try</string>
-    <string name="manual_connect">Manually connect the recorder</string>
-    <string name="connect_failed_upload_log">Connect failed. Please confirm that has connected to the recorder WiFi and the correct device model is selected. If so, please submit the log and contact customer service.</string>
-    <string name="need_disconnect_goluk_wifi">You need to disconnect the recorder WiFi to use the network function!</string>
+    <string name="no_wifi_selected">You are currently connected to non-GOLUK Wi-Fi, please switch to GOLUK Wi-Fi and try again.</string>
+    <string name="not_goluk_device">Please connect to GOLUK Wi-Fi. If you are connected, please turn off Bluetooth and VPN and try again;</string>
+    <string name="compress_video">正在压缩视频...</string>
+    <string name="export_error">导出失败</string>
+    <string name="exporting">正在导出...</string>
 </resources>

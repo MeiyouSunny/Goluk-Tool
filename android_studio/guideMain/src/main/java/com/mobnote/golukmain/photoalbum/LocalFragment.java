@@ -24,6 +24,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.log.app.LogConst;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.veuisdk.SdkEntry;
@@ -94,6 +95,13 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                             GolukDebugUtils.e(LocalFragment.this.getClass().getSimpleName(), "Delete failed  Path is :" + imgfile.getAbsolutePath());
                         }
                     }
+                    // T1SP删除对应的GPS文件
+//                    final String gpsFilePath = FileUtil.getGpsFileByVideoPath(path);
+//                    File gpsFile = new File(gpsFilePath);
+//                    if (gpsFile.exists()) {
+//                        gpsFile.delete();
+//                    }
+
                     SettingUtils.getInstance().putBoolean(filename, true);
                     break;
                 }
@@ -243,6 +251,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         mWonderfulVideoAdapter.notifyDataSetChanged();
     }
 
+
     /**
      * 跳转到本地视频播放页面
      */
@@ -272,25 +281,45 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                     "FileName:%s, Path:%s, HP:%s, Size:%s, Type:%s", filename, path, videoHP, size, type + "");
 
             if (!mFragmentAlbum.parentViewIsMainActivity) {
-                if (type != 3) {// 不是循环视频
+                if (type != PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {// 不是循环视频
                     GolukUtils.startPhotoAlbumPlayerActivity(getActivity(), type, "local", path, filename, createTime, videoHP, size,
                             (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
                     return;
                 }
             }
+
+            // T1SP的紧急视频或循环视频,跳转到PhotoAlbumPlayerT1SP(需要播放轨迹)
+//            if (isT1spVideoAndHaveGpsFile(path)) {
+//                boolean isShareVideo = path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
+//                GolukUtils.startPhotoAlbumPlayerT1spActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
+//                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO), isShareVideo);
+//                return;
+//            }
+            // 其他视频文件
             GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
                     (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
         }
     }
 
-    public int getVideoType(String name) {
-        if (name.contains("WND")) {
-            return 1;
-        } else if (name.contains("URG")) {
-            return 2;
-        } else {
-            return 3;
+    /**
+     * T1SP的视频并且包含GPS文件
+     */
+    private boolean isT1spVideoAndHaveGpsFile(String path) {
+        // 循环/紧急/缩时视频轨迹为.NMEA文件
+        if (path.contains(FileUtil.URGENT_VIDEO_PREFIX) ||
+                path.contains(FileUtil.LOOP_VIDEO_PREFIX) ||
+                path.contains(FileUtil.TIMELAPSE_VIDEO_PREFIX)) {
+            String gpsPath = path.replace("MP4", "NMEA");
+            File gpsFile = new File(gpsPath);
+            return gpsFile.exists();
         }
+
+        // 精彩视频轨迹在视频文件中
+        return path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
+    }
+
+    public int getVideoType(String name) {
+        return PhotoAlbumConfig.getVideoTypeByName(name);
     }
 
     @Override
@@ -327,7 +356,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 updateNewState(filename);
 
                 d.getVideoInfo1().isNew = false;
-                mWonderfulVideoAdapter.notifyDataSetChanged();
+                //mWonderfulVideoAdapter.notifyDataSetChanged();
             } else {
                 // 点击列表右边项,跳转到视频播放页面
 
@@ -341,7 +370,7 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                 updateNewState(filename);
 
                 d.getVideoInfo2().isNew = false;
-                mWonderfulVideoAdapter.notifyDataSetChanged();
+                //mWonderfulVideoAdapter.notifyDataSetChanged();
             }
         }
     }

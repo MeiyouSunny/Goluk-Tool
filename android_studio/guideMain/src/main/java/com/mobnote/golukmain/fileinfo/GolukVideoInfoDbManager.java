@@ -1,12 +1,13 @@
 package com.mobnote.golukmain.fileinfo;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
@@ -47,17 +48,17 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 	}
 
 	private void openDb() {
-		new Thread() {
-			public void run() {
+//		new Thread() {
+//			public void run() {
 				GolukDebugUtils.e("", "dbtest----GolukDbManager------openDb----1");
 				db = mDbHelper.getWritableDatabase();
 				if (null != db) {
 					isOpen = true;
 				}
 				GolukDebugUtils.e("", "dbtest----GolukDbManager------openDb----isOpen:  " + isOpen);
-			}
-
-		}.start();
+//			}
+//
+//		}.start();
 	}
 
 	@Override
@@ -159,6 +160,16 @@ public class GolukVideoInfoDbManager implements IVideoInfoDataFn {
 			}
 		}
 		return bean;
+	}
+
+	/**
+	 * 是否已经保存了对应的视频信息
+	 *
+	 * @param fileName 视频名称
+	 */
+	public boolean hasSaved(String fileName) {
+		VideoFileInfoBean fileInfo = selectSingleData(fileName);
+		return fileInfo != null;
 	}
 
 	@Override

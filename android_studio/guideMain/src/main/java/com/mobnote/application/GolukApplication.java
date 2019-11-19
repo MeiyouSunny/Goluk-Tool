@@ -1,5 +1,16 @@
 package com.mobnote.application;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -14,6 +25,19 @@ import android.provider.MediaStore;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
+
+import cn.com.mobnote.logic.GolukLogic;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
+import cn.com.mobnote.module.location.GolukPosition;
+import cn.com.mobnote.module.location.ILocationFn;
+import cn.com.mobnote.module.msgreport.IMessageReportFn;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.mobnote.module.talk.ITalkFn;
+import cn.com.tiros.api.Const;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.baidu.BaiduLocation;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.alibaba.fastjson.JSON;
 import com.baidu.mapapi.SDKInitializer;
@@ -57,6 +81,7 @@ import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.CountryBean;
 import com.mobnote.golukmain.internation.login.GolukMobUtils;
 import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
 import com.mobnote.golukmain.livevideo.VdcpLiveBean;
 import com.mobnote.golukmain.player.SdkHandler;
@@ -76,6 +101,9 @@ import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.map.LngLat;
+import com.mobnote.t1sp.base.ui.BaseOnViewBindListener;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
 import com.mobnote.user.User;
@@ -358,6 +386,15 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         return mIsExit;
     }
 
+    VKAccessTokenTracker vkAccessTokenTracker = new VKAccessTokenTracker() {
+        @Override
+        public void onVKAccessTokenChanged(VKAccessToken oldToken, VKAccessToken newToken) {
+            if (newToken == null) {
+                // VKAccessToken is invalid
+            }
+        }
+    };
+
     private boolean isInitializeSDK = false;
 
     @Override
@@ -371,17 +408,16 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
         if (isMainProcess()) {
             HttpManager.getInstance();
-
-//            initializeSDK();
+            initializeSDK();
         }
 
         // TODO 此处不要做初始化相关的工作
     }
 
     /**
-     * 初始化SDK
+     * 锐动SDK文档
      */
-    public void initializeSDK() {
+    private void initializeSDK() {
         if (isInitializeSDK) return;
         //百度sdk
         SDKInitializer.initialize(this);
@@ -392,15 +428,23 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         initXLog();
         GolukMobUtils.initMob(this);
         ZhugeSDK.getInstance().init(getApplicationContext());
-
-        //锐动SDK
         SdkEntry.enableDebugLog(true);
         String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
-        if (isMainland()) {
+        if(isMainland()) {
             SdkEntry.initialize(this, videoPath, RD_APP_KEY, RD_APP_SECRET, new SdkHandler().getCallBack());
-        } else {
+        }else{
             SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
         }
+
+        // T1SP
+        MVP.registerOnViewBindListener(new BaseOnViewBindListener());
+        $.initialize(this);
+        com.mobnote.t1sp.api.HttpManager.initHttp();
+        goluk.com.t1s.api.HttpManager.initHttp();
+        // Downloader
+        DownloaderT1spImpl.init(this);
+        // Connecter
+        T1SPConnecter.instance().init(this);
 
         // Bugly
         String buglyId = isMainland() ? "900012751" : "900021946";
@@ -448,9 +492,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         LogConfiguration config = new LogConfiguration.Builder()
                 .logLevel(LogLevel.ALL)            // Specify log level, logs below this level won't be printed, default: LogLevel.ALL
                 .tag("goluk")                                         // Specify TAG, default: "X-LOG"
-                .nt()                                                  // Enable thread info, disabled by default
-                //.st(1)                                                 // Enable stack trace info with depth 2, disabled by default
-                //.b()                                                   // Enable border, disabled by default
+                .nt()                                                   // Enable thread info, disabled by default
+                .st(1)                                                 // Enable stack trace info with depth 2, disabled by default
+                .b()                                                   // Enable border, disabled by default
                 .build();
 
         Printer androidPrinter = new AndroidPrinter();             // Printer that print the log using android.util.Log
@@ -789,10 +833,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             return mVideoSavePath + "wonderful/";
         } else if (IPCManagerFn.TYPE_URGENT == type) {
             return mVideoSavePath + "urgent/";
-        } else if (IPCManagerFn.TYPE_CIRCULATE == type) {
-            return mVideoSavePath + "loop/";
         } else {
-            return mVideoSavePath + "reduce/";
+            return mVideoSavePath + "loop/";
         }
     }
 
@@ -1003,8 +1045,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                         }
                     }
 
-                    XLog.tag(LogConst.TAG_DOWNLOAD).i("Count %d/%d, current progress:%s, %d", mNoDownLoadFileList.size(),
-                            mDownLoadFileList.size(), filename, percent);
                 } else if (0 == success) {
                     // 下载完成
                     if (null != mMainActivity) {
@@ -1264,7 +1304,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
     // 设置连接状态
-    private void setIpcLoginState(boolean isSucess) {
+    public void setIpcLoginState(boolean isSucess) {
         isIpcLoginSuccess = isSucess;
         isIpcConnSuccess = isSucess;
         if (isSucess) {
@@ -1273,6 +1313,13 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (!isSucess) {
             mCanNotUse = false;
         }
+    }
+
+    /**
+     * 当前是否是T1SP处于连接状态
+     */
+    private boolean isT1SPAndConnected() {
+        return mIPCControlManager.isT2S() && isIpcConnSuccess;
     }
 
     // VDCP 连接状态 回调
@@ -1666,10 +1713,12 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         if (this.isExit()) {
             return;
         }
-        if (ENetTransEvent_IPC_VDCP_ConnectState == event) {
+        // T1SP忽略
+        if (ENetTransEvent_IPC_VDCP_ConnectState == event && !isT1SPAndConnected()) {
             IPC_VDCP_Connect_CallBack(msg, param1, param2);
         }
-        if (ENetTransEvent_IPC_VDCP_CommandResp == event) {
+        // T1SP忽略
+        if (ENetTransEvent_IPC_VDCP_CommandResp == event && !isT1SPAndConnected()) {
             IPC_VDC_CommandResp_CallBack(event, msg, param1, param2);
         }
         // IPC下载连接状态 event = 2

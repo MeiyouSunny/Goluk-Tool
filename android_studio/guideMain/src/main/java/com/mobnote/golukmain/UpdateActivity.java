@@ -5,11 +5,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,11 +29,15 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
+import com.mobnote.eventbus.EventIpcUpdateSuccess;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.log.app.LogConst;
+import com.mobnote.t1sp.upgrade.UpgradeListener;
+import com.mobnote.t1sp.upgrade.UpgradeManager;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.user.DataCleanManage;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.IpcUpdateManage;
@@ -43,6 +51,7 @@ import com.mobnote.wifibind.WifiRsBean;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -55,7 +64,7 @@ import de.greenrobot.event.EventBus;
  *
  * @author mobnote
  */
-public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, WifiConnCallBack {
+public class UpdateActivity extends BaseActivity implements OnClickListener, IPCManagerFn, WifiConnCallBack, UpgradeListener {
     /**
      * 下载 / 安装按钮
      **/
@@ -92,6 +101,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
      * 升级过程中提示不要断电图片
      **/
     private ImageView mNoBreakImage, mtfCardImage;
+    // 升级提示
+    private TextView mTvUpgradeHint;
     /**
      * 升级过程中提示不要断点文字
      **/
@@ -233,6 +244,8 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
     private AlertDialog mCheckSDCard = null;
     private boolean mIsUpgrading;
 
+    private UpgradeManager mT1SPUpgradeManager;
+
     @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -341,16 +354,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         if (mIsExit) {
                             return;
                         }
+                        String text = getString(R.string.str_ipc_update_first_period);
+                        if (!mApp.getIPCControlManager().isT2S()) {
+                            text = text + ": " + mPercent + getString(R.string.str_ipc_update_percent_unit);
+                        }
                         if (mSendDialog == null) {
-                            mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, mApp.getContext()
-                                    .getResources().getString(R.string.str_ipc_update_first_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mSendDialog = UserUtils.showDialogUpdate(UpdateActivity.this, text);
                         } else {
-                            mSendDialog.setMessage(mApp.getContext().getResources().getString(
-                                    R.string.str_ipc_update_first_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mSendDialog.setMessage(text);
                         }
 
                         XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading stage 1: " + mPercent + "%");
@@ -375,16 +386,14 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                             return;
                         }
                         mIsDisConnect = true;
+                        String alertMsg = mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period);
+                        // 小白无升级进度回调
+                        if (!(mApp.getIPCControlManager().isT2S()))
+                            alertMsg = alertMsg + ": " + mPercent + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit);
                         if (mUpdateDialog == null) {
-                            mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this,
-                                    mApp.getContext().getResources().getString(R.string.str_ipc_update_second_period)
-                                            + mPercent
-                                            + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mUpdateDialog = UserUtils.showDialogUpdate(UpdateActivity.this, alertMsg);
                         } else {
-                            mUpdateDialog.setMessage(mApp.getContext().getResources()
-                                    .getString(R.string.str_ipc_update_second_period)
-                                    + mPercent
-                                    + mApp.getContext().getResources().getString(R.string.str_ipc_update_percent_unit));
+                            mUpdateDialog.setMessage(alertMsg);
                         }
 
                         XLog.tag(LogConst.TAG_UPGRADE).i("Upgrading stage 2: " + mPercent + "%");
@@ -403,11 +412,16 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                                 || IPCControlManager.T2_SIGN.equals(mApp.mIPCControlManager.mProduceName)) {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success_t1));
+                        } else if (mApp.getIPCControlManager().isT2S()) {
+                            UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
+                                    .getString(R.string.str_ipc_update_success_t1s));
                         } else {
                             UserUtils.showUpdateSuccess(mUpdateDialogSuccess, UpdateActivity.this, mApp.getResources()
                                     .getString(R.string.str_ipc_update_success));
                         }
                         isNewVersion();
+                        // 发送升级成功Event
+                        EventBus.getDefault().post(new EventIpcUpdateSuccess());
 
                         // 保存ipc版本号
                         SharedPrefUtil.saveIPCVersion(mIpcVersion);
@@ -621,6 +635,20 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         ZhugeUtils.eventIpcUpdate(this);
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        // 处理手动删除已下载的固件,返回当前页面
+        boolean hasIpcFile = mApp.mIpcUpdateManage.isIpcUpdateBinFileExist();
+        if (!hasIpcFile) {
+            mSign = 0;
+            mTextDowload.setText(this.getResources().getString(R.string.str_ipc_update_undownload));
+            mBtnDownload.setText(this.getResources().getString(R.string.str_ipc_update_download_file));
+            mDownloadStatus = IpcUpdateManage.DOWNLOAD_STATUS_FAIL;
+            mBtnDownload.setEnabled(true);
+        }
+    }
+
     // 初始化view
     public void initView() {
         ImageButton mBtnBack = (ImageButton) findViewById(R.id.back_btn);
@@ -637,12 +665,22 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         mVoiceLayout = (RelativeLayout) findViewById(R.id.rl_update_voice);
         mtfCardImage = (ImageView) findViewById(R.id.iv_upgrade_tfcard_image);
         mtfCardText = (TextView) findViewById(R.id.tv_upgrade_tfcard_text);
+        mTvUpgradeHint = (TextView) findViewById(R.id.upgrade_hint);
         mLaterLayout = (RelativeLayout) findViewById(R.id.rl_update_later);
 
         // 监听
         mBtnBack.setOnClickListener(this);
         mBtnDownload.setOnClickListener(this);
         mVoiceLayout.setOnClickListener(this);
+
+        // T1SP提示文字增加重启提示
+        if (mApp.getIPCControlManager().isT2S()) {
+            String hint = getString(R.string.ipc_hint_text);
+            String hintT1SP = getString(R.string.t1sp_ipc_hint_text);
+            SpannableStringBuilder style = new SpannableStringBuilder(hintT1SP);
+            style.setSpan(new ForegroundColorSpan(Color.RED), hint.length(), hintT1SP.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            mTvUpgradeHint.setText(style);
+        }
     }
 
     @Override
@@ -693,14 +731,23 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
                         // version + "，当前已是最新版本");
                         isNewVersion();
                     } else {
-                        String file = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
-                        boolean b = mApp.mIpcUpdateManage.ipcInstall(file);
-                        if (b) {
-                            //mIsUpgrading = true;
-                            mtfCardImage.setVisibility(View.GONE);
-                            mtfCardText.setVisibility(View.GONE);
-                            mNoBreakImage.setVisibility(View.VISIBLE);
-                            mNoBreakText.setVisibility(View.VISIBLE);
+                        String filePath = mApp.mIpcUpdateManage.isHasIPCFile(mIpcVersion);
+                        if (mApp.getIPCControlManager().isT2S()) {
+                            // T1SP设备
+                            File binFile = new File(FileUtil.convertFs1ToRealPath(filePath));
+                            mT1SPUpgradeManager = new UpgradeManager(binFile);
+                            mT1SPUpgradeManager.setListener(this);
+                            mT1SPUpgradeManager.start();
+                        } else {
+                            // 传统设备
+                            boolean b = mApp.mIpcUpdateManage.ipcInstall(filePath);
+                            if (b) {
+                                mIsUpgrading = true;
+                                mtfCardImage.setVisibility(View.GONE);
+                                mtfCardText.setVisibility(View.GONE);
+                                mNoBreakImage.setVisibility(View.VISIBLE);
+                                mNoBreakText.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -1009,6 +1056,9 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         EventBus.getDefault().unregister(this);
 
         XLog.tag(LogConst.TAG_UPGRADE).i("Leave updage page.");
+
+        if (mT1SPUpgradeManager != null)
+            mT1SPUpgradeManager.stop();
     }
 
     /**
@@ -1128,6 +1178,45 @@ public class UpdateActivity extends BaseActivity implements OnClickListener, IPC
         }
         super.onBackPressed();
     }
+
+    @Override
+    public void onEnterUpgradeMode(boolean success) {
+        if (!success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUploadUpgradeFileStart() {
+        mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
+    }
+
+    @Override
+    public void onUploadProgress(int progress) {
+//        mPercent = String.valueOf(progress);
+//        mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_FILE);
+    }
+
+    @Override
+    public void onUploadUpgradeFileResult(boolean success) {
+        if (success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_TRANSFER_OK);
+        else
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUpgradeStart(boolean success) {
+        if (success)
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADEING);
+        else
+            mUpdateHandler.sendEmptyMessage(UPDATE_UPGRADE_FAIL);
+    }
+
+    @Override
+    public void onUpgradeFinish(boolean success) {
+        mUpdateHandler.sendEmptyMessage(success ? UPDATE_UPGRADE_OK : UPDATE_UPGRADE_FAIL);
+    }
+
 
     public void onEventMainThread(EventWifiState event) {
         if (event != null && event.getOpCode() == EventConfig.WIFI_STATE && event.getMsg()) {

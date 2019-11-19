@@ -2,6 +2,16 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.text.TextUtils;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TimeZone;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -48,6 +58,7 @@ public class IPCControlManager implements IPCManagerFn {
     public static final String T2U_SIGN = "T2U";
     public static final String T3_SIGN = "T3";
     public static final String T3U_SIGN = "T3U";
+    public static final String T2S_SIGN = "T2S";
 
     public static final String MODEL_T = "T";
     public static final String MODEL_G = "G";
@@ -97,7 +108,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setIpcMode() {
-        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName) || T3U_SIGN.equals(mProduceName)) {
+        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_IPCDirect);
         } else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_T1);
@@ -125,6 +136,13 @@ public class IPCControlManager implements IPCManagerFn {
     public boolean isT1OrT2() {
         return T1_SIGN.equals(mProduceName) || T1U_SIGN.equals(mProduceName)
                 || T2_SIGN.equals(mProduceName) || T2U_SIGN.equals(mProduceName);
+    }
+
+    /**
+     * 是否是T1SP设备
+     */
+    public boolean isT2S() {
+        return !TextUtils.isEmpty(mProduceName) && TextUtils.equals(mProduceName, T2S_SIGN);
     }
 
     /**
@@ -1296,7 +1314,6 @@ public class IPCControlManager implements IPCManagerFn {
         }
 
     }
-
 
     public boolean isSupportMoveDection() {
         if (!GolukApplication.getInstance().isMainland()) {

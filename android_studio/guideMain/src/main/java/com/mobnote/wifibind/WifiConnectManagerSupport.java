@@ -31,11 +31,30 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.json.JSONObject;
 
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.NetworkInfo.State;
+import android.net.wifi.ScanResult;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.net.wifi.WifiConfiguration.AuthAlgorithm;
+import android.net.wifi.WifiConfiguration.KeyMgmt;
+import android.text.TextUtils;
+import android.util.Log;
+
+import com.mobnote.golukmain.reportlog.ReportLogManager;
+import com.mobnote.util.JsonUtil;
 
 public class WifiConnectManagerSupport {
 

@@ -1,0 +1,375 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#242424">
+
+    <RelativeLayout
+        android:id="@+id/title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#242629">
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="35dp"
+            android:layout_height="33dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/close_btn"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/car_recorder_title"
+            android:textColor="@color/white"
+            android:textSize="16sp"/>
+
+        <ImageButton
+            android:id="@+id/mSettingBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/driving_car_setting"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_carrecorder_connection_state"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title_layout"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true">
+
+            <ImageView
+                android:id="@+id/changeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:contentDescription="@string/imgdes"
+                android:src="@drawable/recorder_changeipc_icon"/>
+
+            <TextView
+                android:id="@+id/mConnectTip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/carrecorder_text_nor_color"
+                android:textSize="12sp"/>
+
+            <ImageView
+                android:id="@+id/mIPCConnectState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/index_wifi"
+                android:contentDescription="@string/def"/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/mVideoResolutions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/carrecorder_text_nor_color"
+            android:textSize="12sp"/>
+
+        <ImageView
+            android:id="@+id/adas_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/recorder_adas_on"
+            android:contentDescription="@string/def"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ipclive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_carrecorder_connection_state">
+
+        <RelativeLayout
+            android:id="@+id/mRtmpPlayerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/vLayout"
+                android:layout_width="match_parent"
+                android:layout_height="160dp">
+
+                <com.rd.car.player.RtspPlayerView
+                    android:id="@+id/mRtmpPlayerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageButton
+                    android:id="@+id/ic_rotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/mFullScreen"
+                    android:layout_alignRight="@+id/mFullScreen"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/ic_rotate"
+                    android:contentDescription="@string/def"
+                    android:visibility="gone"/>
+
+                <ImageButton
+                    android:id="@+id/mFullScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginBottom="6dp"
+                    android:layout_marginRight="6dp"
+                    android:background="@drawable/carrecorder_btn_full_press"
+                    android:contentDescription="@string/def"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mPalyerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/default_pic"
+                android:visibility="gone">
+
+                <ImageButton
+                    android:id="@+id/mPlayBtn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/carrecorder_play_btn"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mConncetLayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#15171A"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="-60dp"
+                    android:drawableTop="@drawable/video_no_link_pic"
+                    android:gravity="center_horizontal"
+                    android:text="@string/str_carrecorder_connect_text"
+                    android:textColor="#047CF3"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/mNotconnected"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#15171A"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="-60dp"
+                    android:drawableTop="@drawable/video_linking_pic"
+                    android:gravity="center_horizontal"
+                    android:text="@string/str_album_no_connect"
+                    android:textColor="#047CF3"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/mLoadingLayout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:id="@+id/mLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"/>
+
+            <TextView
+                android:id="@+id/mLoadingText"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:textColor="#ffffff"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layout_full_screen_options"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <ImageButton
+                android:id="@+id/ic_rotate_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/mFullScreen"
+                android:layout_alignRight="@+id/mRtmpPlayerLayout"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/ic_rotate"
+                android:contentDescription="@string/def"
+                android:visibility="gone"/>
+
+            <ImageButton
+                android:id="@+id/ic_exit_full_screen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/mRtmpPlayerLayout"
+                android:layout_alignRight="@+id/mRtmpPlayerLayout"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
+                android:background="@drawable/btn_player_normal"
+                android:contentDescription="@string/def"
+                android:visibility="visible"/>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/jcqp_info"
+        android:layout_width="match_parent"
+        android:layout_height="115dp"
+        android:layout_below="@+id/ipclive"
+        android:background="#17191a">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal">
+
+            <RelativeLayout
+                android:id="@+id/new_image_layout"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp">
+
+                <ImageView
+                    android:id="@+id/image2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/share_video_no_pic"/>
+
+                <ImageView
+                    android:id="@+id/new2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/video_new_icon"
+                    android:visibility="gone"/>
+
+                <com.mobnote.golukmain.videosuqare.RingView
+                    android:id="@+id/downloadSize"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/layout2"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/new_image_layout">
+
+
+                <ImageView
+                    android:id="@+id/image1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/share_video_no_pic"/>
+
+                <ImageView
+                    android:id="@+id/new1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/video_new_icon"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/image3"
+                android:layout_width="114dp"
+                android:layout_height="64dp"
+                android:layout_marginLeft="5dp"
+                android:layout_toRightOf="@+id/layout2"
+                android:background="#383e46"
+                android:drawablePadding="0dp"
+                android:drawableTop="@drawable/share_video_pic"
+                android:gravity="center"
+                android:paddingTop="4dp"
+                android:text="@string/sd_card_album"
+                android:textColor="#7c8085"
+                android:textSize="12sp"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/layout_capture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/jcqp_info">
+
+        <Button
+            android:id="@+id/btn_capture"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/driving_car_living_defalut_icon"
+            android:textColor="@color/white"
+            android:textSize="40sp"
+            android:textStyle="bold"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

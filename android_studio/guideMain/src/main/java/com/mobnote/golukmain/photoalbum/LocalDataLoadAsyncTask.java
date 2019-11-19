@@ -6,12 +6,23 @@ import android.text.TextUtils;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.t1sp.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
-import com.mobnote.util.SortByDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+
+import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
+import com.mobnote.golukmain.carrecorder.util.SettingUtils;
+import com.mobnote.golukmain.carrecorder.util.Utils;
+import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
+import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
+import com.mobnote.util.SortByDate;
+
+import android.os.AsyncTask;
+import android.text.TextUtils;
 
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
     private DataCallBack mDataCallBack = null;
@@ -44,11 +55,16 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
             files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + dir, "(.+?(mp|MP)4)"));
         }
 
+        List<String> files = new ArrayList<String>();
+        for (String dir : videoPaths) {
+            files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + dir, "(.+?(mp|MP)4)"));
+        }
+
         if (null == files || files.size() <= 0) {
             return null;
         }
 
-        Collections.sort(files, new SortByDate());
+        //Collections.sort(files, new SortByDate());
 
         int fLen = files.size();
         VideoInfo videoInfoTemp;
@@ -67,8 +83,15 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
             }
         }
 
-        return null;
-    }
+        Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
+            @Override
+            public int compare(VideoInfo lhs, VideoInfo rhs) {
+                return (int) (GolukUtils.parseStringToMilli(rhs.videoCreateDate) - GolukUtils.parseStringToMilli(lhs.videoCreateDate));
+            }
+        });
+
+		return null;
+	}
 
     @Override
     protected void onPostExecute(String result) {

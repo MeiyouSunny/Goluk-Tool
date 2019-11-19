@@ -255,4 +255,34 @@ public class DateTimeUtils {
         }
     }
 
+    /**
+     * 获取当前时间字符串,格式为: 2010$01$01$00$00$00
+     */
+    public static String getNowTimeStringSplitWith$() {
+        Date date = new Date();
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy$MM$dd$HH$mm$ss");
+        return formater.format(date);
+    }
+
+    /**
+     * 获取指定时间字符串,格式为: 2010$01$01$00$00$00
+     */
+    public static String getTimeStringSplitWith$(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy$MM$dd$HH$mm$ss");
+        return formater.format(date);
+    }
+
+    public static String getTimeDateString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        return formater.format(date);
+    }
+
+    public static String getTimeHourString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("HH:mm:ss");
+        return formater.format(date);
+    }
+
 }

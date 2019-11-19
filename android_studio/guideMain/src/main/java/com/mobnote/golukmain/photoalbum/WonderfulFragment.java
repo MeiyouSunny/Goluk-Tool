@@ -35,6 +35,7 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.log.app.LogConst;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -183,7 +184,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             deleteListData(list);
         }
     }
@@ -223,7 +224,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             downloadVideoFlush(list);
         }
     }
@@ -325,6 +326,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             loadData(false);
         }
     }
+
 
     @Override
     public void onItemClicked(View arg1, DoubleVideoInfo videoInfo, int columnIndex) {
@@ -447,6 +449,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         }
     }
 
+
     /**
      * 跳转到本地视频播放页面
      *
@@ -540,7 +543,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
             return;
         }
 
-        if (null == empty || null == mStickyListHeadersListView) {
+        if(null == empty || null == mStickyListHeadersListView) {
             return;
         }
 

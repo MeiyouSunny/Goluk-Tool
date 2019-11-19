@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
+
+    <RelativeLayout
+        android:id="@+id/ll_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="#242629">
+
+        <LinearLayout
+            android:id="@+id/tab_type"
+            android:layout_width="225dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tab_wonderful"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/str_wonderful_title"
+                android:textColor="#0080ff"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tab_urgent"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/str_urgent_title"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tab_timelapse"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/reduce"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/tab_loop"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/str_loop_title"
+                android:textColor="#ffffff"
+                android:textSize="16sp"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/edit_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/photo_edit"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/back_btn"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/player_back_btn"
+            android:visibility="gone"/>
+
+        <Button
+            android:id="@+id/cancel_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="#00000000"
+            android:text="@string/short_input_cancel"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/video_title_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/mEditLayout"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentBottom="true"
+        android:background="#f8f8f8"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/photoalbum_line_color"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/mDownLoadBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/mDownLoadIcon"
+                    android:layout_width="19.33dp"
+                    android:layout_height="26.66dp"
+                    android:background="@drawable/photo_download_icon"
+                    android:duplicateParentState="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/mDeleteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/mDeleteIcon"
+                    android:layout_width="18.66dp"
+                    android:layout_height="25.33dp"
+                    android:background="@drawable/select_video_del_icon"
+                    android:duplicateParentState="true"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_select_all"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/cb_select_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:checked="false"
+                    android:clickable="true"
+                    android:text="@string/select_all"
+                    android:textColor="#0080ff"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <com.mobnote.golukmain.photoalbum.CustomViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mEditLayout"
+        android:layout_below="@+id/ll_tabs">
+    </com.mobnote.golukmain.photoalbum.CustomViewPager>
+
+
+</RelativeLayout>

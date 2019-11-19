@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,11 +30,13 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.t1sp.ui.album.AlbumCloudAdapterListener;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -44,7 +47,7 @@ import java.util.List;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
-public class FragmentAlbum extends Fragment implements OnClickListener {
+public class FragmentAlbum extends Fragment implements OnClickListener, AlbumCloudAdapterListener {
 
     /**
      * 活动分享
@@ -624,10 +627,12 @@ public class FragmentAlbum extends Fragment implements OnClickListener {
         }
     }
 
+    @Override
     public boolean getEditState() {
         return editState;
     }
 
+    @Override
     public List<String> getSelectedList() {
         return selectedListData;
     }

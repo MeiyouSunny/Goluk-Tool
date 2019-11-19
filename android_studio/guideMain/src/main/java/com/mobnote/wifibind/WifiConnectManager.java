@@ -24,6 +24,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     public static final String TITLE = "Goluk";
+    public static final String WIFI_NAME_T2S = "Goluk_T2S";
     private static final String TAG = "testhan";
     private static final String WIFICONFIG = "wifi.config";
     private WifiConnCallBack callback = null;
@@ -36,12 +37,20 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     WifiApManagerSupport apManagesupport = null;
     private NetUtil netUtil = null;
 
+    public WifiConnectManager(Context context, WifiManager wifiManager) {
+        this(wifiManager, context);
+    }
+
     // 构造函数
     public WifiConnectManager(WifiManager wifiManager, Object callback) {
         this.wifiManager = wifiManager;
         this.wifiSupport = new WifiConnectManagerSupport(wifiManager);
-        this.callback = (WifiConnCallBack) callback;
-        this.context = (Context) callback;
+        if (callback != null) {
+            if (callback instanceof WifiConnCallBack)
+                this.callback = (WifiConnCallBack) callback;
+            if (callback instanceof Context)
+                this.context = (Context) callback;
+        }
         // 初始化wifi工具类
         support = new WifiConnectManagerSupport(wifiManager);
         apManagesupport = new WifiApManagerSupport(wifiManager);
@@ -129,6 +138,19 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
      */
     public WifiRsBean getConnResult() {
         return wifiSupport.getConnResult(TITLE);
+    }
+
+    /**
+     * 是否已经连接上小白WIFI
+     *
+     * @return
+     */
+    public boolean isConnectedT1sWifi() {
+        if (!NetUtil.isWifiConnected(context))
+            return false;
+
+        WifiRsBean result = wifiSupport.getConnResult(WIFI_NAME_T2S);
+        return result != null && result.getIpc_ssid().startsWith(WIFI_NAME_T2S);
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//
@@ -844,7 +866,6 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
             this.unbind();
         }
     }
-
 
     private void collectLog(String method, String msg) {
         JSONObject logJson = JsonUtil.getReportData(TAG, method, msg);

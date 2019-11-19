@@ -57,6 +57,7 @@ import com.mobnote.golukmain.startshare.VideoShareActivity;
 import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
 import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.t1sp.ui.album.PhotoAlbumPlayerT1SP;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.user.UserUtils;
 import com.mobnote.videoedit.AfterEffectActivity;
@@ -1118,6 +1119,36 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
         intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        context.startActivity(intent);
+    }
+
+    public static void startPhotoAlbumPlayerActivityT2S(Context context, int type, String vidFrom, String path, String relativePath, String filename, String createTime,
+                                                     String videoHP, String size, PromotionSelectItem promotionItem) {
+        Intent intent = new Intent(context, PhotoAlbumPlayer.class);
+        intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
+        intent.putExtra(PhotoAlbumPlayer.PATH, path);
+        intent.putExtra(PhotoAlbumPlayer.RELATIVE_PATH, relativePath);
+        intent.putExtra(PhotoAlbumPlayer.FILENAME, filename);
+        intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+        intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+        intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        context.startActivity(intent);
+    }
+
+    public static void startPhotoAlbumPlayerT1spActivity(Context context, int type, String vidFrom, String path, String filename, String createTime,
+                                                     String videoHP, String size, PromotionSelectItem promotionItem, boolean isShareVideo) {
+        Intent intent = new Intent(context, PhotoAlbumPlayerT1SP.class);
+        intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
+        intent.putExtra(PhotoAlbumPlayer.PATH, path);
+        intent.putExtra(PhotoAlbumPlayer.FILENAME, filename);
+        intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+        intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+        intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        intent.putExtra("isShareVideo", isShareVideo);
         context.startActivity(intent);
     }
 

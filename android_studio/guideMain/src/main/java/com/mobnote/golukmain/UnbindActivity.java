@@ -1,6 +1,9 @@
 package com.mobnote.golukmain;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -13,8 +16,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
+import com.mobnote.eventbus.EventDownloadState;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.IpcInfoUpdate;
+import com.mobnote.eventbus.EventIpcUpdateSuccess;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiUnbindSelectListActivity;
@@ -31,6 +36,8 @@ import org.json.JSONObject;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackWifiInfo;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
     public static final String TAG = "Unbind";
@@ -66,6 +73,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     private ImageView mIPCimage;
     private IPCInfo mIpcInfo;
     private RelativeLayout mNameLayout;
+
+    // IPC固件升级成功Flag
+    private boolean mIpcUpdateSuccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,12 +129,12 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUnbindBtn.setText(this.getResources().getString(R.string.str_ipc_change_others));
         mUnbindBtn.setVisibility(View.GONE);
         // 获取当前使用的信息
-        WifiBindHistoryBean bean = WifiBindDataCenter.getInstance().getCurrentUseIpc();
-        if ((mApplication.isBindSucess() || mApplication.isIpcLoginSuccess) && null != bean) {
+        WifiBindHistoryBean currentIpcInfo = WifiBindDataCenter.getInstance().getCurrentUseIpc();
+        if ((currentIpcInfo != null) && (mIpcUpdateSuccess || (mApplication.isBindSucess() || mApplication.isIpcLoginSuccess))) {
             mIPCViewLayout.setVisibility(View.VISIBLE);
             mPwdLayout.setEnabled(true);
             // String ipcName = this.ipcName();
-            mTextCameraName.setText(bean.ipc_ssid);
+            mTextCameraName.setText(currentIpcInfo.ipc_ssid);
             mTextVersion.setText(vIpc);
             GolukApplication.getInstance().getIPCControlManager();
             if (IPCControlManager.T1_SIGN.equals(ipcModel) || IPCControlManager.T1s_SIGN.equals(ipcModel)
@@ -148,8 +158,26 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         if (null != mApplication && mApplication.isIpcLoginSuccess) {
             mApplication.getIPCControlManager().getIpcWifiConfig();
         }
+
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
+            getWifiInfoT2S();
+            return;
+        }
     }
 
+    private void getWifiInfoT2S() {
+        ApiUtil.queryWifiInfo(new CallbackWifiInfo() {
+            @Override
+            public void onSuccess(String wifiName, String wifiPwd) {
+                mTextCameraName.setText(wifiName);
+                mTextPasswordName.setText(wifiPwd);
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
+    }
 
     @Override
     protected void onResume() {
@@ -161,6 +189,11 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     }
 
     private void adaptDownloadState() {
+        boolean isConnectedIPC = (mApplication != null && mApplication.isIpcLoginSuccess);
+        if (!isConnectedIPC) {
+            mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+        }
+
         mUpdateLayout.setEnabled(true);
         if (mApplication.mIpcUpdateManage.isDownloading()) {// 下载中
             mTextVersion.setText(R.string.str_fireware_is_downloading);
@@ -169,20 +202,27 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         } else {
             if (mApplication.mIpcUpdateManage.isDownloadCached(vIpc)) {
                 canOfflineInstall = true;
+                downloadLater = false;
                 mTextVersion.setText(R.string.install_new_firmware);
                 return;
             }
             if (mApplication.isIpcLoginSuccess) {
                 return;
             }
-            boolean canCheckServer = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
-            if (canCheckServer) {
-                return;
-            }
-            if(TextUtils.isEmpty(SharedPrefUtil.getIPCNumber())){
-                return;
-            }
+//            boolean canCheckServer = mApplication.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_IPC, vIpc);
+//            if (canCheckServer) {
+//                return;
+//            }
+//            if(TextUtils.isEmpty(SharedPrefUtil.getIPCNumber())){
+//                return;
+//            }
             isNewest();
+        }
+    }
+
+    private void judgeIsDownloading() {
+        if (mApplication.mIpcUpdateManage.isDownloading()) {
+            mTextVersion.setText(R.string.str_fireware_is_downloading);
         }
     }
 
@@ -194,16 +234,22 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
     private void downloadLater(IPCInfo ipcInfo) {
         downloadLater = true;
+        canOfflineInstall = false;
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
         mIpcInfo = ipcInfo;
+
+        judgeIsDownloading();
     }
 
     private void downloadNow(IPCInfo ipcInfo) {
         mTextVersion.setText(R.string.str_update_find_new_first);
         mUpdateLayout.setEnabled(true);
         canOfflineInstallLater = true;
+        canOfflineInstall = false;
         mIpcInfo = ipcInfo;
+
+        judgeIsDownloading();
     }
 
     private void installLater(IPCInfo ipcInfo) {
@@ -211,6 +257,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
         mUpdateLayout.setEnabled(true);
         mIpcInfo = ipcInfo;
         canOfflineInstall = true;
+        downloadLater = false;
     }
 
     @Override
@@ -254,15 +301,18 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 11);
         } else if (id == R.id.unbind_layout_update) {
-            if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
-                GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
-            } else if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater) {
+            if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater
+                    || !TextUtils.isEmpty(mApplication.mIpcUpdateManage.isHasIPCFile(mIpcInfo.version))) {
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);
+            } else if (mApplication.mIpcUpdateManage.isDownloading() || downloadLater) {// 下载中
+                GolukUtils.startUpdateActivity(UnbindActivity.this, 0, mIpcInfo, false);
             }
         }
     }
 
     public void onEventMainThread(EventIPCCheckUpgradeResult event) {
+        mApplication.mIpcUpdateManage.setNeedShowIpcDialog(false);
+
         if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW) {
             isNewest();
         } else if (event.ResultType == EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY) {
@@ -276,6 +326,28 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
     public void onEventMainThread(IpcInfoUpdate event) {
         initViewData();
+    }
+
+    /**
+     * 固件升级成功Event
+     */
+    public void onEventMainThread(EventIpcUpdateSuccess event) {
+        if (event != null) {
+            mIpcUpdateSuccess = true;
+        }
+    }
+
+    /**
+     * 固件下载状态
+     */
+    public void onEventMainThread(EventDownloadState event) {
+        if (event == null)
+            return;
+        if (event.isDownloading()) {
+            mTextVersion.setText(R.string.str_fireware_is_downloading);
+        } else if (event.isDownloadSuccess()) {
+            mTextVersion.setText(R.string.install_new_firmware);
+        }
     }
 
     @Override
@@ -332,6 +404,7 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
     @Override
     protected void onDestroy() {
         if (mApplication.getIPCControlManager() != null) {
+            mApplication.mIpcUpdateManage.setNeedShowIpcDialog(true);
             mApplication.getIPCControlManager().removeIPCManagerListener(TAG);
         }
 //        if (GolukApplication.getInstance().isIpcLoginSuccess) {

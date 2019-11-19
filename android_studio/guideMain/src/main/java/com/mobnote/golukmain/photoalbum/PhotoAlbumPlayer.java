@@ -1,6 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,10 +15,12 @@ import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.text.TextUtils;
@@ -55,6 +58,7 @@ import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
@@ -74,6 +78,9 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.t1sp.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.download.Task;
+import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
@@ -120,6 +127,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     public static final String VIDEO_FROM = "video_from";
     public static final String PATH = "path";
+    public static final String RELATIVE_PATH = "relativePath";
     public static final String DATE = "date";
     public static final String HP = "hp";
     public static final String SIZE = "size";
@@ -134,7 +142,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private GolukApplication mApp = null;
     private ImageButton mBackBtn = null;
-    private String mDate, mHP, mPath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
+    private String mDate, mHP, mPath, mRelativePath, mVideoFrom, mSize, mFileName, mVideoUrl, mMicroVideoUrl, mImageUrl;
     private int mType;
     private RelativeLayout mVideoViewLayout;
     private FullScreenVideoView mVideoView;
@@ -278,10 +286,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mVideoView.setVideoPath(mMicroVideoUrl);
             mIsUsingMicro = true;
             mResolutionTV.setText(MICRO_RESOLUTION);
+            XLog.i("start with microSolution");
         } else {
             mVideoView.setVideoPath(mVideoUrl);
             mIsUsingMicro = false;
             mResolutionTV.setText(mHP);
+            XLog.i("start with originSolution");
         }
         showLoading();
         mVideoView.requestFocus();
@@ -297,10 +307,12 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mVideoView.setVideoPath(mMicroVideoUrl);
             mIsUsingMicro = true;
             mResolutionTV.setText(MICRO_RESOLUTION);
+            XLog.i("change 2 microSolution");
         } else {
             mVideoView.setVideoPath(mVideoUrl);
             mIsUsingMicro = false;
             mResolutionTV.setText(mHP);
+            XLog.i("change 2 originSolution");
         }
         mVideoView.requestFocus();
         if (mVideoView.isPlaying()) {
@@ -315,6 +327,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mDate = intent.getStringExtra(DATE);
             mHP = intent.getStringExtra(HP);
             mPath = intent.getStringExtra(PATH);
+            mRelativePath = intent.getStringExtra(RELATIVE_PATH);
             Log.i("path", "path:" + mPath);
             mVideoFrom = intent.getStringExtra(VIDEO_FROM);
             mSize = intent.getStringExtra(SIZE);
@@ -324,6 +337,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mDate = savedInstanceState.getString(DATE);
             mHP = savedInstanceState.getString(HP);
             mPath = savedInstanceState.getString(PATH);
+            mRelativePath = savedInstanceState.getString(RELATIVE_PATH);
             mVideoFrom = savedInstanceState.getString(VIDEO_FROM);
             mSize = savedInstanceState.getString(SIZE);
             mFileName = savedInstanceState.getString(FILENAME);
@@ -388,6 +402,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         if (mPath != null) {
             outState.putString(PATH, mPath);
+        }
+        if (mRelativePath != null) {
+            outState.putString(RELATIVE_PATH, mRelativePath);
         }
         if (mVideoFrom != null) {
             outState.putString(VIDEO_FROM, mVideoFrom);
@@ -504,15 +521,19 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mResolutionTV.setText(mHP);
         }
 
-        if (mDate != null) {
-            TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
-            if (mDate.length() >= 10)
+        TextView tvTitleData = (TextView) findViewById(R.id.textview_title_date);
+        TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
+        // eg: 20180131135629
+        if (!TextUtils.isEmpty(mDate)) {
+            if (mDate.length() >= 19) {
                 tvTitleData.setText(mDate.substring(0, 10));
-            TextView tvTitleTime = (TextView) findViewById(R.id.textview_title_time);
-            if (mDate.length() >= 19)
                 tvTitleTime.setText(mDate.substring(11, 19));
-            TextView title = (TextView) findViewById(R.id.title);
-            title.setText(mDate);
+            } else if (mDate.length() >= 14) {
+                String dateText = mDate.substring(0, 4) + "-" + mDate.substring(4, 6) + "-" + mDate.substring(6, 8);
+                tvTitleData.setText(dateText);
+                String timeText = mDate.substring(8, 10) + ":" + mDate.substring(10, 12) + ":" + mDate.substring(12, 14);
+                tvTitleTime.setText(timeText);
+            }
         }
         mBtnDownload = (Button) findViewById(R.id.btn_download);
         if (!TextUtils.isEmpty(mVideoFrom) && "local".equals(mVideoFrom)) {
@@ -701,7 +722,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             } else {
                 //相册详情页面-下载到本地
                 ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
-                EventBus.getDefault().post(new EventDownloadIpcVid(mFileName, getType()));
+                String path = mApp.getIPCControlManager().isT2S() ? mRelativePath : mPath;
+                EventBus.getDefault().post(new EventDownloadIpcVid(path, getType()));
             }
         } else if (id == R.id.btn_delete) {
             String tempPath = "";
@@ -713,7 +735,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                     tempPath = mFileName;
                 }
             }
-            showConfimDeleteDialog(tempPath);
+            showConfimDeleteDialog(mPath);
         } else {
             Log.e(TAG, "id = " + id);
         }
@@ -748,17 +770,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             return;
         }
         if (bFull) {
-
             DisplayMetrics metrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(metrics);
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
-            if (metrics.widthPixels < metrics.heightPixels) {
-                params.height = metrics.widthPixels;
-                params.width = metrics.heightPixels;
-            } else {
-                params.width = metrics.widthPixels;
-                params.height = metrics.heightPixels;
-            }
+            params.width = LayoutParams.MATCH_PARENT;
+            params.height = LayoutParams.MATCH_PARENT;
             params.leftMargin = 0;
             if (Build.VERSION.SDK_INT > 16) {
                 params.removeRule(RelativeLayout.BELOW);
@@ -785,7 +801,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             hideOperator();
             RelativeLayout.LayoutParams lp = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
             lp.width = mScreenWidth;
-            lp.height = (int) (lp.width / 1.777);
+            int heightSet = (int) (((float) mVideoHeight / mVideoWidth) * mScreenWidth);
+            //lp.height = (int) (lp.width / 1.777);
+            lp.height = heightSet;
             lp.leftMargin = 0;
             lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
@@ -800,13 +818,15 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     }
 
     private boolean isAllowedDelete(String path) {
-        List<String> dlist = GolukApplication.getInstance().getDownLoadList();
-        if (dlist.contains(path)) {
-            return false;
-        } else {
-            return true;
+        List<Task> tasks = DownloaderT1spImpl.getInstance().getDownloadList();
+        if (!CollectionUtils.isEmpty(tasks)) {
+            for (Task downloadTask : tasks) {
+                if (TextUtils.equals(path, downloadTask.downloadPath))
+                    return false;
+            }
         }
 
+        return true;
     }
 
     private void showConfimDeleteDialog(final String path) {
@@ -829,7 +849,18 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                         } else {
                             //相册详情页面-删除视频
                             ZhugeUtils.eventAlbumDeleteVideo(PhotoAlbumPlayer.this);
-                            EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, getType()));
+
+                            if (mApp.getIPCControlManager().isT2S()) {
+                                mVideoView.stopPlayback();
+                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                                    }
+                                }, 500);
+                            } else {
+                                EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                            }
                             GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
                         }
 
@@ -856,7 +887,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @date 2015年6月5日
      */
     private void getPlayAddr() {
+        // T2S
+        if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
+            mVideoUrl = mPath;
+            return;
+        }
 
+        // Other
         String ip = SettingUtils.getInstance().getString("IPC_IP");
 
         if (TextUtils.isEmpty(mVideoFrom)) {
@@ -1012,12 +1049,29 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         return formatter.format(new Date(time));
     }
 
+    private int mVideoWidth, mVideoHeight;
+
     @Override
     public void onPrepared(GolukPlayer mp) {
+        mVideoWidth = mp.getVideoWidth();
+        mVideoHeight = mp.getVideoHeight();
+        updateLayoutSize(mVideoWidth, mVideoHeight);
         if (null != mDurationTime) {
             mDurationTime.setText(formatTime(mVideoView.getDuration()));
             mVtDurationTime.setText(formatTime(mVideoView.getDuration()));
         }
+    }
+
+    /**
+     * 根据视频实际大小来设置视频控件大小
+     */
+    private void updateLayoutSize(int videoWidth, int videoHeight) {
+        int playerWidth = mVideoViewLayout.getWidth();
+        int heightSet = (int) (((float) videoHeight / videoWidth) * playerWidth);
+
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) mVideoViewLayout.getLayoutParams();
+        layoutParams.height = heightSet;
+        mVideoViewLayout.setLayoutParams(layoutParams);
     }
 
     private boolean isShow = false;
@@ -1675,6 +1729,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 //.setWatermarkPath(configData.enableWatermark ? EDIT_WATERMARK_PATH : null)
                 // 设置水印位置
                 .setWatermarkPosition(configData.watermarkShowRectF).get();
+
         // 获取秀拍客配置服务器
         SdkService sdkService = SdkEntry.getSdkService();
         if (null != sdkService) {

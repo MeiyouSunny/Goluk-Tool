@@ -32,6 +32,7 @@ import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UnbindActivity;
 import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
@@ -39,10 +40,17 @@ import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.live.LiveDialogManager;
+import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.t1sp.connect.T1SPConnecter;
+import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
+import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
+import com.mobnote.t1sp.util.Const;
+import com.mobnote.t1sp.util.TimeSync;
+import com.mobnote.t1sp.util.ViewUtil;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
@@ -59,6 +67,8 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
+import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 
 /**
  * Wifi扫描列表
@@ -344,7 +354,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return false;
         }
 
-
         GolukDebugUtils.e("", "WifiBindList----sWillConnName2: " + mWillConnName);
 
         collectLog("isGetWifiBean", "willConnName2:" + mWillConnName + "  willConnMac2:" + mWillConnMac);
@@ -414,6 +423,10 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         collectLog("dealAutoConn", "-----2");
         // 去连接IPC
         // isAutoConn = true;
+
+        // T1SP连接
+        connectT2S();
+        // Other
         sendLogicLinkIpc();
     }
 
@@ -590,6 +603,13 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             return;
         }
 
+        // 如果是自动连接并且已经连上Goluk_T1s热点
+        if (mAutoConn && mWac.isConnectedT1sWifi()) {
+            GolukDebugUtils.e(Const.LOG_TAG, "Current connected WIFI is T1SP type");
+            connectT2S();
+            return;
+        }
+
         // 自动获取WIFI信息,自动连接
         if (mAutoConn) {
             autoConnWifi();
@@ -610,6 +630,110 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //            autoConnWifi();
         mIsCanAcceptNetState = true;
         isBackFromWifiListPage = false;
+    }
+
+    /**
+     * T1SP连接
+     */
+    private void connectT2S() {
+        ApiUtil.sendConnectTest(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                // T2S 连接结果回调
+                // 保存WIFI信息
+                saveT2SInfo();
+                // 同步时间
+                TimeSync timeSync = new TimeSync();
+                timeSync.syncTime();
+                // 页面跳转
+                goNextAfterT1SPConnected();
+                GolukApplication.getInstance().setIpcLoginState(true);
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+    }
+
+    /**
+     * T1SP连接成功后跳转
+     */
+    private void goNextAfterT1SPConnected() {
+        if (mIsFromUpgrade) {
+            finish();
+            return;
+        }
+        if (mIsFromManagerToUpgrade) {
+            finish();
+            return;
+        }
+        if (mGotoAlbum) {
+            Intent photoalbum = new Intent(WiFiLinkListActivity.this, PhotoAlbumT1SPActivity.class);
+            photoalbum.putExtra(PhotoAlbumT1SPActivity.CLOSE_WHEN_EXIT, true);
+            photoalbum.putExtra("from", "cloud");
+            startActivity(photoalbum);
+            finish();
+            return;
+        }
+        if (mIsFromRemoteAlbum) {
+            EventBus.getDefault().post(new EventSingleConnSuccess());
+            finish();
+            return;
+        }
+        if (mReturnToMainAlbum) {
+            Intent mainIntent = new Intent(WiFiLinkListActivity.this, MainActivity.class);
+            startActivity(mainIntent);
+            EventBus.getDefault().post(new EventFinishWifiActivity());
+            EventBus.getDefault().post(new EventSingleConnSuccess());
+            return;
+        } else {
+            T1SPConnecter.instance().finishRecordActivity(CarRecorderActivity.class);
+            ViewUtil.goActivityAndClearTop(WiFiLinkListActivity.this, CarRecorderT1SPActivity.class);
+            finish();
+        }
+    }
+
+    /**
+     * 保存T2S信息
+     */
+    private void saveT2SInfo() {
+        // Product
+        getApp().getIPCControlManager().setProduceName(IPCControlManager.T2S_SIGN);
+        // WIFI
+        if (null == mWac)
+            return;
+        WifiRsBean wifiResult = mWac.getConnResult();
+        if (null == wifiResult)
+            return;
+
+        mWillConnName = wifiResult.getIpc_ssid();
+        mWillConnMac = wifiResult.getIpc_bssid();
+        if (mWillConnName == null || mWillConnName.length() <= 0)
+            return;
+
+        saveConnectWifiMsg(mWillConnName, IPC_PWD_DEFAULT, mWillConnMac);
+
+        // 保存绑定历史记录
+        WifiRsBean beans = new WifiRsBean();
+        beans.setIpc_mac(WiFiInfo.IPC_MAC);
+        beans.setIpc_ssid(WiFiInfo.IPC_SSID);
+        //beans.setIpc_ip(CONNECT_IPC_IP);
+        beans.setIpc_pass(WiFiInfo.IPC_PWD);
+        //beans.setPh_ssid(WiFiInfo.MOBILE_SSID);
+        //beans.setPh_pass(WiFiInfo.MOBILE_PWD);
+        mWac.saveConfiguration(beans);
+
+        WifiBindHistoryBean historyBean = new WifiBindHistoryBean();
+        historyBean.ipc_ssid = WiFiInfo.IPC_SSID;
+        historyBean.ipc_pwd = WiFiInfo.IPC_PWD;
+        historyBean.ipc_mac = WiFiInfo.IPC_MAC;
+        historyBean.ipc_ip = CONNECT_IPC_IP;
+        historyBean.ipcSign = WiFiInfo.IPC_MODEL;
+        historyBean.mobile_ssid = WiFiInfo.IPC_SSID;
+        historyBean.mobile_pwd = WiFiInfo.MOBILE_PWD;
+        historyBean.state = WifiBindHistoryBean.CONN_USE;
+        WifiBindDataCenter.getInstance().saveBindData(historyBean);
     }
 
     @Override
@@ -648,7 +772,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
         if (EventConfig.WIFI_STATE == event.getOpCode() && event.getMsg()) {
             // 连接网络成功
-            if (isWifiConnected(this)) {
+            if (NetUtil.isWifiConnected(this)) {
                 GolukDebugUtils.e("", "WifiLinkList------------wifi Change wifi");
                 collectLog("onEventMainThread", "wifi-----222");
                 XLog.tag(LogConst.TAG_CONNECTION).i("Net type changed, WIFI is connected");

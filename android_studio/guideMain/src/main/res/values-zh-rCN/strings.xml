@@ -395,7 +395,7 @@
     <string name="zdxhlx_title">自动循环录像</string>
     <string name="sylz_title">声音录制</string>
     <string name="str_settings_kgjtsy_title">开关机提示音</string>
-    <string name="pzgy_title">紧急碰撞视频感应</string>
+    <string name="pzgy_title">碰撞灵敏度</string>
     <string name="str_low">低</string>
     <string name="str_middle">中</string>
     <string name="str_high">高</string>
@@ -641,6 +641,7 @@
     <string name="str_settings_video_type2">经典模式</string>
     <string name="str_seconds">秒</string>
     <string name="str_settings_wonderful_video_type_hint_text">精彩抓拍（6+6）：按下遥控器（KIT）按键，触发录制前6秒+后6秒的12秒精彩视频片段。 经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">精彩抓拍（5+7）：按下遥控器（KIT）按键，触发录制前5秒+后7秒的12秒精彩视频片段。 经典模式：按下遥控器（KIT）按键，触发录制一段30秒精彩视频。</string>
     <string name="str_usercenter_header_attention_each_other_text">相互关注</string>
     <string name="str_follow_list_title">我的关注</string>
     <string name="str_search_hint">搜索用户(昵称/认证说明)</string>
@@ -989,8 +990,8 @@
     <string name="str_adas_road_offset_sensibility">道路偏移报警灵敏度</string>
     <string name="str_adas_assistance_info">辅助信息显示（OSD叠加）</string>
     <string name="str_adas_paramter_error">为了准确地向您提供驾驶安全辅助信息，请输入正确的位置参数哦</string>
-    <string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级1阶段：</string>
-    <string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级2阶段：</string>
+    <string name="str_ipc_update_first_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级1阶段</string>
+    <string name="str_ipc_update_second_period">开始升级，过程可能需要几分钟， 请不要关闭摄像头电源… 升级2阶段</string>
     <string name="str_ipc_update_transfer_file_success">文件传输成功，正在为您准备升级</string>
     <string name="str_ipc_update_success_t1">设备升级成功</string>
     <string name="str_ipc_update_fail">很抱歉，升级失败。请您重试。</string>
@@ -1240,6 +1241,7 @@
     <string name="line_no_client">未安装Line客户端</string>
     <string name="line_content">Line只支持文本，图片</string>
     <string name="line_no_content">请设置分享内容</string>
+    <!-- 仅有中文 start-->
     <string name="export_error">导出失败...</string>
     <string name="exporting">视频导出中，请耐心等待...</string>
     <string name="signature_is_empty">个性签名不能为空</string>
@@ -1272,9 +1274,28 @@
     <string name="cloud_save_tip">分享的视频仅保存一年</string>
     <string name="not_in_china_alert">本应用限定在中国地区使用，您不在中国地区，不能使用本应用</string>
     <string name="close_app">关闭程序</string>
-
     <string name="connect_step_3">如果已连上记录仪WiFi,仍然连不上,可尝试</string>
     <string name="manual_connect">手动连接记录仪</string>
     <string name="connect_failed_upload_log">连接失败，请确认手机已连接记录仪WiFi并选择了正确的设备型号。如果是正确操作请提交日志并联系客服。</string>
     <string name="need_disconnect_goluk_wifi">需断开记录仪WiFi才能使用网络功能!</string>
+    <!-- 仅有中文 end-->
+
+    <!-- T2S start-->
+    <string name="capture_time_5_7">精彩抓拍(5+7)</string>
+    <string name="storage_left">可用空间</string>
+    <string name="enter_album_mode_hint">进入相册模式，记录仪将停止录像</string>
+    <string name="cancel_downloading_videos_hin">视频正在下载，退出将取消下载</string>
+    <string name="enter_setting_mode_hint">进入设置模式，记录仪将停止录像</string>
+    <string name="recovery_to_record">记录仪恢复录像</string>
+    <string name="capture_success_hint">抓拍成功</string>
+    <string name="emg_video_sound">紧急视频提示音</string>
+    <string name="lower">较低</string>
+    <string name="higher">较高</string>
+    <string name="hint_pk_mode">当⻋辆熄⽕后，极路客会开启⼀秒⼀拍的缩时录影，确保⻋辆24⼩时监控。开启停⻋安防需搭配降压线使⽤。</string>
+    <string name="hint_gsensor">启动后，⻋辆在⾏⻋中如果发⽣异常的碰撞，极路客会⾃动保存12秒（碰撞时刻的前5秒和后7秒）紧急视频影像。当存储空间不⾜时，将⾃动覆盖早期录制的⽂件。</string>
+    <string name="t1sp_ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。升级成功后，请拔掉电源重新开机。</string>
+    <string name="str_ipc_update_success_t1s">设备升级成功，请拔插电源重新开机</string>
+    <string name="hint_gsensor_t1sp">启动后，⻋辆在⾏⻋中如果发⽣异常的碰撞，极路客会⾃动保存15秒（碰撞时刻的前5秒和后10秒）紧急视频影像。当存储空间不⾜时，将⾃动覆盖早期录制的⽂件。</string>
+    <!-- T2S end-->
+
 </resources>

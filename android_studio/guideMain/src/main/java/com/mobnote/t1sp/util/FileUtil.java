@@ -117,9 +117,9 @@ public class FileUtil {
     /**
      * T1SP 获取网络完整URL
      */
-//    public static String getVideoUrlByPath(String videoPath) {
-//        return Const.HTTP_SCHEMA + Const.IP + videoPath;
-//    }
+    public static String getVideoUrlByPath(String videoPath) {
+        return Const.HTTP_SCHEMA + Const.IP + videoPath;
+    }
 
     /**
      * 根据视频名获取精彩视频绝对路径

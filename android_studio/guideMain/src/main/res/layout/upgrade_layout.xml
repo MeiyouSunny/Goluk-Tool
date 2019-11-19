@@ -171,11 +171,12 @@
 
             <!-- 断电提示 -->
             <TextView
+                android:id="@+id/upgrade_hint"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingLeft="21dp"
-                android:paddingRight="21dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="@string/ipc_hint_text"
                 android:textColor="@color/user_hint_text_color" />
             

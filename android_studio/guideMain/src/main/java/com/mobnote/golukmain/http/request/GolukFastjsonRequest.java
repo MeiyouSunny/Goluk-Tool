@@ -1,9 +1,16 @@
 package com.mobnote.golukmain.http.request;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import android.text.TextUtils;
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.api.Tapi;
 
 import com.android.volley.Request.Method;
 import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
 import com.android.volley.VolleyError;
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
@@ -26,6 +33,7 @@ public abstract class GolukFastjsonRequest<T> {
     private  Class<T> mClazz;
     private  Map<String, String> mHeaders = new HashMap<String, String>();
     private  Map<String, String> mParams = new HashMap<String, String>();
+    private String mRequestBody;
     private  IRequestResultListener mListener;
     private Object mTag;
     private boolean bCache = false;
@@ -124,7 +132,7 @@ public abstract class GolukFastjsonRequest<T> {
             mParams = null;
 		}
 
-		FastjsonRequest<T> request = new FastjsonRequest<T>(type, url, mClazz, mHeaders, mParams, new Response.Listener<T>(){
+		FastjsonRequest<T> request = new FastjsonRequest<T>(type, url, mClazz, mHeaders, mParams, mRequestBody, new Response.Listener<T>(){
 
 			@Override
 			public void onResponse(T response) {
@@ -161,4 +169,14 @@ public abstract class GolukFastjsonRequest<T> {
         XLog.tag(LogConst.TAG_HTTP).i("URL(%s): %s", method, url);
         XLog.tag(LogConst.TAG_HTTP).i("Params:%s", mParams);
     }
+	}
+
+	public String getRequestBody() {
+		return mRequestBody;
+	}
+
+	public void setRequestBody(String requestBody) {
+		this.mRequestBody = requestBody;
+	}
+
 }

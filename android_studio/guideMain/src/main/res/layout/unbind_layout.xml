@@ -55,6 +55,7 @@
                     android:textSize="12sp" />
 
                 <TextView
+                    android:layout_alignLeft="@id/goluk_mobile"
                     android:id="@+id/goluk_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSON;
 import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
+import com.mobnote.eventbus.EventDownloadState;
 import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.golukmain.R;
@@ -253,6 +254,14 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
     }
 
     /**
+     * 当前下载的更新固件是否还存在
+     */
+    public boolean isIpcUpdateBinFileExist() {
+        String binFile = isHasIPCFile(SharedPrefUtil.getIPCDownVersion());
+        return !TextUtils.isEmpty(binFile);
+    }
+
+    /**
      * 获取下载的文件路径 (下载前获取一次，升级安装时获取一次)
      */
     public String getBinFilePath(String filename) {
@@ -292,6 +301,9 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         if (mApp.getContext() != null && mApp.getContext() instanceof UpdateActivity) {
             ((UpdateActivity) mApp.getContext()).downloadCallback(state, param1, param2);
         }
+
+        // Send event
+        EventBus.getDefault().post(new EventDownloadState(state));
     }
 
     /**
@@ -317,6 +329,12 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         }
     }
 
+    /* 是否显示IPC升级提示框,默认True */
+    private boolean mNeedShowIpcDialog = true;
+
+    public void setNeedShowIpcDialog(boolean needShow) {
+        mNeedShowIpcDialog = needShow;
+    }
     /**
      * type: 0/1 下载／安装 ipc升级
      * <p/>
@@ -326,6 +344,18 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
         if (ipcInfo == null || TextUtils.isEmpty(ipcInfo.version)) {
             return;
         }
+
+        // 如果不需要显示提示框,只发送事件消息
+        if (!mNeedShowIpcDialog) {
+            EventIPCCheckUpgradeResult eventIpcUpdate = new EventIPCCheckUpgradeResult();
+            eventIpcUpdate.ipcInfo = ipcInfo;
+            int eventType = (type == 0) ? EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY
+                    : EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_INSTALL_DELAY;
+            eventIpcUpdate.ResultType = eventType;
+            EventBus.getDefault().post(eventIpcUpdate);
+            return;
+        }
+
         // 如果当前的请求来自启动页，且当前版本被忽略更新过，则不弹框
         String latestIgnoredIpcUpgradeVersion = SharedPrefUtil.getLatestIgnoredIpcUpgradeVersion();
         if (!TextUtils.isEmpty(latestIgnoredIpcUpgradeVersion)
@@ -897,7 +927,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                     return;
                 }
 
-                IPCInfo ipcInfo = ipcUpdateUtils(ipc);
+                final IPCInfo ipcInfo = ipcUpdateUtils(ipc);
                 if (ipcInfo == null) {
                     // ipc不需要升级
                     if (!mApp.isIpcLoginSuccess && !mApp.isBindSucess()) {
@@ -927,7 +957,7 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                                 .setNegativeButton(mApp.getContext().getResources().getString(R.string.str_update_later), new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY));
+                                        EventBus.getDefault().post(new EventIPCCheckUpgradeResult(EventIPCCheckUpgradeResult.EVENT_RESULT_TYPE_NEW_DELAY, ipcInfo));
                                     }
                                 })
                                 .setPositiveButton(mApp.getContext().getResources().getString(R.string.str_button_ok),

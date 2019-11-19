@@ -1,0 +1,34 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#F1F1F2"
+              android:orientation="vertical"
+              tools:context="com.mobnote.t1sp.ui.setting.DeviceSettingsActivity">
+
+    <include layout="@layout/app_bar_base"/>
+
+    <likly.view.repeat.RepeatView
+        android:id="@+id/repeater"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:canRefresh="false"
+        app:hasMore="false"
+        app:viewHolderClass="com.mobnote.t1sp.ui.setting.selection.SettingSelectionViewHolder"
+        app:viewHolderLayout="@layout/viewholder_setting_selection_item"/>
+
+    <TextView
+        android:id="@+id/tv_wonderful_video_capture_hint_desc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingTop="10dp"
+        android:textColor="#999999"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+
+</LinearLayout>

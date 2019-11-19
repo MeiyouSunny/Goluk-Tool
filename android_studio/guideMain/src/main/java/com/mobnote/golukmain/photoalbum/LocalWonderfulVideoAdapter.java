@@ -1,14 +1,10 @@
 package com.mobnote.golukmain.photoalbum;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Color;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
@@ -20,16 +16,18 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersAdapter;
-import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.entity.DoubleVideoInfo;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.util.GlideUtils;
+import com.mobnote.t1sp.util.ThumbAsyncTask;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyListHeadersAdapter {
     private FragmentAlbum mFragment = null;
@@ -166,7 +164,6 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
             holder.mPreView2.setVisibility(View.VISIBLE);
         }
 
-
         holder.image1.setImageResource(R.drawable.tacitly_pic);
         holder.image2.setImageResource(R.drawable.tacitly_pic);
 
@@ -184,7 +181,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //		holder.mVideoSize1.setText(mVideoInfo1.videoSize);
 //		holder.image1.setTag("image:" + mVideoInfo1.filename);
         displayVideoQuality(mVideoInfo1.videoHP, holder.mVideoQuality1);
-        loadImage(mVideoInfo1.filename, holder.image1);
+        loadImage(mVideoInfo1.videoPath, holder.image1);
         int type = getVideoType(mVideoInfo1.filename);
         if (type == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
             holder.mVide1Type.setText(mContext.getResources().getString(R.string.str_wonderful_title));
@@ -214,7 +211,7 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
 //			holder.mVideoSize2.setText(mVideoInfo2.videoSize);
 //			holder.image2.setTag("image:" + mVideoInfo2.filename);
             displayVideoQuality(mVideoInfo2.videoHP, holder.mVideoQuality2);
-            loadImage(mVideoInfo2.filename, holder.image2);
+            loadImage(mVideoInfo2.videoPath, holder.image2);
 
 //			if (mVideoInfo2.isNew) {
 //				holder.mNewIcon2.setVisibility(View.VISIBLE);
@@ -289,16 +286,21 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
     /**
      * 加载并显示预览图片
      *
-     * @param filename 图片名称
-     * @param image    显示控件
+     * @param videoPath 图片名称
+     * @param imageView 显示控件
      * @author xuhw
      * @date 2015年6月8日
      */
-    private void loadImage(String filename, ImageView image) {
-        filename = filename.replace(".mp4", ".jpg");
-        String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
+    private void loadImage(String videoPath, ImageView imageView) {
+        if (TextUtils.isEmpty(videoPath) || imageView == null)
+            return;
+        //imageView.setImageBitmap(ThumbUtil.getLocalVideoThumb(videoPath));
+        new ThumbAsyncTask(mContext, imageView).execute(videoPath);
+
+//        filename = filename.replace(".mp4", ".jpg");
+//        String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
 //		GlideUtils.loadLocalImage(mActivity, image, filePath + File.separator + filename, R.drawable.album_default_img);
-        GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
+//        GlideUtils.loadImage(mContext, image, filePath + File.separator + filename, R.drawable.album_default_img);
 //		Bitmap mBitmap = mActivity.getBitmap(filename);
 //		if (null != mBitmap) {
 //			image.setImageBitmap(mBitmap);
@@ -355,13 +357,8 @@ public class LocalWonderfulVideoAdapter extends BaseAdapter implements StickyLis
      * @date 2015年6月8日
      */
     private void displayVideoQuality(String videoHP, TextView text) {
-        if ("1080p".equals(videoHP) || "1080P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_1080));
-        } else if ("720p".equals(videoHP) || "720P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_720));
-        } else if ("480p".equals(videoHP) || "480P".equals(videoHP)) {
-            text.setText(mContext.getResources().getString(R.string.str_album_video_480));
-        }
+        videoHP = videoHP.toUpperCase();
+        text.setText(videoHP);
     }
 
     @Override

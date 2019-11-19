@@ -34,6 +34,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -155,6 +156,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         }
     }
 
+
     @Override
     public void onPause() {
         super.onPause();
@@ -179,10 +181,11 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             deleteListData(list);
         }
     }
+
 
     /**
      * 从设备上下载视频到本地
@@ -193,7 +196,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             downloadVideoFlush(list);
         }
     }
@@ -556,7 +559,6 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
                     }
                     isGetFileListDataing = false;
                     GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
-                    XLog.tag(LogConst.TAG_ALUMB).i("Query remote loop video list: param1%s,\nData%s", param1, (String) param2);
                     if (RESULE_SUCESS == param1) {
                         if (TextUtils.isEmpty((String) param2)) {
                             return;

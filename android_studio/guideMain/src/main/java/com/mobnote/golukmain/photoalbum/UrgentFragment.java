@@ -34,6 +34,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SharedPrefUtil;
@@ -184,7 +185,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
     public void onEventMainThread(EventDeletePhotoAlbumVid event) {
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             deleteListData(list);
         }
     }
@@ -204,7 +205,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
 
             List<String> list = new ArrayList<String>();
-            list.add(event.getVidPath());
+            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
             downloadVideoFlush(list);
         }
     }
@@ -562,7 +563,6 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
                     }
                     isGetFileListDataing = false;
                     GolukDebugUtils.e("xuhw", "YYYYYY=======获取文件列表===@@@======param1=" + param1 + "=====param2=" + param2);
-                    XLog.tag(LogConst.TAG_ALUMB).i("Query remote emergency video list: param1%s,\nData%s", param1, (String) param2);
                     if (RESULE_SUCESS == param1) {
                         if (TextUtils.isEmpty((String) param2)) {
                             return;

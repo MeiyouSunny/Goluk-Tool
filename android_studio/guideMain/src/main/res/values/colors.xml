@@ -147,4 +147,7 @@
     <color name="tab_color_white">#ffffff</color>
     <color name="tab_color_darker">#333333</color>
     <color name="tab_color_lighter">#999999</color>
+    <color name="bg_press">#FFC6C6C4</color>
+    <color name="bg_transparent">#00000000</color>
+
 </resources>

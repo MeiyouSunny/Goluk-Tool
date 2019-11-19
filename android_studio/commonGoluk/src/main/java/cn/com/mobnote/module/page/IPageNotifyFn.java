@@ -18,6 +18,8 @@ public interface IPageNotifyFn extends IGolukCommFn {
      * 分享param1:（分析成功结果json串信息），param2:0
      */
     public static int PageType_Share = 2;
+    /* 上传视频Gps轨迹 */
+    public static int PAGETYPE_UPLOAD_GPS_TRACK = 3;
     /**
      * 获取评论
      */

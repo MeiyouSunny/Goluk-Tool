@@ -6,6 +6,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.MemoryCategory;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class GlideUtils {
 
@@ -42,11 +43,28 @@ public class GlideUtils {
 	}
 
 	public static void loadImage(Context context, ImageView view, String neturl, int placeholder) {
-		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
+		//Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
 		if (placeholder <= 0) {
 			Glide.with(context).load(neturl).into(view);
 		} else {
 			Glide.with(context).load(neturl).placeholder(placeholder).into(view);
+		}
+	}
+
+	/**
+	 * 加载T1SP远程视频(紧急/循环)缩略图
+	 */
+	public static void loadRemoteT1SPImage(Context context, ImageView view, String neturl, int placeholder) {
+		Glide.get(context).setMemoryCategory(MemoryCategory.LOW);
+		if (placeholder <= 0) {
+			Glide.with(context).load(neturl).diskCacheStrategy(DiskCacheStrategy.ALL).into(view);
+		} else {
+			//Glide.with(context).load(neturl).diskCacheStrategy(DiskCacheStrategy.ALL).placeholder(placeholder).into(view);
+			Glide.with(context)
+					.load(neturl)
+					.centerCrop()
+					.dontAnimate()
+					.into(view);
 		}
 	}
 

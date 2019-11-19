@@ -487,6 +487,7 @@
     <string name="str_settings_video_type2">30 сек.</string>
     <string name="str_seconds">сек.</string>
     <string name="str_settings_wonderful_video_type_hint_text">Захват особого момента (6+6)：Нажмите кнопку KIT, чтобы включить запись первых 6+6 (12) сек. видео особого момента.Классический режим：Нажмите кнопку KIT, чтобы включить запись 30 секунд видео особого момента.</string>
+    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Захват особого момента (5+7)：Нажмите кнопку KIT, чтобы включить запись первых 5+7 (12) сек. видео особого момента.Классический режим：Нажмите кнопку KIT, чтобы включить запись 30 секунд видео особого момента.</string>
     <string name="str_usercenter_header_attention_each_other_text">Взаимная подписка</string>
     <string name="str_follow_list_title">Я подписан(а)</string>
     <string name="str_search_hint">Искать пользователя (по имени/проверочному описанию)</string>
@@ -835,8 +836,8 @@
     <string name="str_adas_road_offset_sensibility">Чувствительность сигнала о смене ряда</string>
     <string name="str_adas_assistance_info">Экран вспомогательной информации (наложенный экран)</string>
     <string name="str_adas_paramter_error">Чтобы мы могли предоставлять вам точную информацию и помогать вам обеспечивать безопасность в пути, пожалуйста, введите правильные параметры местоположения.</string>
-    <string name="str_ipc_update_first_period">Началось обновление. Это может занять несколько минут. Не отключайте питание видеорегистратора. ….. 1-й этап обновления:</string>
-    <string name="str_ipc_update_second_period">Началось обновление. Это может занять несколько минут. Не отключайте питание видеорегистратора. ….. 2-й этап обновления:</string>
+    <string name="str_ipc_update_first_period">Началось обновление. Это может занять несколько минут. Не отключайте питание видеорегистратора. ….. 1-й этап обновления</string>
+    <string name="str_ipc_update_second_period">Началось обновление. Это может занять несколько минут. Не отключайте питание видеорегистратора. ….. 2-й этап обновления</string>
     <string name="str_ipc_update_transfer_file_success">Файл передан успешно. Идет подготовка к обновлению.</string>
     <string name="str_ipc_update_success_t1">Устройство успешно обновлено</string>
     <string name="str_ipc_update_fail">К сожалению, обновить не удалось. Повторите попытку.</string>
