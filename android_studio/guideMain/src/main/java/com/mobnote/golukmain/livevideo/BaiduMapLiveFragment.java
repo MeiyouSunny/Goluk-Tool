@@ -3,7 +3,6 @@ package com.mobnote.golukmain.livevideo;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.RelativeLayout;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -24,14 +23,10 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GlideCircleTransform;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
 
-import cn.com.mobnote.module.location.GolukPosition;
-import cn.com.mobnote.module.page.IPageNotifyFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -227,6 +222,11 @@ public class BaiduMapLiveFragment extends AbstractLiveMapViewFragment implements
     @Override
     public void onMapStatusChangeStart(MapStatus arg0) {
         // mBaseHandler.removeMessages(MSG_H_TO_MYLOCATION);
+    }
+
+    @Override
+    public void onMapStatusChangeStart(MapStatus mapStatus, int i) {
+
     }
 
     @Override

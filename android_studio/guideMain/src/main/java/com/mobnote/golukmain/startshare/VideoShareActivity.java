@@ -35,6 +35,7 @@ import com.mobnote.eventbus.EventSharetypeSelected;
 import com.mobnote.eventbus.SharePlatformSelectedEvent;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.helper.QCloudHelper;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.newest.IDialogDealFn;
@@ -71,6 +72,7 @@ import java.io.ObjectOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 
 import cn.com.mobnote.eventbus.EventShortLocationFinish;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -642,7 +644,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
                 break;
             case EVENT_UPLOAD_SUCESS:
                 // 文件上传成功，请求分享连接
-                requestShareInfo();
+                requestShareInfo((Map<String, String>) obj);
                 break;
             case EVENT_PROCESS:
                 if (null != obj && null != mShareLoading) {
@@ -660,7 +662,15 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
     }
 
     // 请求分享信息
-    private void requestShareInfo() {
+    private void requestShareInfo(Map<String, String> urls) {
+        String photoUrl = "";
+        String videoUrl = "";
+        if (urls.containsKey(QCloudHelper.PHOTO_BUCKET)) {
+            photoUrl = urls.get(QCloudHelper.PHOTO_BUCKET);
+        }
+        if (urls.containsKey(QCloudHelper.VIDEO_BUCKET)) {
+            videoUrl = urls.get(QCloudHelper.VIDEO_BUCKET);
+        }
         mShareLoading.switchState(ShareLoading.STATE_GET_SHARE);
         final String t_vid = this.mUploadVideo.getVideoId();
         final String t_signTime = this.mUploadVideo.getSignTime();
@@ -685,7 +695,7 @@ public class VideoShareActivity extends BaseActivity implements View.OnClickList
         GetVideoSaveAddressRequest request = new GetVideoSaveAddressRequest(IPageNotifyFn.PageType_Share, this);
 
         request.get(t_vid, t_type, desc, selectTypeJson, isSquare, videoCreateTime, t_signTime, activityid,
-                t_location, "", tagId, "", mVideoQuality, "");
+                t_location, "", tagId, "", mVideoQuality, "", photoUrl, videoUrl);
 
         XLog.tag(LogConst.TAG_SHARE_VIDEO).i("Request share short url info");
     }

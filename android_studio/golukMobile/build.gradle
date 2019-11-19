@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion '25.0.2'
+    buildToolsVersion '26.0.2'
     dexOptions {
         jumboMode = true
         javaMaxHeapSize "4g"
@@ -16,6 +16,11 @@ android {
         ndk{
             abiFilters 'armeabi'
         }
+
+        manifestPlaceholders = [
+                XG_ACCESS_ID : "2100181851",
+                XG_ACCESS_KEY: "AQN896B52GLF",
+        ]
     }
 
     flavorDimensions "default"

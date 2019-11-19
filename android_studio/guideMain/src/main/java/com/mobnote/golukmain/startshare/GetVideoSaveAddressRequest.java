@@ -29,10 +29,12 @@ public class GetVideoSaveAddressRequest extends GolukFastjsonRequest<VideoSaveRe
     public void get(String videoid, String type, String describe, String attribute,
                     String issquare, String creattime, String signtime, String activityid,
                     String location, String devicetag, String tagId, String gps,
-                    String resolution, String checkCode) {
+                    String resolution, String checkCode,String photoUrl,String videoUrl) {
         HashMap<String, String> params = (HashMap<String, String>) getParam();
         params.put("xieyi", "" + 100);
         params.put("videoid", videoid);
+        params.put("photourl", photoUrl);
+        params.put("videourl", videoUrl);
         params.put("type", type);
         params.put("describe", describe);
         params.put("attribute", attribute);
@@ -77,6 +79,7 @@ public class GetVideoSaveAddressRequest extends GolukFastjsonRequest<VideoSaveRe
         if(!TextUtils.isEmpty(tagId)) {
             params.put("tagid", tagId);
         }
+
         super.post();
     }
 }
