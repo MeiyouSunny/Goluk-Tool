@@ -1,6 +1,5 @@
 package com.mobnote.util;
 
-import android.os.Environment;
 import android.text.TextUtils;
 
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
@@ -8,8 +7,6 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.Utils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
 
 import java.io.File;
@@ -94,7 +91,7 @@ public class GolukVideoUtils {
                             resolution = "480p";
                         }
 
-                        dateStr = parseDateString(dateStr);
+//                        dateStr = parseDateString(dateStr);
                     }
                 }
 
@@ -114,6 +111,7 @@ public class GolukVideoUtils {
             File videoFile = new File(videoPath);
             if (videoFile.exists())
                 size = String.format("%.1f", videoFile.length() / 1024.f / 1024.f) + "MB";
+            dateStr = parseDateString(dateStr);
             VideoInfo mVideoInfo = new VideoInfo();
             mVideoInfo.videoCreateDate = dateStr;
             mVideoInfo.videoSize = size;

@@ -32,7 +32,6 @@ import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UnbindActivity;
 import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
@@ -45,13 +44,13 @@ import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.ui.album.PhotoAlbumT1SPActivity;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.TimeSync;
 import com.mobnote.t1sp.util.ViewUtil;
-import com.mobnote.log.app.LogConst;
 import com.mobnote.user.IPCInfo;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
@@ -598,7 +597,12 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
         // 选了设备型号并跳转到WIFI页面回来后
         if (mNeedAutoConnectAfterSelectDeviceType) {
-            sendLogicLinkIpc();
+            // T2S
+            if (mDeviceTypeSelected != null && (mDeviceTypeSelected.startsWith("T4") || mDeviceTypeSelected.startsWith("T2S"))) {
+                connectT2S();
+            } else {
+                sendLogicLinkIpc();
+            }
             mNeedAutoConnectAfterSelectDeviceType = false;
             return;
         }
@@ -1037,6 +1041,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         showSelectDeviceType(true);
     }
 
+    private String mDeviceTypeSelected = "";
     private boolean mNeedAutoConnectAfterSelectDeviceType;
     public void showSelectDeviceType(final boolean needGotoSystemWifiList) {
         mNeedAutoConnectAfterSelectDeviceType = needGotoSystemWifiList;
@@ -1044,13 +1049,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         typeSelector.showDeviceTypeList(this, new DeviceTypeSelector.OnDeviceTypeSelectListener() {
             @Override
             public void onTypeSelected(String type) {
-                System.out.println("");
+                mDeviceTypeSelected = type;
                 IPCControlManager ipcControlManager = mApp.getIPCControlManager();
                 if (ipcControlManager != null) {
                     ipcControlManager.setProduceName(type);
                     ipcControlManager.setIpcMode();
                     if (!needGotoSystemWifiList) {
-                        sendLogicLinkIpc();
+                        // T2S
+                        if (type.startsWith("T4") || type.startsWith("T2S")) {
+                            connectT2S();
+                        } else {
+                            sendLogicLinkIpc();
+                        }
                     } else {
                         GolukUtils.startSystemWifiList(WiFiLinkListActivity.this);
                     }

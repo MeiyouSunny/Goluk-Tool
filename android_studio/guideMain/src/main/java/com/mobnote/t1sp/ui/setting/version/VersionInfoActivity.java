@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.ui.setting.version;
 
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.mobnote.util.QRCodeEncoder;
 import butterknife.BindView;
 import goluk.com.t1s.api.ApiUtil;
 import goluk.com.t1s.api.callback.CallbackVersion;
+import goluk.com.t1s.api.callback.CallbackWifiInfo;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -29,8 +31,8 @@ public class VersionInfoActivity extends BackTitleActivity {
     TextView mDeviceId;
     @BindView(R2.id.mVersion)
     TextView mDeviceVersion;
-    @BindView(R2.id.iv_qrcode)
-    ImageView mSNQrcode;
+//    @BindView(R2.id.iv_qrcode)
+//    ImageView mSNQrcode;
 
     @Override
     public int initLayoutResId() {
@@ -43,15 +45,40 @@ public class VersionInfoActivity extends BackTitleActivity {
         setTitle(R.string.my_version_title_text);
 
         getVersionInfo();
+        getWifiInfo();
 
         mDevicePic.setImageResource(R.drawable.connect_t1_icon_1);
+    }
+
+    private void getWifiInfo() {
+        ApiUtil.queryWifiInfo(new CallbackWifiInfo() {
+            @Override
+            public void onSuccess(String wifiName, String wifiPwd) {
+                if (TextUtils.isEmpty(wifiName))
+                    return;
+                String type = "";
+                if (wifiName.startsWith("Goluk_T4U")) {
+                    type = "T4U";
+                } else if (wifiName.startsWith("Goluk_T4")) {
+                    type = "T4";
+                } else if (wifiName.startsWith("Goluk_T2SU")) {
+                    type = "T2SU";
+                } else if (wifiName.startsWith("Goluk_T2S")) {
+                    type = "T2S";
+                }
+                mDeviceModel.setText(getString(R.string.str_goluk) + type);
+            }
+
+            @Override
+            public void onFail() {
+            }
+        });
     }
 
     private void getVersionInfo() {
         ApiUtil.getVersion(new CallbackVersion() {
             @Override
             public void onSuccess(String version) {
-                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceVersion.setText(version);
             }
 
@@ -65,7 +92,7 @@ public class VersionInfoActivity extends BackTitleActivity {
                 mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceId.setText(sn);
 
-                mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));
+                //mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));
 
             }
 

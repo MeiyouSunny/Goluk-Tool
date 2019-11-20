@@ -37,6 +37,9 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     WifiApManagerSupport apManagesupport = null;
     private NetUtil netUtil = null;
 
+    // T2S
+
+
     public WifiConnectManager(Context context, WifiManager wifiManager) {
         this(wifiManager, context);
     }
@@ -141,7 +144,7 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
     }
 
     /**
-     * 是否已经连接上小白WIFI
+     * 是否已经连接上T2S的WIFI
      *
      * @return
      */
@@ -149,8 +152,12 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
         if (!NetUtil.isWifiConnected(context))
             return false;
 
-        WifiRsBean result = wifiSupport.getConnResult(WIFI_NAME_T2S);
-        return result != null && result.getIpc_ssid().startsWith(WIFI_NAME_T2S);
+        WifiRsBean result = wifiSupport.getConnResult(TITLE);
+        return result != null &&
+                (result.getIpc_ssid().startsWith("T2S")
+                        || result.getIpc_ssid().startsWith("T2SU")
+                        || result.getIpc_ssid().startsWith("T4")
+                        || result.getIpc_ssid().startsWith("T4U"));
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//
