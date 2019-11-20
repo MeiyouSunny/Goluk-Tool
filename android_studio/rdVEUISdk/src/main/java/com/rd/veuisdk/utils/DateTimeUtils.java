@@ -29,6 +29,14 @@ public class DateTimeUtils {
     }
 
     /**
+     * @param s 单位:秒
+     * @return
+     */
+    public static String stringForTime(float s) {
+        return stringForTime((long) (s * 1000), false);
+    }
+
+    /**
      * 毫秒数转换为时间格式化字符串 支持是否显示小时
      *
      * @param timeMs
@@ -44,19 +52,53 @@ public class DateTimeUtils {
         int seconds = totalSeconds % 60;
         int minutes = (totalSeconds / 60) % 60;
         int hours = totalSeconds / 3600;
-
-        m_sbFormator.setLength(0);
-        try {
-            if (hours > 0 || existsHours) {
-                return m_formatter.format("%s%02d:%02d:%02d",
-                        bNegative ? "-" : "", hours, minutes, seconds)
-                        .toString();
-            } else {
-                return m_formatter.format("%s%02d:%02d", bNegative ? "- " : "",
-                        minutes, seconds).toString();
+        synchronized (m_sbFormator) {
+            m_sbFormator.setLength(0);
+            try {
+                if (hours > 0 || existsHours) {
+                    return m_formatter.format("%s%02d:%02d:%02d",
+                            bNegative ? "-" : "", hours, minutes, seconds)
+                            .toString();
+                } else {
+                    return m_formatter.format("%s%02d:%02d", bNegative ? "- " : "",
+                            minutes, seconds).toString();
+                }
+            } catch (Exception ex) {
+                return "";
             }
-        } catch (Exception ex) {
-            return "";
+        }
+    }
+
+    /**
+     *  毫秒数转换为时间格式化字符串 如果hours小于0则显示毫秒
+     * @param timeMs
+     * @return
+     */
+    public static String stringForTimeSS(long timeMs) {
+        boolean bNegative = timeMs < 0;// 是否为负数
+        if (bNegative) {
+            timeMs = -timeMs;
+        }
+        int totalSeconds = (int) (timeMs / 1000);
+
+        int seconds = totalSeconds % 60;
+        int minutes = (totalSeconds / 60) % 60;
+        int hours = totalSeconds / 3600;
+        int ss = (int) (timeMs % 1000 / 10);
+        synchronized (m_sbFormator) {
+            m_sbFormator.setLength(0);
+            try {
+                if (hours > 0) {
+                    return m_formatter.format("%s%02d:%02d:%02d",
+                            bNegative ? "-" : "", hours, minutes, seconds)
+                            .toString();
+                } else {
+                    return m_formatter.format("%s%02d:%02d:%02d", bNegative ? "- " : "",
+                            minutes, seconds, ss).toString();
+                }
+            } catch (Exception ex) {
+                return "";
+            }
         }
     }
 
@@ -148,7 +190,7 @@ public class DateTimeUtils {
     }
 
     /**
-     * 提交微博登陆中的生日
+     * 提交微博登录中的生日
      *
      * @param birthday
      * @return
@@ -215,44 +257,57 @@ public class DateTimeUtils {
         int seconds = totalSeconds % 60;// 秒
         int minutes = (totalSeconds / 60) % 60;// 分
         int hours = totalSeconds / 3600;// 时
+        synchronized (m_sbFormator) {
+            m_sbFormator.setLength(0);
+            try {
+                // 判断是否支持小时
+                if (hours > 0 || existsHours) {
+                    return m_formatter.format(
+                            alignment ? "%s%02d:%02d:%02d" : "%s%d:%d:%d",
+                            bNegative ? "-" : "", hours, minutes, seconds)
+                            .toString();
 
-        m_sbFormator.setLength(0);
-        try {
-            // 判断是否支持小时
-            if (hours > 0 || existsHours) {
-                return m_formatter.format(
-                        alignment ? "%s%02d:%02d:%02d" : "%s%d:%d:%d",
-                        bNegative ? "-" : "", hours, minutes, seconds)
-                        .toString();
+                } else if (existsMillisecond) {
 
-            } else if (existsMillisecond) {
+                    if (exitsMin) {
 
-                if (exitsMin) {
-
-                    if (minutes > 0 || alignment) {
-                        return m_formatter.format(
-                                alignment ? "%s%02d:%02d.%d" : "%s%d:%d.%d",
-                                bNegative ? "- " : "", minutes, seconds,
-                                millisecond).toString();
+                        if (minutes > 0 || alignment) {
+                            return m_formatter.format(
+                                    alignment ? "%s%02d:%02d.%d" : "%s%d:%d.%d",
+                                    bNegative ? "- " : "", minutes, seconds,
+                                    millisecond).toString();
+                        } else {
+                            return m_formatter.format(
+                                    alignment ? "%s%02d.%d" : "%s%d.%d",
+                                    bNegative ? "- " : "", seconds, millisecond)
+                                    .toString();
+                        }
                     } else {
-                        return m_formatter.format(
-                                alignment ? "%s%02d.%d" : "%s%d.%d",
-                                bNegative ? "- " : "", seconds, millisecond)
+                        int sec = hours * 60 * 60 + minutes * 60 + seconds;
+                        return m_formatter.format("%d.%d", sec, millisecond)
                                 .toString();
                     }
                 } else {
-                    int sec = hours * 60 * 60 + minutes * 60 + seconds;
-                    return m_formatter.format("%d.%d", sec, millisecond)
-                            .toString();
+                    return m_formatter.format(
+                            alignment ? "%s%02d:%02d" : "%s%d:%d",
+                            bNegative ? "- " : "", minutes, seconds).toString();
                 }
-            } else {
-                return m_formatter.format(
-                        alignment ? "%s%02d:%02d" : "%s%d:%d",
-                        bNegative ? "- " : "", minutes, seconds).toString();
+            } catch (Exception ex) {
+                return "";
             }
-        } catch (Exception ex) {
-            return "";
         }
+    }
+
+    public static String getTimeDateString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+        return formater.format(date);
+    }
+
+    public static String getTimeHourString(long time) {
+        Date date = new Date(time);
+        SimpleDateFormat formater = new SimpleDateFormat("HH:mm:ss");
+        return formater.format(date);
     }
 
     /**
@@ -270,18 +325,6 @@ public class DateTimeUtils {
     public static String getTimeStringSplitWith$(long time) {
         Date date = new Date(time);
         SimpleDateFormat formater = new SimpleDateFormat("yyyy$MM$dd$HH$mm$ss");
-        return formater.format(date);
-    }
-
-    public static String getTimeDateString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
-        return formater.format(date);
-    }
-
-    public static String getTimeHourString(long time) {
-        Date date = new Date(time);
-        SimpleDateFormat formater = new SimpleDateFormat("HH:mm:ss");
         return formater.format(date);
     }
 
