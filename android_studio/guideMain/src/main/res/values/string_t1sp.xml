@@ -16,10 +16,6 @@
     <!--<string name="hint_gsensor">启动后，⻋辆在⾏⻋中如果发⽣异常的碰撞，极路客会⾃动保存12秒（碰撞时刻的前5秒和后7秒）紧急视频影像。当存储空间不⾜时，将⾃动覆盖早期录制的⽂件。</string>-->
     <!--<string name="t1sp_ipc_hint_text">安装升级固件前，请确认摄像头已正常连接；安装升级过程中请不要断电，直到升级完成。升级成功后，请拔掉电源重新开机。</string>-->
 
-    <string name="str_ipc_update_success_t1s">固件升级成功</string>
-    <string name="capture_failed">抓拍失败</string>
-
-    <string name="reduce">缩时</string>
     <!-- Array -->
     <!-- 视频清晰度 -->
     <array name="video_res">

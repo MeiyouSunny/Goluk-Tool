@@ -487,7 +487,6 @@
     <string name="str_settings_video_type2">30 сек.</string>
     <string name="str_seconds">сек.</string>
     <string name="str_settings_wonderful_video_type_hint_text">Захват особого момента (6+6)：Нажмите кнопку KIT, чтобы включить запись первых 6+6 (12) сек. видео особого момента.Классический режим：Нажмите кнопку KIT, чтобы включить запись 30 секунд видео особого момента.</string>
-    <string name="str_settings_wonderful_video_type_ts1p_hint_text">Захват особого момента (5+7)：Нажмите кнопку KIT, чтобы включить запись первых 5+7 (12) сек. видео особого момента.Классический режим：Нажмите кнопку KIT, чтобы включить запись 30 секунд видео особого момента.</string>
     <string name="str_usercenter_header_attention_each_other_text">Взаимная подписка</string>
     <string name="str_follow_list_title">Я подписан(а)</string>
     <string name="str_search_hint">Искать пользователя (по имени/проверочному описанию)</string>

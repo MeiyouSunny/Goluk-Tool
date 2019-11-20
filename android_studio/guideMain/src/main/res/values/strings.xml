@@ -1560,9 +1560,4 @@
     <string name="not_in_china_alert">This application is limited to use in China.</string>
     <string name="close_app">Quit App</string>
 
-    <string name="no_wifi_selected">You are currently connected to non-GOLUK Wi-Fi, please switch to GOLUK Wi-Fi and try again.</string>
-    <string name="not_goluk_device">Please connect to GOLUK Wi-Fi. If you are connected, please turn off Bluetooth and VPN and try again;</string>
-    <string name="compress_video">正在压缩视频...</string>
-    <string name="export_error">导出失败</string>
-    <string name="exporting">正在导出...</string>
 </resources>

@@ -18,8 +18,10 @@ public class PhotoAlbumConfig {
 	public static final int PHOTO_BUM_IPC_WND = 1;
 	/***相册远程紧急视频*/
 	public static final int PHOTO_BUM_IPC_URG = 2;
-	/***相册远程循环视频*/
-	public static final int PHOTO_BUM_IPC_LOOP = 3;
+	/* 缩时 */
+    public static final int PHOTO_BUM_IPC_TIMESLAPSE = 3;
+    /***相册远程循环视频*/
+    public static final int PHOTO_BUM_IPC_LOOP = 4;
 	
 	/**自动查询**/
 	public static final String VIDEO_LIST_TAG_SEARACH = "0";

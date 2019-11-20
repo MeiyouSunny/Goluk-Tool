@@ -487,7 +487,6 @@
     <string name="str_settings_video_type2">클래식 모드</string>
     <string name="str_seconds">초</string>
     <string name="str_settings_wonderful_video_type_hint_text">캡처 하이라이트 (6+6)：첫 6+6 (12)초의 하이라이트 동영상 부분 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.클래식 모드：30초 동안의 하이라이트 동영상 녹음을 활성화 하려면 \'키트\' 버튼을 누르세요.</string>
-    <string name="str_settings_wonderful_video_type_ts1p_hint_text">ハイライトキャプチャ（5+7）：[KIT]ボタンを押して、最初の5+7（12）秒のハイライトビデオセクションの録画を有効にします。クラシックモード：[KIT]ボタンを押して、ハイライトビデオの30秒の録画を有効にします。</string>
     <string name="str_usercenter_header_attention_each_other_text">상호간 팔로우 하기</string>
     <string name="str_follow_list_title">팔로잉 합니다</string>
     <string name="str_search_hint">사용자 검색 (별명/인증 설명으로)</string>

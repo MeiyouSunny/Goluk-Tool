@@ -14,16 +14,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.carrecorder.util.Utils;
-import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
-import com.mobnote.util.SortByDate;
-
-import android.os.AsyncTask;
-import android.text.TextUtils;
-
 public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
     private DataCallBack mDataCallBack = null;
     private int type = 0;
@@ -49,11 +39,6 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
 //		String file = mFilePath + filePaths[type];
 
 //		List<String> files = FileInfoManagerUtils.getVideoConfigFile(file);
-
-        List<String> files = new ArrayList<String>();
-        for(String dir: videoPaths) {
-            files.addAll(FileInfoManagerUtils.getFileNames(mFilePath + dir, "(.+?(mp|MP)4)"));
-        }
 
         List<String> files = new ArrayList<String>();
         for (String dir : videoPaths) {

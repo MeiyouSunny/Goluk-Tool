@@ -1,17 +1,8 @@
 package com.mobnote.util;
 
-import java.util.Comparator;
-
-import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
-
 import android.text.TextUtils;
 
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.t1sp.util.FileUtil;
-
-import java.util.Comparator;
-
 import com.mobnote.t1sp.util.FileUtil;
 
 import java.util.Comparator;
@@ -43,7 +34,7 @@ public class SortByDate implements Comparator<String> {
 		return (date2.compareTo(date1));
 	}
 
-	private String getDateFromName(String s) {
+	private String getDateFromName(String fileName) {
         String date = "";
         if (fileName.contains("_")) {
             // 传统视频文件,如 WND3_171101112822_0030.mp4

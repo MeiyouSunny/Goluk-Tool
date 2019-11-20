@@ -243,5 +243,13 @@ public class NetUtil {
                 && networkInfo.isConnected();
     }
 
+    public static boolean isWifiConnected(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        return networkInfo != null
+                && networkInfo.isAvailable()
+                && networkInfo.isConnected();
+    }
 
 }
