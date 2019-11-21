@@ -28,6 +28,7 @@ android {
 
     packagingOptions {
         doNotStrip '*/armeabi/*.so'
+        doNotStrip '*/mips/*.so'
     }
 
         compileOptions {
