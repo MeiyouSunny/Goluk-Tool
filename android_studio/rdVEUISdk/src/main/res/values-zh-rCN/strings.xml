@@ -9,7 +9,7 @@
     <string name="cancel">取消</string>
     <string name="edit">编辑</string>
     <string name="select_media_hint">请选择媒体!</string>
-    <string name="app_name">rdVEDemo</string>
+    <string name="app_name">Goluk</string>
     <string name="preview_error">暂时无法预览，请重试！</string>
     <string name="no_media">没有媒体</string>
     <string name="video_not_found">没有找到视频</string>

@@ -311,20 +311,21 @@ public class VideoEditFragment extends BaseFragment {
         setViewVisibility(R.id.rb_sound_effect, false);
         setViewVisibility(R.id.rb_sound, false);
         setViewVisibility(R.id.rb_music_many, false);
+        setViewVisibility(R.id.rb_audio, false);
         ///
 
         int rbCount = 0;
         //配音
-        if (mUIConfig.isHideDubbing()) {
-            setViewVisibility(R.id.rb_audio, false);
-        } else {
-            if (mUIConfig.voiceLayoutTpye == UIConfiguration.VOICE_LAYOUT_2) {
-                setViewVisibility(R.id.rb_audio, false);
-            } else {
-                rbCount++;
-                setViewVisibility(R.id.rb_audio, true);
-            }
-        }
+//        if (mUIConfig.isHideDubbing()) {
+//            setViewVisibility(R.id.rb_audio, false);
+//        } else {
+//            if (mUIConfig.voiceLayoutTpye == UIConfiguration.VOICE_LAYOUT_2) {
+//                setViewVisibility(R.id.rb_audio, false);
+//            } else {
+//                rbCount++;
+//                setViewVisibility(R.id.rb_audio, true);
+//            }
+//        }
         //配乐
         if (!mUIConfig.isHideSoundTrack()) {
             rbCount++;
@@ -334,12 +335,12 @@ public class VideoEditFragment extends BaseFragment {
 //        if (!mUIConfig.isHideMusicEffect()) {
 //            rbCount++;
 //        }
-        setViewVisibility(R.id.rb_sound_effect, !mUIConfig.isHideMusicEffect());
+//        setViewVisibility(R.id.rb_sound_effect, !mUIConfig.isHideMusicEffect());
         //音效
 //        if (!mUIConfig.isHideSound()) {
 //            rbCount++;
 //        }
-        setViewVisibility(R.id.rb_sound, !mUIConfig.isHideSound());
+//        setViewVisibility(R.id.rb_sound, !mUIConfig.isHideSound());
         //多段配乐
 //        if (!mUIConfig.isHideMusicMany()) {
 //            rbCount++;
