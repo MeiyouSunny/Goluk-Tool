@@ -181,7 +181,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             deleteListData(list);
         }
     }
@@ -196,7 +196,7 @@ public class LoopFragment extends Fragment implements IPCManagerFn, LocalWonderf
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_LOOP) {
 
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             downloadVideoFlush(list);
         }
     }

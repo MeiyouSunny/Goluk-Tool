@@ -184,7 +184,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             deleteListData(list);
         }
     }
@@ -224,7 +224,7 @@ public class WonderfulFragment extends Fragment implements IPCManagerFn, LocalWo
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
 
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             downloadVideoFlush(list);
         }
     }

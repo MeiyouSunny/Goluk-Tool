@@ -89,7 +89,7 @@ public class VersionInfoActivity extends BackTitleActivity {
         ApiUtil.getSN(new CallbackVersion() {
             @Override
             public void onSuccess(String sn) {
-                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
+//                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceId.setText(sn);
 
                 //mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));

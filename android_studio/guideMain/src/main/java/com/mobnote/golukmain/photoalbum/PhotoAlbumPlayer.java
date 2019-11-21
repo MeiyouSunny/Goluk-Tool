@@ -722,7 +722,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             } else {
                 //相册详情页面-下载到本地
                 ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
-                String path = mApp.getIPCControlManager().isT2S() ? mRelativePath : mPath;
+                String path = mApp.getIPCControlManager().isT2S() ? mRelativePath : mFileName;
                 EventBus.getDefault().post(new EventDownloadIpcVid(path, getType()));
             }
         } else if (id == R.id.btn_delete) {
@@ -735,7 +735,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                     tempPath = mFileName;
                 }
             }
-            showConfimDeleteDialog(mPath);
+            showConfimDeleteDialog(tempPath);
         } else {
             Log.e(TAG, "id = " + id);
         }

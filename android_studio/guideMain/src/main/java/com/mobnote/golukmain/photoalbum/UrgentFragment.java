@@ -185,7 +185,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
     public void onEventMainThread(EventDeletePhotoAlbumVid event) {
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             deleteListData(list);
         }
     }
@@ -205,7 +205,7 @@ public class UrgentFragment extends Fragment implements IPCManagerFn, LocalWonde
         if (event != null && event.getType() == PhotoAlbumConfig.PHOTO_BUM_IPC_URG) {
 
             List<String> list = new ArrayList<String>();
-            list.add(FileUtil.getFileNameFromPath(event.getVidPath()));
+            list.add(event.getVidPath());
             downloadVideoFlush(list);
         }
     }
