@@ -27,8 +27,16 @@ public class IpcDownloaderImpl implements IpcDownloader {
 
     private boolean mNeedCheckSD;
 
-    public IpcDownloaderImpl() {
+    private static IpcDownloaderImpl instance;
+
+    private IpcDownloaderImpl() {
         mFileNames = new ArrayList<>();
+    }
+
+    public static IpcDownloaderImpl getInstance() {
+        if (instance == null)
+            instance = new IpcDownloaderImpl();
+        return instance;
     }
 
     @Override
@@ -47,6 +55,11 @@ public class IpcDownloaderImpl implements IpcDownloader {
         if (mFileNames != null) {
             mFileNames.addAll(fileNames);
         }
+    }
+
+    @Override
+    public List<VideoInfo> getDownloadingFiles() {
+        return mFileNames;
     }
 
     @Override

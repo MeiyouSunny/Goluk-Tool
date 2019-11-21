@@ -37,8 +37,6 @@ import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.t1sp.callback.CommonCallback;
 import com.mobnote.t1sp.download.DownloaderT1sp;
-import com.mobnote.t1sp.download.DownloaderT1spImpl;
-import com.mobnote.t1sp.download.Task;
 import com.mobnote.t1sp.download.ThumbDownloader;
 import com.mobnote.t1sp.download2.IpcDownloadListener;
 import com.mobnote.t1sp.download2.IpcDownloader;
@@ -550,7 +548,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
 //
 //        DownloaderT1spImpl.getInstance().addDownloadTasks(downloadTasks, this);
 
-        final IpcDownloader ipcDownloader = new IpcDownloaderImpl();
+        final IpcDownloader ipcDownloader = IpcDownloaderImpl.getInstance();
         ipcDownloader.addDownloadFileList(videoInfos);
         ipcDownloader.setListener(new IpcDownloadListener() {
             @Override
@@ -710,11 +708,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
     };
 
     private boolean isAllowedDelete(List<String> deleteList) {
-        List<Task> tasks = DownloaderT1spImpl.getInstance().getDownloadList();
-        if (!CollectionUtils.isEmpty(tasks)) {
-            for (Task downloadTask : tasks) {
-                if (deleteList.contains(downloadTask.downloadPath))
-                    return false;
+        List<VideoInfo> videoInfos = IpcDownloaderImpl.getInstance().getDownloadingFiles();
+        if (!CollectionUtils.isEmpty(videoInfos)) {
+            for (VideoInfo videoInfo : videoInfos) {
+                for (String filePath : deleteList) {
+                    if (filePath.contains(videoInfo.filename))
+                        return false;
+                }
             }
         }
 

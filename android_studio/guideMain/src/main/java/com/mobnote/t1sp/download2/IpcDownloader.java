@@ -25,7 +25,9 @@ public interface IpcDownloader {
      */
     void addDownloadFileList(List<VideoInfo> videoInfos);
 
-    /**
+    List<VideoInfo> getDownloadingFiles();
+
+   /**
      * 设置监听
      *
      * @param listener IpcDownloadListener
