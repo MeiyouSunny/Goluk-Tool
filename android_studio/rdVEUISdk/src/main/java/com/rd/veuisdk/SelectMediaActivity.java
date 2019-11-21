@@ -1,52 +1,49 @@
 package com.rd.veuisdk;
 
 import android.Manifest;
-import android.content.ContentValues;
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.provider.MediaStore.Video;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.rd.gallery.IImage;
-import com.rd.gallery.IVideo;
 import com.rd.lib.utils.CoreUtils;
-import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
+import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.veuisdk.adapter.MediaCheckedAdapter;
+import com.rd.veuisdk.adapter.MediaListAdapter;
 import com.rd.veuisdk.fragment.IStateCallBack;
 import com.rd.veuisdk.fragment.PhotoSelectFragment;
 import com.rd.veuisdk.fragment.PhotoSelectFragment.IMediaSelector;
 import com.rd.veuisdk.fragment.VideoSelectFragment;
 import com.rd.veuisdk.manager.UIConfiguration;
+import com.rd.veuisdk.model.ExtPicInfo;
 import com.rd.veuisdk.model.ImageItem;
+import com.rd.veuisdk.model.VideoOb;
 import com.rd.veuisdk.ui.ExtViewPagerNoScroll;
 import com.rd.veuisdk.utils.IntentConstants;
+import com.rd.veuisdk.utils.SelectMediaPopHandler;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -56,24 +53,17 @@ import java.util.List;
  * @author jian
  * @author abreal
  */
-public class SelectMediaActivity extends BaseActivity implements IMediaSelector, IStateCallBack {
-    private final String TAG = "SelectMediaActivity";
+public class SelectMediaActivity extends BaseActivity implements IMediaSelector, IStateCallBack, MediaListAdapter.IAdapterListener {
     // 请求code:读取外置存储
-    private static final int REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS = 1;
+    private static final int REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS = 1;
     // 请求code:摄像头权限
     private static final int REQUEST_CODE_CAMERA_PERMISSIONS = 2;
     // 请求code:导出后返回
     private static final int REQUEST_CODE_EXPORT = 10;
+    private boolean mIsAppend = false;
     // 视频源列表
-
-    public static boolean mIsAppend = false;
-
     private VideoSelectFragment mVideoFragment;
     private PhotoSelectFragment mPhotoFragment;
-    private ArrayList<Integer> mAllMediaKeySelected = new ArrayList<Integer>();
-
-    private ArrayList<ImageItem> mItemArray = new ArrayList<ImageItem>();
-    private int mSelectedTotal = 0;
     private final int REQUESTCODE_FOR_CAMERA = 2;
 
     private boolean mAddPhoto;
@@ -83,56 +73,266 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
     private ExtViewPagerNoScroll mVpMedia;
     private TextView mTvImportInfo;
 
-    public final static String ALBUM_FORMAT_TYPE = "album_format_type";
-    public final static String ALBUM_ONLY = "album_only";
+    final static String ALBUM_FORMAT_TYPE = "album_format_type";
+    final static String ALBUM_ONLY = "album_only";
+    private final static String ALBUM_APPEND_MAX = "append_max";
+    private static final String ACTION_APPEND = "action_append";
+    static final String APPEND_IMAGE = "edit.addmenu.addimage";
+    static final String PARAM_LIMIT_MIN = "param_limit_min";
+    static final String LOTTIE_IMAGE = "lottie_image";
 
-    private int mFormatType = -1;
+
+    private int mFormatType = UIConfiguration.ALBUM_SUPPORT_DEFAULT;
     //是否直接返回文件路径string  (true)，还是返回mediaobject (false)
     private boolean mIsAlbumOnly = false;
 
     private int mMediaCountLimit;
+    private int appendMax = -1;//最大允许追加多少个
 
     private UIConfiguration mUIConfig;
-    private boolean hasJb2 = true; //
+    private boolean hasJb2 = true;
+
+    /**
+     */
+    public static void appendMedia(Context context, boolean appImage, int maxAppend, int code) {
+        appendMedia(context, appImage, false, maxAppend, code);
+    }
+
+    /**
+     */
+    public static void appendMedia(Context context, boolean appImage, boolean isLottieImage, int maxAppend, int code) {
+        Intent intent = new Intent(context, SelectMediaActivity.class);
+        intent.putExtra(ACTION_APPEND, true);
+        intent.putExtra(APPEND_IMAGE, appImage);
+        intent.putExtra(ALBUM_APPEND_MAX, maxAppend);
+        intent.putExtra(LOTTIE_IMAGE, isLottieImage);
+        ((Activity) context).startActivityForResult(intent, code);
+    }
+
+
+    /**
+     * 选择媒体
+     */
+    @Deprecated
+    public static void appendMedia(Context context, int maxAppend, int code) {
+        Intent intent = new Intent(context, SelectMediaActivity.class);
+        intent.putExtra(ACTION_APPEND, true);
+        intent.putExtra(ALBUM_APPEND_MAX, maxAppend);
+        ((Activity) context).startActivityForResult(intent, code);
+    }
+
+
+    /**
+     * 选择单个Layer对应的媒体
+     *
+     * @param formatType 视频|图片
+     */
+    public static void appendMedia(Context context, boolean isAlbumOnly, int formatType, int maxAppend, int code) {
+        Intent intent = new Intent(context, SelectMediaActivity.class);
+        intent.putExtra(ACTION_APPEND, true);
+        intent.putExtra(ALBUM_ONLY, isAlbumOnly);
+        intent.putExtra(ALBUM_FORMAT_TYPE, formatType);
+        intent.putExtra(ALBUM_APPEND_MAX, maxAppend);
+        intent.putExtra(PARAM_AE_MEDIA, true);
+        ((Activity) context).startActivityForResult(intent, code);
+    }
+
+    /**
+     * AE详情->选择指定的类型的媒体
+     *
+     * @param enableRepeat 是否允许重复（允许重复时只能添加图片）， true 允许添加那个图片（无限制）；false 依据模板中的layer.size()
+     */
+    static void onAEMedia(Context context, int picNum, int videoNum, int requestCode, boolean enableRepeat) {
+        Intent intent = new Intent(context, SelectMediaActivity.class);
+        intent.putExtra(PARAM_AE_MEDIA_DETAIL, true);
+        intent.putExtra(PARAM_AE_MEDIA_PIC_NUM, picNum);
+        intent.putExtra(PARAM_AE_MEDIA_VIDEO_NUM, videoNum);
+        intent.putExtra(PARAM_AE_REPEAT, enableRepeat);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+
+    }
+
+
+    private static final String PARAM_AE_MEDIA = "ae_media";
+    private static final String PARAM_AE_MEDIA_DETAIL = "PARAM_AE_MEDIA_detail";
+    private static final String PARAM_AE_MEDIA_PIC_NUM = "ae_media_pic_num";
+    private static final String PARAM_AE_MEDIA_VIDEO_NUM = "ae_media_video_num";
+    private static final String PARAM_AE_REPEAT = "ae_media_pic_repeat";
+    //是否隐藏文字板
+    private boolean bHideText = false;
+    private RecyclerView mMediaChecked;
+
+    private MediaCheckedAdapter mMediaCheckedAdapter;
+    private View mTvMediaHint;
+    private int nEditMediaIndex = -1;
+    private static final int REQUEST_EDIT_TRIM = 989;
+    private static final int REQUEST_EDIT_ROTATE = 990;
+    private static final int REQUEST_IMPORT_TRIM = 9991;
+    private static final int REQUEST_IMPORT_ROTATE = 992;
+
+    private static final int REQUEST_EDIT_TEXT_PIC = 993;
+
+    /**
+     * 是否需要返回mediaObject 对象，如不需要（不用裁剪 、旋转 等）
+     */
+    private boolean bNeedResultMediaObject = true;
+
+    private void initMediaChecked() {
+        mMediaCheckedAdapter = new MediaCheckedAdapter();
+        LinearLayoutManager mVerticalLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        mMediaChecked.setLayoutManager(mVerticalLayoutManager);
+        mTvMediaHint = findViewById(R.id.tv_media_hint);
+        mMediaCheckedAdapter.setOnItemClickListener(new MediaCheckedAdapter.OnItemClickListener() {
+            @Override
+            public void onDelete(int position) {
+                if (mMediaCheckedAdapter.getItemCount() == 0) {
+                    mTvMediaHint.setVisibility(View.VISIBLE);
+                    btnNext.setEnabled(false);
+                }
+                onRefreshCount();
+            }
+
+            @Override
+            public void onItemClick(int position) {
+                nEditMediaIndex = position;
+                if (bNeedResultMediaObject) {
+                    MediaObject mediaObject = mMediaCheckedAdapter.getItem(position);
+                    if (null != mediaObject) {
+                        if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
+                            cancelLoadPhotos();
+                            TrimMediaActivity.onImportTrim(SelectMediaActivity.this, mediaObject, REQUEST_EDIT_TRIM);
+                        } else {
+                            Object tmp = mediaObject.getTag();
+                            ExtPicInfo extPicInfo;
+                            if (null != tmp && tmp instanceof VideoOb && (extPicInfo = ((VideoOb) tmp).getExtpic()) != null) {
+                                cancelLoadPhotos();
+                                ExtPhotoActivity.editTextPic(SelectMediaActivity.this, extPicInfo, REQUEST_EDIT_TEXT_PIC);
+                            } else {
+                                cancelLoadPhotos();
+                                Scene scene = VirtualVideo.createScene();
+                                scene.addMedia(mediaObject);
+                                CropRotateMirrorActivity.onImportImage(SelectMediaActivity.this, scene, REQUEST_EDIT_ROTATE);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    }
+
+    // -1 表示无限制，可添加任意数量个文件
+    private final int DEFAULT_AE_MEDIA_LIMIT = -1;
+
+
+    private int nPicLimit = DEFAULT_AE_MEDIA_LIMIT;
+    private int nVideoLimit = DEFAULT_AE_MEDIA_LIMIT;
+    private boolean isAEDetail = false;
+    private boolean enableAERepeat = false;
+
+    private int nMediaLimitMin = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        mIsAppend = getIntent().getBooleanExtra(EditPreviewActivity.ACTION_APPEND, false);
-        mIsAlbumOnly = getIntent().getBooleanExtra(ALBUM_ONLY, false);
-        mUIConfig = SdkEntry.getSdkService().getUIConfig();
-        if (!mIsAppend) {
-//            VideoEditActivity.orientationType = mUIConfig.orientation;
+        TAG = "SelectMediaActivity";
+        showNotchScreen();
+        Intent intent = getIntent();
+        nMediaLimitMin = intent.getIntExtra(PARAM_LIMIT_MIN, 0);
+        isAEDetail = intent.getBooleanExtra(PARAM_AE_MEDIA_DETAIL, false);
+        if (isAEDetail) {
+            //Ae详情，选择指定类型的文件
+            nPicLimit = intent.getIntExtra(PARAM_AE_MEDIA_PIC_NUM, DEFAULT_AE_MEDIA_LIMIT);
+            nVideoLimit = intent.getIntExtra(PARAM_AE_MEDIA_VIDEO_NUM, DEFAULT_AE_MEDIA_LIMIT);
+            enableAERepeat = intent.getBooleanExtra(PARAM_AE_REPEAT, false);
         }
+        mIsAppend = intent.getBooleanExtra(ACTION_APPEND, false);
+        mIsAlbumOnly = intent.getBooleanExtra(ALBUM_ONLY, false);
+        if (mIsAlbumOnly) {
+            //只需要返回路径即可
+            bNeedResultMediaObject = false;
+            bShowAddBtn = false;
+        } else {
+            bNeedResultMediaObject = true;
+        }
+        appendMax = intent.getIntExtra(ALBUM_APPEND_MAX, -1);
+        mUIConfig = SdkEntry.getSdkService().getUIConfig();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.select_media_layout);
+        mMediaChecked = $(R.id.rvCheckedMedia);
+        initMediaChecked();
         mStrActivityPageName = getString(R.string.select_medias);
-        mAddPhoto = getIntent().getBooleanExtra(
-                EditPreviewActivity.APPEND_IMAGE, false);
+        mAddPhoto = intent.getBooleanExtra(APPEND_IMAGE, false);
         hasJb2 = CoreUtils.hasJELLY_BEAN_MR2();
-        if (mIsAlbumOnly) {
-            mFormatType = getIntent().getIntExtra(ALBUM_FORMAT_TYPE, -1);
+        if (intent.getBooleanExtra(PARAM_AE_MEDIA, false)) {
+            bHideText = true;
+            mFormatType = intent.getIntExtra(ALBUM_FORMAT_TYPE, UIConfiguration.ALBUM_SUPPORT_DEFAULT);
         } else {
-            mFormatType = mUIConfig.albumSupportFormatType;
+            if (intent.getBooleanExtra(LOTTIE_IMAGE, false)) {
+                mFormatType = UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY;
+            } else if (mIsAlbumOnly) {
+                mFormatType = intent.getIntExtra(ALBUM_FORMAT_TYPE, -1);
+            } else {
+                mFormatType = mUIConfig.albumSupportFormatType;
+            }
+        }
+        if (mIsAlbumOnly) {
+            mMediaCheckedAdapter.setHideMediaDuration(true);
+        }
+        mSelectMediaPopHandler = new SelectMediaPopHandler(this, new SelectMediaPopHandler.Callback() {
+            @Override
+            public void onPhoto() {
+                openPhotoCamera();
+            }
+
+            @Override
+            public void onVideo() {
+                openVideoCamera();
+            }
+        });
+        if (isAEDetail) {
+            mMediaCheckedAdapter.setEnableEditClick(false);
+            mMediaCheckedAdapter.setHideMediaDuration(true);
+            bHideText = true;
+            //AEDetail选择媒体
+            if (nVideoLimit == 0) {
+                //只能选图片
+                mFormatType = UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY;
+            }
+            mIsAlbumOnly = false;
+            mIsAppend = true;
+            bNeedResultMediaObject = true;
+            mMediaCheckedAdapter.setHideMediaDuration(true);
+        } else {
+            mMediaCountLimit = mUIConfig.mediaCountLimit;
+            if (appendMax > -1) {
+                mMediaCountLimit = appendMax;
+            }
         }
 
-        mMediaCountLimit = mUIConfig.mediaCountLimit;
 
-        if (getLastCustomNonConfigurationInstance() != null) {
-            mAddPhoto = (Boolean) getLastCustomNonConfigurationInstance();
+        //是否隐藏被选中的媒体类型
+        if (mFormatType != UIConfiguration.ALBUM_SUPPORT_DEFAULT) {
+            mMediaCheckedAdapter.setHideMediaType(true);
         }
 
+
+        mMediaChecked.setAdapter(mMediaCheckedAdapter);
+
+        Object tmp = getLastCustomNonConfigurationInstance();
+        if (tmp != null) {
+            mAddPhoto = (Boolean) tmp;
+        }
         initView();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int hasReadPermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-            List<String> permissions = new ArrayList<String>();
-            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
+            List<String> permissions = new ArrayList<>();
+            if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 permissions.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
             }
+            if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            }
             if (!permissions.isEmpty()) {
-                requestPermissions(
-                        permissions.toArray(new String[permissions.size()]),
-                        REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS);
+                requestPermissions(permissions.toArray(new String[permissions.size()]), REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS);
             } else {
                 loadFragments();
             }
@@ -159,20 +359,17 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
-            case REQUEST_CODE_READ_EXTERNAL_STORAGE_PERMISSIONS: {
+            case REQUEST_CODE_EXTERNAL_STORAGE_PERMISSIONS: {
                 for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] == PackageManager.PERMISSION_GRANTED) {
-                        loadFragments();
-                    } else {
-                        SysAlertDialog.showAutoHideDialog(this, null,
-                                getString(R.string.permission_ablum_error),
-                                Toast.LENGTH_SHORT);
+                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
+                        onToast(R.string.permission_album_error);
                         finish();
+                        return;
                     }
                 }
+                loadFragments();
             }
             break;
             case REQUEST_CODE_CAMERA_PERMISSIONS:
@@ -182,9 +379,7 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
                     mRunnableCheckCamera.run();
                     mRunnableCheckCamera = null;
                 } else {
-                    SysAlertDialog.showAutoHideDialog(this, null,
-                            getString(R.string.permission_camera_error),
-                            Toast.LENGTH_SHORT);
+                    onToast(R.string.permission_camera_error);
                 }
                 break;
             default: {
@@ -194,29 +389,87 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         }
     }
 
+    private void onAdd(MediaObject mediaObject) {
+        if (View.VISIBLE == mTvMediaHint.getVisibility()) {
+            mTvMediaHint.setVisibility(View.GONE);
+        }
+        btnNext.setEnabled(true);
+        mMediaCheckedAdapter.add(mediaObject);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == VideoSelectFragment.CODE_EXT_PIC) {
+            if (requestCode == REQUEST_IMPORT_TRIM) {
+                Scene newScene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+                if (null != newScene) {
+                    onAdd(newScene.getAllMedia().get(0));
+                }
+            } else if (requestCode == REQUEST_IMPORT_ROTATE) {
+                Scene newScene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+                if (null != newScene) {
+                    onAdd(newScene.getAllMedia().get(0));
+                }
+            } else if (requestCode == REQUEST_EDIT_TRIM) {
 
-                Intent intent = new Intent(SelectMediaActivity.this,
-                        EditPreviewActivity.class);
+                if (nEditMediaIndex >= 0) {
+                    Scene newScene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+                    if (null != newScene) {
+                        mMediaCheckedAdapter.update(nEditMediaIndex, newScene.getAllMedia().get(0));
+                    }
+                    nEditMediaIndex = -1;
+                }
 
-                intent.putExtra(IntentConstants.EXTRA_EXT_ISEXTPIC, 1);
-                intent.putParcelableArrayListExtra(
-                        IntentConstants.EXTRA_MEDIA_LIST,
-                        data.getParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST));
-                intent.putExtra(IntentConstants.EXTRA_EXT_PIC_INFO, data
-                        .getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO));
-                setResult(RESULT_OK, intent);
-                finish();
+
+            } else if (requestCode == REQUEST_EDIT_ROTATE) {
+
+                if (nEditMediaIndex >= 0) {
+                    Scene newScene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+                    if (null != newScene) {
+                        mMediaCheckedAdapter.update(nEditMediaIndex, newScene.getAllMedia().get(0));
+                    }
+                    nEditMediaIndex = -1;
+                }
+
+
+            } else if (requestCode == REQUEST_EDIT_TEXT_PIC) {
+                MediaObject media = data
+                        .getParcelableExtra(IntentConstants.EXTRA_MEDIA_OBJECTS);
+                VideoOb nvb = new VideoOb(media.getTrimStart(), media.getTrimEnd(),
+                        media.getTrimStart(), media.getTrimEnd(),
+                        media.getTrimStart(), media.getTrimEnd(),
+                        1, (ExtPicInfo) data.getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO), VideoOb.DEFAULT_CROP);
+                media.setTag(nvb);
+
+                if (nEditMediaIndex >= 0) {
+                    mMediaCheckedAdapter.update(nEditMediaIndex, media);
+                    nEditMediaIndex = -1;
+                }
+
+            } else if (requestCode == VideoSelectFragment.CODE_EXT_PIC) {
+
+
+                ArrayList<MediaObject> tempMedias = data
+                        .getParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST);
+                int isextPic = data.getIntExtra(IntentConstants.EXTRA_EXT_ISEXTPIC, 0);
+
+                ExtPicInfo extPicInfo = data.getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO);
+
+                MediaObject tmp = tempMedias.get(0);
+                if (null != tmp) {
+                    tmp.setTag(new VideoOb(tmp.getTrimStart(), tmp.getTrimEnd(), tmp
+                            .getTrimStart(), tmp.getTrimEnd(), tmp.getTrimStart(),
+                            tmp.getTrimEnd(), isextPic, extPicInfo, VideoOb.DEFAULT_CROP));
+                    onAdd(tmp);
+                }
+
 
             } else if (requestCode == REQUESTCODE_FOR_CAMERA) {
                 // data.hasExtra(SdkEntry.INTENT_KEY_PICTURE_PATH);getStringExtra(SdkEntry.INTENT_KEY_PICTURE_PATH);
                 if (data.hasExtra(SdkEntry.INTENT_KEY_PICTURE_PATH)) {// RecorderActivity内部已经执行了插入相册的操作，这里只要刷新一下就好
                     if (mFormatType == UIConfiguration.ALBUM_SUPPORT_DEFAULT) {
-                        setchecked(1);
+                        setCheck(1);
                         mVpMedia.setCurrentItem(1, true);
                         mPhotoFragment.refresh();
                         mVideoFragment.refresh();
@@ -233,13 +486,13 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
                         try {
                             VideoConfig vcMediaInfo = new VideoConfig();
                             float duration = VirtualVideo.getMediaInfo(path, vcMediaInfo);
-                            insertToGalleryr(path, Utils.s2ms(duration),
+                            Utils.insertToGallery(SelectMediaActivity.this, path, Utils.s2ms(duration),
                                     vcMediaInfo.getVideoWidth(),
                                     vcMediaInfo.getVideoHeight());
                         } catch (Exception ex) {
                         } finally {
                             if (mFormatType == UIConfiguration.ALBUM_SUPPORT_DEFAULT) {
-                                setchecked(0);
+                                setCheck(0);
                                 mVpMedia.setCurrentItem(0, true);
                                 mPhotoFragment.refresh();
                                 mVideoFragment.refresh();
@@ -257,6 +510,7 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
                 setResult(RESULT_OK, data);
                 finish();
             }
+            onRefreshCount();
         } else {
             if (requestCode == REQUEST_CODE_EXPORT) {
                 setResult(RESULT_CANCELED);
@@ -274,47 +528,6 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
 
     }
 
-    private String getPhotopath() {
-        // 照片全路径
-        String fileName = "";
-        // 文件夹路径
-        String pathUrl = Environment.getExternalStorageDirectory()
-                + "/DCIM/Camera/";
-        String imageName = "noname.jpg";
-        File file = new File(pathUrl);
-        file.mkdirs();// 创建文件夹
-        fileName = pathUrl + imageName;
-        return fileName;
-    }
-
-    private void insertToGalleryr(String path, int duration, int width,
-                                  int height) {
-        ContentValues videoValues = new ContentValues();
-        videoValues.put(Video.Media.TITLE, getString(R.string.undefine));
-        videoValues.put(Video.Media.MIME_TYPE, "video/mp4");
-        videoValues.put(Video.Media.DATA, path);
-        videoValues.put(Video.Media.ARTIST, getString(R.string.app_name));
-        videoValues.put(Video.Media.DATE_TAKEN,
-                String.valueOf(System.currentTimeMillis()));
-        videoValues.put(Video.Media.DESCRIPTION, getString(R.string.app_name));
-        videoValues.put(Video.Media.DURATION, duration);
-        videoValues.put(Video.Media.WIDTH, width);
-        videoValues.put(Video.Media.HEIGHT, height);
-        getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoValues);
-
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mItemArray.clear();
-        mSelectedTotal = 0;
-    }
 
     @Override
     public void finish() {
@@ -325,8 +538,52 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mMediaCheckedAdapter.purge();
+        if (null != mVpMedia) {
+            mVpMedia.removeOnPageChangeListener(mPageChangeListener);
+        }
+    }
+
+    @Override
     public boolean isHideText() {
+        if (bHideText) {
+            return bHideText;
+        }
         return SdkEntry.getSdkService().getUIConfig().isHideText();
+    }
+
+
+    @Override
+    public void onAdd(ImageItem item) {
+        MediaObject mediaObject = aeMediaLimitCheck(item);
+        if (null != mediaObject) {
+            if (checkCanAddMedia()) {
+                onAddImp(mediaObject);
+            }
+        }
+    }
+
+    /**
+     * 添加媒体到recycleview
+     *
+     * @param mediaObject
+     */
+    private void onAddImp(MediaObject mediaObject) {
+        onAdd(mediaObject);
+        onRefreshCount();
+    }
+
+
+    @Override
+    public boolean isShowAddBtn() {
+        return bShowAddBtn;
+    }
+
+    @Override
+    public boolean isAppend() {
+        return mIsAppend;
     }
 
     private class MPageAdapter extends FragmentPagerAdapter {
@@ -382,10 +639,11 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         public Fragment getItem(int paramInt) {
             return (Fragment) this.fragments.get(paramInt);
         }
+
     }
 
-    private void setchecked(int paramInt) {
-        switch (paramInt) {
+    private void setCheck(int index) {
+        switch (index) {
             case 0:
                 this.mRbVideo.setChecked(true);
                 this.mRbPhoto.setChecked(false);
@@ -401,29 +659,35 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         }
     }
 
+    private View btnNext;
+    private SelectMediaPopHandler mSelectMediaPopHandler;
+    private OnPageChangeListener mPageChangeListener = new OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            setCheck(position);
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
+
     private void initView() {
         mRbVideo = (RadioButton) findViewById(R.id.rbVideo);
         mRbPhoto = (RadioButton) findViewById(R.id.rbPhoto);
         mVpMedia = (ExtViewPagerNoScroll) findViewById(R.id.mediaViewPager);
         mTvImportInfo = (TextView) findViewById(R.id.import_info_text);
 
-        mVpMedia.setOnPageChangeListener(new OnPageChangeListener() {
+        mVpMedia.addOnPageChangeListener(mPageChangeListener);
 
-            @Override
-            public void onPageSelected(int arg0) {
-                setchecked(arg0);
-            }
-
-            @Override
-            public void onPageScrolled(int arg0, float arg1, int arg2) {
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int arg0) {
-            }
-        });
-
-        findViewById(R.id.import_btn).setOnClickListener(new OnClickListener() {
+        btnNext = findViewById(R.id.import_btn);
+        btnNext.setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -445,21 +709,17 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
 
             @Override
             public void onClick(View v) {
-//                if (mIsAlbumOnly) {
-//                    setResult(SdkEntry.RESULT_ALBUM_TO_CAMERA);
-//                    finish();
-//                    return;
-//                }
                 if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
                     openPhotoCamera();
                 } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
                     openVideoCamera();
                 } else {
-                    showPopupWindow(v);
+                    mSelectMediaPopHandler.showPopupWindow(v);
+                    mSelectMediaPopHandler.toggleBright();
                 }
             }
         });
-        if (mIsAlbumOnly && !mUIConfig.enableAlbumCamera) {
+        if (!mUIConfig.enableAlbumCamera) {
             findViewById(R.id.btnCamera).setVisibility(View.INVISIBLE);
         }
         if (!hasJb2) {
@@ -471,7 +731,7 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
             @Override
             public void onClick(View v) {
                 if (mVpMedia.getCurrentItem() != 0) {
-                    setchecked(0);
+                    setCheck(0);
                     mVpMedia.setCurrentItem(0, true);
                 }
             }
@@ -482,14 +742,22 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
             @Override
             public void onClick(View v) {
                 if (mVpMedia.getCurrentItem() != 1) {
-                    setchecked(1);
+                    setCheck(1);
                     mVpMedia.setCurrentItem(1, true);
                 }
             }
         });
-
-        if (mMediaCountLimit == 1 && mIsAlbumOnly) {
-            findViewById(R.id.rlAlbumBottomBar).setVisibility(View.GONE);
+        if (mIsAlbumOnly) {
+            //只返回路径即可
+            bShowAddBtn = false;
+            if (mMediaCountLimit == 1) {
+                findViewById(R.id.rlAlbumBottomBar).setVisibility(View.GONE);
+            } else {
+                bShowAddBtn = true;
+            }
+        } else {
+            //返回MediaObject，
+            bShowAddBtn = true;
         }
 
         if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
@@ -501,23 +769,23 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         }
     }
 
+    /**
+     * 是否显示item中的add按钮
+     */
+    private boolean bShowAddBtn = false;
+
     private void showPhotoOnly() {
-
-
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         findViewById(R.id.rgFormat).setVisibility(View.GONE);
         tvTitle.setText(R.string.select_media_title_photo);
         tvTitle.setVisibility(View.VISIBLE);
-
     }
 
     private void showVideoOnly() {
-
         TextView tvTitle = (TextView) findViewById(R.id.tvTitle);
         findViewById(R.id.rgFormat).setVisibility(View.GONE);
         tvTitle.setText(R.string.select_media_title_video);
         tvTitle.setVisibility(View.VISIBLE);
-
     }
 
     private Runnable mRunnableCheckCamera;
@@ -547,47 +815,6 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         }
     }
 
-    /**
-     * 弹出拍照录像选择窗口
-     *
-     * @param view
-     * @return
-     */
-    private void showPopupWindow(View view) {
-        View contentView = LayoutInflater.from(this).inflate(
-                R.layout.camera_popup, null);
-
-        final PopupWindow popupWindow = new PopupWindow(contentView,
-                LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, true);
-
-        TextView tvPhoto = (TextView) contentView.findViewById(R.id.tvPhoto);
-        TextView tvVideo = (TextView) contentView.findViewById(R.id.tvVideo);
-
-        tvPhoto.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                openPhotoCamera();
-            }
-        });
-
-        tvVideo.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                popupWindow.dismiss();
-                openVideoCamera();
-            }
-        });
-
-        popupWindow.setTouchable(true);
-        // 如果不设置PopupWindow的背景，无论是点击外部区域还是Back键都无法dismiss弹框
-        ColorDrawable colorDrawable = new ColorDrawable(getResources()
-                .getColor(R.color.white));
-        popupWindow.setBackgroundDrawable(colorDrawable);
-        popupWindow.showAsDropDown(view, -75, 10);
-    }
 
     // 照相机
     private void openPhotoCamera() {
@@ -619,229 +846,137 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
         });
     }
 
+    private void cancelLoadPhotos() {
+        if (null != mPhotoFragment) {
+            //防止部分文件夹资源太多，正在扫描中... (强制退出扫描)
+            mPhotoFragment.cancelLoadPhotos();
+        }
+    }
+
     /**
      * 响应按下导入时
      */
-    protected void onImportClick() {
+    private void onImportClick() {
         if (mFormatType != UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
             if (null == mVideoFragment) {
                 return;
             }
         }
-        if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
-            if (mPhotoFragment.getMedia().size() == 0) {
-                SysAlertDialog.showAlertDialog(this,
-                        getString(R.string.album_no_photo),
-                        getString(R.string.album_dialog_ok),
-                        new DialogInterface.OnClickListener() {
+        if (mMediaCheckedAdapter.getItemCount() == 0) {
+            SysAlertDialog.showAlertDialog(this,
+                    getString(R.string.media_select),
+                    getString(R.string.album_no_all),
+                    getString(R.string.album_dialog_ok),
+                    new DialogInterface.OnClickListener() {
 
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                SysAlertDialog.cancelLoadingDialog();
-                                dialog.dismiss();
-                            }
-                        }, null, null).show();
-                return;
-            }
-        } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
-            if (mVideoFragment.getMedia().size() == 0) {
-                SysAlertDialog.showAlertDialog(this,
-                        getString(R.string.media_select),
-                        getString(R.string.album_no_video),
-                        getString(R.string.album_dialog_ok),
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                SysAlertDialog.cancelLoadingDialog();
-                                dialog.dismiss();
-                            }
-                        }, null, null).show();
-                return;
-            }
-        } else {
-            if (mVideoFragment.getMedia().size() == 0
-                    && mPhotoFragment.getMedia().size() == 0) {
-                SysAlertDialog.showAlertDialog(this,
-                        getString(R.string.media_select),
-                        getString(R.string.album_no_all),
-                        getString(R.string.album_dialog_ok),
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog,
-                                                int which) {
-                                SysAlertDialog.cancelLoadingDialog();
-                                dialog.dismiss();
-                            }
-                        }, null, null).show();
-                return;
-            }
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            SysAlertDialog.cancelLoadingDialog();
+                            dialog.dismiss();
+                        }
+                    }, null, null).show();
+            return;
         }
+        if (isAEDetail && enableAERepeat && mMediaCheckedAdapter.getItemCount() < nPicLimit) {
+            onToast(getString(R.string.select_media_at_least_limit, nPicLimit));
+            return;
+        }
+
+        int len = mMediaCheckedAdapter.getItemCount();
+        if (nMediaLimitMin != 0 && len < nMediaLimitMin) {
+            //至少选择%d个
+            onToast(getString(R.string.select_media_at_least_limit, nMediaLimitMin));
+            return;
+        }
+
+        cancelLoadPhotos();
+        List<MediaObject> list = mMediaCheckedAdapter.getList();
+        len = list.size();
         if (mIsAlbumOnly) {
-            ArrayList<String> arrMediaPath = new ArrayList<String>();
-            for (Integer nMediaKey : mAllMediaKeySelected) {
-                IImage item = null;
-                if (mVideoFragment != null) {
-                    item = mVideoFragment.getMedia().get(nMediaKey.intValue());
-                }
-                String path;
-                if (item != null && item instanceof IVideo) {
-                    path = item.getDataPath();
-                } else {
-                    if (mPhotoFragment != null) {
-                        item = mPhotoFragment.getMedia().get(
-                                nMediaKey.intValue());
-                    }
-                    if (item != null) {
-                        path = item.getDataPath();
-                    } else {
-                        continue;
-                    }
-                }
-                arrMediaPath.add(path);
+            ArrayList<String> arrMediaPath = new ArrayList<>();
+            for (int i = 0; i < len; i++) {
+                arrMediaPath.add(list.get(i).getMediaPath());
             }
             Intent intent = new Intent();
-            intent.putStringArrayListExtra(SdkEntry.ALBUM_RESULT,
-                    arrMediaPath);
+            intent.putStringArrayListExtra(SdkEntry.ALBUM_RESULT, arrMediaPath);
             setResult(RESULT_OK, intent);
             finish();
             return;
         }
-        ThreadPoolUtils.executeEx(new ThreadPoolUtils.ThreadPoolRunnable() {
-            Intent intent;
-            ArrayList<MediaObject> allMedia = new ArrayList<MediaObject>();
-            ArrayList<Scene> arrScenes = new ArrayList<Scene>();
+        if (len == 0) {
+            SysAlertDialog.showAlertDialog(this,
+                    getString(R.string.media_select),
+                    getString(R.string.unsupport_video_o_photo),
+                    getString(R.string.album_dialog_ok),
+                    new DialogInterface.OnClickListener() {
 
-            @Override
-            public void onStart() {
-                SysAlertDialog
-                        .showLoadingDialog(SelectMediaActivity.this, null);
-            }
-
-            @Override
-            public void onBackground() {
-                for (Integer nMediaKey : mAllMediaKeySelected) {
-                    IImage item = null;
-                    item = mVideoFragment.getMedia().get(
-                            nMediaKey.intValue());
-
-                    MediaObject io = null;
-                    if (item != null && item instanceof IVideo) {
-                        try {
-                            io = VirtualVideo.createScene().addMedia(item
-                                    .getDataPath());
-                        } catch (InvalidArgumentException e) {
-                            e.printStackTrace();
+                        @Override
+                        public void onClick(DialogInterface dialog,
+                                            int which) {
+                            SysAlertDialog.cancelLoadingDialog();
+                            dialog.dismiss();
                         }
-                    } else {
-                        if (mPhotoFragment != null) {
-                            item = mPhotoFragment.getMedia().get(
-                                    nMediaKey.intValue());
-                        }
-                        if (item != null) {
-                            try {
-                                io = VirtualVideo.createScene().addMedia(item
-                                        .getDataPath());
-                            } catch (InvalidArgumentException e) {
-                                e.printStackTrace();
-                            }
-                        } else {
-                            continue;
-                        }
-                    }
-                    if (null != io) {
-                        allMedia.add(io);
-                        Scene scene = new Scene();
-                        scene.addMedia(io);
-                        arrScenes.add(scene);
-                    }
-                }
+                    }, null, null).show();
+            return;
+        }
+        ArrayList<MediaObject> allMedia = new ArrayList<>();
+        ArrayList<Scene> arrScenes = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            MediaObject mediaObject = list.get(i);
+            Scene scene = VirtualVideo.createScene();
+            scene.addMedia(mediaObject);
+            arrScenes.add(scene);
+            allMedia.add(mediaObject);
+        }
+        Intent intent = new Intent();
+        if (mIsAppend) {
+            intent.putParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST, allMedia);
+            setResult(RESULT_OK, intent);
+            finish();
+        } else {
+            intent.putParcelableArrayListExtra(IntentConstants.INTENT_EXTRA_SCENE, arrScenes);
+            UIConfiguration config = SdkEntry.getSdkService().getUIConfig();
+            if (config.isEnableWizard() && !config.isHidePartEdit()) {
+                intent.putParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST, allMedia);
+                intent.setClass(this, EditPreviewActivity.class);
+            } else {
+                intent.setClass(this, VideoEditActivity.class);
             }
+            startActivityForResult(intent, REQUEST_CODE_EXPORT);
+            overridePendingTransition(0, 0);
+        }
 
-            @Override
-            public void onEnd() {
-                SysAlertDialog.cancelLoadingDialog();
-                if (allMedia.size() == 0) {
-                    SysAlertDialog.showAlertDialog(SelectMediaActivity.this,
-                            getString(R.string.media_select),
-                            getString(R.string.unsupport_video_o_photo),
-                            getString(R.string.iknow),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    SysAlertDialog.cancelLoadingDialog();
-                                    dialog.dismiss();
-                                }
-                            }, null, null).show();
-                    return;
-                }
-
-                if (getIntent().getBooleanExtra(IntentConstants.EDIT_TWO_WAY,
-                        false)) {
-                    UIConfiguration config = SdkEntry.getSdkService().getUIConfig();
-
-                    if (config.isEnableWizard()
-                            && !config.isHidePartEdit()) {
-                        intent = new Intent(SelectMediaActivity.this,
-                                EditPreviewActivity.class);
-                    } else {
-                        intent = new Intent(SelectMediaActivity.this,
-                                VideoEditActivity.class);
-                    }
-                } else {
-                    intent = new Intent(SelectMediaActivity.this,
-                            EditPreviewActivity.class);
-                }
-
-                intent.putParcelableArrayListExtra(
-                        IntentConstants.EXTRA_MEDIA_LIST, allMedia);
-                if (mIsAppend) {
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else {
-                    intent.putParcelableArrayListExtra(
-                            IntentConstants.INTENT_EXTRA_SCENE, arrScenes);
-                    if (getIntent().getBooleanExtra(
-                            IntentConstants.EDIT_TWO_WAY, false)) {
-                        intent.putExtra(IntentConstants.EDIT_TWO_WAY, true);
-                        startActivityForResult(intent, REQUEST_CODE_EXPORT);
-                    } else {
-                        startActivity(intent);
-                        finish();
-                    }
-                }
-
-            }
-        });
     }
 
     private void setMediaCountText(int videoCount, int imageCount) {
-        if (mFormatType == -1) {
-            if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
-                mTvImportInfo.setText(getString(R.string.import_info_photo_only,
-                        imageCount));
-            } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
-                mTvImportInfo.setText(getString(R.string.import_info_video_only,
-                        videoCount));
+        if (isAEDetail) {
+            if (enableAERepeat) {
+                //190528 只能选择图片
+                mTvImportInfo.setText(getString(R.string.select_ae_enable_repeatlimit, nPicLimit, imageCount));
             } else {
-                mTvImportInfo.setText(getString(R.string.import_info,
-                        videoCount, imageCount));
+                //ae 有数目限制
+                if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
+                    mTvImportInfo.setText(getString(R.string.select_ae_picture_limit, imageCount, nPicLimit));
+                } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
+                    mTvImportInfo.setText(getString(R.string.select_ae_video_limit, videoCount, nVideoLimit));
+                } else {
+                    if (nPicLimit > 0) {
+                        //190505 明确模板中没有图片时
+                        mTvImportInfo.setText(getString(R.string.select_ae_media_limit, videoCount, nVideoLimit, imageCount, (nPicLimit + nVideoLimit)));
+                    } else {
+                        mTvImportInfo.setText(getString(R.string.select_ae_media_no_pic_limit, videoCount, nVideoLimit));
+                    }
+                }
             }
         } else {
             if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
-                mTvImportInfo.setText(getString(R.string.import_info_photo_only,
-                        imageCount));
+                mTvImportInfo.setText(getString(R.string.import_info_photo_only, imageCount));
             } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
                 mTvImportInfo.setText(getString(R.string.import_info_video_only,
                         videoCount));
             } else {
-                mTvImportInfo.setText(getString(R.string.import_info,
-                        videoCount, imageCount));
+                mTvImportInfo.setText(getString(R.string.import_info, videoCount, imageCount));
             }
         }
     }
@@ -855,66 +990,116 @@ public class SelectMediaActivity extends BaseActivity implements IMediaSelector,
     public void onRefreshCount() {
         int videoSize = 0;
         int photoSize = 0;
-        if (mFormatType == UIConfiguration.ALBUM_SUPPORT_IMAGE_ONLY) {
-            photoSize = mPhotoFragment.getMedia().size();
-        } else if (mFormatType == UIConfiguration.ALBUM_SUPPORT_VIDEO_ONLY) {
-            videoSize = mVideoFragment.getMedia().size();
-        } else {
-            photoSize = mPhotoFragment.getMedia().size();
-            videoSize = mVideoFragment.getMedia().size();
+        List<MediaObject> list = mMediaCheckedAdapter.getList();
+        if (null != list) {
+            int len = list.size();
+            if (isAEDetail && nPicLimit == 0) {
+                videoSize = len;
+            } else {
+                for (int i = 0; i < len; i++) {
+                    if (list.get(i).getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
+                        videoSize++;
+                    }
+                }
+            }
+            photoSize = len - videoSize;
         }
         setMediaCountText(videoSize, photoSize);
+    }
+
+    /**
+     * 检测是否满足最大媒体数目
+     *
+     * @return true 可以继续添加媒体 ；false不可以继续添加媒体
+     */
+    private boolean checkCanAddMedia() {
+        if (mMediaCountLimit != 0 && mMediaCheckedAdapter.getItemCount() >= mMediaCountLimit) {
+            onToast(getString(R.string.once_un_exceed_num, mMediaCountLimit));
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 确认当前媒体，是否可以被添加
+     *
+     * @param item
+     * @return ！=null  允许添加； ==null 不允许被添加（超过数目限制）
+     */
+    private MediaObject aeMediaLimitCheck(ImageItem item) {
+        MediaObject mediaObject = null;
+        try {
+            mediaObject = new MediaObject(this, item.image.getDataPath());
+            if (isAEDetail && !enableAERepeat) {
+                //190528enableAERepeat  不限制数目
+                int count = mMediaCheckedAdapter.getItemCount();
+                if (nPicLimit == 0) {
+                    //190505 nPicLimit==0时，可选择图片或视频
+                    if (count >= nVideoLimit) {
+                        onToast(getString(R.string.select_media_limit, nVideoLimit));
+                        return null;
+                    }
+                } else {
+                    int videoCount = mMediaCheckedAdapter.getVideoCount();
+                    int allLimit = nPicLimit + nVideoLimit;
+                    if (count >= allLimit) {
+                        onToast(getString(R.string.select_media_limit, allLimit));
+                        return null;
+                    }
+                    if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE && videoCount >= nVideoLimit) {
+                        onToast(getString(R.string.select_video_limit, nVideoLimit));
+                        return null;
+                    }
+                }
+            }
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
+        return mediaObject;
     }
 
     @Override
     public int addMediaItem(ImageItem item) {
 
-        if (mIsAlbumOnly) {
+        MediaObject mediaObject = aeMediaLimitCheck(item);
+        if (null == mediaObject) {
+            //超过数目限制
+            return 2;
+        }
+        if (!checkCanAddMedia()) {
+            return 2;
+        }
+        if (mIsAlbumOnly || getIntent().getBooleanExtra(LOTTIE_IMAGE, false)) {
             if (mMediaCountLimit == 1) {
-                mAllMediaKeySelected.add(item.imageItemKey);
-                item.position = mSelectedTotal;
-                mSelectedTotal++;
-                mItemArray.add(item);
+                mMediaCheckedAdapter.add(mediaObject);
                 return 1;
             }
-            if (mMediaCountLimit != 0
-                    && mSelectedTotal >= mMediaCountLimit) {
-                SysAlertDialog.showAutoHideDialog(this, null,
-                        getString(R.string.once_un_exceed_num, mMediaCountLimit),
-                        Toast.LENGTH_SHORT);
-                return 2;
+        }
+        if (bNeedResultMediaObject) {
+            if (null != mediaObject) {
+                if (isAEDetail) {
+                    //aedetail->此时不编辑媒体
+                    onAddImp(mediaObject);
+                } else {
+                    if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
+                        TrimMediaActivity.onImportTrim(SelectMediaActivity.this, mediaObject, REQUEST_IMPORT_TRIM);
+                    } else {
+                        Scene scene = VirtualVideo.createScene();
+                        scene.addMedia(mediaObject);
+                        CropRotateMirrorActivity.onImportImage(SelectMediaActivity.this, scene, REQUEST_IMPORT_ROTATE);
+                    }
+                }
+            }
+        } else {
+            //不需要返回obj, 不用导入编辑
+            try {
+                onAdd(new MediaObject(this, item.image.getDataPath()));
+            } catch (InvalidArgumentException e) {
+                e.printStackTrace();
             }
         }
-
-
-        mAllMediaKeySelected.add(item.imageItemKey);
-        item.position = mSelectedTotal;
-        mSelectedTotal++;
-        mItemArray.add(item);
         return 0;
     }
 
-    @Override
-    public void removeMediaItem(ImageItem item) {
-        mAllMediaKeySelected.remove((Integer) item.imageItemKey);
-        mSelectedTotal--;
-        mItemArray.remove(item.position);
-    }
 
-    @Override
-    public void resetPosition() {
-        for (int n = 0; n < mItemArray.size(); n++) {
-            mItemArray.get(n).position = n;
-        }
-    }
-
-    @Override
-    public void replaceItem(ImageItem item) {
-        for (int n = 0; n < mItemArray.size(); n++) {
-            if (mItemArray.get(n).imageItemKey == item.imageItemKey) {
-                item.position = n;
-                mItemArray.set(n, item);
-            }
-        }
-    }
 }

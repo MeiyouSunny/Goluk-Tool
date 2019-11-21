@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/subtitle_anim_layout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:visibility="gone">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckedTextView
+            android:id="@+id/anim_none"
+            style="@style/caption_anim_item_style"
+            android:text="@string/none"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_left"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_push_left"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_right"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_push_right"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_top"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_push_top"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <CheckedTextView
+            android:id="@+id/anim_bottom"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_push_bottom"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_scale_fade_in"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_scale_fade_in"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_rotate_fade_in"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_rotate_fade_in"/>
+
+        <CheckedTextView
+            android:id="@+id/anim_fade_in_out"
+            style="@style/caption_anim_item_style"
+            android:text="@string/caption_anim_fade_in_out"/>
+    </LinearLayout>
+</LinearLayout>

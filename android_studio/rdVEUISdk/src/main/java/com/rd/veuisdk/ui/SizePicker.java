@@ -12,18 +12,18 @@ import android.view.View;
 import java.util.ArrayList;
 
 /**
- * 字幕字体大小选择器
+ * 贴纸大小选择器
  *
  * @author JIAN
  */
 public class SizePicker extends View {
     private final int ITEM_WIDTH = 5;
-    private final int START_SIZE = 16;
+    public static final int START_SIZE = 16;
     private final int END_SIZE = 35;
     private final int HORIZONTAL_SPCING = 1;
     private final int ITEM_COUNT = 100;
-    private final float MIN = AppConfig.MIN_SCALE;
-    private final float MAX = AppConfig.MAX_SCALE;
+    private float MIN = AppConfig.MIN_SCALE;
+    private float MAX = AppConfig.MAX_SCALE;
     private Paint mPaint = new Paint();
     private int index = 0;
     private ArrayList<DisfInfo> list = new ArrayList<DisfInfo>();
@@ -105,9 +105,7 @@ public class SizePicker extends View {
     public int getNeedMinWidth() {
         int nAddLeft = 0;
         for (int i = START_SIZE; i <= END_SIZE; i++) {
-
             for (int j = 0; j < ITEM_COUNT; j++) {
-
                 int mleft = 0;
                 if (j == 0) {
                     mleft = nAddLeft;

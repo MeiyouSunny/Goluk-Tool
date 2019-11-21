@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/config_menu_title_bg"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        style="@style/public_titlebar_style"
+        android:background="@color/config_titlebar_bg"
+        android:splitMotionEvents="false">
+
+        <com.rd.lib.ui.ExtImageView
+            android:id="@+id/btnLeft"
+            style="@style/public_title_bar_button"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:src="@drawable/edit_back_button"
+            />
+
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:ellipsize="marquee"
+            android:fadingEdge="none"
+            android:gravity="center"
+            android:lines="1"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:shadowColor="@color/black"
+            android:shadowDx="0"
+            android:shadowDy="0"
+            android:shadowRadius="0"
+            android:singleLine="true"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_18"/>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/config_menu_title_bg"
+            android:gravity="center_vertical"
+            android:minHeight="50dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/record_bitrate"
+            android:textColor="@color/transparent_white"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/public_menu_back_color"
+            android:orientation="vertical">
+
+            <com.rd.veuisdk.ui.ExtSeekBar
+                android:id="@+id/sbBitrateBar"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:progressDrawable="@null"
+                android:thumb="@null"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="10dp"
+                    android:text="400k"
+                    android:textColor="@color/white"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="10dp"
+                    android:text="3000k"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/config_menu_title_bg"
+            android:gravity="center_vertical"
+            android:minHeight="50dp"
+            android:paddingLeft="5dp"
+            android:paddingTop="5dp"
+            android:text="@string/record_size"
+            android:textColor="@color/transparent_white"/>
+
+
+        <RadioGroup
+            android:id="@+id/recordSizeRG"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/public_menu_back_color"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/rbSize_0"
+                style="@style/record_size_rb_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="360P"/>
+
+            <View style="@style/config_baseline_style"/>
+
+            <RadioButton
+                android:id="@+id/rbSize_1"
+                style="@style/record_size_rb_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="480P"/>
+
+            <View style="@style/config_baseline_style"/>
+
+            <RadioButton
+                android:id="@+id/rbSize_2"
+                style="@style/record_size_rb_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="720P"/>
+
+            <View style="@style/config_baseline_style"/>
+
+            <RadioButton
+                android:id="@+id/rbSize_3"
+                style="@style/record_size_rb_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="1080P"/>
+
+            <View style="@style/config_baseline_style"/>
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

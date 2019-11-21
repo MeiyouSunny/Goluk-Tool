@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:background="@color/transparent_black"
+              android:orientation="vertical">
+
+    <com.rd.lib.ui.RotateRelativeLayout
+        android:id="@+id/rlPlayerBottomMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <TextView
+            android:id="@+id/tvCurTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:text="@string/record_default_time"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_12"/>
+
+
+        <TextView
+            android:id="@+id/tvTotalTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/record_default_time"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_12"/>
+
+        <com.rd.veuisdk.ui.RdSeekBar
+            android:id="@+id/sbEditor"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/tvTotalTime"
+            android:layout_toRightOf="@id/tvCurTime"
+            android:maxHeight="8px"
+            android:minHeight="8px"
+            android:paddingLeft="10dp"
+            android:paddingRight="15dp"
+            android:progressDrawable="@drawable/video_editor_progress"
+            android:thumb="@drawable/seekbar_thumb"
+            android:thumbOffset="23dp"/>
+    </com.rd.lib.ui.RotateRelativeLayout>
+
+
+</LinearLayout>

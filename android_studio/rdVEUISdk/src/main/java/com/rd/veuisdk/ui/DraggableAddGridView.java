@@ -10,14 +10,12 @@
 package com.rd.veuisdk.ui;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.database.DataSetObserver;
 import android.graphics.Point;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -51,7 +49,6 @@ public class DraggableAddGridView extends ViewGroup {
     public static final float childRatio = .9f;
     public static final int HORIZONTAL = 0;
     public static final int VERTICAL = 1;
-    public static final int TAG_KEY_NEED_HIDE_CLOSE_BUTTON = 1;
 
     private int mColumnCount, mChildSize, mPadding, mDpi, mScrollPosition = 0;
     protected float mLastDelta = 0;
@@ -62,7 +59,7 @@ public class DraggableAddGridView extends ViewGroup {
     private boolean mTempEnabled = true, mIsTouching = false, mTouchAndMoved = false;
     // anim vars
     public static int mAnimDuration = 150;
-    protected ArrayList<Integer> mNewPositions = new ArrayList<Integer>();
+    protected ArrayList<Integer> mNewPositions = new ArrayList<>();
     // listeners
     protected RearrangeListAdapater mRearrageAdapter;
     protected OnClickListener mSecondaryOnClickListener;
@@ -84,14 +81,11 @@ public class DraggableAddGridView extends ViewGroup {
     private onLonglistener mOnLongListener;
     private ArrayList<Scene> mArrSceneInfo;
 
+
     public void setLongLisenter(onLonglistener longListener) {
         mOnLongListener = longListener;
     }
 
-
-    /**
-     * constructor
-     */
 
     public interface AddItemOnClickListener {
         void onClick(int index);
@@ -101,37 +95,36 @@ public class DraggableAddGridView extends ViewGroup {
         void reorderAddItem(ArrayList<Scene> arr, int drag);
     }
 
+    public DraggableAddGridView(Context context) {
+        super(context);
+        init();
+    }
+
     public DraggableAddGridView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        init();
+    }
+
+    public DraggableAddGridView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    private void init() {
+        mArrSceneInfo = new ArrayList<>();
         mHandler.removeCallbacks(mUpdateTask);
         mHandler.postAtTime(mUpdateTask, SystemClock.uptimeMillis() + 500);
         setChildrenDrawingOrderEnabled(true);
-        DisplayMetrics metrics = new DisplayMetrics();
         if (!isInEditMode()) {
-            ((Activity) context).getWindowManager().getDefaultDisplay()
-                    .getMetrics(metrics);
-            mDpi = metrics.densityDpi;
+            mDpi = CoreUtils.getMetrics().densityDpi;
         } else {
             mDpi = 160;
         }
-
         mChildSize = CoreUtils.dpToPixel(90);
         mPadding = CoreUtils.dpToPixel(5);
         mAddButtonWidth = 4 * mPadding;
         mItemCloseButtonHorizontalPadding = CoreUtils.dpToPixel(5);
         mItemCloseButtonVerticalPadding = CoreUtils.dpToPixel(5);
-        // GestureDetector myGesDetector = new GestureDetector(listener)
-    }
-
-    /**
-     * 设置Item大小（dp为单位)
-     *
-     * @param fItemSize
-     * @param fItemSpace
-     */
-    public void setItemSize(float fItemSize, float fItemSpace) {
-        mChildSize = CoreUtils.dpToPixel(fItemSize);
-        mPadding = CoreUtils.dpToPixel(fItemSpace);
     }
 
     public void setHideAddItemWithoutSort(boolean hide) {
@@ -145,23 +138,9 @@ public class DraggableAddGridView extends ViewGroup {
      * @param nHeightDimId
      */
     public void setItemSize(int nWidthDimId, int nHeightDimId) {
-        mItemWidth = Math.round(getResources().getDimension(nWidthDimId));
-        mItemHeight = Math.round(getResources().getDimension(nHeightDimId));
+        mItemWidth = Math.round(getResources().getDimension(R.dimen.priview_item_width_plus));
+        mItemHeight = Math.round(getResources().getDimension(R.dimen.priview_item_height_plus));
         mChildSize = Math.max(mItemWidth, mItemHeight);
-    }
-
-    /**
-     * 设置item关闭边距(通过dim)
-     *
-     * @param nPaddingHorizontalDimId
-     * @param nPaddingVerticalDimId
-     */
-    public void setItemCloseButtonPadding(int nPaddingHorizontalDimId,
-                                          int nPaddingVerticalDimId) {
-        mItemCloseButtonHorizontalPadding = Math.round(getResources()
-                .getDimension(nPaddingHorizontalDimId));
-        mItemCloseButtonVerticalPadding = Math.round(getResources()
-                .getDimension(nPaddingVerticalDimId));
     }
 
 
@@ -191,9 +170,6 @@ public class DraggableAddGridView extends ViewGroup {
                         && mScrollPosition < getMaxScroll()) {
                     mScrollPosition += 20;
                 }
-                // Log.d(TAG, String.format("check:%d,min:%d,max:%d",
-                // nCheckCoor,
-                // nMinCheckCoor, nMaxCheckCoor));
             } else if (mLastDelta != 0 && !mIsTouching) {
                 mScrollPosition += mLastDelta;
                 mLastDelta *= .5;
@@ -212,7 +188,6 @@ public class DraggableAddGridView extends ViewGroup {
         }
     };
 
-    // OVERRIDES
     @Override
     public void addView(View child) {
         super.addView(child);
@@ -226,8 +201,6 @@ public class DraggableAddGridView extends ViewGroup {
         super.removeViewAt(index);
         mNewPositions.remove(index);
     }
-
-    ;
 
     // LAYOUT
     @Override
@@ -260,7 +233,6 @@ public class DraggableAddGridView extends ViewGroup {
                         contentView = itemView.getContentView();
                     }
                     ViewGroup.LayoutParams p = contentView.getLayoutParams();
-
                     p.width = mItemWidth;
                     p.height = mItemHeight;
                     contentView.setLayoutParams(p);
@@ -284,32 +256,27 @@ public class DraggableAddGridView extends ViewGroup {
                     }
 
                 }
-                if (!mHideAddItem) {  //不隐藏加号
+                if (!mHideAddItem) {
+                    //不隐藏加号
                     for (int nTmp = 0; nTmp <= mItemCount; nTmp++) {
                         if (mHideSort && nTmp == mItemCount) {
                             continue;
                         }
                         if (nTmp < getChildCount()) {
-                            itemAdd = (AddViewItem) this
-                                    .getChildAt(mItemCount + nTmp);
+                            itemAdd = (AddViewItem) this.getChildAt(mItemCount + nTmp);
                         } else {
                             itemAdd = null;
                         }
-                        LayoutInflater inflater = LayoutInflater
-                                .from(getContext());
-                        View contentAdd = inflater.inflate(
-                                R.layout.item_add_view, itemAdd);
+                        LayoutInflater inflater = LayoutInflater.from(getContext());
+                        View contentAdd = inflater.inflate(R.layout.item_add_view, itemAdd);
 
                         if (itemAdd == null) {
                             if (nTmp == mItemCount - 1) {
-                                itemAdd = new AddViewItem(this.getContext(),
-                                        contentAdd, 1);
+                                continue;
                             } else if (nTmp == mItemCount) {
-                                itemAdd = new AddViewItem(this.getContext(),
-                                        contentAdd, 2);
+                                itemAdd = new AddViewItem(this.getContext(), contentAdd, 2);
                             } else {
-                                itemAdd = new AddViewItem(this.getContext(),
-                                        contentAdd, 0);
+                                itemAdd = new AddViewItem(this.getContext(), contentAdd, 0);
                             }
                             this.addView(itemAdd);
                         } else {
@@ -317,9 +284,7 @@ public class DraggableAddGridView extends ViewGroup {
                         }
 
                         if (nTmp == mItemCount - 1 || nTmp == mItemCount) {
-                            ViewGroup.LayoutParams ap = new ViewGroup.LayoutParams(
-                                    mItemWidth, mItemHeight);
-
+                            ViewGroup.LayoutParams ap = new ViewGroup.LayoutParams(mItemWidth, mItemHeight);
                             contentAdd.setLayoutParams(ap);
                             contentAdd.measure(mItemWidth, mItemHeight);
                         } else {
@@ -329,14 +294,13 @@ public class DraggableAddGridView extends ViewGroup {
                                     if (checkMediaDuration(nTmp + 1)) {
                                         itemAdd.setTransitionType(transition.getTitle());
                                     } else {
-                                        itemAdd.setTransitionType("无");
+                                        itemAdd.setTransitionType(getResources().getString(R.string.none));
                                     }
                                 } else {
-                                    itemAdd.setTransitionType("无");
+                                    itemAdd.setTransitionType(getResources().getString(R.string.none));
                                 }
                             }
-                            ViewGroup.LayoutParams ap = new ViewGroup.LayoutParams(
-                                    mAddButtonWidth, mItemHeight);
+                            ViewGroup.LayoutParams ap = new ViewGroup.LayoutParams(mAddButtonWidth, mItemHeight);
 
                             contentAdd.setLayoutParams(ap);
                             contentAdd.measure(mAddButtonWidth, mItemHeight);
@@ -344,22 +308,11 @@ public class DraggableAddGridView extends ViewGroup {
 
                         Point xy = getCoorFromIndex(nTmp);
 
-                        if (nTmp == mItemCount - 1) {
-                            itemAdd.layout(xy.x + mItemWidth + mPadding, xy.y
-                                    - mPadding, xy.x + (2 * mItemWidth)
-                                    + mPadding, xy.y + mItemHeight);
-                        } else if (nTmp == mItemCount) {
-                            itemAdd.layout(xy.x + mItemWidth - mAddButtonWidth
-                                            + mPadding, xy.y - mPadding, xy.x
-                                            + (2 * mItemWidth) - mAddButtonWidth + mPadding,
-                                    xy.y + mItemHeight);
-                        } else {
-                            itemAdd.layout(
-                                    xy.x + mItemWidth - CoreUtils.dpToPixel(5),
-                                    xy.y - mPadding,
-                                    xy.x + mItemWidth + mAddButtonWidth + CoreUtils.dpToPixel(8),
-                                    xy.y + mItemHeight);
-                        }
+                        itemAdd.layout(
+                                xy.x + mItemWidth - CoreUtils.dpToPixel(5),
+                                xy.y - mPadding,
+                                xy.x + mItemWidth + mAddButtonWidth + CoreUtils.dpToPixel(8),
+                                xy.y + mItemHeight);
 
                         if (mHideAddItemWithoutSort) {
                             itemAdd.setEnabled(false);
@@ -388,45 +341,22 @@ public class DraggableAddGridView extends ViewGroup {
                         }
                     }
                     if (!mHideAddItem) {
-
                         for (int i = mItemCount; i < getChildCount(); i++) {
                             Point xy = getCoorFromIndex(i - mItemCount);
                             View child = getChildAt(i);
                             child.setVisibility(View.VISIBLE);
                             if (mHideSort) {
-                                if (i == getChildCount() - 1) {
-                                    child.layout(xy.x + mItemWidth + mPadding,
-                                            xy.y - mPadding, xy.x
-                                                    + (2 * mItemWidth)
-                                                    + mPadding, xy.y
-                                                    + mItemHeight);
-                                } else {
-                                    child.layout(
-                                            xy.x + mItemWidth - mPadding / 2,
-                                            xy.y - mPadding,
-                                            (int) (xy.x + mItemWidth
-                                                    + mAddButtonWidth + 1.5 * mPadding),
-                                            xy.y + mItemHeight);
-                                }
+                                child.layout(
+                                        xy.x + mItemWidth - CoreUtils.dpToPixel(5),
+                                        xy.y - mPadding,
+                                        xy.x + mItemWidth + mAddButtonWidth + CoreUtils.dpToPixel(8),
+                                        xy.y + mItemHeight);
                             } else {
-                                if (i == getChildCount() - 2) {
-                                    child.layout(xy.x + mItemWidth + mPadding,
-                                            xy.y - mPadding, xy.x
-                                                    + (2 * mItemWidth)
-                                                    + mPadding, xy.y
-                                                    + mItemHeight);
-                                } else if (i == getChildCount() - 1) {
-                                    child.layout(xy.x + mItemWidth - mAddButtonWidth
-                                            + mPadding, xy.y - mPadding, xy.x
-                                            + (2 * mItemWidth) - mAddButtonWidth
-                                            + mPadding, xy.y + mItemHeight);
-                                } else {
-                                    child.layout(
-                                            xy.x + mItemWidth - CoreUtils.dpToPixel(5),
-                                            xy.y - mPadding,
-                                            xy.x + mItemWidth + mAddButtonWidth + CoreUtils.dpToPixel(8),
-                                            xy.y + mItemHeight);
-                                }
+                                child.layout(
+                                        xy.x + mItemWidth - CoreUtils.dpToPixel(5),
+                                        xy.y - mPadding,
+                                        xy.x + mItemWidth + mAddButtonWidth + CoreUtils.dpToPixel(8),
+                                        xy.y + mItemHeight);
                             }
                         }
                     } else {  //隐藏加号
@@ -486,11 +416,6 @@ public class DraggableAddGridView extends ViewGroup {
         setMeasuredDimension(width, height);
     }
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see android.view.View#onDraw(android.graphics.Canvas)
-     */
     @Override
     protected int getChildDrawingOrder(int childCount, int i) {
         if (mDraggedIndex == -1)
@@ -555,7 +480,7 @@ public class DraggableAddGridView extends ViewGroup {
                 return i;
             }
             if (coor < mAddButtonWidth + mItemWidth) {
-                if (i + mItemCount == getChildCount() - 1) {
+                if (i + mItemCount == getChildCount()) {
                     return -1;
                 }
                 return i + mItemCount;
@@ -627,10 +552,9 @@ public class DraggableAddGridView extends ViewGroup {
     /**
      * 响应
      */
-    public void onClick(View view) {
+    private void onClick(View view) {
         if (view instanceof DraggableGridViewItem) {
             int nRemoveIndex = getIndexOf(view);
-
             if (nRemoveIndex >= 0) {
                 if (mOnItemClickListener != null) {
                     DraggableGridViewItem itemView = (DraggableGridViewItem) view;
@@ -641,18 +565,7 @@ public class DraggableAddGridView extends ViewGroup {
         } else if (view instanceof AddViewItem) {
             if (!mHideAddItemWithoutSort) {
                 int index = getIndexOf(view);
-                if (mHideSort) {
-                    if (index >= getChildCount() - 1) {
-                        return;
-                    }
-                } else {
-                    if (index >= getChildCount() - 2) {
-                        return;
-                    }
-                }
-                AddViewItem addItem = (AddViewItem) view;
                 resetAddItem();
-                addItem.setSelected(true);
                 mAddItemListener.onClick(index - mItemCount);
             }
         }
@@ -686,8 +599,6 @@ public class DraggableAddGridView extends ViewGroup {
         if (!mTempEnabled) {
             return false;
         }
-
-        // Log.e("onlong....", "preformonlong...");
         int index = getLastIndex();
         if (index >= mItemCount) {
             return false;
@@ -705,19 +616,7 @@ public class DraggableAddGridView extends ViewGroup {
     }
 
     private boolean mIsDoLong = false;
-    //
-    // @Override
-    // public boolean onInterceptTouchEvent(MotionEvent ev) {
-    // int action = ev.getAction();
-    // switch (action) {
-    // case MotionEvent.ACTION_DOWN:
-    // case MotionEvent.ACTION_MOVE: // 移动事件
-    // case MotionEvent.ACTION_UP:
-    // case MotionEvent.ACTION_CANCEL:
-    // break;
-    // }
-    // return false;
-    // }
+
 
     private Runnable mLongClickRunable = new Runnable() {
 
@@ -733,14 +632,11 @@ public class DraggableAddGridView extends ViewGroup {
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
-
         int action = ev.getAction();
-        // Log.e("onTouchEvent", action + "---" + mIsDoLong);
         switch (action) {
             case MotionEvent.ACTION_DOWN: {
                 mIsDoLong = false;
                 mHideAddItem = false;
-                // final View viewDown = view;
                 mTempEnabled = true;
                 mLastXPosition = (int) ev.getX();
                 mLastYPosition = (int) ev.getY();
@@ -751,9 +647,8 @@ public class DraggableAddGridView extends ViewGroup {
                 mDraggedIndex = -1;
                 setLastViewPressed(true);
                 // 长按
-                if (getChildCount() > 1) {
-                    postDelayed(mLongClickRunable,
-                            ViewConfiguration.getLongPressTimeout());
+                if (getChildCount() > 1 && (null != mOnLongListener)) {
+                    postDelayed(mLongClickRunable, ViewConfiguration.getLongPressTimeout());
                 }
                 break;
             }
@@ -766,7 +661,6 @@ public class DraggableAddGridView extends ViewGroup {
                     mHideAddItem = false;
                     removeCallbacks(mLongClickRunable);
                 }
-
                 if (!mIsDoLong) {
                     doActionMove((int) ev.getX(), (int) ev.getY());
                 }
@@ -775,10 +669,8 @@ public class DraggableAddGridView extends ViewGroup {
             case MotionEvent.ACTION_CANCEL:
                 if (-1 != mDraggedIndex)
                     animateDragged(false);
-                if (mIsDoLong) {
-                    if (null != mOnLongListener) {
-                        mOnLongListener.onCancel();
-                    }
+                if (mIsDoLong && null != mOnLongListener) {
+                    mOnLongListener.onCancel();
                 } else {
                     if (!mTouchAndMoved) {
                         onClick(getlastIndexView());
@@ -790,7 +682,6 @@ public class DraggableAddGridView extends ViewGroup {
                 mIsDoLong = false;
                 mIsScroll = false;
                 mDraggedIndex = -1;
-
                 invalidate();
                 break;
         }
@@ -1116,9 +1007,9 @@ public class DraggableAddGridView extends ViewGroup {
             else {
                 if (mHideSort) {
                     max = mColumnCount * (mItemWidth + mAddButtonWidth) - getWidth()
-                            + mItemWidth - mAddButtonWidth + mPadding;
+                            - mAddButtonWidth + mPadding;
                 } else {
-                    max = mColumnCount * (mItemWidth + mAddButtonWidth) - getWidth() + 2
+                    max = mColumnCount * (mItemWidth + mAddButtonWidth) - getWidth()
                             * mItemWidth - mAddButtonWidth;
                 }
 
@@ -1147,10 +1038,13 @@ public class DraggableAddGridView extends ViewGroup {
             mRearrageAdapter.unregisterDataSetObserver(mDataSetObserver);
             mDataSetObserver = null;
         }
+
+
         this.removeAllViewsInLayout();
         invalidate();
         mOldItemCount = 0;
         mRearrageAdapter = adapter;
+
         if (mRearrageAdapter != null) {
             mOldItemCount = mItemCount;
             mItemCount = mRearrageAdapter.getItemCount();
@@ -1169,13 +1063,7 @@ public class DraggableAddGridView extends ViewGroup {
         if (addIndex >= mArrSceneInfo.size()) {
             return false;
         }
-        Scene sceneFront = mArrSceneInfo.get(addIndex - 1);
-        Scene sceneBelow = mArrSceneInfo.get(addIndex);
-        if (sceneFront.getDuration() < 0.5f || sceneBelow.getDuration() < 0.5f) {
-            return false;
-        } else {
-            return true;
-        }
+        return true;
     }
 
     public void setOnItemClickListener(OnItemClickListener l) {
@@ -1197,9 +1085,6 @@ public class DraggableAddGridView extends ViewGroup {
             mOldItemCount = 0;
             requestLayout();
         }
-
-        public void clearSavedState() {
-        }
     }
 
     public void setAddItemSelect(final int index) {
@@ -1214,27 +1099,29 @@ public class DraggableAddGridView extends ViewGroup {
     /**
      * 添加视频按钮
      */
-    public class AddViewItem extends ViewGroup implements OnClickListener {
+    private class AddViewItem extends ViewGroup implements OnClickListener {
 
         private View m_contentView;
         private boolean isSelected;
         private int itemType;
+        private TextView tvTransition;
+        private ImageView ivAdd;
 
         public AddViewItem(Context context, View v, int itemType) {
             super(context);
             this.itemType = itemType;
             m_contentView = v;
+            tvTransition = (TextView) m_contentView.findViewById(R.id.tvTransitionTitle);
+            ivAdd = (ImageView) m_contentView.findViewById(R.id.ivAddItem);
             if (itemType == 1) {
                 m_contentView.findViewById(R.id.ivExtraItem).setVisibility(View.VISIBLE);
                 m_contentView.findViewById(R.id.ivAddItem).setVisibility(View.GONE);
-                m_contentView.findViewById(R.id.ivTransition).setVisibility(View.GONE);
                 m_contentView.findViewById(R.id.tvTransitionTitle).setVisibility(View.GONE);
                 m_contentView.setOnClickListener(this);
             } else if (itemType == 2) {
                 ImageView lastItem = (ImageView) m_contentView
                         .findViewById(R.id.ivExtraItem);
                 m_contentView.findViewById(R.id.ivAddItem).setVisibility(View.GONE);
-                m_contentView.findViewById(R.id.ivTransition).setVisibility(View.GONE);
                 m_contentView.findViewById(R.id.tvTransitionTitle).setVisibility(View.GONE);
                 m_contentView.findViewById(R.id.tvItemSort).setVisibility(View.VISIBLE);
                 lastItem.setBackgroundResource(R.drawable.edit_sort_button);
@@ -1253,9 +1140,6 @@ public class DraggableAddGridView extends ViewGroup {
                 return;
             }
             isSelected = select;
-            ImageView ivAdd = (ImageView) m_contentView
-                    .findViewById(R.id.ivAddItem);
-
             if (isSelected) {
                 ivAdd.setBackgroundResource(R.drawable.item_edit_add_press);
             } else {
@@ -1265,8 +1149,6 @@ public class DraggableAddGridView extends ViewGroup {
         }
 
         public void setTransitionType(String typeTitle) {
-            TextView tvTransition = (TextView) m_contentView
-                    .findViewById(R.id.tvTransitionTitle);
             tvTransition.setText(typeTitle);
             invalidate();
         }
@@ -1275,14 +1157,6 @@ public class DraggableAddGridView extends ViewGroup {
         public void setEnabled(boolean enabled) {
             super.setEnabled(enabled);
             if (null != m_contentView) {
-
-                View group = m_contentView.findViewById(R.id.addItemTvParent);
-                if (null != group) {
-                    //是否隐藏加号
-                    group.setVisibility(enabled ? View.VISIBLE : View.GONE);
-                }
-                ImageView ivAdd = (ImageView) m_contentView
-                        .findViewById(R.id.ivAddItem);
                 if (null != ivAdd) {
                     ivAdd.setEnabled(enabled);
                 }
@@ -1312,7 +1186,6 @@ public class DraggableAddGridView extends ViewGroup {
 
         @Override
         public boolean onTouchEvent(MotionEvent ev) {
-            // Log.e("child  item...", "onTouchEvent..." + ev.getAction());
             int action = ev.getAction();
             switch (action) {
                 case MotionEvent.ACTION_DOWN:

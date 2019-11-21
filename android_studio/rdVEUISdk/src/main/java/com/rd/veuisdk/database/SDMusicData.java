@@ -25,15 +25,15 @@ public class SDMusicData {
     /**
      * 本地音乐信息数据表名
      */
-    public static final String TABLE_NAME = "sd_music_list";
+    private static final String TABLE_NAME = "sd_music_list";
     /**
      * 本地音乐信息数据表的字段
      */
-    public static final String TITLE = "_title";// 标题
-    public static final String ART = "_art";// 标题
-    public static final String DURATION = "_duration";// 播放时间
-    public static final String PLAY_PATH = "_play_path";// 播放路径
-    public static final String _ID = "_id";
+    private static final String TITLE = "_title";// 标题
+    private static final String ART = "_art";// 标题
+    private static final String DURATION = "_duration";// 播放时间
+    private static final String PLAY_PATH = "_play_path";// 播放路径
+    private static final String _ID = "_id";
     private static SDMusicData instance = null;
     private int newMusicNum, lastMusicNum;
 
@@ -117,35 +117,17 @@ public class SDMusicData {
      * @return
      */
     public boolean deleteData(int deleteId) {
-        SQLiteDatabase db = root.getWritableDatabase();
-        final String deleteMusic = _ID + "=?";
-        // 删除数据的条件
-        final String[] deleteValues = new String[]{String.valueOf(deleteId)};
-        boolean result = db.delete(TABLE_NAME, deleteMusic, deleteValues) > 0;
-        return result;
+        if (null != root) {
+            SQLiteDatabase db = root.getWritableDatabase();
+            final String deleteMusic = _ID + "=?";
+            // 删除数据的条件
+            final String[] deleteValues = new String[]{String.valueOf(deleteId)};
+            boolean result = db.delete(TABLE_NAME, deleteMusic, deleteValues) > 0;
+            return result;
+        }
+        return false;
     }
 
-    /**
-     * 修改一列数据
-     *
-     * @param updateId
-     * @param mItem
-     * @return
-     */
-    public boolean updateData(int updateId, MusicItem mItem) {
-        SQLiteDatabase db = root.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(TITLE, mItem.getTitle());
-        values.put(ART, mItem.getArt());
-        values.put(DURATION, mItem.getDuration() + "");
-        values.put(PLAY_PATH, mItem.getPath());
-        String updateMusic = _ID + "=?";
-        // 修改数据的条件
-        final String[] deleteValues = new String[]{String.valueOf(updateId)};
-        boolean result = db.update(TABLE_NAME, values, updateMusic,
-                deleteValues) > 0;
-        return result;
-    }
 
     /**
      * 判断数据是否存在
@@ -154,14 +136,17 @@ public class SDMusicData {
      * @return
      */
     public boolean isExistData(MusicItem music) {
-        SQLiteDatabase db = root.getWritableDatabase();
-        // 查询表中的记录是否已存在，返回Cursor游标
-        Cursor cursor = db.query(TABLE_NAME, null, PLAY_PATH + " = ?",
-                new String[]{String.valueOf(music.getPath())}, null, null,
-                null);
-        boolean isexist = cursor.getCount() > 0 ? true : false;
-        cursor.close();
-        return isexist;
+        if (null != root) {
+            SQLiteDatabase db = root.getWritableDatabase();
+            // 查询表中的记录是否已存在，返回Cursor游标
+            Cursor cursor = db.query(TABLE_NAME, null, PLAY_PATH + " = ?",
+                    new String[]{String.valueOf(music.getPath())}, null, null,
+                    null);
+            boolean isexist = cursor.getCount() > 0 ? true : false;
+            cursor.close();
+            return isexist;
+        }
+        return false;
     }
 
     /**
@@ -170,35 +155,38 @@ public class SDMusicData {
      * @return
      */
     public ArrayList<MusicItem> queryAll() {
-        SQLiteDatabase db = root.getReadableDatabase();
-        // 查询MUSICINFO表中所有记录，返回Cursor游标
-        Cursor cursor = db
-                .query(TABLE_NAME, null, null, null, null, null, null);
         ArrayList<MusicItem> allMusic = new ArrayList<MusicItem>();
-        if (cursor != null) {
-            MusicItem mItem;
-            String art;
-            while (cursor.moveToNext()) {
-                mItem = new MusicItem();
-                mItem.setId(cursor.getInt(0));
-                mItem.setTitle(cursor.getString(1));
-                art = cursor.getString(2);
-                if (!TextUtils.isEmpty(art) && art.contains("<unknown>")) {
-                    art = "";
+        if (null != root) {
+            SQLiteDatabase db = root.getReadableDatabase();
+            // 查询MUSICINFO表中所有记录，返回Cursor游标
+            Cursor cursor = db
+                    .query(TABLE_NAME, null, null, null, null, null, null);
+
+            if (cursor != null) {
+                MusicItem mItem;
+                String art;
+                while (cursor.moveToNext()) {
+                    mItem = new MusicItem();
+                    mItem.setId(cursor.getInt(0));
+                    mItem.setTitle(cursor.getString(1));
+                    art = cursor.getString(2);
+                    if (!TextUtils.isEmpty(art) && art.contains("<unknown>")) {
+                        art = "";
+                    }
+                    mItem.setArt(art);
+                    mItem.setDuration(cursor.getLong(3));
+                    mItem.setPath(cursor.getString(4));
+                    if (checkFileIsExists(mItem)) {
+                        allMusic.add(mItem);
+                    }
                 }
-                mItem.setArt(art);
-                mItem.setDuration(cursor.getLong(3));
-                mItem.setPath(cursor.getString(4));
-                if (checkFileIsExists(mItem)) {
-                    allMusic.add(mItem);
+                cursor.close();
+                newMusicNum = allMusic.size() - lastMusicNum;
+                if (newMusicNum < 0) {
+                    newMusicNum = 0;
                 }
+                lastMusicNum = allMusic.size();
             }
-            cursor.close();
-            newMusicNum = allMusic.size() - lastMusicNum;
-            if (newMusicNum < 0) {
-                newMusicNum = 0;
-            }
-            lastMusicNum = allMusic.size();
         }
         return allMusic;
     }
@@ -254,20 +242,21 @@ public class SDMusicData {
      * @param path
      */
     private boolean updateMusicPath(long id, String path) {
-        SQLiteDatabase db = root.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(_ID, path.hashCode());
-        contentValues.put(PLAY_PATH, path);
-        try {
-            boolean result = db.update(TABLE_NAME, contentValues,
-                    _ID + " = ? ", new String[]{String.valueOf(id)}) > 0;
-            // boolean result = db.replace(MUSICINFO_TABLE_NAME,
-            // _ID + " = " + String.valueOf(id), contentValues) > 0;
-            return result;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        if (null != root) {
+            SQLiteDatabase db = root.getWritableDatabase();
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(_ID, path.hashCode());
+            contentValues.put(PLAY_PATH, path);
+            try {
+                boolean result = db.update(TABLE_NAME, contentValues,
+                        _ID + " = ? ", new String[]{String.valueOf(id)}) > 0;
+                return result;
+            } catch (Exception e) {
+                e.printStackTrace();
+
+            }
         }
+        return false;
 
     }
 

@@ -15,14 +15,7 @@ public interface IThumbLineListener {
      */
     void updateThumb(int id, int start, int end);
 
-    /**
-     * 按下的位置
-     *
-     * @param id
-     * @param start
-     * @param end
-     */
-    void onTouch(int id, int start, int end);
+
 
     /**
      * 点击选中的项

@@ -26,6 +26,8 @@ public class TTFData {
     private final static String CODE = "_code";
     private final static String TIMEUNIX = "_timeunix";
     private final static String INDEX = "_index";
+    private final static String BUSECUSTOMAPI = "_customApi"; //是否使用的自定义的api ，0 未使用 ，1 使用
+    private final static String ICON = "_icon";
 
     private TTFData() {
 
@@ -39,7 +41,7 @@ public class TTFData {
     public static void createTable(SQLiteDatabase db) {
         String sql = "CREATE TABLE " + TABLE_NAME + " (" + INDEX
                 + " INTEGER PRIMARY KEY," + CODE + " TEXT NOT NULL," + URL
-                + " TEXT  ," + LOCALPATH + " TEXT ," + TIMEUNIX + " LONG  )";
+                + " TEXT  ," + LOCALPATH + " TEXT ," + TIMEUNIX + " LONG ," + BUSECUSTOMAPI + " INTEGER ," + ICON + " TEXT )";
         // 如果该表已存在则删除
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         db.execSQL(sql);
@@ -70,8 +72,14 @@ public class TTFData {
         return root;
     }
 
-    public void replaceAll(ArrayList<TtfInfo> list) {
+    public synchronized void replaceAll(ArrayList<TtfInfo> list) {
+        if (null == root) {
+            return;
+        }
         SQLiteDatabase db = root.getWritableDatabase();
+        if (null == db) {
+            return;
+        }
         db.beginTransaction();
         int len = list.size();
         TtfInfo info;
@@ -80,6 +88,8 @@ public class TTFData {
             ContentValues cv = new ContentValues();
             cv.put(URL, info.url);
             cv.put(CODE, info.code);
+            cv.put(ICON, info.icon);
+            cv.put(BUSECUSTOMAPI, info.bCustomApi ? 1 : 0);
             cv.put(INDEX, info.index);
             cv.put(LOCALPATH, info.local_path);
             cv.put(TIMEUNIX, info.timeunix);
@@ -87,31 +97,46 @@ public class TTFData {
         }
         db.setTransactionSuccessful();
         db.endTransaction();
+        db.close();
     }
 
-    public long replace(TtfInfo info) {
+    public synchronized long replace(TtfInfo info) {
+        if (null == root) {
+            return -1;
+        }
         SQLiteDatabase db = root.getWritableDatabase();
+        if (null == db) {
+            return -1;
+        }
         ContentValues cv = new ContentValues();
         cv.put(URL, info.url);
         cv.put(CODE, info.code);
         cv.put(INDEX, info.index);
+        cv.put(ICON, info.icon);
+        cv.put(BUSECUSTOMAPI, info.bCustomApi ? 1 : 0);
         cv.put(TIMEUNIX, info.timeunix);
         cv.put(LOCALPATH, info.local_path);
-        return db.replace(TABLE_NAME, URL + " =  " + info.url, cv);
+        long re = db.replace(TABLE_NAME, URL + " =  " + info.url, cv);
+        db.close();
+        return re;
     }
 
     /**
      * 只返回存在本地sd上的文件
      *
+     * @param bCustomApi
      * @return
      */
-    public ArrayList<TtfInfo> getAll() {
+    public synchronized ArrayList<TtfInfo> getAll(boolean bCustomApi) {
         ArrayList<TtfInfo> list = new ArrayList<TtfInfo>();
         if (root == null) {
             return null;
         }
         SQLiteDatabase db = root.getReadableDatabase();
-        Cursor c = db.query(TABLE_NAME, null, null, null, null, null, INDEX
+        if (db == null) {
+            return null;
+        }
+        Cursor c = db.query(TABLE_NAME, null, BUSECUSTOMAPI + " = ? ", new String[]{Integer.toString(bCustomApi ? 1 : 0)}, null, null, INDEX
                 + " asc ");
 
         if (null != c) {
@@ -123,6 +148,8 @@ public class TTFData {
                 temp.timeunix = c.getLong(c.getColumnIndex(TIMEUNIX));
                 temp.index = c.getInt(c.getColumnIndex(INDEX));
                 temp.local_path = c.getString(c.getColumnIndex(LOCALPATH));
+                temp.icon = c.getString(c.getColumnIndex(ICON));
+                temp.bCustomApi = c.getInt(c.getColumnIndex(BUSECUSTOMAPI)) == 1;
                 if (FileUtils.isExist(temp.local_path)) {
                     list.add(temp);
                 } else {
@@ -153,6 +180,9 @@ public class TTFData {
         if (root == null) {
             return null;
         }
+        if (TextUtils.isEmpty(code)) {
+            return null;
+        }
         SQLiteDatabase db = root.getWritableDatabase();
         Cursor c = db.query(TABLE_NAME, new String[]{LOCALPATH}, CODE
                 + " = ? ", new String[]{code}, null, null, null);
@@ -178,17 +208,14 @@ public class TTFData {
 
     }
 
-    private int delete(SQLiteDatabase db, String url) {
+    private synchronized int delete(SQLiteDatabase db, String url) {
         return db.delete(TABLE_NAME, URL + " = ?", new String[]{url});
     }
 
     /**
-     * delete by caption
-     *
-     * @param url
-     * @return
+     * delete by url
      */
-    private int delete(String url) {
+    private synchronized int delete(String url) {
         SQLiteDatabase db = root.getWritableDatabase();
         return delete(db, url);
     }
@@ -203,13 +230,9 @@ public class TTFData {
     public boolean checkDelete(TtfInfo newInfo, TtfInfo dbInfo) {
 
         if (null != newInfo && null != dbInfo && newInfo.url.equals(dbInfo.url)) {
-
             if (newInfo.timeunix > dbInfo.timeunix) {
                 if (!TextUtils.isEmpty(dbInfo.local_path)) {
-                    File f = new File(dbInfo.local_path);
-                    if (FileUtils.isExist(f.getAbsolutePath())) {
-                        FileUtils.deleteAll(f);
-                    }
+                    FileUtils.deleteAll(new File(dbInfo.local_path));
                 }
                 return delete(newInfo.url) > 0;
             }

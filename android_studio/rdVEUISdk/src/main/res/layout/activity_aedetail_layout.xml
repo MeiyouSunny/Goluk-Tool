@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/public_background_color"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
+
+    <include layout="@layout/rdveuisdk_public_title_bar"/>
+
+
+    <com.rd.lib.ui.PreviewFrameLayout
+        android:id="@+id/contentFrame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        >
+
+
+        <com.rd.lib.ui.PreviewFrameLayout
+            android:id="@+id/previewFrame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true">
+
+
+            <com.rd.veuisdk.ui.exoplayer.RdExoPlayerView
+                android:id="@+id/exoPlayer"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                />
+        </com.rd.lib.ui.PreviewFrameLayout>
+
+    </com.rd.lib.ui.PreviewFrameLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_margin="5dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/aeTvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"/>
+
+
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:text="@string/ae_media_info"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14"/>
+
+
+        <TextView
+            android:id="@+id/aeMedia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="3dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14"/>
+
+
+        <com.rd.lib.ui.ExtButton
+            android:id="@+id/btnPreview"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:layout_margin="15dp"
+            android:background="@drawable/one_key_make"
+            android:gravity="center"
+            android:text="@string/one_key_make"
+            android:textColor="@color/white"/>
+
+        <Switch
+            android:id="@+id/swAERepeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:layout_gravity="center_horizontal"
+            android:checked="false"
+            android:drawableRight="@drawable/subtitle_switch"
+            android:text="@string/ae_enable_repeat"
+            android:textColor="@color/fu_menu_text_color"
+            android:textSize="15dp"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

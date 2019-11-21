@@ -1,25 +1,12 @@
 apply plugin: 'com.android.library'
 
-
-task generateStrings(type: Exec) {
-    workingDir './'
-    commandLine "python", "rdexcel2str.py"
-}
-
-//afterEvaluate {
-//    android.testVariants.all { variant ->
-//        variant.javaCompiler.dependsOn(generateStrings)
-//    }
-//    preBuild.dependsOn generateStrings
-//}
-
 android {
     compileSdkVersion 26
-    buildToolsVersion '26.0.2'
+    buildToolsVersion "25.0.3"
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 26
+        minSdkVersion 17
+        targetSdkVersion 23
         versionCode 1
         versionName "1.0"
     }
@@ -45,26 +32,17 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-	compile 'com.rd:base:0.3.9'
-    compile 'com.rd:recorderbase:0.4.8'
     compile project(':rdVECore')
 
-    compile ('com.facebook.fresco:fresco:1.3.0')
-            {exclude group: 'com.parse.bolts',
-                        module: 'bolts-tasks'
-                exclude group: 'com.parse.bolts',
-                        module: 'bolts-applinks';
-            }
-    compile ('com.facebook.fresco:webpsupport:1.3.0'){
-        exclude group: 'com.parse.bolts',
-                module: 'bolts-tasks'
-            exclude group: 'com.parse.bolts',
-                    module: 'bolts-applinks';
-    }
+    compile 'com.facebook.fresco:fresco:1.3.0'
+    compile 'com.facebook.fresco:webpsupport:1.3.0'
 
     compile 'com.squareup.okio:okio:1.13.0'
-    compile 'com.squareup.okhttp3:okhttp:3.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.11.0'
+    compile 'com.alibaba:fastjson:1.2.9'
 
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:recyclerview-v7:26.1.0'
+    compile 'com.android.support:appcompat-v7:23.4.0'
+    compile 'com.android.support:recyclerview-v7:23.4.0'
+    compile 'com.android.support:design:23.4.0'
+    compile 'com.android.support:cardview-v7:23.4.0'
 }

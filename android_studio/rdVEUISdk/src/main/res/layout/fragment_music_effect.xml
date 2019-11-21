@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:background="@color/fragment_content_bg"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_above="@+id/rlBottomMenu"
+        android:layout_height="match_parent">
+
+
+        <LinearLayout
+            android:id="@+id/effectParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewFilter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/pitchParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:text="@string/music_effect_pitch_title"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="3dp"
+                android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
+                android:textSize="@dimen/text_size_14"
+                android:layout_height="wrap_content"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="2dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/low"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12"/>
+
+
+                <SeekBar
+                    android:id="@+id/sbarPitch"
+                    style="@style/seekbar_style"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="-5dp"
+                    android:layout_marginRight="-15dp"
+                    android:layout_weight="1"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:minWidth="45dp"
+                    android:text="@string/high"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+    </FrameLayout>
+
+    <include layout="@layout/layout_bottom_menu"/>
+
+</RelativeLayout>

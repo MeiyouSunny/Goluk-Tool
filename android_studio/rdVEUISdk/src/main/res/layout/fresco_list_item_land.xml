@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp">
+
+        <com.rd.veuisdk.ui.ExtCircleSimpleDraweeView
+            android:id="@+id/ivItemImage"
+            android:layout_width="@dimen/record_filter_item_size_horizontal"
+            android:layout_height="@dimen/record_filter_item_size_horizontal"
+            android:background="@null"
+            extCircle:circleBgColor="@color/transparent"
+            extCircle:circleBorderColor="@color/main_orange"
+            extCircle:circleChecked="false"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"
+            />
+    </RelativeLayout>
+
+    <com.rd.lib.ui.ExtTextView
+        android:id="@+id/tvItemCaption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:maxWidth="@dimen/record_filter_item_size_horizontal"
+        android:singleLine="true"
+        android:textColor="@color/borderline_color"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/text_size_12"
+        android:layout_marginTop="3dp"/>
+
+</LinearLayout>

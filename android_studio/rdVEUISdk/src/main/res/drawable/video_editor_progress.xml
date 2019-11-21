@@ -18,8 +18,7 @@
     <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
-                <solid android:color="@color/transparent_black" />
-
+                <solid android:color="@color/transparent_white" />
                 <stroke
                     android:height="1dp"
                     android:width="1dp"

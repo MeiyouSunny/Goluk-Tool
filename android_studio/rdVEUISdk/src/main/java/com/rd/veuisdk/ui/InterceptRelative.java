@@ -11,6 +11,7 @@ import com.rd.lib.utils.CoreUtils;
 
 /**
  * 录制界面拦截焦点
+ *
  * @author JIAN
  * @date 2017-4-28 下午2:20:26
  */
@@ -24,7 +25,7 @@ public class InterceptRelative extends RotateRelativeLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
-        boolean re = super.onInterceptTouchEvent(ev);
+        super.onInterceptTouchEvent(ev);
         return false;
     }
 
@@ -34,7 +35,7 @@ public class InterceptRelative extends RotateRelativeLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        boolean re = super.onTouchEvent(event);
+        super.onTouchEvent(event);
 
         mView = getChildAt(0);
         if (null != mView) {

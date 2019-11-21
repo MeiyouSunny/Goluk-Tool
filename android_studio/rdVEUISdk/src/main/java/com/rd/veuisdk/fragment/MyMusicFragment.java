@@ -10,13 +10,11 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ListView;
 
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.net.JSONObjectEx;
@@ -25,8 +23,6 @@ import com.rd.veuisdk.adapter.MyMusicAdapter;
 import com.rd.veuisdk.adapter.MyMusicAdapter.TreeNode;
 import com.rd.veuisdk.database.SDMusicData;
 import com.rd.veuisdk.database.WebMusicData;
-import com.rd.veuisdk.hb.views.PinnedSectionListView;
-import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.model.MusicItem;
 import com.rd.veuisdk.model.MusicItems;
 import com.rd.veuisdk.model.MyMusicInfo;
@@ -56,69 +52,29 @@ public class MyMusicFragment extends BaseV4Fragment {
         mInternalMusic = getString(R.string.internal_music);
         mIsDownloaded = getString(R.string.downloaded);
         SDMusicData.getInstance().initilize(getActivity());
-        mPageName = getString(R.string.mymusic);
         mAllKxMusicItems = new MusicItems();
         Context context = getActivity();
         mAllKxMusicItems.loadAssetsMusic(context);
-        mAllLocalMusicItems = new MusicItems(context);
         mReceiver = new MySdReceiver();
         getActivity().registerReceiver(mReceiver, new IntentFilter(ACTION_SHOW));
     }
 
-    private View mDownloadMusic;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (null == mRoot) {
-            mRoot = inflater.inflate(R.layout.rdveuisdk_mymusic_layout, null);
-        }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.rdveuisdk_mymusic_layout, container, false);
         init(getActivity());
         return mRoot;
     }
 
     private void init(Context context) {
-        mDownloadMusic = findViewById(R.id.download);
-        mDownloadMusic.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
-        
-        mListView = (PinnedSectionListView) findViewById(R.id.expandable_mymusic);
-
+        mListView = $(R.id.expandable_mymusic);
         context.registerReceiver(updateReceiver, new IntentFilter(
                 ExtScanMediaDialog.INTENT_SIGHTSEEING_UPATE));
-        mListView.setOnItemLongClickListener(longlistener);
-        mListView.setOnItemClickListener(mItemListener);
-
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+        mListView.setOnItemClickListener(mOnItemClickListener);
         mMusicAdapter = new MyMusicAdapter(context);
         mListView.setAdapter(mMusicAdapter);
-        mListView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                int mlast = view.getFirstVisiblePosition()
-                        + view.getChildCount();
-                if (mlast - 1 == mMusicAdapter.getCheckId()
-                        || mlast - 2 == mMusicAdapter.getCheckId()) {
-                    // if (scan_sd.getVisibility() == View.VISIBLE)
-                    // scan_sd.setVisibility(View.GONE);
-                } else {
-                    // if (scan_sd.getVisibility() != View.VISIBLE)
-                    // scan_sd.setVisibility(View.VISIBLE);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-
-            }
-        });
         mDownloadListener = new DownLoadListener();
         mReload = true;
         context.registerReceiver(mDownloadListener, new IntentFilter(
@@ -129,28 +85,16 @@ public class MyMusicFragment extends BaseV4Fragment {
     private ArrayList<TreeNode> list = new ArrayList<MyMusicAdapter.TreeNode>();
     private String mlastMusic = "", mIsDownloaded = "";
 
-    /**
-     * 之前的mp3路径
-     *
-     * @param lastmp3
-     */
-    public void setLastMp3(String lastmp3) {
-        mlastMusic = lastmp3;
-    }
 
-    private PinnedSectionListView mListView;
+    private ListView mListView;
     private MyMusicAdapter mMusicAdapter;
     /**
      * 快秀音乐
      */
     private MusicItems mAllKxMusicItems;
-    /**
-     * 本地音乐
-     */
-    private MusicItems mAllLocalMusicItems;
     private DownLoadListener mDownloadListener;
 
-    private OnItemClickListener mItemListener = new OnItemClickListener() {
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
 
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
@@ -182,15 +126,15 @@ public class MyMusicFragment extends BaseV4Fragment {
                 t2.tag = 1;
                 t2.sectionPosition = mSectionPosition;
                 t2.listPosition = mListPosition++;
-                mMusicAdapter.onSectionAdded(t2, mSectionPosition);
+                if (null != mMusicAdapter) {
+                    mMusicAdapter.addTreeNode(t2);
+                }
                 list.add(t2);
                 WebMusicInfo mWebMusicInfo;
                 MyMusicInfo minfoInfo;
                 TreeNode mNode;
                 for (MusicItem musicExternal : mAllKxMusicItems) {
                     minfoInfo = new MyMusicInfo();
-
-                    // Log.d(TAG,"item-"+ musicExternal.toString());
 
                     mWebMusicInfo = new WebMusicInfo();
                     mWebMusicInfo.setLocalPath(musicExternal.getPath());
@@ -205,7 +149,9 @@ public class MyMusicFragment extends BaseV4Fragment {
                     mNode.tag = 1;
                     mNode.sectionPosition = mSectionPosition;
                     mNode.listPosition = mListPosition++;
-                    mMusicAdapter.onSectionAdded(mNode, mSectionPosition);
+                    if (null != mMusicAdapter) {
+                        mMusicAdapter.addTreeNode(mNode);
+                    }
                     list.add(mNode);
 
                 }
@@ -242,7 +188,6 @@ public class MyMusicFragment extends BaseV4Fragment {
         int index = 0;
         int j = (islast ? 2 : 0);
 
-        int nsectionPosition = 0;
         for (int i = j; i < len; i++) {
             TreeNode mNode = temps.get(i);
 
@@ -250,12 +195,11 @@ public class MyMusicFragment extends BaseV4Fragment {
                     && mNode.childs.getmInfo().getLocalPath().equals(path)) { // 删除的选项
             } else {
                 mNode.listPosition = index;
-                mMusicAdapter.onSectionAdded(mNode, nsectionPosition);
+                if (null != mMusicAdapter) {
+                    mMusicAdapter.addTreeNode(mNode);
+                }
                 list.add(mNode);
                 index++;
-                if (mNode.type == TreeNode.SECTION) {
-                    nsectionPosition++;
-                }
             }
 
         }
@@ -263,7 +207,7 @@ public class MyMusicFragment extends BaseV4Fragment {
         mHandler.sendEmptyMessage(NOTIFI);
     }
 
-    private OnItemLongClickListener longlistener = new OnItemLongClickListener() {
+    private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
 
         @Override
         public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -280,18 +224,14 @@ public class MyMusicFragment extends BaseV4Fragment {
      * 重新加载数据
      */
     private boolean mReload = false;
-    private final String TAG = "mymusicfragment";
 
     private class DownLoadListener extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context arg0, Intent arg1) {
             mReload = true;
-            // Log.d(TAG, mReload + "onReceive_DownLoadListener");
         }
-
     }
-
 
     @Override
     public void onStart() {
@@ -309,14 +249,13 @@ public class MyMusicFragment extends BaseV4Fragment {
                     mMusicAdapter.clear();
                     break;
                 case NOTIFI:
-                    // Log.d(TAG, "notihadnler..." + list.size() + "...");
                     mMusicAdapter.setCanAutoPlay(false);
                     if (!TextUtils.isEmpty(mlastMusic)
                             && !new File(mlastMusic).exists()) {
                         mlastMusic = "";
                     }
                     mMusicAdapter.replace(list, mlastMusic);
-                    mMusicAdapter.getView(mListView);
+                    mMusicAdapter.setListView(mListView);
 
                     break;
 
@@ -324,19 +263,15 @@ public class MyMusicFragment extends BaseV4Fragment {
                     break;
             }
         }
-
-        ;
     };
 
     @Override
     public void onResume() {
         super.onResume();
         onReLoad();
-
     }
 
     public void onReLoad() {
-        // Log.d(TAG, mReload + "...onReLoad......");
         if (mReload) {
             mReload = false;
             getMusic();
@@ -351,8 +286,6 @@ public class MyMusicFragment extends BaseV4Fragment {
                 .queryAll();
         int msize = download.size();
 
-        // Log.e("downloadinfo....", msize + "...msize");
-
         if (msize > 0) {
             TreeNode t1 = new TreeNode();
             t1.type = TreeNode.SECTION;
@@ -361,7 +294,7 @@ public class MyMusicFragment extends BaseV4Fragment {
             t1.tag = 0;
             t1.sectionPosition = mSectionPosition;
             t1.listPosition = mListPosition++;
-            mMusicAdapter.onSectionAdded(t1, mSectionPosition);
+            mMusicAdapter.addTreeNode(t1);
             list.add(t1);
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < msize; i++) {
@@ -393,7 +326,7 @@ public class MyMusicFragment extends BaseV4Fragment {
                             mNode.tag = 0;
                             mNode.sectionPosition = mSectionPosition;
                             mNode.listPosition = mListPosition++;
-                            mMusicAdapter.onSectionAdded(mNode, mSectionPosition);
+                            mMusicAdapter.addTreeNode(mNode);
                             list.add(mNode);
                         }
                         max = mListPosition - 1;
@@ -416,7 +349,7 @@ public class MyMusicFragment extends BaseV4Fragment {
                     mNode.tag = 0;
                     mNode.sectionPosition = mSectionPosition;
                     mNode.listPosition = mListPosition++;
-                    mMusicAdapter.onSectionAdded(mNode, mSectionPosition);
+                    mMusicAdapter.addTreeNode(mNode);
                     list.add(mNode);
                 }
             }
@@ -430,12 +363,6 @@ public class MyMusicFragment extends BaseV4Fragment {
         }
         super.onPause();
 
-    }
-
-    public void pausePlay() {
-        if (null != mMusicAdapter) {
-            mMusicAdapter.onPause();
-        }
     }
 
     @Override
@@ -454,20 +381,6 @@ public class MyMusicFragment extends BaseV4Fragment {
         getActivity().unregisterReceiver(mReceiver);
         mReceiver = null;
 
-    }
-
-    ;
-
-    public void setCanAutoPlay(boolean canAutoPlay) {
-        if (null != mMusicAdapter)
-            mMusicAdapter.setCanAutoPlay(canAutoPlay);
-    }
-
-    public AudioMusicInfo getCheckMusicInfo() {
-        if (null != mMusicAdapter) {
-            return mMusicAdapter.getCheckedMusic();
-        }
-        return null;
     }
 
     /**
@@ -527,11 +440,7 @@ public class MyMusicFragment extends BaseV4Fragment {
             String action = intent.getAction();
             if (TextUtils.equals(ACTION_SHOW, action)) {
                 if (intent.getBooleanExtra(BCANSHOW, true)) {
-                    // if (null != scan_sd)
-                    // scan_sd.setVisibility(View.VISIBLE);
                 } else {
-                    // if (null != scan_sd)
-                    // scan_sd.setVisibility(View.GONE);
                 }
 
             }

@@ -1,28 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/subtitle_size_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone" >
-
-    <com.rd.veuisdk.ui.TimeLine
-        android:id="@+id/timeline_size"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="3dp" >
-
-        <LinearLayout
-            android:id="@+id/subtitle_size_linearlayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical" >
-
-            <com.rd.veuisdk.ui.SizePicker
-                android:id="@+id/subtitle_sizepicker"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/subtitle_size_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </LinearLayout>
- 
-    </com.rd.veuisdk.ui.TimeLine>
+                android:layout_height="match_parent"
+                android:visibility="gone">
 
-</FrameLayout>
+
+    <TextView
+        android:id="@+id/tvSubtitleSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/llSubtitleSize"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="7dp"
+        android:text="12.1"
+        android:textColor="@color/white"
+        android:textSize="13dp"/>
+
+    <LinearLayout
+        android:id="@+id/llSubtitleSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:clipChildren="false"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="45dp"
+            android:text="@string/subtitle_size_small"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_12"/>
+
+        <SeekBar
+            android:id="@+id/sbSubtitleSize"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="-20dp"
+            android:layout_marginRight="-20dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:maxHeight="3dp"
+            android:maxWidth="3dp"
+            android:minHeight="3dp"
+            android:minWidth="3dp"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp"
+            android:progress="50"
+            android:progressDrawable="@drawable/subtitle_size_progress"
+            android:thumb="@drawable/subtitle_size_thumb"
+            android:thumbOffset="15dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:minWidth="45dp"
+            android:text="@string/subtitle_size_large"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_12"/>
+    </LinearLayout>
+</RelativeLayout>

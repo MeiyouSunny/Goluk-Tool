@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="4dp">
+
+        <com.rd.veuisdk.ui.ExtCircleSimpleDraweeView
+            android:id="@+id/ivItemImage"
+            style="@style/effectAniButtonStyle"
+            android:background="@null"
+            extCircle:circleBgColor="@color/transparent"
+            extCircle:circleBorderColor="@color/main_orange"
+            extCircle:circleChecked="false"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="true"
+            />
+    </RelativeLayout>
+
+    <com.rd.lib.ui.ExtTextView
+        android:id="@+id/tvItemCaption"
+        style="@style/effectTextStyle"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:gravity="center"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:textIsSelectable="false"
+        />
+
+</LinearLayout>

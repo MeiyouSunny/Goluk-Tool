@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.veuisdk.ui.NoneMultiTouchLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/dark_bg"
+    tools:context=".demo.zishuo.VoiceTextActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--顶部-->
+            <RelativeLayout
+                android:id="@+id/rl_top_menu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btnLeft"
+                    style="@style/public_title_bar_button"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/edit_back_button"
+                    android:gravity="left|center_vertical"
+                    android:paddingRight="15dp"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_18"/>
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btnRight"
+                    style="@style/public_title_bar_button"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="3dp"
+                    android:background="@null"
+                    android:gravity="center|right"
+                    android:padding="5dp"
+                    android:text="@string/next_step"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_18"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
+
+            <!--语音转文字-->
+            <RelativeLayout
+                android:id="@+id/rl_type_voice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clipChildren="false"
+                android:visibility="visible">
+
+                <!--时间长度-->
+                <TextView
+                    android:id="@+id/tv_recording_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="00:00:00"
+                    android:gravity="center_horizontal"
+                    android:textSize="35sp"/>
+
+                <!--播放轨道-->
+                <RelativeLayout
+                    android:id="@+id/rl_track"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:background="@color/black"
+                    android:clipChildren="false"
+                    android:gravity="center"
+                    android:layout_below="@id/tv_recording_duration">
+
+                    <com.rd.veuisdk.demo.zishuo.WaveformView
+                        android:id="@+id/recording_track"
+                        android:layout_width="match_parent"
+                        android:layout_height="120dp"
+                        android:background="@color/black"/>
+
+                    <ImageView
+                        android:id="@+id/btn_recording_audition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/voice_text_btn_play"
+                        android:visibility="gone"/>
+
+                </RelativeLayout>
+
+                <!--底部录音-->
+                <RelativeLayout
+                    android:id="@+id/rl_recording"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_alignParentBottom="true">
+
+                    <!--录音开始-->
+                    <LinearLayout
+                        android:id="@+id/ll_recorded"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.rd.lib.ui.ExtTextView
+                            android:id="@+id/btn_inscription_library"
+                            style="@style/edit_menu"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/voice_text_btn_inscription"
+                            android:textSize="@dimen/text_size_14"
+                            android:drawablePadding="2dp"
+                            android:text="@string/zishuo_inscription_library"/>
+
+                        <ImageView
+                            android:id="@+id/btn_recording"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/voice_text_btn_recording"/>
+
+                        <com.rd.lib.ui.ExtTextView
+                            android:id="@+id/btn_import"
+                            style="@style/edit_menu"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/voice_text_btn_import"
+                            android:textSize="@dimen/text_size_14"
+                            android:drawablePadding="2dp"
+                            android:text="@string/zishuo_import"/>
+
+                    </LinearLayout>
+
+                    <!--录音中-->
+                    <LinearLayout
+                        android:id="@+id/ll_recording"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:gravity="center_vertical">
+
+                        <com.rd.lib.ui.ExtTextView
+                            android:id="@+id/btn_delete"
+                            style="@style/edit_menu"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/voice_text_btn_delete"
+                            android:textSize="@dimen/text_size_14"
+                            android:drawablePadding="2dp"
+                            android:text="@string/zishuo_delete"/>
+
+                        <ImageView
+                            android:id="@+id/btn_continue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/voice_text_btn_recording_pause"/>
+
+                        <com.rd.lib.ui.ExtTextView
+                            android:id="@+id/btn_next"
+                            style="@style/edit_menu"
+                            android:layout_weight="1"
+                            android:drawableTop="@drawable/voice_text_btn_next"
+                            android:textSize="@dimen/text_size_14"
+                            android:drawablePadding="2dp"
+                            android:text="@string/next_step"/>
+
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <!--显示文字-->
+                <com.rd.veuisdk.demo.zishuo.ListTextView
+                    android:id="@+id/ltv_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/dark_bg"
+                    android:layout_above="@id/rl_recording"
+                    android:layout_below="@id/rl_track"
+                    android:layout_marginBottom="@dimen/dimen_30"
+                    android:layout_marginTop="@dimen/dimen_30"/>
+
+                <!--倒计时-->
+                <TextView
+                    android:id="@+id/tv_countdown"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="3"
+                    android:visibility="gone"
+                    android:textSize="110sp"/>
+
+            </RelativeLayout>
+
+            <!--底部-->
+            <RelativeLayout
+                android:id="@+id/rl_bottom_menu"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_marginBottom="5dp">
+
+                <ImageView
+                    android:id="@+id/iv_point"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/voice_text_point"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"/>
+
+                <!--底部菜单-->
+                <RelativeLayout
+                    android:id="@+id/rl_temp3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:visibility="visible"
+                    android:layout_marginBottom="5dp"
+                    android:layout_above="@id/iv_point">
+
+                    <TextView
+                        android:id="@+id/btn_voice1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/zishuo_voice_transform_text"
+                        android:textSize="@dimen/text_size_16"
+                        android:layout_centerInParent="true"
+                        android:textColor="@color/white"/>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--输入框-->
+        <RelativeLayout
+            android:id="@+id/rl_custom_input"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="#00ffffff"
+            android:layout_alignParentBottom="true"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:id="@+id/rl_text_custom"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:background="@color/special_bg">
+
+                <EditText
+                    android:id="@+id/et_text_custom"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"
+                    android:padding="5dp"
+                    android:textSize="@dimen/text_size_16"
+                    android:textColor="@color/white"
+                    android:gravity="left|top"
+                    android:imeOptions="actionDone"
+                    android:background="@drawable/subtitle_edittext_background"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="5dp"
+                    android:lineSpacingMultiplier="1.2"/>
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btn_et_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/right"
+                    android:minWidth="45dp"
+                    android:minHeight="20dp"
+                    android:textColor="@color/black"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="right"
+                    android:background="@drawable/music_library_additem_bg"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!--题词库-->
+        <LinearLayout
+            android:id="@+id/ll_inscription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</com.rd.veuisdk.ui.NoneMultiTouchLinearLayout>

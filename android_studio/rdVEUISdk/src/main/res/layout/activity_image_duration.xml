@@ -4,15 +4,15 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/public_menu_back_color"
+              android:background="@color/black"
               android:orientation="vertical">
 
-    <include layout="@layout/rdveuisdk_public_title_bar"/>
 
-    <com.rd.lib.ui.PreviewFrameLayout
+    <RelativeLayout
         android:id="@+id/rlImageLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/black">
 
         <com.rd.lib.ui.PreviewFrameLayout
@@ -53,54 +53,51 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/sbEditor"
             android:layout_alignParentRight="true"/>
-    </com.rd.lib.ui.PreviewFrameLayout>
+    </RelativeLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:gravity="center"
+        android:background="@color/fragment_content_bg"
         android:orientation="vertical">
 
-        <RelativeLayout
+        <CheckBox
+            android:id="@+id/cbDurationApplyToAll"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:button="@drawable/toning_all"
+            android:text="@string/transition_apply_to_all"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_13"/>
 
-            <com.rd.veuisdk.ui.DragItemScrollView
-                android:id="@+id/drag_image_duration"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/speed_height"
-                attrdata:sArrays="@array/duration_array"/>
+        <TextView
+            android:id="@+id/tvCurDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/white"
+            android:textSize="18dp"
+            android:text="x1.00"/>
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginTop="-10dp"
-                android:layout_below="@+id/drag_image_duration"
-                android:gravity="center"
-                >
-
-                <com.rd.lib.ui.ExtButton
-                    android:id="@+id/durationApplyToAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/image_duration_applytoall"
-                    android:onClick="clickView"
-                    android:paddingLeft="20dp"
-                    android:text="@string/apply_to_all"
-                    android:textColor="@drawable/image_duration_applytoall_textcolor"
-                    android:textSize="@dimen/text_size_13"/>
-
-            </RelativeLayout>
-        </RelativeLayout>
-
-
+        <com.rd.veuisdk.ui.RulerSeekbar
+            android:id="@+id/dragViewDuration"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            attrdata:sArrays="@array/duration_array"/>
     </LinearLayout>
 
-    <include layout="@layout/public_menu"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        >
 
+        <include layout="@layout/layout_bottom_menu"/>
+    </LinearLayout>
 </LinearLayout>

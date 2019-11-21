@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/dark_bg"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rlBottomMenu"
+        android:gravity="center_vertical"
+        android:orientation="vertical">
+
+        <RadioGroup
+            android:id="@+id/rgProportionLine1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/rbProportionOri"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_none"
+                android:text="@string/none"/>
+
+            <RadioButton
+                android:id="@+id/rbProportion1x1"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_1x1"
+                android:text="@string/proportion_1x1"/>
+
+            <RadioButton
+                android:id="@+id/rbProportion169"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_169"
+                android:text="@string/proportion_16x9"/>
+
+
+        </RadioGroup>
+
+
+        <RadioGroup
+            android:id="@+id/rgProportionLine2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+
+            <RadioButton
+                android:id="@+id/rbProportion916"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_916"
+                android:text="@string/proportion_9x16"/>
+
+            <RadioButton
+                android:id="@+id/rbProportion43"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_43"
+                android:text="@string/proportion_4x3"/>
+
+            <RadioButton
+                android:id="@+id/rbProportion34"
+                style="@style/rb_proportion_style"
+                android:drawableTop="@drawable/proportion_34"
+                android:text="@string/proportion_3x4"/>
+
+        </RadioGroup>
+    </LinearLayout>
+
+
+    <include layout="@layout/layout_bottom_menu"/>
+</RelativeLayout>

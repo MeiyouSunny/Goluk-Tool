@@ -54,7 +54,7 @@ public class ProgressView extends View {
         mPaint.setAntiAlias(true);
         mPaint.setTextSize(getResources()
                 .getDimensionPixelSize(R.dimen.text_size_19));
-        mPaint.setColor(getResources().getColor(R.color.kxblue));
+        mPaint.setColor(getResources().getColor(R.color.main_color));
         gesDetector = new GestureDetector(context, new pressGestureListener());
         mTitleBackDrawable = getResources().getDrawable(
                 R.drawable.theme_title_preview_back);
@@ -268,7 +268,7 @@ public class ProgressView extends View {
         this.listener = new WeakReference<onProgressListener>(listener);
     }
 
-    public void setListener(onEditTitleListener listener) {
+    public void setEditListener(onEditTitleListener listener) {
         this.editTitleListener = new WeakReference<onEditTitleListener>(
                 listener);
     }

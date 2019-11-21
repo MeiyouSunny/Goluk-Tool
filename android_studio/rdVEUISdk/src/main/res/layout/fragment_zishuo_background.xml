@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.veuisdk.ui.ScrollLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                android:id="@+id/collageScrollLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/fragment_content_bg">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tmpBar">
+
+        <LinearLayout
+            android:id="@+id/ll_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="@dimen/dimen_30"
+            android:layout_marginBottom="@dimen/dimen_20">
+
+            <!--本地上传-->
+            <Button
+                android:id="@+id/btn_add_local"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:text="@string/local"
+                android:textColor="@color/white"
+                android:layout_gravity="center_vertical"
+                android:textSize="@dimen/text_size_16"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:background="@color/special_bg"
+                android:layout_marginLeft="@dimen/dimen_10"/>
+
+            <!--图片 视频-->
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/iv_bg"
+                android:layout_width="54dp"
+                android:layout_marginTop="2dp"
+                android:layout_marginBottom="2dp"
+                android:layout_height="match_parent"
+                android:background="@color/special_bg"
+                android:layout_marginLeft="@dimen/dimen_10"/>
+
+            <!--颜色-->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_color"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/dimen_10"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/fragmentParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone"/>
+
+    </FrameLayout>
+
+    <include layout="@layout/fragment_collage_title_layout"/>
+
+</com.rd.veuisdk.ui.ScrollLayout>

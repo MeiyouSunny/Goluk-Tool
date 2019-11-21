@@ -27,6 +27,15 @@
             android:visibility="visible">
 
             <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnConfig"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_config_setting"/>
+
+            <com.rd.lib.ui.RotateImageView
                 android:id="@+id/btnFlashModeCtrl"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

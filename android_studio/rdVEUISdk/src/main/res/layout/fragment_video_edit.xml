@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/llBottomMenu"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="bottom"
+    >
+
+
+    <RadioGroup
+        android:id="@+id/rgRootMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/dark_bg"
+        android:layout_above="@+id/llEditorGroups"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbVoice"
+            style="@style/root_menu"
+            android:text="@string/voice"/>
+
+        <TextView
+            android:id="@+id/tvPartedit"
+            style="@style/root_menu"
+            android:text="@string/partedit"/>
+
+        <RadioButton
+            android:id="@+id/rbAdvancedEdit"
+            style="@style/root_menu"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:text="@string/advanced_edit"/>
+
+        <RadioButton
+            android:visibility="gone"
+            android:id="@+id/rbSetting"
+            style="@style/root_menu"
+            android:text="@string/setting"/>
+
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:id="@+id/llEditorGroups"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark_bg"
+        android:layout_marginBottom="3dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+
+        <com.rd.veuisdk.ui.ReboundHScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:scrollbars="none"
+            android:visibility="visible">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_theme"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_theme"
+                    android:text="@string/theme"
+                    android:visibility="gone"/>
+
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_mv"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/rb_mv"
+                    android:text="@string/mv"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_word"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_word"
+                    android:text="@string/subtitle"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_sticker"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_special"
+                    android:text="@string/sticker"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_volume"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_volume"
+                    android:text="@string/volume"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_music"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_music"
+                    android:text="@string/music"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_proportion"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/rb_proportion"
+                    android:text="@string/more_orientation"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_sound"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_sound"
+                    android:text="@string/sound"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_music_many"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_music_many"
+                    android:text="@string/music_many"
+                    />
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_audio"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_rb_audio"
+                    android:text="@string/audio"
+                    />
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_sound_effect"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_rb_musiceffect"
+                    android:text="@string/sound_effect"
+                    />
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_filter"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_filter"
+                    android:text="@string/filter"/>
+
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_effect"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/rb_effect"
+                    android:text="@string/effect"/>
+
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_osd"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/edit_osd"
+                    android:text="@string/dewatermark"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_collage"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/mix_btn"
+                    android:text="@string/collage"
+                    />
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_graffiti"
+                    style="@style/edit_menu"
+                    android:visibility="gone"
+                    android:drawableTop="@drawable/btn_graffiti"
+                    android:text="@string/graffiti"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_animation_type"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/rb_ani_type"
+                    android:text="@string/ani_type_zoom_out"
+                    android:visibility="gone"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_background"
+                    style="@style/edit_menu"
+                    android:drawableTop="@drawable/rb_background"
+                    android:text="@string/background"
+                    android:visibility="gone"/>
+
+                <com.rd.lib.ui.ExtTextView
+                    android:id="@+id/rb_cover"
+                    style="@style/edit_menu"
+                    android:visibility="gone"
+                    android:drawableTop="@drawable/btn_cover"
+                    android:text="@string/cover"/>
+
+
+            </LinearLayout>
+        </com.rd.veuisdk.ui.ReboundHScrollView>
+    </LinearLayout>
+</RelativeLayout>

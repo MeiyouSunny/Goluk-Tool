@@ -116,7 +116,9 @@ public class MusicItems extends ArrayList<MusicItem> {
             for (MusicItem musicItem : allMusicItems) {
                 musicItem.setTitleSortKey(HanziToPinyin.getPinyinName(musicItem
                         .getTitle()));
-                this.add(musicItem);
+                if (isMusicAvaliable(musicItem.getPath())) {
+                    this.add(musicItem);
+                }
             }
         }
 
@@ -505,7 +507,7 @@ public class MusicItems extends ArrayList<MusicItem> {
     }
 
     public static class MusicItemsComparator implements Comparator<MusicItem> {
-        private final Collator mCollator = Collator.getInstance();
+        private Collator mCollator = Collator.getInstance();
 
         @Override
         public int compare(MusicItem lhs, MusicItem rhs) {

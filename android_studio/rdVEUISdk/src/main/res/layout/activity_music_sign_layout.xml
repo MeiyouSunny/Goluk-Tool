@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/public_menu_back_color"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/public_titlebar_minheight"
+        android:background="@color/transparent_black">
+
+        <include layout="@layout/rdveuisdk_public_title_bar"></include>
+    </RelativeLayout>
+
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        xmlns:fresco="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/simpleDraweeView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@null"
+        android:scaleType="centerCrop"
+        fresco:actualImageScaleType="focusCrop"
+        fresco:failureImageScaleType="centerInside"
+        fresco:placeholderImageScaleType="fitCenter"
+        />
+
+
+</LinearLayout>

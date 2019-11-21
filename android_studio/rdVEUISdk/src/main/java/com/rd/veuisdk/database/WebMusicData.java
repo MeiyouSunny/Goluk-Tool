@@ -18,7 +18,7 @@ import java.util.ArrayList;
  */
 public class WebMusicData {
 
-    public static final String TABLE_NAME = "web_music_list";
+    private static final String TABLE_NAME = "web_music_list";
 
     private static final String ID = "_m_id";
     private static final String LOCAL_PATH = "_localpath";

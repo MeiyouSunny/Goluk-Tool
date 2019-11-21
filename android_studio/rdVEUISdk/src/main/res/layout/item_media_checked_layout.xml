@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.lib.ui.PreviewFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/previewFrame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="12dp">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            />
+
+        <TextView
+            android:id="@+id/tv_media_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/item_priview_num_bg"
+            android:gravity="center"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_14"/>
+
+
+        <RelativeLayout
+            android:id="@+id/buttomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_gravity="bottom"
+            android:visibility="gone"
+            android:background="@drawable/gradient20_anchor_bg">
+
+            <ImageView
+                android:id="@+id/ivItemType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="5dp"
+                android:layout_marginLeft="5dp"/>
+
+            <TextView
+                android:id="@+id/item_duration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:paddingRight="5dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/part_delete"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/item_priview_delete"/>
+
+
+</com.rd.lib.ui.PreviewFrameLayout>
+
+

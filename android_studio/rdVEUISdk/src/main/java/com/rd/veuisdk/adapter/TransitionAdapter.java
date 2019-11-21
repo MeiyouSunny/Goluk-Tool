@@ -3,10 +3,10 @@ package com.rd.veuisdk.adapter;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
@@ -22,11 +22,13 @@ import com.rd.veuisdk.R;
 import com.rd.veuisdk.model.TransitionInfo;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * 转场列表adapter
  */
-public class TransitionAdapter extends BaseAdapter {
+public class TransitionAdapter extends BaseRVAdapter<TransitionAdapter.ViewHolder> {
     private LayoutInflater mLayoutInflater;
     private String TAG = "TransitionAdapter";
     private ArrayList<TransitionInfo> mTransitionInfos;
@@ -40,89 +42,129 @@ public class TransitionAdapter extends BaseAdapter {
         mLayoutInflater = LayoutInflater.from(context);
     }
 
-    public void updateData(ArrayList<TransitionInfo> mlist) {
+
+    /**
+     * @param list
+     * @param checkedIndex
+     */
+    public void updateData(List<TransitionInfo> list, int checkedIndex) {
         mTransitionInfos.clear();
-        if (null != mlist) {
-            mTransitionInfos.addAll(mlist);
+        if (null != list && list.size() > 0) {
+            mTransitionInfos.addAll(list);
         }
+        lastCheck = checkedIndex;
         notifyDataSetChanged();
     }
 
-
-    @Override
-    public int getCount() {
-        return mTransitionInfos.size();
+    public TransitionInfo getItem(int position) {
+        if (position < getItemCount()) {
+            return mTransitionInfos.get(position);
+        }
+        return null;
     }
 
-    @Override
-    public TransitionInfo getItem(int i) {
-        return mTransitionInfos.get(i);
-    }
 
-    @Override
-    public long getItemId(int i) {
-        return i;
-    }
-
-    private int checkedId = -1;
-
-    public void setChecked(int checkId) {
-        checkedId = checkId;
-        notifyDataSetChanged();
-    }
-
-    public void recycle() {
-        ImagePipeline imagePipeline = Fresco.getImagePipeline();
-        imagePipeline.clearMemoryCaches();
-        //imagePipeline.clearDiskCaches();
-    }
-
-    @Override
-    public View getView(int i, View view, ViewGroup viewGroup) {
-        ViewHolder vh;
-        if (null == view) {
-            view = mLayoutInflater.inflate(R.layout.transiton_item_layout, null);
-            vh = new ViewHolder();
-            vh.mIcon = (SimpleDraweeView) view.findViewById(R.id.transition_item_icon);
-            vh.mText = (CheckedTextView) view.findViewById(R.id.transition_item_text);
-            view.setTag(vh);
-        } else {
-            vh = (ViewHolder) view.getTag();
+    /**
+     * 获取一个可用的随机数(list的下标)，基于adapter的
+     *
+     * @return
+     */
+    public int getRandomIndex() {
+        Random random = new Random();
+        try {
+            int len = getItemCount();
+            List<Integer> list = new ArrayList<>();
+            int tmp = 8;
+            for (int i = 0; i < 8; i++) {
+                list.add(i);
+            }
+            for (int i = tmp; i < len; i++) {
+                TransitionInfo info = mTransitionInfos.get(i);
+                if (info.isExistFile()) {
+                    //已下载
+                    list.add(i);
+                }
+            }
+            int max = list.size();
+            //避免出现无转场 即0
+            int nTmp = random.nextInt(max - 1) + 1;
+            int index = list.get(nTmp);
+            return index;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
 
+    }
 
-        TransitionInfo info = getItem(i);
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return new ViewHolder(mLayoutInflater.inflate(R.layout.transiton_item_layout, parent, false));
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        TransitionInfo info = mTransitionInfos.get(position);
         if (null != info) {
-            vh.mText.setText(info.getText());
-            String url = info.getIconPath();
-
+            holder.mText.setText(info.getName());
+            String url = info.getCover();
             ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(url))
                     .setRotationOptions(RotationOptions.autoRotate())
                     .setLocalThumbnailPreviewsEnabled(true)
                     .setResizeOptions(mResizeOptions)
                     .build();
             DraweeController placeHolderDraweeController = Fresco.newDraweeControllerBuilder()
-                    .setOldController(vh.mIcon.getController())
+                    .setOldController(holder.mIcon.getController())
                     .setImageRequest(request)
                     .build();
-            vh.mIcon.setController(placeHolderDraweeController);
+            holder.mIcon.setController(placeHolderDraweeController);
         }
 
-        RoundingParams roundingParams = vh.mIcon.getHierarchy().getRoundingParams();
-        if (checkedId == i) {
+        RoundingParams roundingParams = holder.mIcon.getHierarchy().getRoundingParams();
+        if (lastCheck == position) {
             roundingParams.setBorderColor(edColor);
-            vh.mText.setChecked(true);
+            holder.mText.setChecked(true);
         } else {
-            vh.mText.setChecked(false);
+            holder.mText.setChecked(false);
             roundingParams.setBorderColor(normalColor);
         }
-        vh.mIcon.getHierarchy().setRoundingParams(roundingParams);
-
-        return view;
+        holder.mIcon.getHierarchy().setRoundingParams(roundingParams);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (null != mOnItemClickListener) {
+                    mOnItemClickListener.onItemClick(position, mTransitionInfos.get(position));
+                }
+            }
+        });
     }
 
-    class ViewHolder {
+
+    @Override
+    public int getItemCount() {
+        return mTransitionInfos.size();
+    }
+
+
+    public void setChecked(int checkId) {
+        lastCheck = checkId;
+        notifyDataSetChanged();
+    }
+
+    public void recycle() {
+        ImagePipeline imagePipeline = Fresco.getImagePipeline();
+        imagePipeline.clearMemoryCaches();
+    }
+
+
+    class ViewHolder extends RecyclerView.ViewHolder {
         SimpleDraweeView mIcon;
         CheckedTextView mText;
+
+        public ViewHolder(View itemView) {
+            super(itemView);
+            mIcon = (SimpleDraweeView) itemView.findViewById(R.id.transition_item_icon);
+            mText = (CheckedTextView) itemView.findViewById(R.id.transition_item_text);
+        }
     }
 }

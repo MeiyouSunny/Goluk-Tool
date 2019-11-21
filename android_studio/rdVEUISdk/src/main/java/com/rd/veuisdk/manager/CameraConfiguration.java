@@ -8,6 +8,7 @@ import android.util.Log;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.models.Scene;
 import com.rd.veuisdk.manager.VEOSDBuilder.OSDState;
+import com.rd.veuisdk.model.CloudAuthorizationInfo;
 
 import java.util.ArrayList;
 
@@ -186,6 +187,21 @@ public class CameraConfiguration implements Parcelable {
     public final boolean hideMV;
 
     /**
+     * 云音乐
+     */
+    public final String cloudMusicUrl;
+
+
+    /**
+     * 云音乐-分类
+     */
+    public final String cloudMusicTypeUrl;
+    //云音乐授权
+    public final CloudAuthorizationInfo mCloudAuthorizationInfo;
+
+    public final String fitlerUrl;
+
+    /**
      * 是否隐藏视频录制
      */
     public final boolean hideRec;
@@ -240,13 +256,19 @@ public class CameraConfiguration implements Parcelable {
         this.hideMV = builder.mHideMV;
         this.hidePhoto = builder.mHidePhoto;
 
-        if (builder.mCameraMVMinTime > builder.mCameraMVMaxTime) {
-            cameraMVMinTime = builder.mCameraMVMaxTime;
-        } else {
-            cameraMVMinTime = 0;
-        }
-        this.cameraMVMaxTime = builder.mCameraMVMaxTime;
+        int tmin = 0, tmax = 0;
 
+
+        tmin = Math.max(0, builder.mCameraMVMinTime);
+        if (builder.mCameraMVMaxTime <= builder.mCameraMVMinTime && builder.mCameraMVMaxTime != 0) {
+            //最大值无效
+            tmax = 0;
+        } else {
+            tmax = Math.max(0, builder.mCameraMVMaxTime);
+        }
+
+        this.cameraMVMinTime = tmin;
+        this.cameraMVMaxTime = tmax;
         if (hideMV && hidePhoto && builder.mHideRec) {
             Log.e(this.toString(), "不能同时隐藏所有功能，现已显示视频拍摄功能");
             this.hideRec = false;
@@ -256,12 +278,19 @@ public class CameraConfiguration implements Parcelable {
 
         this.cameraWatermarkRectF = builder.mCameraWatermarkRectF;
 
-        this.videoMaxTime = builder.mVideoMaxTime;
-        if (builder.mVideoMinTime > builder.mVideoMaxTime && builder.mVideoMaxTime != 0) {
-            videoMinTime = builder.mVideoMaxTime;
+
+        tmin = 0;
+        tmax = 0;
+        tmin = Math.max(0, builder.mVideoMinTime);
+        if (builder.mVideoMaxTime <= builder.mVideoMinTime && builder.mVideoMaxTime != 0) {
+            //最大值无效
+            tmax = 0;
         } else {
-            videoMinTime = 0;
+            tmax = Math.max(0, builder.mVideoMaxTime);
         }
+
+        this.videoMinTime = tmin;
+        this.videoMaxTime = tmax;
 
         this.cameraOsdHeader = builder.mCameraOsdHeader;
         this.cameraOsdEnd = builder.mCameraOsdEnd;
@@ -269,6 +298,10 @@ public class CameraConfiguration implements Parcelable {
         this.enableFrontMirror = builder.enableFrontMirror;
         this.orientation = builder.mOrientation;
         this.enableBeauty = builder.enableBeauty;
+        this.cloudMusicUrl = builder.mCloudMusicUrl;
+        this.cloudMusicTypeUrl = builder.mCloudMusicTypeUrl;
+        this.fitlerUrl = builder.fitlerUrl;
+        this.mCloudAuthorizationInfo = builder.mCloudAuthorizationInfo;
     }
 
     /**
@@ -308,6 +341,84 @@ public class CameraConfiguration implements Parcelable {
         private int mRecordVideoKeyFrameTime = 1;
         private int mRecordVideoMaxWH = 640;
         private int mRecordVideoFrameRate = 24;
+
+        /**
+         * 滤镜
+         *
+         * @param url
+         * @return
+         */
+        public Builder setFilterUrl(String url) {
+            this.fitlerUrl = url;
+            return this;
+        }
+
+        private String fitlerUrl;
+
+        /**
+         * 录制界面的云音乐
+         *
+         * @param url
+         * @return
+         */
+        public Builder setCloudMusicUrl(String url) {
+            mCloudMusicUrl = url;
+            return this;
+        }
+
+        /**
+         * * 录制界面的云音乐
+         *
+         * @param musicTypeUrl 分类
+         * @param url          单个类型的云音乐请求接口 （支持分页）
+         * @return
+         */
+        public Builder setCloudMusicUrl(String musicTypeUrl, String url) {
+            mCloudMusicTypeUrl = musicTypeUrl;
+            mCloudMusicUrl = url;
+            return this;
+        }
+
+        private String mCloudMusicUrl = "";
+        private String mCloudMusicTypeUrl = "";
+
+
+        private CloudAuthorizationInfo mCloudAuthorizationInfo = null;
+
+        /**
+         * 云音乐
+         *
+         * @param url                云音乐地址
+         * @param artist             艺术家
+         * @param homepageTitle      个人中心标题
+         * @param homepageUrl        个人中心Url
+         * @param authorizationTitle 证书标题
+         * @param authorizationUrl   证书Url
+         * @return
+         */
+        public Builder setCloudMusicUrl(String url, String artist, String homepageTitle, String homepageUrl, String authorizationTitle, String authorizationUrl) {
+            setCloudMusicUrl(url);
+            this.mCloudAuthorizationInfo = new CloudAuthorizationInfo(artist, homepageTitle, homepageUrl, authorizationTitle, authorizationUrl);
+            return this;
+        }
+
+        /**
+         * 云音乐
+         *
+         * @param musicTypeUrl       云音乐分类地址
+         * @param url                云音乐地址（支持分页）
+         * @param artist             艺术家
+         * @param homepageTitle      个人中心标题
+         * @param homepageUrl        个人中心Url
+         * @param authorizationTitle 证书标题
+         * @param authorizationUrl   证书Url
+         * @return
+         */
+        public Builder setCloudMusicUrl(String musicTypeUrl, String url, String artist, String homepageTitle, String homepageUrl, String authorizationTitle, String authorizationUrl) {
+            setCloudMusicUrl(musicTypeUrl, url);
+            this.mCloudAuthorizationInfo = new CloudAuthorizationInfo(artist, homepageTitle, homepageUrl, authorizationTitle, authorizationUrl);
+            return this;
+        }
 
         /**
          * 设置录制码率
@@ -650,8 +761,24 @@ public class CameraConfiguration implements Parcelable {
         return 0;
     }
 
+    //唯一指定标识，以后不能再更改
+    private static final String VER_TAG = "181127cameraconfig";
+    private final int ver = 2;
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        //特别标识
+        {
+            dest.writeString(VER_TAG);
+            dest.writeInt(ver);
+        }
+
+        dest.writeString(cloudMusicTypeUrl);
+
+        //新增部分字段
+        dest.writeParcelable(this.mCloudAuthorizationInfo, flags);
+
+        //*********************************顺序不能改变。支持草稿箱
         dest.writeDouble(this.recordVideoBitRate);
         dest.writeInt(this.recordVideoKeyFrameTime);
         dest.writeInt(this.recordVideoMaxWH);
@@ -682,9 +809,29 @@ public class CameraConfiguration implements Parcelable {
         dest.writeInt(this.orientation);
         dest.writeByte(this.enableBeauty ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableFrontMirror ? (byte) 1 : (byte) 0);
+        dest.writeString(this.cloudMusicUrl);
+        dest.writeString(this.fitlerUrl);
     }
 
     protected CameraConfiguration(Parcel in) {
+        //当前读取的position
+        int oldPosition = in.dataPosition();
+        String tmp = in.readString();
+        if (VER_TAG.equals(tmp)) {
+            int tVer = in.readInt();
+            if (tVer >= 2) {
+                cloudMusicTypeUrl = in.readString();
+            } else {
+                cloudMusicTypeUrl = null;
+            }
+            this.mCloudAuthorizationInfo = in.readParcelable(CloudAuthorizationInfo.class.getClassLoader());
+        } else {
+            cloudMusicTypeUrl = null;
+            this.mCloudAuthorizationInfo = null;
+            //恢复到读取之前的index
+            in.setDataPosition(oldPosition);
+        }
+
         this.recordVideoBitRate = in.readDouble();
         this.recordVideoKeyFrameTime = in.readInt();
         this.recordVideoMaxWH = in.readInt();
@@ -715,6 +862,8 @@ public class CameraConfiguration implements Parcelable {
         this.orientation = in.readInt();
         this.enableBeauty = in.readByte() != 0;
         this.enableFrontMirror = in.readByte() != 0;
+        this.cloudMusicUrl = in.readString();
+        this.fitlerUrl = in.readString();
     }
 
     public static final Parcelable.Creator<CameraConfiguration> CREATOR = new Parcelable.Creator<CameraConfiguration>() {

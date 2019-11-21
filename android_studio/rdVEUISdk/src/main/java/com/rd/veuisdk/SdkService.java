@@ -149,11 +149,11 @@ public class SdkService {
         return mCameraConfig;
     }
 
-    ExportConfiguration getExportConfig() {
+    public ExportConfiguration getExportConfig() {
         return mExportConfig;
     }
 
-    UIConfiguration getUIConfig() {
+    public UIConfiguration getUIConfig() {
         return mUIConfig;
     }
 

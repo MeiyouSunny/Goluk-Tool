@@ -1,25 +1,28 @@
 package com.rd.veuisdk;
 
 import com.rd.vecore.Music;
-import com.rd.vecore.models.SubtitleObject;
+import com.rd.vecore.models.DewatermarkObject;
+import com.rd.vecore.models.MediaObject;
+import com.rd.vecore.models.caption.CaptionObject;
 import com.rd.veuisdk.fragment.AudioInfo;
-import com.rd.veuisdk.model.SpecialInfo;
+import com.rd.veuisdk.model.CollageInfo;
+import com.rd.veuisdk.model.MOInfo;
+import com.rd.veuisdk.model.SoundInfo;
+import com.rd.veuisdk.model.StickerInfo;
 import com.rd.veuisdk.model.WordInfo;
-import com.rd.veuisdk.net.SpecialUtils;
+import com.rd.veuisdk.net.StickerUtils;
 import com.rd.veuisdk.net.SubUtils;
 import com.rd.veuisdk.net.TTFUtils;
 import com.rd.veuisdk.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 临时保存的字幕，特效参数
- *
- * @author JIAN
  */
 public class TempVideoParams {
     private final String TAG = "vparams";
-
     private static TempVideoParams mTempParamsInstance = new TempVideoParams();
 
     /**
@@ -31,7 +34,10 @@ public class TempVideoParams {
         return mTempParamsInstance;
     }
 
-    private int mHeadTime = 0, mTailTime = 0, mThemeId = 0;
+    private int mHeadTime = 0;
+    private int mTailTime = 0;
+    private int mThemeId = 0;
+
 
     public int getThemeId() {
         return mThemeId;
@@ -56,35 +62,26 @@ public class TempVideoParams {
      * @param msec 片头时间(ms)
      */
     public void setThemeHeader(int msec) {
-        int len = mSubtitles.size();
+        int len = mWordInfos.size();
         int poff = msec - mHeadTime;
         for (int i = 0; i < len; i++) {
-            WordInfo info = mSubtitles.get(i);
+            WordInfo info = mWordInfos.get(i);
             info.offTimeLine(poff);
         }
-        len = mSpecails.size();
+        len = mStickerInfos.size();
         for (int i = 0; i < len; i++) {
-            WordInfo info = mSpecails.get(i);
+            StickerInfo info = mStickerInfos.get(i);
             info.offTimeLine(poff);
         }
 
-        len = mSubEffects.size();
-        for (int i = 0; i < len; i++) {
-            SubtitleObject info = mSubEffects.get(i);
-            float nstart = info.getTimelineStart(), nend = info.getTimelineEnd();
-            nstart = nstart + Utils.ms2s(poff);
-            nend = nend + Utils.ms2s(poff);
-            info.setTimelineRange(nstart, nend);
-        }
-
-        len = mSpEffects.size();
-        for (int i = 0; i < len; i++) {
-            SpecialInfo info = mSpEffects.get(i);
-            info.offTimeLine(poff);
-        }
         for (AudioInfo ai : mAudios) {
             ai.offset(Utils.ms2s(poff));
         }
+
+        for (SoundInfo s : mSoundInfos) {
+            s.offset(poff);
+        }
+
         this.mHeadTime = msec;
     }
 
@@ -111,19 +108,9 @@ public class TempVideoParams {
      */
     public static double mEditingVideoAspectRatio = -1;
 
-    /**
-     * 是否为标准横向视频
-     *
-     * @return
-     */
-    public static boolean isLandscapeVideo() {
-        double fRoundAspectRatio = (double) (Math
-                .floor(mEditingVideoAspectRatio * 10)) / 10;
-        return fRoundAspectRatio == (double) (Math.floor((16.0 / 9) * 10)) / 10;
-    }
 
     /**
-     * 当前编辑视频持续时间
+     * 当前编辑视频持续时间 单位：ms
      */
     private int mEditingVideoDuration;
 
@@ -138,19 +125,34 @@ public class TempVideoParams {
 
     /**
      * 设置编辑视频持续时间
-     *
-     * @param mEditingVideoDuration
      */
-    public void setEditingVideoDuration(int mEditingVideoDuration) {
-        this.mEditingVideoDuration = mEditingVideoDuration;
+    public void setEditingVideoDuration(int duration) {
+        this.mEditingVideoDuration = duration;
     }
 
-    private ArrayList<WordInfo> mSubtitles = new ArrayList<WordInfo>(),
-            mSpecails = new ArrayList<WordInfo>();
+    private ArrayList<WordInfo> mWordInfos = new ArrayList<>();
+
+
+    private ArrayList<StickerInfo> mStickerInfos = new ArrayList<>();
+
+    private ArrayList<MOInfo> mMOInfos = new ArrayList<>();
+    private ArrayList<CollageInfo> mCollageInfos = new ArrayList<>();
+
+    public void setCollageList(List<CollageInfo> list) {
+        mCollageInfos.clear();
+        mCollageInfos.addAll(list);
+
+    }
 
     public void setSubs(ArrayList<WordInfo> msubs) {
-        mSubtitles.clear();
-        mSubtitles.addAll(msubs);
+        mWordInfos.clear();
+        mWordInfos.addAll(msubs);
+
+    }
+
+    public void setMosaics(ArrayList<MOInfo> items) {
+        mMOInfos.clear();
+        mMOInfos.addAll(items);
 
     }
 
@@ -181,11 +183,10 @@ public class TempVideoParams {
      */
     public ArrayList<WordInfo> getSubsDuraionChecked() {
         int duration = getEditingVideoDuration();
-        ArrayList<WordInfo> temp = new ArrayList<WordInfo>();
-        int len = mSubtitles.size();
-        WordInfo info;
+        ArrayList<WordInfo> temp = new ArrayList<>();
+        int len = mWordInfos.size();
         for (int i = 0; i < len; i++) {
-            info = mSubtitles.get(i);
+            WordInfo info = mWordInfos.get(i);
             if (info.getStart() < duration) {
                 if (info.getEnd() > duration) {
                     info = new WordInfo(info);
@@ -199,15 +200,61 @@ public class TempVideoParams {
         return temp;
     }
 
-    public ArrayList<WordInfo> getSubs() {
-        return mSubtitles;
+    /**
+     * 获取与编辑视频时间线对比后的马赛克信息
+     *
+     * @return
+     */
+    public ArrayList<MOInfo> getMosaicDuraionChecked() {
+        int duration = getEditingVideoDuration();
+        ArrayList<MOInfo> temp = new ArrayList<>();
+        int len = mMOInfos.size();
+        for (int i = 0; i < len; i++) {
+            MOInfo info = mMOInfos.get(i);
+            if (info.getStart() < duration) {
+                if (info.getEnd() > duration) {
+                    info = new MOInfo(info);
+                    info.setEnd(duration);
+                }
+                temp.add(info);
+
+            }
+        }
+
+        return temp;
     }
 
-    public void setSpecial(ArrayList<WordInfo> sps) {
+    /**
+     * @return
+     */
+    public ArrayList<CollageInfo> getCollageDurationChecked() {
+        return getCollageDurationChecked(Utils.ms2s(getEditingVideoDuration()));
+    }
 
-        // Log.d(TAG, "setSpecial-->"+sps.size());
-        mSpecails.clear();
-        mSpecails.addAll(sps);
+    public ArrayList<CollageInfo> getCollageDurationChecked(float duration) {
+        ArrayList<CollageInfo> tmp = new ArrayList<>();
+        int len = mCollageInfos.size();
+        for (int i = 0; i < len; i++) {
+            CollageInfo info = mCollageInfos.get(i);
+            MediaObject mediaObject = info.getMediaObject();
+            if (mediaObject.getTimelineFrom() < duration) {
+                if (mediaObject.getTimelineTo() > duration) {
+                    info.fixMediaLine(mediaObject.getTimelineFrom(), duration);
+                }
+                tmp.add(info);
+            }
+        }
+        return tmp;
+    }
+
+    /**
+     * 贴纸
+     *
+     * @param list
+     */
+    public void setSpecial(ArrayList<StickerInfo> list) {
+        mStickerInfos.clear();
+        mStickerInfos.addAll(list);
 
     }
 
@@ -216,66 +263,99 @@ public class TempVideoParams {
      *
      * @return
      */
-    public ArrayList<WordInfo> getSpecailsDurationChecked() {
+    public ArrayList<StickerInfo> getSpecailsDurationChecked() {
         int duration = mEditingVideoDuration;
-        ArrayList<WordInfo> temp = new ArrayList<WordInfo>();
-        int len = mSpecails.size();
-        WordInfo info;
-        // boolean mAspectRatio = getAsp() != EditorGlobal.editorAspectRatio;
+        ArrayList<StickerInfo> temp = new ArrayList<>();
+        int len = mStickerInfos.size();
         for (int i = 0; i < len; i++) {
-            info = mSpecails.get(i);
+            StickerInfo info = mStickerInfos.get(i);
             if (info.getStart() < duration) {
                 if (info.getEnd() > duration) {
-                    info = new WordInfo(info);
+                    info = new StickerInfo(info);
                     info.setEnd(duration);
                 }
                 temp.add(info);
             }
         }
 
-        // Log.d(TAG, "getSpecails-->"+len+"......"+temp.size());
         return temp;
     }
 
-    public ArrayList<WordInfo> getSpecails() {
+    public ArrayList<StickerInfo> getRSpEffects() {
+        int duration = mEditingVideoDuration;
+        ArrayList<StickerInfo> temp = new ArrayList<>();
+        if (null != mStickerInfos && mStickerInfos.size() > 0) {
+            for (StickerInfo spInfo : mStickerInfos) {
+                if (null != spInfo && spInfo.getEnd() <= duration) {
+                    temp.add(spInfo);
+                }
+            }
+        }
+        return temp;
+    }
 
-        return mSpecails;
+
+    /**
+     * @return
+     */
+    public ArrayList<StickerInfo> getRSpecialInfos() {
+
+        return mStickerInfos;
     }
 
     public void recycle() {
-        mSubtitles.clear();
-        mSpecails.clear();
+
+        int len = mWordInfos.size();
+        for (int i = 0; i < len; i++) {
+            mWordInfos.get(i).recycle();
+        }
+        mWordInfos.clear();
+
+
+        len = mMOInfos.size();
+        for (int i = 0; i < len; i++) {
+            mMOInfos.get(i).recycle();
+        }
+        mMOInfos.clear();
+
+
         SubUtils.getInstance().recycle();
-        SpecialUtils.getInstance().recycle();
+        StickerUtils.getInstance().recycle();
         TTFUtils.recycle();
 
         if (null != mMusicObject) {
-            //mMusicObject.recycle();
             mMusicObject = null;
         }
-        int len = mAudios.size();
+        len = mAudios.size();
         for (int i = 0; i < len; i++) {
             mAudios.get(i).recycle();
         }
         mAudios.clear();
-
-        len = mSubEffects.size();
-//        for (int i = 0; i < len; i++) {
-////            mSubEffects.get(i).recycle();
-//        }
-        mSubEffects.clear();
-        len = mSpEffects.size();
-        for (int i = 0; i < len; i++) {
-            mSpEffects.get(i).recycle();
+        //音效
+        for (SoundInfo s : mSoundInfos) {
+            s.recycle();
         }
-        mSpEffects.clear();
-        VideoEditActivity.mCurrentFilterType = 0;
+        mSoundInfos.clear();
+        //多段配乐
+        for (SoundInfo s : mMusicinfo) {
+            s.recycle();
+        }
+        mMusicinfo.clear();
+
+        len = mStickerInfos.size();
+        for (int i = 0; i < len; i++) {
+            mStickerInfos.get(i).recycle();
+        }
+        mStickerInfos.clear();
+        AEActivity.mCurrentFilterType = 0;
+
+        mCollageInfos.clear();
     }
 
     /**
      * 配音
      */
-    private ArrayList<AudioInfo> mAudios = new ArrayList<AudioInfo>();
+    private ArrayList<AudioInfo> mAudios = new ArrayList<>();
 
     public void setAudioList(ArrayList<AudioInfo> audio) {
         mAudios.clear();
@@ -289,7 +369,7 @@ public class TempVideoParams {
      */
     public ArrayList<AudioInfo> getAudios() {
         int duration = getEditingVideoDuration();
-        ArrayList<AudioInfo> temp = new ArrayList<AudioInfo>();
+        ArrayList<AudioInfo> temp = new ArrayList<>();
         int len = mAudios.size();
         for (int i = 0; i < len; i++) {
             AudioInfo info = mAudios.get(i);
@@ -310,9 +390,17 @@ public class TempVideoParams {
      * @param duration
      */
     public void checkParams(int duration) {
-        // Log.d(TAG,
-        // "checkParams..." + duration + "....mSubtitles.size(): " + mSubtitles.size()
-        // + "....mSpecails.size() ->" + mSpecails.size());
+
+        /**
+         * 判断音效
+         */
+        for (SoundInfo s : mSoundInfos) {
+            if (s.getEnd() > duration) {
+                s.recycle();
+                mSoundInfos.remove(s);
+            }
+        }
+
         /**
          * 判断配音
          */
@@ -327,44 +415,24 @@ public class TempVideoParams {
         /**
          * 判断字幕
          */
-        // SubExportUtils sexpU=new SubExportUtils(_context, _list, lwidth,
-        // lheight)
-        WordInfo info;
-        for (int i = 0; i < mSubtitles.size(); i++) {
-            info = mSubtitles.get(i);
+        for (int i = 0; i < mWordInfos.size(); i++) {
+            WordInfo info = mWordInfos.get(i);
             if (info.getEnd() > duration) {
-                mSubtitles.remove(i);
-            }
-        }
-
-        SubtitleObject mitem;
-        for (int m = 0; m < mSubEffects.size(); m++) {
-            mitem = mSubEffects.get(m);
-            if (Utils.s2ms(mitem.getTimelineEnd()) > duration) {
-                mSubEffects.remove(mitem);
-                m--;
+                mWordInfos.remove(i);
             }
         }
 
         /**
          * 判断特效
          */
-        for (int i = 0; i < mSpecails.size(); i++) {
-            info = mSpecails.get(i);
+        for (int i = 0; i < mStickerInfos.size(); i++) {
+            StickerInfo info = mStickerInfos.get(i);
             if (info.getEnd() > duration) {
-                mSpecails.remove(i);
+                mStickerInfos.remove(i);
                 i--;
             }
         }
-        SpecialInfo spInfo;
-        for (int m = 0; m < mSpEffects.size(); m++) {
-            spInfo = mSpEffects.get(m);
-            if (spInfo.getTimelineTo() > duration) {
-                spInfo.recycle();
-                mSpEffects.remove(m);
-                m--;
-            }
-        }
+
 
         if (null != mMusicObject) {
             if (Utils.s2ms(mMusicObject.getTimelineStart()) > duration) {
@@ -400,55 +468,112 @@ public class TempVideoParams {
     public Music getMusic() {
         if (null != mMusicObject) {
             mMusicObject.setTimelineRange(Utils.ms2s(this.mHeadTime), -Utils.ms2s(this.mTailTime));
-            mMusicObject.setFadeInOut(Utils.ms2s(3000), Utils.ms2s(1500));// 淡入淡出
+            mMusicObject.setFadeInOut(1.5f, 1.5f);// 淡入淡出
             return mMusicObject;
         }
         return null;
     }
 
-    private ArrayList<SubtitleObject> mSubEffects = new ArrayList<SubtitleObject>();
-    private ArrayList<SpecialInfo> mSpEffects = new ArrayList<SpecialInfo>();
-
-    public void setSubEffects(ArrayList<SubtitleObject> sublist) {
-        mSubEffects.clear();
-        mSubEffects.addAll(sublist);
-    }
-
-    public ArrayList<SubtitleObject> getSubEffects() {
-        int duration = mEditingVideoDuration;
-        ArrayList<SubtitleObject> temp = new ArrayList<SubtitleObject>();
-        SubtitleObject mitem;
-        int len = mSubEffects.size();
-        for (int m = 0; m < len; m++) {
-            mitem = mSubEffects.get(m);
-            if (Utils.s2ms(mitem.getTimelineEnd()) <= duration) {
-                temp.add(mitem);
+    /**
+     * 字幕对象列表
+     *
+     * @return
+     */
+    public ArrayList<CaptionObject> getCaptionObjects() {
+        ArrayList<CaptionObject> temp = new ArrayList<>();
+        if (null != mWordInfos && mWordInfos.size() > 0) {
+            for (WordInfo info : mWordInfos) {
+                if (info.getEnd() <= mEditingVideoDuration) {
+                    temp.add(info.getCaptionObject());
+                } else if (info.getStart() < mEditingVideoDuration && mEditingVideoDuration <= info.getEnd()) {
+                    //有交叉，保留有效部分的时间线
+                    info.setEnd(mEditingVideoDuration);
+                }
             }
         }
         return temp;
     }
 
-    public void setSpEffects(ArrayList<SpecialInfo> splist) {
-        mSpEffects.clear();
-        mSpEffects.addAll(splist);
+    public ArrayList<WordInfo> getWordInfos() {
+        return mWordInfos;
     }
 
-    public ArrayList<SpecialInfo> getSpEffects() {
-        int duration = mEditingVideoDuration;
-        ArrayList<SpecialInfo> temp = new ArrayList<SpecialInfo>();
-
-        SpecialInfo spInfo;
-        for (int m = 0; m < mSpEffects.size(); m++) {
-            spInfo = mSpEffects.get(m);
-            if (spInfo.getTimelineTo() <= duration) {
-                temp.add(spInfo);
+    /**
+     * 马赛克|去水印 对象列表
+     *
+     * @return
+     */
+    public ArrayList<DewatermarkObject> getMarkList() {
+        ArrayList<DewatermarkObject> temp = new ArrayList<>();
+        if (null != mMOInfos && mMOInfos.size() > 0) {
+            for (MOInfo info : mMOInfos) {
+                if (info.getEnd() <= mEditingVideoDuration) {
+                    temp.add(info.getObject());
+                } else if (info.getStart() < mEditingVideoDuration && mEditingVideoDuration <= info.getEnd()) {
+                    //有交叉，保留有效部分的时间线
+                    info.setEnd(mEditingVideoDuration);
+                }
             }
         }
         return temp;
     }
 
-    public boolean checkAspectRatioChanged() {
-        return getAspectRatio() == mEditingVideoAspectRatio;
+    /**
+     * 音效
+     */
+    private ArrayList<SoundInfo> mSoundInfos = new ArrayList<>();
+
+    public void setSoundInfoList(ArrayList<SoundInfo> soundInfos) {
+        mSoundInfos.clear();
+        if (soundInfos != null && soundInfos.size() > 0) {
+            mSoundInfos.addAll(soundInfos);
+        }
+    }
+
+    public ArrayList<SoundInfo> getSoundInfoList() {
+        int duration = getEditingVideoDuration();
+        ArrayList<SoundInfo> temp = new ArrayList<>();
+        int len = mSoundInfos.size();
+        for (int i = 0; i < len; i++) {
+            SoundInfo soundInfo = mSoundInfos.get(i);
+            if (soundInfo.getStart() < duration) {
+                if (soundInfo.getEnd() > duration) {
+                    soundInfo = new SoundInfo(soundInfo);
+                    soundInfo.setEnd(duration);
+                }
+                temp.add(soundInfo);
+            }
+        }
+        return temp;
+    }
+
+    /**
+     * 多段配乐
+     */
+    private ArrayList<SoundInfo> mMusicinfo = new ArrayList<>();
+
+    public void setMusicInfoList(ArrayList<SoundInfo> soundInfos) {
+        mMusicinfo.clear();
+        if (soundInfos != null && soundInfos.size() > 0) {
+            mMusicinfo.addAll(soundInfos);
+        }
+    }
+
+    public ArrayList<SoundInfo> getMusicInfoList() {
+        int duration = getEditingVideoDuration();
+        ArrayList<SoundInfo> temp = new ArrayList<>();
+        int len = mMusicinfo.size();
+        for (int i = 0; i < len; i++) {
+            SoundInfo soundInfo = mMusicinfo.get(i);
+            if (soundInfo.getStart() < duration) {
+                if (soundInfo.getEnd() > duration) {
+                    soundInfo = new SoundInfo(soundInfo);
+                    soundInfo.setEnd(duration);
+                }
+                temp.add(soundInfo);
+            }
+        }
+        return temp;
     }
 
 }

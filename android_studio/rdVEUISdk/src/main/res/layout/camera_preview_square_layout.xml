@@ -26,7 +26,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
                 android:background="@null"
                 android:padding="8dp"
                 android:src="@drawable/edit_back_button"
@@ -73,15 +72,12 @@
             android:layout_height="wrap_content"
             >
 
-
+            <!-- 占位-->
             <com.rd.lib.ui.PreviewFrameLayout
                 android:id="@+id/frameSquarePreview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true">
-
-
-            </com.rd.lib.ui.PreviewFrameLayout>
+                android:layout_centerInParent="true"/>
 
 
             <!-- 添加云音乐布局 -->
@@ -144,7 +140,6 @@
                                 android:paddingLeft="4dp"
                                 android:paddingTop="5dp"
                                 android:scrollHorizontally="false"
-                                android:text="@string/add_music"
                                 android:textColor="#b3ffffff"
                                 android:textSize="@dimen/text_size_12"/>
 
@@ -233,6 +228,15 @@
             android:layout_centerVertical="true"
             android:background="@color/camera_list_back_color"
             android:orientation="horizontal">
+
+            <com.rd.lib.ui.RotateImageView
+                android:id="@+id/btnConfig1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:scaleType="center"
+                android:src="@drawable/btn_config_setting"/>
 
             <com.rd.lib.ui.RotateImageView
                 android:id="@+id/btnFlashModeCtrl1"

@@ -5,6 +5,6 @@
         android:bottomLeftRadius="4dp"
         android:bottomRightRadius="4dp" />
 
-    <solid android:color="@color/auto_tx_color" />
+    <solid android:color="@color/auto_txt_color" />
 
 </shape>

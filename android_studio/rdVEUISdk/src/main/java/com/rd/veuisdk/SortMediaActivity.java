@@ -1,5 +1,6 @@
 package com.rd.veuisdk;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -45,6 +46,15 @@ import java.util.List;
  * @author scott
  */
 public class SortMediaActivity extends BaseActivity {
+    /**
+     * 排序
+     */
+    static void onSortMedia(Context context, ArrayList<Scene> list, int requestCode) {
+        Intent intent = new Intent(context, SortMediaActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, list);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+        ((Activity) context).overridePendingTransition(0, 0);
+    }
 
     private DragMediaAdapter mScenesAdapter;
     private int mIndex;
@@ -164,11 +174,13 @@ public class SortMediaActivity extends BaseActivity {
                     SdkEntryHandler.getInstance().onSelectVideo(
                             SortMediaActivity.this);
                 } else {
-                    Intent intent = new Intent(SortMediaActivity.this,
-                            com.rd.veuisdk.SelectMediaActivity.class);
-
-                    intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-                    startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+                    int mediaLimit = SdkEntry.getSdkService().getUIConfig().mediaCountLimit;
+                    int max = mediaLimit > 0 ? mediaLimit - mSceneList.size() : -1;
+                    if (max == 0) {
+                        onToast(getString(R.string.media_un_exceed_num, mediaLimit));
+                    } else {
+                        SelectMediaActivity.appendMedia(SortMediaActivity.this, false, max, REQUESTCODE_FOR_APPEND);
+                    }
                 }
 
             } else {
@@ -200,10 +212,10 @@ public class SortMediaActivity extends BaseActivity {
         @Override
         public boolean isExt(int position) {
             VideoOb vo = (VideoOb) mScenesAdapter.getItem(position).getAllMedia().get(0).getTag();
-            if (vo.isExtPic == 1) {
-                return true;
-            } else {
+            if (vo == null || vo.isExtPic == 0) {
                 return false;
+            } else {
+                return true;
             }
         }
     };
@@ -360,7 +372,7 @@ public class SortMediaActivity extends BaseActivity {
     private void addVideoObToMedia(MediaObject media, int isextpic, ExtPicInfo info) {
         media.setTag(new VideoOb(media.getTrimStart(), media.getTrimEnd(), media
                 .getTrimStart(), media.getTrimEnd(), media.getTrimStart(),
-                media.getTrimEnd(), isextpic, info, 0));
+                media.getTrimEnd(), isextpic, info, VideoOb.DEFAULT_CROP));
     }
 
     /**

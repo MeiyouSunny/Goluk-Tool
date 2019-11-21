@@ -1,5 +1,6 @@
 package com.rd.veuisdk;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -8,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Paint.FontMetrics;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,7 +21,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnKeyListener;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.RadioGroup;
@@ -36,6 +35,7 @@ import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.MediaObject;
 import com.rd.veuisdk.TTFHandler.ITTFHandlerListener;
 import com.rd.veuisdk.adapter.TTFAdapter;
+import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.model.ExtPicInfo;
 import com.rd.veuisdk.ui.ColorPicker.IColorListener;
 import com.rd.veuisdk.ui.ExtColorPicker;
@@ -49,13 +49,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * 文字图片
+ */
 public class ExtPhotoActivity extends BaseActivity {
-    ExtEditPic mEtInput;
-    RadioGroup mRgMainType;
-    RadioGroup mRgTextSide;
-    ExtColorPicker mColorPicker;
-    ExtColorPicker mBgPicker;
-    GridView mGvTTF;
+    private ExtEditPic mEtInput;
+    private RadioGroup mRgMainType;
+    private RadioGroup mRgTextSide;
+    private ExtColorPicker mColorPicker;
+    private ExtColorPicker mBgPicker;
+    private GridView mGvTTF;
 
     private ExtPicInfo mExtPicInfo;
     private TTFHandler mTTFHandler;
@@ -71,6 +74,31 @@ public class ExtPhotoActivity extends BaseActivity {
     private int mBgPosition;
     private int mTextColorPosition;
 
+
+    /**
+     * 编辑textPic
+     *
+     * @param context
+     * @param picInfo
+     * @param requestCode
+     */
+    public static void editTextPic(Context context, ExtPicInfo picInfo, int requestCode) {
+        Intent intent = new Intent(context, ExtPhotoActivity.class);
+        intent.putExtra(IntentConstants.EXTRA_EXT_PIC_INFO, picInfo);
+        intent.putExtra(IntentConstants.EXTRA_EXT_ISEDIT, true);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 新建单个文字图片
+     *
+     * @param context
+     * @param requestCode
+     */
+    public static void onTextPic(Context context, int requestCode) {
+        Intent intent = new Intent(context, ExtPhotoActivity.class);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+    }
 
     @Override
     protected void onCreate(Bundle arg0) {
@@ -173,12 +201,7 @@ public class ExtPhotoActivity extends BaseActivity {
 
                     @Override
                     public void run() {
-                        InputMethodManager inputm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        inputm.toggleSoftInput(0,
-                                InputMethodManager.HIDE_NOT_ALWAYS);
-                        mEtInput.requestFocus();
-                        mEtInput.setFocusable(true);
-                        mEtInput.setFocusableInTouchMode(true);
+                        InputUtls.showInput(mEtInput);
                     }
                 }, 200);
             }
@@ -322,7 +345,8 @@ public class ExtPhotoActivity extends BaseActivity {
             }
 
         });
-        mTTFHandler = new TTFHandler(mGvTTF, mTTFListener);
+        UIConfiguration mUIConfig = SdkEntry.getSdkService().getUIConfig();
+        mTTFHandler = new TTFHandler(mGvTTF, mTTFListener, false, (null != mUIConfig ? mUIConfig.fontUrl : null));
 
     }
 
@@ -428,16 +452,15 @@ public class ExtPhotoActivity extends BaseActivity {
     private void onSure() {
         mEtInput.setCursorVisible(false);
         String path = PathUtils.getTempFileNameForSdcard("Temp_bmp_", "png");
-
         int[] wh = save(path);
-
-
         MediaObject media = null;
         try {
             media = new MediaObject(path);
-            RectF rectF = new RectF(0, 0, wh[0], wh[1]);
-            media.setClipRectF(rectF);
-            media.setShowRectF(rectF);
+//            RectF rectF = new RectF(0, 0, wh[0], wh[1]);
+//            media.setClipRectF(rectF);
+//            media.setShowRectF(rectF);
+            media.setClearImageDefaultAnimation(true);
+            media.setBackgroundVisiable(false);
         } catch (InvalidArgumentException e) {
             e.printStackTrace();
         }

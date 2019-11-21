@@ -2,9 +2,18 @@
 <resources>
 
     <string-array name="crop_menu">
-        <item>原始值</item>
-        <item>正方形</item>
-        <item>自由</item>
+        <item>Original</item>
+        <item>Square</item>
+        <item>Free</item>
+    </string-array>
+    <string-array name="cover_picture">
+        <item>Local picture</item>
+        <!--<item>Rich photo material</item>-->
+        <item>Video itself</item>
+    </string-array>
+    <string-array name="cover_text">
+        <item>Add horizontal text</item>
+        <item>Add vertical text</item>
     </string-array>
     <string-array name="speed_array">
         <item>1/4</item>
@@ -13,16 +22,50 @@
         <item>2X</item>
         <item>4X</item>
     </string-array>
+    <string-array name="cover_duration_array">
+        <item>0s</item>
+        <item>1s</item>
+        <item>2s</item>
+        <item>3s</item>
+        <item>4s</item>
+    </string-array>
     <string-array name="duration_array">
-        <item>3</item>
+        <item>0.1</item>
+        <item>2</item>
         <item>4</item>
-        <item>5</item>
         <item>6</item>
-        <item>7</item>
+        <item>8</item>
     </string-array>
     <string-array name="scan_sd_menu">
-        <item>快速扫描</item>
-        <item>自定义扫描</item>
+        <item>Quick scan</item>
+        <item>Custom scan</item>
     </string-array>
+    <string-array name="music_filter_titles">
+        <item>Pitch</item>
+        <item>None</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Monster</item>
+        <item>Cartoon</item>
+        <item>Reverberation</item>
+        <item>Echo</item>
+        <item>Mixed</item>
+        <item>Indoor</item>
+        <item>Stage</item>
+        <item>KTV</item>
+        <item>Factory</item>
+        <item>Arena</item>
+        <item>Electric</item>
+    </string-array>
+    <string-array name="inscription_library">
+        <item>Replacement inscription</item>
+        <item>Custom inscription</item>
+        <item>Clear inscription</item>
+    </string-array>
+    <string-array name="ae_image_menu">
+        <item>edit</item>
+        <item>replace</item>
+    </string-array>
+
 
 </resources>

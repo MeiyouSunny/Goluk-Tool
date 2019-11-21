@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+     >
+
+
+        <com.rd.veuisdk.ui.CheckSimpleView
+            android:id="@+id/ivItemImage"
+            style="@style/effectAniButtonStyle"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@null"
+            extCircle:circleBgColor="@color/transparent"
+            extCircle:circleBorderColor="@color/main_orange"
+            extCircle:circleChecked="false"
+            fresco:actualImageScaleType="focusCrop"
+            fresco:failureImageScaleType="centerInside"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="false"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -152,12 +152,8 @@ public class FaceuAdapter extends BaseAdapter {
 
             if (checkPosition == getPositon(position)) {
                 vh.src.setChecked(true);
-//                vh.checked.setImageResource(R.drawable.filter_p);
-//                vh.checked.setVisibility(View.VISIBLE);
             } else {
                 vh.src.setChecked(false);
-//                vh.checked.setImageResource(0);
-//                vh.checked.setVisibility(View.GONE);
             }
 
             listener.setP(position, vh.state, vh.pbar);
@@ -283,7 +279,7 @@ public class FaceuAdapter extends BaseAdapter {
 
             @Override
             public void Canceled(long mid) {
-                // Log.e("Canceled....", mid + ".........");
+//                 Log.e("Canceled....", mid + ".........");
                 mhandler.obtainMessage(CANCEL, String.valueOf(mid))
                         .sendToTarget();
 
@@ -293,12 +289,7 @@ public class FaceuAdapter extends BaseAdapter {
             public void Finished(long mid, String localPath) {
                 checkPosition = getPositon(p);
                 arrPosition.remove((Object) p);
-
-                File fsrc = new File(localPath);
-
-                File ftarget = new File(info.getPath());
-                boolean re = fsrc.renameTo(ftarget);
-
+                new File(localPath).renameTo(new File(info.getPath()));
                 mhandler.obtainMessage(FINISHED, String.valueOf(mid))
                         .sendToTarget();
 
@@ -322,8 +313,6 @@ public class FaceuAdapter extends BaseAdapter {
                         LineProgress temp = maps.get(Long.parseLong(msg.obj
                                 .toString()));
                         if (null != temp) {
-                            // Log.e("progress...1111111.", msg.arg1 + "..........."
-                            // + msg.arg2 + "////" + temp.toString());
                             View convertView = getChildAt(temp.getPosition());
                             if (null != convertView) {
 
@@ -352,8 +341,6 @@ public class FaceuAdapter extends BaseAdapter {
                     if (maps.containsKey(key)) {
                         LineProgress temp = maps.get(key);
                         if (null != temp) {
-                            // Log.e("progress...1111111.", msg.arg1 + "..........."
-                            // + msg.arg2 + "////" + temp.toString());
                             View convertView = getChildAt(temp.getPosition());
                             CircleImageView selected = null;
                             if (null != convertView) {
@@ -426,7 +413,7 @@ public class FaceuAdapter extends BaseAdapter {
     }
 
     private class ViewHolder {
-        private ImageView  state;
+        private ImageView state;
         private CircleProgressBarView pbar;
         private CircleImageView src;
         private FrameLayout down_layout;

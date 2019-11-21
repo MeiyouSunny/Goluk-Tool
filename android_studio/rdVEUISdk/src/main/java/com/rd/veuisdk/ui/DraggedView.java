@@ -23,17 +23,17 @@ import com.rd.veuisdk.R;
  */
 public class DraggedView extends View {
 
-    private Resources mResources;
+
     private boolean mShowTrash;
 
     public DraggedView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mResources = getResources();
-        mStrRelease = mResources.getString(R.string.release_hand_for_del);
-        mDraggedInfo = mResources.getString(R.string.dragged_info_trash_del);
+        Resources res = getResources();
+        mStrRelease = res.getString(R.string.release_hand_for_del);
+        mDraggedInfo = res.getString(R.string.drag_into_trash_del);
         mTashCirclePaint.setAntiAlias(true);
-        mFoceCircleColor = mResources.getColor(R.color.transparent_black80);
-        mCicColor = mResources.getColor(R.color.trash_border_color);
+        mFoceCircleColor = res.getColor(R.color.transparent_black80);
+        mCicColor = res.getColor(R.color.trash_border_color);
         mTashCirclePaint.setColor(mCicColor);
 
         mRectPaint.setAntiAlias(true);
@@ -42,12 +42,12 @@ public class DraggedView extends View {
         mTextPaint.setAntiAlias(true);
         mTextPaint.setColor(Color.WHITE);
 
-        mTextPaint.setTextSize(mResources.getDimensionPixelSize(R.dimen.text_size_16));
+        mTextPaint.setTextSize(res.getDimensionPixelSize(R.dimen.text_size_16));
 
         mStrTemp = mDraggedInfo;
 
-        mTrashPress = mResources.getDrawable(R.drawable.trash_p);
-        mTrashNormal = mResources.getDrawable(R.drawable.trash_n);
+        mTrashPress = res.getDrawable(R.drawable.trash_p);
+        mTrashNormal = res.getDrawable(R.drawable.trash_n);
         mTrashDrawable = mTrashNormal;
     }
 
@@ -153,26 +153,11 @@ public class DraggedView extends View {
     public void setData(Bitmap bp, int left, int top, int right, int bottom) {
         mTempBitmap = bp;
         mTempBitmapRect = new Rect(left, top, right, bottom);
-
-        mIsTouching = false;
-        // postDelayed(new Runnable() {
-        //
-        // @Override
-        // public void run() {
-        // if (!mIsTouching) {
-        //
-        // if (null != mTrashListener) {
-        // mTrashListener.onCancel();
-        // }
-        // }
-        // }
-        // }, 200);
-
         invalidate();
 
     }
 
-    // quxiao
+    // 取消
     public void onCancel() {
         invalidate();
         if (null != mTrashListener) {
@@ -187,12 +172,9 @@ public class DraggedView extends View {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        mIsTouching = true;
         mResult = true;
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                // mIsForceIng = mIsForceIng(event.getX(), event.getY());
-
                 mIsForceIng = true;
                 mResult = mIsForceIng;
 
@@ -223,7 +205,6 @@ public class DraggedView extends View {
                 break;
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
-                mIsTouching = true;
                 if (mResult && null != mTempBitmapRect) {
                     checkCandel();
                     if (mDeleteItem)
@@ -324,7 +305,6 @@ public class DraggedView extends View {
         this.mShowTrash = mShowTrash;
     }
 
-    private boolean mIsTouching = false;
 
     public interface onTrashListener {
 

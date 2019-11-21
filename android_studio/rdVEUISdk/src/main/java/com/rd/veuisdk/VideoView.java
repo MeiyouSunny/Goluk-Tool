@@ -50,6 +50,11 @@ public class VideoView extends FrameLayout {
         mVideoPreview.pause();
     }
 
+    public void setAutoRepeat(boolean bRepeat) {
+        mVideoPreview.setAutoRepeat(bRepeat);
+    }
+
+
     private VirtualVideoView.VideoViewListener epvListener = new VirtualVideoView.VideoViewListener() {
 
         /**
@@ -166,6 +171,10 @@ public class VideoView extends FrameLayout {
      */
     public void setPlayerListener(PlayerListener listener) {
         this.listener = listener;
+    }
+
+    public void setBackgroundColor(int color) {
+        mVideoPreview.setBackgroundColor(color);
     }
 
     /**

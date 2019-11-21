@@ -7,42 +7,53 @@ import android.view.View;
 /**
  * 自定义的listitem都需要继承ListItem这个抽象类.然后实现initContentView这个方法,
  * 初始化布局,然后可以根据自己的实际情况,添加自己的各种item
- * 
+ *
  * @author jeck
- * 
  */
 public abstract class HorizontalListItem {
 
-    /** 布局资源 */
+    /**
+     * 布局资源
+     */
     protected View contentView;
 
-    /** 资源填充器 */
+    /**
+     * 资源填充器
+     */
     protected LayoutInflater inflater;
 
-    /** itemId */
+    /**
+     * itemId
+     */
     protected int itemId = -1;
 
-    /** 相关id */
+    /**
+     * 相关id
+     */
     protected int relativeId = -1;
 
-    /** 点击事件监听器 */
+    /**
+     * 点击事件监听器
+     */
     protected OnListItemClickListener listItemClickListener;
     protected OnListItemTransitionClickListener listItemTranClickListener;
 
     protected Context _context;
 
-    /** 是否为选中状态 */
+    /**
+     * 是否为选中状态
+     */
     protected boolean isSelected = false;
 
     public HorizontalListItem(Context context, int itemId) {
 
-	this._context = context;
-	this.itemId = itemId;
+        this._context = context;
+        this.itemId = itemId;
 
-	inflater = (LayoutInflater) _context
-		.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        inflater = (LayoutInflater) _context
+                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-	initContentView();
+        initContentView();
     }
 
     /**
@@ -63,86 +74,83 @@ public abstract class HorizontalListItem {
 
     /**
      * 返回item布局,因为我们的父容器需要将每一个item布局添加到父容器布局中
-     * 
+     *
      * @return
      */
     public View getContentView() {
 
-	return contentView;
+        return contentView;
     }
 
     /**
      * 为每一个item注册一个点击响应事件监听器,用于处理点击事件
-     * 
+     *
      * @param listener
      */
     public void registerListItemClickListener(OnListItemClickListener listener) {
 
-	this.listItemClickListener = listener;
+        this.listItemClickListener = listener;
     }
 
     public void registerTransitionClickListener(
-	    OnListItemTransitionClickListener listener) {
+            OnListItemTransitionClickListener listener) {
 
-	this.listItemTranClickListener = listener;
+        this.listItemTranClickListener = listener;
     }
 
     public int getItemId() {
-	return itemId;
+        return itemId;
     }
 
     public boolean isSelected() {
-	return isSelected;
+        return isSelected;
     }
 
     public void setSelected(boolean isSelected) {
-	this.isSelected = isSelected;
+        this.isSelected = isSelected;
     }
 
     public int getRelativeId() {
-	return relativeId;
+        return relativeId;
     }
 
     public void setRelativeId(int relativeId) {
-	this.relativeId = relativeId;
+        this.relativeId = relativeId;
     }
 
     /**
      * 响应点击事件
-     * 
+     *
      * @author jeck
-     * 
      */
     public interface OnListItemClickListener {
 
-	public void setOnListItemClick(int itemId);
+        public void setOnListItemClick(int itemId);
 
     }
 
     /**
      * 只支持转场
-     * 
+     *
      * @author JIAN
-     * 
      */
     public interface OnListItemTransitionClickListener {
 
-	public void setOnListItemClick(int itemId, int tranStrId);
+        public void setOnListItemClick(int itemId, int tranStrId);
 
     }
 
     /**
      * 点击显示配乐布局
-     * 
+     *
      * @author jeck
-     * 
      */
     public interface OnFilterClickListener {
 
-	/**
-	 * 切换配乐
-	 */
-	public void onSwitchFilterClick(int filterType, HorizontalListItem item);
+        /**
+         * 切换配乐
+         */
+        public void onSwitchFilterClick(int index, int filterType, HorizontalListItem item);
 
     }
 

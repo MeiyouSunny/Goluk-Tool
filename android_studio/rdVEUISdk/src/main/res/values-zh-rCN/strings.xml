@@ -1,96 +1,559 @@
-<?xml version="1.0" ?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-    <string name="music">音乐</string>
-    <string name="filter">滤镜</string>
-    <string name="partedit">片段编辑</string>
-    <string name="export">导出</string>
-    <string name="music_soundtrack">配乐</string>
-    <string name="musicVoice">配乐</string>
-    <string name="videoVoice">原音</string>
-    <string name="video_voice_p">原音开</string>
-    <string name="video_voice_n">原音关</string>
-    <string name="music_none">无配乐</string>
-    <string name="music_no_song">无配乐</string>
-    <string name="sp_music_chaowan">潮玩</string>
-    <string name="sp_music_faxian">发现</string>
-    <string name="sp_music_heibai">黑白</string>
-    <string name="sp_music_huiyi">回忆</string>
-    <string name="sp_music_jietou">街头</string>
-    <string name="sp_music_lvxing">旅行</string>
-    <string name="sp_music_qingxin">清新</string>
-    <string name="music_2_7">撒野</string>
-    <string name="music_2_6">清新</string>
-    <string name="music_2_5">旅行</string>
-    <string name="music_2_4">街头</string>
-    <string name="music_2_3">回忆</string>
-    <string name="music_2_2">黑白</string>
-    <string name="music_2_1">发现</string>
-    <string name="music_2_0">潮玩</string>
-    <string name="sp_music_saye">撒野</string>
-    <string name="sp_filter_1">原片</string>
-    <string name="sp_filter_2">褪色</string>
-    <string name="sp_filter_3">明暗</string>
-    <string name="sp_filter_5">光年</string>
-    <string name="sp_filter_6">印记</string>
-    <string name="sp_filter_7">火花</string>
-    <string name="sp_filter_8">流云</string>
-    <string name="sp_filter_9">清欢</string>
-    <string name="sp_filter_10">描摹</string>
-    <string name="trim_title">截取</string>
-    <string name="preview_intercept">截取</string>
-    <string name="preview_spilt">分割</string>
-    <string name="edit_priview">编辑</string>
-    <string name="prompt.edit">编辑</string>
-    <string name="preview_edit_pic">编辑</string>
-    <string name="mixEdit">编辑</string>
-    <string name="edit">编辑</string>
-    <string name="preview_speed">变速</string>
-    <string name="preview_copy">复制</string>
-    <string name="edit_click_split">单击分割</string>
-    <string name="crop_free_title">自由裁切</string>
-    <string name="crop_mirror_reset">还原</string>
-    <string name="crop_normal_title">原始值裁切</string>
-    <string name="crop_1x1_title">正方形裁切</string>
-    <string name="speed_priview">视频速度</string>
-    <string name="select_media_title_video">视频</string>
-    <string name="cancel">取消</string>
-    <string name="isloading">加载中</string>
-    <string name="exporting">视频导出中，请耐心等待...</string>
-    <string name="export_failed">导出失败...</string>
-    <string name="export_failed_no_free_space">导出失败,存储空间不足！</string>
-    <string name="export_canceled">已取消导出！</string>
+
+    <string name="left">返回</string>
+    <string name="right">完成</string>
+    <string name="draft">存草稿</string>
     <string name="sure">确定</string>
     <string name="next_step">下一步</string>
-    <string name="next">下一步</string>
-    <string name="triming_wating">正在截取,请耐心等待!</string>
-    <string name="crop_video_croping">正在裁剪视频...</string>
-    <string name="crop_video_trim_cancel">视频裁剪已取消!</string>
-    <string name="crop_video_trim_failed">视频裁剪失败!</string>
-    <string name="trim_video_trim_failed">视频截取失败！</string>
-    <string name="trim_video_trim_cancel">视频截取已取消！</string>
-    <string name="quit_edit">确定要放弃编辑吗？</string>
+    <string name="cancel">取消</string>
+    <string name="edit">编辑</string>
+    <string name="select_media_hint">请选择媒体!</string>
+    <string name="app_name">rdVEDemo</string>
+    <string name="preview_error">暂时无法预览，请重试！</string>
+    <string name="no_media">没有媒体</string>
+    <string name="video_not_found">没有找到视频</string>
+    <string name="photo_not_found">没有找到图片</string>
+    <string name="wait">请稍候...</string>
+    <string name="empty">" "</string>
     <string name="priview_title">预览</string>
-    <string name="preview">预览</string>
-    <string name="yes">是</string>
-    <string name="video_duration_too_short_to_trim">视频小于1秒，无法截取</string>
-    <string name="video_duration_too_short_to_split">视频小于0.5秒，无法分割</string>
-    <string name="split_duration_too_low">分割视频的时间太短</string>
-    <string name="sp_filter_4">空白</string>
-    <string name="remove_item">确认删除此视频？</string>
-    <string name="release_hand_for_del">松开手删除</string>
-    <string name="quit_partedit">您确定要放弃片段编辑吗？</string>
-    <string name="please_open_wifi"> 没有可用的网络</string>
-    <string name="please_check_network"> 没有可用的网络</string>
-    <string name="no">否</string>
+    <string name="video_edit">视频编辑</string>
+    <string name="more_orientation">比例</string>
+    <string name="orientation_title">选择画面比例</string>
+    <string name="orientation_1_1">1:1</string>
+    <string name="orientation_landscape">横屏</string>
+    <string name="orientation_portrait">竖屏</string>
+    <string name="orientation_auto">自动</string>
+    <string name="proportion_ori">原比例</string>
+    <string name="proportion_1x1">1:1</string>
+    <string name="proportion_16x9">16:9</string>
+    <string name="proportion_9x16">9:16</string>
+    <string name="proportion_4x3">4:3</string>
+    <string name="proportion_3x4">3:4</string>
+    <string name="addmenu_addimage">添加图片</string>
+    <string name="addmenu_addvideo">添加视频</string>
+    <string name="addmenu_addtext">添加文字</string>
+    <string name="addmenu_transition">切换转场</string>
+    <string name="transition_default">随机转场</string>
+    <string name="filter_apply_to_all">应用到所有媒体</string>
+    <string name="transition_apply_to_all">应用于全部镜头</string>
+    <string name="select_camera_photo">拍照</string>
+    <string name="select_camera_video">录像</string>
+    <string name="videoVoice">原音</string>
+    <string name="edit_click_split">单击分割</string>
+    <string name="subtitle_progress_default">0.0</string>
+    <string name="click_dash_line_to_edit">点击虚线框编辑</string>
+    <string name="import_duration_limit">视频长度不能大于%d秒</string>
+
+    <string name="not_support_cup_arch">当前功能暂不可用</string>
+
+    <string name="select_media_title_video">视频</string>
+    <string name="select_media_title_photo">照片</string>
+
+    <string name="import_info" formatted="false">视频:%d,图片:%d</string>
+    <string name="import_info_video_only" formatted="false">视频:%d</string>
+    <string name="import_info_photo_only" formatted="false">图片:%d</string>
+    <string name="continue_txt">继续</string>
+    <string name="voice">声音</string>
+    <string name="advanced_edit">高级编辑</string>
+    <string name="preview_spilt">分割</string>
+    <string name="preview_rotate">旋转</string>
+    <string name="preview_mirror">镜像</string>
+    <string name="preview_crop">裁切</string>
+    <string name="preview_speed">变速</string>
+    <string name="preview_copy">复制</string>
+    <string name="preview_reverse">倒序</string>
+    <string name="preview_del">删除</string>
+    <string name="preview_sort">调序</string>
+    <string name="preview_trim">截取</string>
+    <string name="preview_picture_duration">图片时长</string>
+    <string name="preview_edit_pic">编辑</string>
+    <string name="preview_text">文字</string>
+    <string name="release_hand_for_del">松开删除</string>
+    <string name="drag_into_trash_del">拖进垃圾桶删除</string>
+    <string name="music">配乐</string>
+    <string name="volume">音量</string>
+    <string name="sound_effect">变声</string>
+    <string name="audio">配音</string>
+    <string name="music_many">多段配乐</string>
+    <string name="subtitle">文字</string>
+    <string name="sticker">贴纸</string>
+    <string name="effect">特效</string>
+    <string name="mosaic">马赛克</string>
+    <string name="dewatermark">去水印</string>
+    <string name="sound">音效</string>
+    <string name="filter">滤镜</string>
+    <string name="ani_type_zoom_out">图片运动</string>
+    <string name="zoom_out_switch">启用动画(仅图片)</string>
+    <string name="background">背景</string>
+    <string name="no_background_mode">无背景模式</string>
+    <string name="blur">模糊</string>
+    <string name="white">白色</string>
+    <string name="black">黑色</string>
+
+    <string name="mv">MV</string>
+    <string name="cover">封面</string>
+    <string name="graffiti">涂鸦</string>
+    <string name="collage">画中画</string>
+    <string name="temp">模板</string>
+    <string name="zishuo">字说</string>
+    <string name="transition">转场</string>
+    <string name="partedit">片段编辑</string>
+    <string name="theme">主题</string>
+    <string name="export">发布</string>
+    <string name="addanim">添加动画</string>
+    <string name="clearanim">清除动画</string>
+    <string name="add_subtitle">添加字幕</string>
+    <string name="add_sticker">添加贴纸</string>
+    <string name="sticker_edit">编辑贴纸</string>
+    <string name="edit_subtitle">编辑字幕</string>
+    <string name="subtitle_style">样式</string>
+    <string name="subtitle_font_style">字体</string>
+    <string name="subtitle_color">颜色</string>
+    <string name="bg_color">背景色</string>
+    <string name="subtitle_size">大小</string>
+    <string name="subtitle_anim">动画</string>
+    <string name="subtitle_stroke">描边</string>
+    <string name="subtitle_align">对齐</string>
+    <string name="none">无</string>
+    <string name="music_none">无配乐</string>
+    <string name="video_voice_n">原音开</string>
+    <string name="video_voice_p">原音关</string>
+    <string name="local">本地</string>
+    <string name="local_video">本地视频</string>
+    <string name="music_yun">云音乐</string>
+    <string name="complete">完成</string>
+    <string name="crop_mirror_reset">还原</string>
+
+    <string name="cover_head">片头</string>
+    <string name="cover_tail">片尾</string>
+    <string name="cover_prompt_add_image">请添加图片</string>
+    <string name="trim_construct">修剪</string>
+    <string name="trim_cut_off">剪除</string>
+
+    <!--旋转文字-->
+    <string name="zishuo_style">风格</string>
+    <string name="zishuo_rotate_text">旋转文字</string>
+    <string name="zishuo_horizontal_text">横排文字</string>
+    <string name="zishuo_vertical_text">竖排文字</string>
+    <string name="zishuo_inscription_library">题词库</string>
+    <string name="zishuo_custom_inscription">自定义题词</string>
+    <string name="zishuo_inscription_detail">详情</string>
+    <string name="zishuo_import">相册视频</string>
+    <string name="zishuo_delete">删除</string>
+    <string name="zishuo_speed_very_slow">极慢</string>
+    <string name="zishuo_speed_slow">慢</string>
+    <string name="zishuo_speed_standard">标准</string>
+    <string name="zishuo_speed_fast">快</string>
+    <string name="zishuo_speed_very_fast">极快</string>
+    <string name="zishuo_input_hint">写下你想说的话。(不同的断句方式，朗读效果不同)</string>
+    <string name="zishuo_audition">试听效果</string>
+    <string name="zishuo_text_transform_voice">文字转语音</string>
+    <string name="zishuo_voice_transform_text">3分钟</string>
+    <string name="zishuo_more_anim">更多动画</string>
+    <string name="zishuo_stroke">描边</string>
+    <string name="zishuo_inscription">使用</string>
+
+    <!-- 字幕 -->
+    <string name="st_style_apply_to_all">应用样式到所有字幕</string>
+    <string name="st_color_apply_to_all">应用颜色到所有字幕</string>
+    <string name="st_anim_apply_to_all">应用动画到所有字幕</string>
+    <string name="st_stroke_apply_to_all">应用描边到所有字幕</string>
+    <string name="st_font_apply_to_all">应用字体到所有字幕</string>
+    <string name="st_size_apply_to_all">应用大小到所有字幕</string>
+    <string name="st_position_apply_to_all">应用位置到所有字幕</string>
+    <string name="subtitle_effect_edit">调整</string>
+    <string name="text_style_bold">粗体</string>
+    <string name="text_style_italic">斜体</string>
+    <string name="text_style_shadow">阴影</string>
+    <string name="subtitle_size_large">大</string>
+    <string name="subtitle_size_small">小</string>
+    <string name="subtitle_alpha">透明度</string>
+    <string name="subtitle_seekbar_stroke">描边 :&#160;</string>
+    <string name="subtitle_thin">细</string>
+    <string name="subtitle_wide">粗</string>
+
+
+    <!-- 转场 -->
+    <string name="show_style_item_recovery">淡入</string>
+    <string name="show_style_item_flash_white">闪白</string>
+    <string name="show_style_item_flash_black">闪黑</string>
+    <string name="show_style_item_to_left">左推</string>
+    <string name="show_style_item_to_right">右推</string>
+    <string name="show_style_item_to_up">上推</string>
+    <string name="show_style_item_to_down">下推</string>
+    <string name="transition_default_duration">1.00秒</string>
+
+    <!-- 配音 -->
+    <string name="audio_tip">按住持续配音，松开后配音结束</string>
+    <string name="audio_press">按住配音</string>
+    <string name="audio_remove_tip">点击按钮可删除当前选中的配音片段</string>
+    <string name="audio_reset">重配</string>
+    <string name="audio_audition">试听</string>
+    <string name="photo_duration">时长</string>
+    <string name="del">删除</string>
+    <string name="et_subtitle_ttf">选择字体</string>
+    <string name="split_duration_less_than">分割视频的时间不能低于%.1f秒</string>
+    <string name="please_check_network">没有可用的网络</string>
     <string name="last_split_cannt_del">至少保留一段视频</string>
-    <string name="just_only_one_video">至少保留一段视频</string>
-    <string name="dragged_into_trash">拖进垃圾桶删除</string>
-    <string name="dragged_info_trash_del">拖进垃圾桶删除</string>
+    <string name="record_no_external_storage">没有存储卡或存储卡未加载！</string>
+    <string name="livecamera_record_cannot_start">开始录制失败！</string>
+    <string name="livecamera_record_switch_filter_failed">切换滤镜失败！</string>
+    <string name="exit_black_screen">双击退出黑屏</string>
+    <string name="activity_label_sightseeing_file">选择文件夹或文件</string>
+    <string name="scan_media">扫描音乐</string>
+    <string name="scan_video">扫描视频</string>
+    <string name="mymusic">我的配乐</string>
+    <string name="localmusic">本地乐库</string>
+    <string name="histroymusic">最近使用</string>
+    <string name="download_more_music">下载更多配乐</string>
+    <string name="music_history_delete">删除最近使用</string>
+    <string name="activity_label_select_music">选择配乐</string>
+
+
+    <string name="activity_label_effect_music">选择音效</string>
+    <string name="select_medias">选择媒体资源</string>
+    <string name="downloading">正在下载资源，请稍等...</string>
+    <string name="download_error">无法下载.</string>
+    <string name="default_ttf"> 默认字体</string>
+    <string name="isloading">加载中....</string>
+    <string name="isDrafting">正在存入草稿箱....</string>
+    <string name="addsub_video_head_failed">主题片头无法添加字幕!</string>
+    <string name="addsub_video_end_failed">主题片尾无法添加字幕!</string>
+    <string name="addsub_video_between_failed">区域太小无法添加字幕!</string>
+    <string name="addsticker_video_head_failed">主题片头无法添加贴纸!</string>
+    <string name="addsticker_video_end_failed">主题片尾无法添加贴纸!</string>
+    <string name="addsticker_video_between_failed">时间区域太短无法添加贴纸!</string>
+    <string name="addaudio_video_head_failed">主题片头无法添加配音!</string>
+    <string name="addaudio_video_end_failed">主题片尾无法添加配音!</string>
+    <string name="addaudio_video_between_failed">时间区域太短无法添加配音!</string>
+    <string name="drag_for_sub">拖动边框,调整字幕起始位置</string>
+    <string name="drag_for_sticker">拖动边框,调整贴纸起始位置</string>
     <string name="drag_for_split">拖动选择分割位置</string>
-    <string name="canceling">取消中…</string>
-    <string name="cancel_export_video">正在导出，是否取消？</string>
-    <string name="cancel_export">正在导出，是否取消？</string>
-    <string name="video_speed_duration_too_short_to_change">视频过短，无法变速</string>
-    <string name="import_duration_limit">导出视频长度不能大于90秒</string>
+    <string name="drag_for_sort">长按并拖动可调整顺序哟</string>
+    <string name="drag_thumb_for_insert_sub">拖动缩略图,确认字幕插入位置</string>
+    <string name="drag_thumb_for_insert_sticker">拖动缩略图,确认贴纸插入位置</string>
+    <string name="fix_video">请选择视频文件</string>
+    <string name="begin_scan">开始扫描</string>
+    <string name="please_open_wifi">没有可用的网络</string>
+    <string name="load_http_failed">加载数据失败</string>
+    <string name="timeout">请求超时</string>
+    <string name="add">添加</string>
+    <string name="all_video">全部视频</string>
+    <string name="video_save_success">已保存视频</string>
+    <string name="video_save_failed">视频保存失败</string>
+    <string name="camera_min_limit_text">小主，至少%s秒</string>
+    <string name="photo_save_success">已保存照片</string>
+    <string name="photo_save_fail">照片保存失败</string>
+    <string name="exporting">视频发布中，请耐心等待...</string>
+    <string name="reversing">倒序处理中，请稍后...</string>
+    <string name="reverse_cancel">视频尚未倒序完成，是否取消？</string>
+    <string name="export_failed">发布失败...</string>
+    <string name="export_failed_by_appverify">发布失败,导出时授权未通过</string>
+    <string name="export_failed_no_free_space">发布失败,存储空间不足！</string>
+    <string name="export_canceled">"已取消发布！</string>
+    <string name="sub_hint">点击输入文字</string>
+    <string name="apply_to_all">应用到所有图片</string>
+    <string name="transition_random">随机</string>
+    <string name="camare_filter_0">原图</string>
+
+
+    <string name="just_only_one_video">至少保留一个视频</string>
+    <string name="just_only_one_image">只有一张图片，不可以删除</string>
+    <string name="just_only_one_scene">只有一个场景，不可以删除</string>
+
+
+    <!-- 对话框提示 -->
+    <string name="cancel_all_changed">确定放弃所有操作？</string>
+    <string name="quit_edit">确定要放弃编辑吗？</string>
+    <string name="quit_partedit">您确定要放弃片段编辑吗？</string>
+    <string name="remove_item">是否删除此媒体项？</string>
+    <string name="album_no_all">您还未选择图片或视频哟!</string>
+    <string name="album_no_video">您还未选择视频哟!</string>
+    <string name="album_no_photo">您还未选择图片哟!</string>
+    <string name="album_dialog_ok">我知道了</string>
+    <string name="image_duration_apply_to_all">确定应用到所有图片吗？</string>
+    <string name="proportion_change_to_auto">有横屏视频,竖屏画面效果不佳,系统将选择最佳画面</string>
+    <string name="video_duration_too_short_to_split">视频小于%.1f秒，不能分割</string>
+    <string name="video_duration_too_short_to_transition">视频小于%.1f秒，无法添加转场</string>
+    <string name="video_duration_too_short_to_trim">视频小于%.1f秒，无法截取</string>
+    <string name="export_duration_limit">当前视频时长超过了最长发布时间限制(%d秒)。您可以关闭本提示去调整，或继续发布</string>
+    <string name="cancel_export">视频尚未导出完成，是否取消？</string>
+    <string name="video_speed_duration_too_short_to_change">视频时长过短，不能变速</string>
+
+    <!-- 人脸贴纸 -->
+    <string name="camare_fu_beauty">美颜</string>
+    <string name="fu_blue">磨皮</string>
+    <string name="fu_color">美白</string>
+    <string name="fu_thin">瘦脸</string>
+    <string name="fu_eye">大眼</string>
+    <string name="level_1">1</string>
+    <string name="level_2">2</string>
+    <string name="level_3">3</string>
+    <string name="level_4">4</string>
+    <string name="level_5">5</string>
+    <string name="level_6">6</string>
+
+    <!-- 压缩 -->
+    <string name="compress">压缩</string>
+    <string name="compress_add_error">解析视频失败</string>
+    <string name="compress_error">压缩视频失败</string>
+    <string name="compress_cancel">取消压缩</string>
+    <string name="compress_file_old_size">原文件大小：</string>
+    <string name="compress_file_new_size">压缩后文件大小：</string>
+    <string name="compress_hardware">使用硬件加速</string>
+    <string name="compress_size">分辨率：</string>
+    <string name="compress_fps">帧率：</string>
+    <string name="compress_bitrate">码率：</string>
+    <string name="compress_size_original">原始尺寸</string>
+    <string name="compress_size_480">480p</string>
+    <string name="compress_size_720">720p</string>
+    <string name="compress_size_1080">1080p</string>
+    <string name="compress_size_customize">自定义</string>
+    <string name="compress_size_constrain">锁定比例</string>
+    <string name="compress_input_width">输入宽：</string>
+    <string name="compress_input_height">输入高：</string>
+
+    <!-- 错误相关 -->
+    <string name="error_preview_crop">无法预览当前剪辑!</string>
+    <string name="blackboard_text">文字板</string>
+    <string name="yes">是</string>
+    <string name="no">否</string>
+    <string name="canceling">取消中...</string>
+    <string name="trim_support_video_only">截取功能只支持视频文件</string>
+
+    <!-- 录制 -->
+    <string name="permission_camera_error">未允许使用摄像头！</string>
+    <string name="permission_external_storage_error">未允许使用存储功能！</string>
+    <string name="permission_album_error">未允许读取相册！</string>
+    <string name="permission_camera_error_p_allow">相机无法打开,请打开相机权限!</string>
+    <string name="permission_audio_error">未允许录制音频！</string>
+    <string name="permission_audio_error_p_allow">无法录音,,请打开录音权限!</string>
+    <string name="exit">退出</string>
     <string name="setting">设置</string>
+    <string name="timeline">时间线</string>
+    <string name="m_short_mv">%d秒\n\tMV</string>
+    <string name="m_short_mv_no_line">%d秒MV</string>
+    <string name="sd_not_enough_record">内存空间不足，无法录制视频！</string>
+    <string name="dialog_tips">温馨提示</string>
+    <string name="error_code">错误代码%d</string>
+    <string name="media_select">媒体选择</string>
+    <string name="unsupport_video_o_photo">不支持的图片或视频！</string>
+    <string name="once_un_exceed_num"> 单次选择媒体不能超过%d个</string>
+    <string name="media_un_exceed_num">媒体不能超过%d个</string>
+    <string name="sd_umount">当前存储卡尚未挂载</string>
+    <string name="p_select_dir">请选择文件夹</string>
+    <string name="isdelete">是否删除此媒体项？</string>
+    <string name="long_s">%s 秒</string>
+    <string name="un_allow_video_photo">未允许读取图片、视频！</string>
+    <string name="trans_need_two_medias">转场至少需要两个图片或视频！</string>
+    <string name="close">关闭</string>
+    <string name="allvideo">全部视频</string>
+    <string name="allphoto">全部图片</string>
+    <string name="album">相册</string>
+    <string name="record_default_time">00:00.0</string>
+    <string name="stop_record">停止</string>
+
+    <!-- 配音 -->
+    <string name="error_record_audio_retry">录音失败，请重试!</string>
+    <string name="record_audio_too_short_retry">录音时间太短，请重试!</string>
+    <string name="history_recently">最近使用</string>
+    <string name="sure_delete">确认删除吗?</string>
+    <string name="local_music">本地音乐</string>
+    <string name="downloaded">已下载</string>
+    <string name="prepareMV">正在准备MV...</string>
+    <string name="internal_music">内置音乐</string>
+    <string name="dialog_download_ing">下载中...</string>
+    <string name="download_thread_limit_msg">请耐心等待...</string>
+    <string name="download_failed">下载失败</string>
+    <string name="music_default_time">00:00</string>
+
+    <!-- 声音特效-->
+    <string name="media_volume1">音量1</string>
+    <string name="media_volume2">音量2</string>
+    <string name="sound_effect1">第一个视频音效:</string>
+    <string name="sound_effect2">第二个视频音效:</string>
+    <string name="all_sound_effect">整体视频音效:</string>
+
+    <string name="media_exception">图片或视频格式不正确或不存在</string>
+
+
+    <string name="caption_anim_push_left">左推</string>
+    <string name="caption_anim_push_right">右推</string>
+    <string name="caption_anim_push_top">上推</string>
+    <string name="caption_anim_push_bottom">下推</string>
+    <string name="caption_anim_scale_fade_in">缩放入出</string>
+    <string name="caption_anim_rotate_fade_in">滚动入出</string>
+    <string name="caption_anim_fade_in_out">淡入淡出</string>
+
+
+    <string name="proportion_169">胶片</string>
+    <string name="proportion_square">正方形</string>
+    <string name="proportion_916">竖屏</string>
+    <string name="ae_media_info">视频制作需要提供如下资源:</string>
+    <string name="one_key_make">一键制作</string>
+    <string name="ae_list">AE模板</string>
+    <string name="ae_preview_media">素材输入(点击下面的素材按钮输入)</string>
+    <string name="ae_preview_sound">背景音乐音量：</string>
+    <string name="ae_preview_change_music">替换背景音乐</string>
+    <string name="ae_preview_change_music_btn">选择音乐</string>
+    <string name="ae_media_item_image">图片</string>
+    <string name="ae_media_item_video">视频/图片</string>
+    <string name="ae_media_item_word">文字</string>
+
+    <string name="mode_detail">模板详情</string>
+    <string name="ae_media_image">%d张图片</string>
+    <string name="ae_media_word">%d个文字</string>
+    <string name="ae_mode_media">%d个视频/图片</string>
+
+    <string name="select_ae_video_limit">视频: %1$d/%2$d </string>
+    <string name="select_ae_picture_limit">图片:  %1$d/%2$d </string>
+    <string name="select_ae_media_limit">视频: %1$d/%2$d 图片:  %3$d/%4$d </string>
+    <string name="select_ae_media_no_pic_limit">视频/图片: %1$d/%2$d </string>
+    <string name="select_ae_enable_repeatlimit">图片(至少%1$d张): %2$d </string>
+
+    <string name="ae_text_info">字数:%1$d/%2$d 最多:%3$d行</string>
+    <string name="yunmusic_sign">授权证书</string>
+    <string name="please_click">请点击</string>
+    <string name="version_lite">当前版本缺少资源不支持该功能</string>
+
+    <!--扫描音频文件-->
+    <string name="scan_music_file_end_num">新增%d个音乐文件</string>
+    <string name="scan_music_file_end_num_0">未找到新音乐</string>
+
+    <!--扫描视频文件-->
+    <string name="scan_video_file_end_num">新增%d个视频文件</string>
+    <string name="scan_video_file_end_num_0">未找到新视频</string>
+
+
+    <!-- aedetail media type limit-->
+    <string name="select_video_limit">最多只能选择%d个视频</string>
+    <string name="select_picture_limit">最多只能选择%d张图片</string>
+
+    <string name="select_media_limit">单次选择媒体不能超过%d个</string>
+    <string name="select_media_at_least_limit">至少选择%d个媒体</string>
+
+    <!--录制输出-->
+    <string name="record_bitrate">码率(kbps)</string>
+    <string name="record_size">分辨率</string>
+    <!--调色-->
+    <string name="toning">调色</string>
+    <string name="filter_config_brightness">亮度</string>
+    <string name="filter_config_contrast">对比度</string>
+    <string name="filter_config_saturation">饱和度</string>
+    <string name="filter_config_sharpness">锐度</string>
+    <string name="filter_config_white_balance">白平衡</string>
+    <string name="filter_config_vignette">暗角</string>
+    <string name="toning_all">应用于全部片段</string>
+    <string name="toning_reset">还原</string>
+    <string name="toning_diff">对比</string>
+    <string name="toning_reset_msg">确认要重置吗?</string>
+    <string name="toning_diff_msg">原始效果</string>
+
+
+    <!-- 特效 -->
+    <string name="effect_filter_revoke">撤销</string>
+    <string name="effect_filter_eraser">橡皮擦</string>
+
+
+    <string name="effect_time_slow">慢动作</string>
+    <string name="effect_time_repeat">反复</string>
+    <string name="effcet_filter">动感</string>
+    <string name="effcet_time">时间</string>
+    <string name="effect_hint_filter">长按添加动感特效</string>
+    <string name="effect_hint_time">单击添加时间特效</string>
+
+    <!--添加媒体-->
+    <string name="edit_media">编辑媒体</string>
+    <string name="added">已添加</string>
+    <string name="add_scene">添加镜头</string>
+
+
+    <string name="duration_fix_format_f">%.1fs</string>
+    <string name="duration_fix_format_int">%ds</string>
+
+
+    <!-- 导出弹窗 -->
+    <string name="video_size_480">导出标清 480P</string>
+    <string name="video_size_720">导出高清 720P</string>
+    <string name="video_size_1080">导出超清 1080P</string>
+    <string name="export_with_draft">导出后保存一份草稿</string>
+    <string name="draft_still_saved">导出后仍保存草稿</string>
+
+
+    <string name="strength">强度</string>
+    <string name="media_volume">视频音量</string>
+    <string name="default_music">默认音乐</string>
+
+
+    <string name="other_gallery">其他\n相册</string>
+
+
+    <string name="ae_replace_video">替换视频</string>
+    <string name="ae_replace_picture">替换图片</string>
+
+
+    <string name="cover_select_video">选择视频</string>
+    <string name="cover_select_ablum">选择相册</string>
+    <string name="music_effect_pitch_title">调节音高</string>
+    <string name="low">低</string>
+    <string name="high">高</string>
+
+    <string name="ae_enable_repeat">启用循环播放</string>
+    <string name="preview">预览</string>
+    <string name="splice_layout">布局</string>
+    <string name="splice_border">边框</string>
+    <string name="splice_order">播放顺序</string>
+    <string name="splice_music">音乐</string>
+    <string name="splice_order_title">播放模式</string>
+
+    <string name="splice_order_title1">同时播放</string>
+    <string name="splice_order_title2">顺序播放</string>
+    <string name="splice_order_player">播放顺序</string>
+    <string name="stop">停止</string>
+    <string name="mute">静音</string>
+    <string name="mute_p">已静音</string>
+    <string name="replace">替换</string>
+    <string name="border_size">粗细</string>
+    <string name="up_load_more">上拉加载更多</string>
+    <string name="already_bottom">已经到底了</string>
+    <string name="loading">正在加载</string>
+    <!--封面-->
+    <string name="cover_add_picture">添加图片</string>
+    <string name="cover_add_text">添加文字</string>
+    <string name="cover_duration">时长</string>
+    <string name="cover_select">选择封面</string>
+    <!--裁剪-->
+    <string name="trim_video_delete">此操作将删除视频未选择部分</string>
+    <string name="trim_video_area">请选择区域</string>
+    <string name="trim_video_prompt">截取时间和剩余时间应该大于1秒</string>
+
+    <string name="mirror_ver">垂直翻转</string>
+    <string name="mirror_hor">左右翻转</string>
+    <string name="crop_free">自由</string>
+    <string name="crop_rotate"> 旋&#160;&#160;&#160;&#160;转  </string>
+    <string name="media_num_limit" formatted="false">媒体数目限制：%1d~%1d </string>
+
+    <string name="video_transcoding">转码</string>
+    <string name="reverse_play">倒放</string>
+    <string name="normal_play">恢复原视频</string>
+
+
+    <string name="auto_recognition">AI 识别</string>
+    <string name="auto_recognition_ing">语音识别中...</string>
+    <string name="auto_recognition_failed">识别失败</string>
+    <string name="auto_server_error">语音识别失败（超出当月试用次数）</string>
+
+
+    <string name="ae_template_error">模板有误</string>
+
+
+    <string name="transition_type_base">基础</string>
+    <string name="transition_type_chachu">擦除</string>
+
+
+    <string name="osd_rb_blur">高斯模糊</string>
+    <string name="osd_rb_pixl">像素化</string>
+    <string name="osd_rb_osd">去水印</string>
+
 </resources>

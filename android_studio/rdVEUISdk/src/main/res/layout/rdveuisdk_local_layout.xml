@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              android:background="@color/edit_menu_bg">
+
+    <HorizontalScrollView
+        android:id="@+id/hsvMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbarSize="0dp"
+        android:scrollbarStyle="@null"
+        android:scrollbarThumbHorizontal="@color/transparent"
+        android:scrollbars="none">
+
+        <RadioGroup
+            android:id="@+id/rgMusicGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@color/edit_menu_bg"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbLocalMusic"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/more_music_menu_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/local_music"
+                android:checked="true"
+                android:textColor="@drawable/radio_music_txcolor"/>
+
+            <RadioButton
+                android:id="@+id/rbLocalVideo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/more_music_menu_bg"
+                android:button="@null"
+                android:gravity="center"
+                android:text="@string/local_video"
+                android:textColor="@drawable/radio_music_txcolor"/>
+
+        </RadioGroup>
+
+    </HorizontalScrollView>
+
+    <com.rd.veuisdk.ui.ExtViewPager
+        android:id="@+id/vpMusicMain"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/edit_menu_bg"/>
+
+</LinearLayout>

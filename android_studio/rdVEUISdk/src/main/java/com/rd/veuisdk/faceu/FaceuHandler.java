@@ -18,7 +18,6 @@ import com.rd.veuisdk.SdkEntry;
 import com.rd.veuisdk.adapter.FaceuAdapter;
 import com.rd.veuisdk.manager.FaceuConfig;
 import com.rd.veuisdk.manager.FaceuInfo;
-import com.rd.veuisdk.ui.HorizontalListViewCamera;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,6 +32,29 @@ import java.io.InputStream;
  */
 public class FaceuHandler implements IRecorderTextureCallBack,
         IRecorderPreivewCallBack {
+    // 句柄索引
+    private static final int ITEM_ARRAYS_FACE_BEAUTY_INDEX = 0;
+    private static final int ITEM_ARRAYS_EFFECT_INDEX = 1;
+    private static final int ITEM_ARRAYS_LIGHT_MAKEUP_INDEX = 2;
+    private static final int ITEM_ARRAYS_EFFECT_ABIMOJI_3D_INDEX = 3;
+    private static final int ITEM_ARRAYS_EFFECT_HAIR_NORMAL_INDEX = 4;
+    private static final int ITEM_ARRAYS_EFFECT_HAIR_GRADIENT_INDEX = 5;
+    private static final int ITEM_ARRAYS_CHANGE_FACE_INDEX = 6;
+    private static final int ITEM_ARRAYS_FUZZYTOON_FILTER_INDEX = 7;
+    private static final int ITEM_ARRAYS_LIVE_PHOTO_INDEX = 8;
+    private static final int ITEM_ARRAYS_FACE_MAKEUP_INDEX = 9;
+    private static final int ITEM_ARRAYS_AVATAR_BACKGROUND = 10;
+    private static final int ITEM_ARRAYS_AVATAR_HAIR = 11;
+    private static final int ITEM_ARRAYS_NEW_FACE_TRACKER = 12;
+
+    // 句柄数量
+    private static final int ITEM_ARRAYS_COUNT = 13;
+
+    private static final String BUNDLE_V3 = "faceu/v3.bundle";
+    private static final String BUNDLE_FACE_BEAUTIFICATION = "faceu/face_beautification.bundle";
+    private static final String ASSETS = "assets:///";
+//    private static final String FACEU_ITEM_BUNDLE = ASSETS + "faceu/BeagleDog.mp3";
+
 
     private byte[] mCameraData;
     private String mCreatedItemId = "";
@@ -42,32 +64,55 @@ public class FaceuHandler implements IRecorderTextureCallBack,
     private int mFrameId;
 
     private FaceuUIHandler faceHandler;
-    private String LOG_TAG = FaceuHandler.this.toString();
+    private final String TAG = "FaceuHandler";
     private byte[] pack;
     private FaceuConfig config;
-    private int[] itemsArray = new int[3];
-    private int mFacebeautyItem = 0, mEffectItem = 0;
 
-    private AssetManager ast;
-    private Context context;
 
+    //美颜和其他道具的handle数组
+    private final int[] itemsArray = new int[ITEM_ARRAYS_COUNT];
+
+    private AssetManager mAssetManager;
+
+    public boolean isCurrentIsVer() {
+        return faceHandler.isCurrentIsVer();
+    }
+
+
+    /**
+     * @param _context
+     * @param filterGroup
+     * @param filter_menu_parent
+     * @param _pack
+     * @param faceConfig
+     * @param fuLayout
+     * @param fuLayoutParent
+     * @param filter_parent_layout
+     * @param listener
+     */
     public FaceuHandler(Context _context, RadioGroup filterGroup,
-                        HorizontalListViewCamera camareLV, View filter_menu_parent,
-                        byte[] _pack, FaceuConfig faceConfig, View fuBeautyLayout,
+                        View filter_menu_parent, View rgMenuParent,
+                        byte[] _pack, FaceuConfig faceConfig,
                         LinearLayout fuLayout, LinearLayout fuLayoutParent, LinearLayout filter_parent_layout, IReloadListener listener) {
-        context = _context;
-        ast = _context.getAssets();
+        //重置数组
+        int len = itemsArray.length;
+        for (int i = 0; i < len; i++) {
+            itemsArray[i] = 0;
+        }
+        mAssetManager = _context.getAssets();
         config = faceConfig;
         pack = _pack;
-        faceHandler = new FaceuUIHandler(filterGroup, camareLV,
-                filter_menu_parent, (null != pack && pack.length > 0), config,
-                fuBeautyLayout, new FaceuListener() {
+        faceHandler = new FaceuUIHandler(filterGroup,
+                filter_menu_parent, rgMenuParent, (null != pack && pack.length > 0), config,
+                new FaceuListener() {
+                    @Override
+                    public void onFUChanged(String filePath, int lastPosition) {
+                        mCurItemId = filePath;
+//                        mCurItemId = FACEU_ITEM_BUNDLE;
+                    }
+                }, fuLayout, fuLayoutParent, filter_parent_layout, listener);
 
-            @Override
-            public void onFUChanged(String mp3Path, int lastPosition) {
-                mCurItemId = mp3Path;
-            }
-        }, fuLayout, fuLayoutParent, filter_parent_layout, listener);
+//        mCurItemId = FACEU_ITEM_BUNDLE;
     }
 
     private boolean inited = false;
@@ -77,46 +122,28 @@ public class FaceuHandler implements IRecorderTextureCallBack,
     public void onInitFaceunity() {
         if (isSupportFace()) {
             inited = false;
-
-            isSwitching = false;
             mFuNotifyPause = true;
             mFrameId = 0;
             mCameraData = null;
-            byte[] v3data = null;
             bInitedSuccessed = false;
-            try {
-                InputStream is = ast.open("faceu/v3.mp3");
-                if (null != is) {
-                    v3data = new byte[is.available()];
-                    is.read(v3data);
-                    is.close();
-                    bInitedSuccessed = true;
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG, "IOException: " + e);
-            } finally {
-                if (bInitedSuccessed) {
-                    faceunity.fuSetup(v3data, null, pack);
-                    faceunity.fuSetMaxFaces(1);
-                }
-                inited = true;
-                mFacebeautyItem = 0;
-                mEffectItem = 0;
-                itemsArray[0] = mFacebeautyItem;
-                itemsArray[1] = mEffectItem;
+            byte[] data = readAssetFaceu(BUNDLE_V3);
+            if (null != data) {
+                faceunity.fuSetup(data, null, pack);
+                faceunity.fuSetMaxFaces(1);
             }
-
-
+            itemsArray[ITEM_ARRAYS_FACE_BEAUTY_INDEX] = 0;
+            itemsArray[ITEM_ARRAYS_EFFECT_INDEX] = 0;
+            bInitedSuccessed = true;
         }
         inited = true;
     }
+
 
     private int previewW, previewH;
 
     @Override
     public void onPreviewFrame(byte[] nv21data, int width, int height) {
-//        Log.e("onPreviewFrame" + this.toString(), ((null!=nv21data)?nv21data.length:"null")
+//        Log.e(TAG, "onPreviewFrame" + ((null != nv21data) ? nv21data.length : "null")
 //                + "..xxxxxxxxxxxx." + width + "*" + height);
         previewW = width;
         previewH = height;
@@ -129,109 +156,111 @@ public class FaceuHandler implements IRecorderTextureCallBack,
 
         @Override
         public void run() {
-            if (!TextUtils.isEmpty(mCurItemId)
-                    && !TextUtils.equals(mCurItemId, FaceuAdapter.NONE)) {
-                File f = new File(mCurItemId);
-                if (null != f && f.exists() && f.length() > 0) {
-                    try {
-                        InputStream is = new FileInputStream(f);
-                        byte[] item_data = new byte[is.available()];
-                        is.read(item_data);
-                        is.close();
-                        mEffectItem = faceunity
-                                .fuCreateItemFromPackage(item_data);
-                        itemsArray[1] = mEffectItem;
-                        // Log.e("ondrawframe", "readItem->" + mCurItemId
-                        // + itemsArray[1]);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Log.e(LOG_TAG, "IOException: " + e.toString());
+            if (!TextUtils.isEmpty(mCurItemId) && !TextUtils.equals(mCurItemId, FaceuAdapter.NONE)) {
+                if (mCurItemId.startsWith(ASSETS)) {
+                    //内置资源
+                    byte[] data = readAssetFaceu(mCurItemId.replace(ASSETS, ""));
+                    if (null != data) {
+                        itemsArray[ITEM_ARRAYS_EFFECT_INDEX] = faceunity.fuCreateItemFromPackage(data);
+                    }
+                } else {
+                    File f = new File(mCurItemId);
+                    if (null != f && f.exists() && f.length() > 0) {
+                        try {
+                            InputStream is = new FileInputStream(f);
+                            byte[] item_data = new byte[is.available()];
+                            is.read(item_data);
+                            is.close();
+                            itemsArray[ITEM_ARRAYS_EFFECT_INDEX] = faceunity.fuCreateItemFromPackage(item_data);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Log.e(TAG, "IOException: " + e.toString());
+                        }
                     }
                 }
+
+
             }
         }
     };
+
+    /**
+     * 读取faceu资源
+     *
+     * @param assetName
+     */
+    private byte[] readAssetFaceu(String assetName) {
+        byte[] data = null;
+        try {
+            InputStream is = mAssetManager.open(assetName);
+            if (null != is) {
+                data = new byte[is.available()];
+                is.read(data);
+                is.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e(TAG, "IOException: " + e);
+        }
+        return data;
+    }
+
     private Runnable readBeauty = new Runnable() {
 
         @Override
         public void run() {
-            mFacebeautyItem = 0;
-            try {
-                InputStream is = ast.open("faceu/face_beautification.mp3");
-                if (null != is) {
-                    byte[] item_data = new byte[is.available()];
-                    is.read(item_data);
-                    is.close();
-                    mFacebeautyItem = faceunity
-                            .fuCreateItemFromPackage(item_data);
-                }
-                // Log.e("beauty....", itemsArray[0] + "");
-            } catch (IOException e) {
-                e.printStackTrace();
-                Log.e(LOG_TAG, "IOException: " + e);
-            } finally {
-                itemsArray[0] = mFacebeautyItem;
+            byte[] data = readAssetFaceu(BUNDLE_FACE_BEAUTIFICATION);
+            if (null != data) {
+                itemsArray[ITEM_ARRAYS_FACE_BEAUTY_INDEX] = faceunity.fuCreateItemFromPackage(data);
             }
-
-
         }
     };
 
     @Override
     public int onDrawFrame(int textureId, float[] transformMatrix, int flags) {
         if (bInitedSuccessed) {
-//        Log.e("ondrawframe..." + this.toString(), mFuNotifyPause + "--"
-//                + "---isSwitching" + isSwitching + "是否有数据:"
-//                + (mCameraData != null) + "---" + previewW + "*" + previewH);
-            if ((!mCreatedItemId.equals(mCurItemId)) || mFuNotifyPause
-                    || isSwitching) {
-                // Log.e("ondrawframe." + mCreatedItemId + "__" + mFuNotifyPause,
-                // mCurItemId + "destoryitem--"
-                // + Arrays.toString(itemsArray));
-                if (itemsArray[1] != 0) {
-                    faceunity.fuDestroyItem(itemsArray[1]);
-                    itemsArray[1] = 0;
-                    mEffectItem = 0;
+//            Log.e(TAG, "onDrawFrame>" + mFuNotifyPause + "--"
+//                    + "是否有数据:"
+//                    + (mCameraData != null) + "---" + previewW + "*" + previewH);
 
+            if (mFuNotifyPause) {
+                //暂停绘制道具 (防止道具在界面上闪烁)
+                return textureId;
+            }
+            int effectItem = itemsArray[ITEM_ARRAYS_EFFECT_INDEX];
+//            android.util.Log.e(TAG, "onDrawFrame: " + mCreatedItemId + " >>" + mCurItemId);
+            if ((!mCreatedItemId.equals(mCurItemId))) {
+                if (effectItem != 0) {
+                    faceunity.fuDestroyItem(effectItem);
+                    itemsArray[ITEM_ARRAYS_EFFECT_INDEX] = effectItem = 0;
                 }
                 mCreatedItemId = mCurItemId;
-                mFuNotifyPause = false;
             }
-            int newTexId = 0;
+            int newTexId = textureId;
 
             if (null != mCameraData) {
                 if (!TextUtils.isEmpty(mCurItemId)) {// 开启人脸道具
-                    if (!isSwitching) {
-
-                        if (itemsArray[1] == 0) {
-                            if (inited) {
-                                mhandler.post(readItem);
-                            }
+                    if (itemsArray[ITEM_ARRAYS_EFFECT_INDEX] == 0) {
+                        if (inited) {
+                            mhandler.post(readItem);
                         }
-
-                    } else {
-                        itemsArray[1] = 0;
                     }
                 }
 
-                faceunity.fuItemSetParam(mEffectItem, "isAndroid", 1.0);
-                if (mFacebeautyItem == 0) {// 开启美白
-
+                faceunity.fuItemSetParam(effectItem, "isAndroid", 1.0);
+                int beauty = itemsArray[ITEM_ARRAYS_FACE_BEAUTY_INDEX];
+                if (beauty == 0) {// 开启美白
                     if (inited) {
                         mhandler.post(readBeauty);
                     }
-                }
-
-
-                // long tem = System.currentTimeMillis();
-                if (mFacebeautyItem != 0) {
-                    faceunity.fuItemSetParam(mFacebeautyItem, "color_level",
+                } else {
+                    faceunity.fuItemSetParam(beauty, "color_level",
                             faceHandler.getColor());// 美白
-                    faceunity.fuItemSetParam(mFacebeautyItem, "blur_level",
+                    faceunity.fuItemSetParam(beauty, "blur_level",
                             faceHandler.getBlue());// 磨皮
-                    faceunity.fuItemSetParam(mFacebeautyItem, "cheek_thinning",
+                    faceunity.fuItemSetParam(beauty, "cheek_thinning",
                             faceHandler.getThin()); // 瘦脸(0-2.0f)
-                    faceunity.fuItemSetParam(mFacebeautyItem, "eye_enlarging",
+                    faceunity.fuItemSetParam(beauty, "eye_enlarging",
                             faceHandler.getEye());
 
                 }
@@ -239,23 +268,18 @@ public class FaceuHandler implements IRecorderTextureCallBack,
                         : 0);
                 newTexId = faceunity.fuDualInputToTexture(mCameraData,
                         textureId, flags, previewW, previewH, mFrameId++, itemsArray);
-                // Log.e(mCreatedItemId + " facehaoshiwu thin-"
-                // + Thread.currentThread().getId(),
-                // (System.currentTimeMillis() - tem) + "----/"
-                // + Arrays.toString(itemsArray));
+//                Log.e(TAG, mCreatedItemId + " thread:"
+//                        + Thread.currentThread().getId() + " 耗时：" +
+//                        (System.currentTimeMillis() - tem));
 
 
             } else {
-                //切换正方形长方形时，第一帧返回null，清除当前贴纸效果，防止闪屏
-                faceunity.fuOnCameraChange();
-                mEffectItem = 0;
-                itemsArray[1] = mEffectItem;
-                mFuNotifyPause = true;
-//            Log.e("null----", "画原始贴图222");
+//                Log.e(TAG, "画原始贴图222");
                 newTexId = textureId;
             }
             return newTexId;
         }
+//        Log.e(TAG, "画原始贴图33333333333333");
         return textureId;
 
     }
@@ -276,50 +300,55 @@ public class FaceuHandler implements IRecorderTextureCallBack,
         }
     }
 
-    private boolean isSwitching = false;
 
     /**
-     * 通知切换摄像头
+     * 通知切换摄像头前最后一帧不绘制面具美颜相关
      */
-    public void onSwitchCamare(boolean isSwitchIng) {
-        if (isSupportFace()) {
-            isSwitching = isSwitchIng;
-            if (!isSwitchIng) {
-                if (bInitedSuccessed) {
-                    faceunity.fuOnCameraChange();
-                }
-            }
-            mEffectItem = 0;
-            itemsArray[1] = mEffectItem;
-            mFuNotifyPause = true;
-            mCameraData = null;// 数据重置为null,先画原始贴图
+    public void onSwitchCamareBefore() {
+        mFuNotifyPause = true;
+    }
+
+    /***
+     * 切换摄像头后第一帧绘制原始贴图(不绘制面具美颜相关)
+     */
+    public void onSwitchCamareAfter() {
+        if (bInitedSuccessed) {
+            faceunity.fuOnCameraChange();
         }
+        mFrameId = 0;
+        mFuNotifyPause = false;
     }
 
     private boolean isSupportFace() {
         return (null != faceHandler && faceHandler.isbSupportFace());
     }
 
+    /***
+     * 是否暂停绘制faceu道具
+     * @param fuNotifyPause
+     */
+    public void setFuNotifyPause(boolean fuNotifyPause) {
+        mFuNotifyPause = fuNotifyPause;
+        if (!mFuNotifyPause) {
+            mFrameId = 0;
+        }
+    }
+
+
     public void onPasue() {
-        // Log.e("onpas.....", inited + this.toString());
         if (isSupportFace()) {
             mFuNotifyPause = true;
-            mEffectItem = 0;
-            mFacebeautyItem = 0;
-            if (0 != itemsArray[1]) {
-                if (bInitedSuccessed) {
-                    faceunity.fuDestroyItem(itemsArray[1]);
-                }
-                itemsArray[1] = mEffectItem;
+            int tmp = itemsArray[ITEM_ARRAYS_EFFECT_INDEX];
+            if (0 != tmp) {
+                faceunity.fuDestroyItem(tmp);
+                itemsArray[ITEM_ARRAYS_EFFECT_INDEX] = 0;
             }
-            if (0 != itemsArray[0]) {
-                if (bInitedSuccessed) {
-                    faceunity.fuDestroyItem(itemsArray[0]);
-                }
-                itemsArray[0] = mFacebeautyItem;
+            tmp = itemsArray[ITEM_ARRAYS_FACE_BEAUTY_INDEX];
+            if (0 != tmp) {
+                faceunity.fuDestroyItem(tmp);
+                itemsArray[ITEM_ARRAYS_FACE_BEAUTY_INDEX] = 0;
             }
             mFrameId = 0;
-            // Log.e("clear", this.toString());
             if (bInitedSuccessed) {
                 faceunity.fuOnDeviceLost();
             }
@@ -337,8 +366,6 @@ public class FaceuHandler implements IRecorderTextureCallBack,
             faceHandler.onFinishView();
             faceHandler = null;
         }
-
-        itemsArray = null;
         mCameraData = null;
 
     }

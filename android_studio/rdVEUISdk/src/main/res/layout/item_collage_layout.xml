@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:extCircle="http://schemas.android.com/apk/res-auto"
+              xmlns:fresco="http://schemas.android.com/apk/res-auto"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <com.rd.veuisdk.ui.CircleAnimationView
+            android:id="@+id/ivItemImage"
+            style="@style/effectAniButtonStyle"
+            android:layout_width="@dimen/dimen_40"
+            android:layout_height="@dimen/dimen_40"
+            android:background="@null"
+            extCircle:circleBgColor="@color/transparent"
+            extCircle:circleBorderColor="@color/main_orange"
+            extCircle:circleChecked="false"
+            fresco:actualImageScaleType="fitCenter"
+            fresco:failureImageScaleType="fitCenter"
+            fresco:placeholderImageScaleType="fitCenter"
+            fresco:roundAsCircle="false"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

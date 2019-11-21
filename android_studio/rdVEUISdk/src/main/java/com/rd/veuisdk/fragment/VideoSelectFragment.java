@@ -1,14 +1,14 @@
 package com.rd.veuisdk.fragment;
 
-import android.app.Activity;
-import android.content.Intent;
+import android.annotation.TargetApi;
+import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,9 +30,9 @@ import com.rd.gallery.IImage;
 import com.rd.gallery.IImageList;
 import com.rd.gallery.IVideo;
 import com.rd.gallery.ImageManager;
+import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.veuisdk.ExtPhotoActivity;
 import com.rd.veuisdk.R;
-import com.rd.veuisdk.SelectMediaActivity;
 import com.rd.veuisdk.adapter.BucketListAdapter;
 import com.rd.veuisdk.adapter.MediaListAdapter;
 import com.rd.veuisdk.fragment.PhotoSelectFragment.IMediaSelector;
@@ -40,25 +40,23 @@ import com.rd.veuisdk.model.ImageItem;
 import com.rd.veuisdk.ui.BounceGridView;
 import com.rd.veuisdk.ui.BucketListView;
 import com.rd.veuisdk.ui.ExtProgressDialog;
+import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class VideoSelectFragment extends BaseV4Fragment {
-    private final String TAG = "VideoSelectFragment";
-    private MediaListAdapter mAdapterMedias;
-
+    private MediaListAdapter mAdapter;
     private ExtProgressDialog mPdMediaScanning;
     private IImageList mIlVideos;
 
     private GalleryImageFetcher mGifVideoThumbnail; // 获取视频缩略图
-    private SparseArray<IImage> mVideoSelected = new SparseArray<IImage>();
     private ArrayList<ImageItem> mVideos = new ArrayList<ImageItem>();
-    private ArrayList<String> mBucketNameList = new ArrayList<String>();
     private ArrayList<String> mBucketIdList = new ArrayList<String>();
     private BucketListAdapter mBucketListAdapter;
 
@@ -69,14 +67,15 @@ public class VideoSelectFragment extends BaseV4Fragment {
     private RelativeLayout mRlNoVideos;
     private TextView tvBucketName;
     private ImageView ivSelectBucket;
-
     private IStateCallBack mStateCallBack;
+    private MediaListAdapter.IAdapterListener mIAdapterListener;
 
     @Override
-    public void onAttach(Activity activity) {
+    public void onAttach(Context activity) {
         super.onAttach(activity);
         mMediaSelector = (IMediaSelector) activity;
         mStateCallBack = (IStateCallBack) activity;
+        mIAdapterListener = (MediaListAdapter.IAdapterListener) activity;
     }
 
     @Override
@@ -87,8 +86,8 @@ public class VideoSelectFragment extends BaseV4Fragment {
     }
 
     public void resetAdapter() {
-        if (mAdapterMedias != null) {
-            mAdapterMedias.notifyDataSetChanged();
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -98,9 +97,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
     private void initImageFetcher() {
         ImageCacheParams cacheParams = new ImageCacheParams(getActivity(),
                 Utils.VIDEO_THUMBNAIL_CACHE_DIR);
-        // 缓冲占用系统内存的25%
-        cacheParams.setMemCacheSizePercent(0.05f);
-
+        cacheParams.setMemCacheSizePercent(0.1f);
         mGifVideoThumbnail = new GalleryImageFetcher(getActivity(),
                 getResources().getDimensionPixelSize(
                         R.dimen.video_list_grid_item_width), getResources()
@@ -111,18 +108,16 @@ public class VideoSelectFragment extends BaseV4Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.video_select_layout, null);
-
-        mGridVideosSelector = (BounceGridView) findViewById(R.id.gridVideosSelector);
-        mRlNoVideos = (RelativeLayout) findViewById(R.id.rlNoVideos);
-        tvBucketName = (TextView) findViewById(R.id.tvVideoBuckname);
-        ivSelectBucket = (ImageView) findViewById(R.id.ivVideoBucket);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.video_select_layout, container, false);
+        mGridVideosSelector = $(R.id.gridVideosSelector);
+        mRlNoVideos = $(R.id.rlNoVideos);
+        tvBucketName = $(R.id.tvVideoBuckname);
+        ivSelectBucket = $(R.id.ivVideoBucket);
 
         tvBucketName.setText(R.string.all_video);
 
-        LinearLayout llVideoBucket = (LinearLayout) findViewById(R.id.llVideoBucket);
+        LinearLayout llVideoBucket = $(R.id.llVideoBucket);
         llVideoBucket.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -131,12 +126,10 @@ public class VideoSelectFragment extends BaseV4Fragment {
             }
         });
 
-        mAdapterMedias = new MediaListAdapter(getActivity(),
-                mGifVideoThumbnail, mStateCallBack.isHideText());
-        mBucketListAdapter = new BucketListAdapter(getActivity(),
-                mBucketNameList, true);
-        mVideoSelected.clear();
-
+        mAdapter = new MediaListAdapter(getActivity(),
+                mGifVideoThumbnail, true);
+        mAdapter.setIAdapterListener((MediaListAdapter.IAdapterListener) getActivity());
+        mBucketListAdapter = new BucketListAdapter(getActivity(), true);
         mGridVideosSelector.setOnItemClickListener(itemClickListener);
         mGridVideosSelector.setOnScrollListener(new AbsListView.OnScrollListener() {
 
@@ -151,12 +144,10 @@ public class VideoSelectFragment extends BaseV4Fragment {
             }
 
             @Override
-            public void onScroll(AbsListView view,
-                                 int firstVisibleItem, int visibleItemCount,
-                                 int totalItemCount) {
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
             }
         });
-        mGridVideosSelector.setAdapter(mAdapterMedias);
+        mGridVideosSelector.setAdapter(mAdapter);
 
         return mRoot;
     }
@@ -166,7 +157,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position,
                                 long id) {
-            onIImageItemClick(view, position);
+            onIImageItemClick(position);
         }
     };
     public static final int CODE_EXT_PIC = 105;
@@ -174,49 +165,26 @@ public class VideoSelectFragment extends BaseV4Fragment {
     /**
      * 响应 某照片点击事件
      *
-     * @param view
      * @param position
      */
-    protected void onIImageItemClick(View view, int position) {
+    private void onIImageItemClick(int position) {
 
-        if (position == 0 && SelectMediaActivity.mIsAppend
+        if (position == 0 && mIAdapterListener.isAppend()
                 && !mStateCallBack.isHideText()) {
-            getActivity().startActivityForResult(
-                    new Intent(getActivity(), ExtPhotoActivity.class),
-                    CODE_EXT_PIC);
-
+            ExtPhotoActivity.onTextPic(getActivity(), CODE_EXT_PIC);
         } else {
-            if (mAdapterMedias.getCount() > 0) {
-                ImageItem item = mAdapterMedias.getItem(position);
+            if (mAdapter.getCount() > 0) {
+                ImageItem item = mAdapter.getItem(position);
                 item.selected = !item.selected;
-                mAdapterMedias.refreashItemSelectedState(view, item);
-                if (item.selected) {
-                    if (mVideoSelected.get(item.imageItemKey) == null) {
-                        int returnType = mMediaSelector.addMediaItem(item);
-                        if (returnType == 0) {
-                            mVideoSelected
-                                    .append(item.imageItemKey, item.image);
-                            mAdapterMedias.notifyDataSetChanged();
-                        } else if (returnType == 2) {
-                            item.selected = !item.selected;
-                            mAdapterMedias.refreashItemSelectedState(view,
-                                    item);
-                        } else if (returnType == 1) {
-                            mVideoSelected
-                                    .append(item.imageItemKey, item.image);
-                            mMediaSelector.onImport();
-                        }
-                        mMediaSelector.onRefreshCount();
-                    }
-                } else {
-                    if (mVideoSelected.get(item.imageItemKey) != null) {
-                        mVideoSelected.remove(item.imageItemKey);
-                        mMediaSelector.removeMediaItem(item);
-                        mMediaSelector.resetPosition();
-                        mAdapterMedias.notifyDataSetChanged();
-                        mMediaSelector.onRefreshCount();
-                    }
+                int returnType = mMediaSelector.addMediaItem(item);
+                if (returnType == 0) {
+                    mAdapter.notifyDataSetChanged();
+                } else if (returnType == 2) {
+                    item.selected = !item.selected;
+                } else if (returnType == 1) {
+                    mMediaSelector.onImport();
                 }
+                mMediaSelector.onRefreshCount();
             }
         }
     }
@@ -225,7 +193,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
     public void onStart() {
         super.onStart();
         if (mVideos.size() > 0) {
-            mAdapterMedias.addAll(mVideos);
+            mAdapter.addAll(mVideos);
         } else {
             loadMedias();
         }
@@ -242,8 +210,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
      * @param unmounted
      * @param scanning
      */
-    private void rebakeVideos(boolean unmounted, boolean scanning,
-                              boolean isFirst) {
+    private void rebakeVideos(boolean unmounted, boolean scanning, boolean isFirst) {
         if (mIlVideos != null) {
             mIlVideos.close();
             mIlVideos = null;
@@ -259,24 +226,27 @@ public class VideoSelectFragment extends BaseV4Fragment {
                     getActivity(), getResources().getString(R.string.wait),
                     true, true, null);
         }
+        ArrayList<String> mBucketNameList = new ArrayList<>();
         ImageManager.ImageListParam ilpParam = ImageManager.allVideos(
                 !unmounted && !scanning, true);
         mIlVideos = ImageManager.makeImageList(getActivity()
                 .getContentResolver(), ilpParam);
-        HashMap<String, String> hmAllBucketIds = mIlVideos.getBucketIds();
-        for (Map.Entry<String, String> entry : hmAllBucketIds.entrySet()) {
-            String strBucketId = entry.getKey();
-            if (strBucketId == null) {
-                continue;
+        if (mIlVideos != null) {
+            HashMap<String, String> hmAllBucketIds = mIlVideos.getBucketIds();
+            for (Map.Entry<String, String> entry : hmAllBucketIds.entrySet()) {
+                String strBucketId = entry.getKey();
+                if (strBucketId == null) {
+                    continue;
+                }
+                if (isFirst) {
+                    mBucketIdList.add(strBucketId);
+                    mBucketNameList.add(hmAllBucketIds.get(strBucketId));
+                }
             }
-            if (isFirst) {
-                mBucketIdList.add(strBucketId);
-                mBucketNameList.add(hmAllBucketIds.get(strBucketId));
-            }
-
+            refreshGridViewData(true);
+            mIlVideos.close();
         }
-        refreshGridViewData(true);
-        mIlVideos.close();
+
     }
 
     /**
@@ -285,7 +255,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
      * @param bGetVideoHashable
      * @return
      */
-    private void refreshGridViewData(final boolean bGetVideoHashable) {
+    private void refreshGridViewData(boolean bGetVideoHashable) {
         if (bGetVideoHashable) {
             SysAlertDialog.showLoadingDialog(getActivity(), R.string.isloading);
         }
@@ -296,27 +266,26 @@ public class VideoSelectFragment extends BaseV4Fragment {
             return;
         }
         for (int nTmp = 0; nTmp < mIlVideos.getCount(); nTmp++) {
-            IVideo videoInfo = (IVideo) mIlVideos.getImageAt(nTmp);
+            IImage videoInfo = null;
+            try {
+                videoInfo = mIlVideos.getImageAt(nTmp);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (videoInfo == null || TextUtils.isEmpty(videoInfo.getDataPath())) {
                 continue;
             }
-            if (videoInfo.getId() <= 0 || videoInfo.getDuration() < 1500) {
-                // || videoInfo.getWidth() == 0 || videoInfo.getHeight() == 0
+            if (videoInfo.getId() <= 0 || ((IVideo) videoInfo).getDuration() < 1500) {
                 continue;
             }
             File fv = new File(videoInfo.getDataPath());
             if (fv.exists() && !fv.getName().endsWith(".wmv")) {
                 ImageItem ii = new ImageItem(videoInfo);
                 mVideos.add(ii);
-                ii.selected = mVideoSelected.get(ii.imageItemKey) != null;
-                if (ii.selected) {
-                    mMediaSelector.replaceItem(ii);
-                    mVideoSelected.append(ii.imageItemKey, ii.image);
-                }
             }
         }
 
-        mAdapterMedias.addAll(mVideos);
+        mAdapter.addAll(mVideos);
         mGifVideoThumbnail.setExitTasksEarly(false);
         if (bGetVideoHashable) {
             SysAlertDialog.cancelLoadingDialog();
@@ -347,37 +316,33 @@ public class VideoSelectFragment extends BaseV4Fragment {
                 true, true);
         mIlVideos = ImageManager.makeImageList(getActivity()
                 .getContentResolver(), ilpParam);
-        final HashMap<String, String> hmAllBucketIds = mIlVideos
-                .getBucketIds();
-        mBucketIdList.clear();
-        mBucketNameList.clear();
-        Thread thread = new Thread(new Runnable() {
 
+        mBucketIdList.clear();
+        ThreadPoolUtils.executeEx(new Runnable() {
             @Override
             public void run() {
-                for (Map.Entry<String, String> entry : hmAllBucketIds
-                        .entrySet()) {
+                ArrayList<String> bucketNameList = new ArrayList<>();
+                HashMap<String, String> hmAllBucketIds = mIlVideos.getBucketIds();
+                for (Map.Entry<String, String> entry : hmAllBucketIds.entrySet()) {
                     String strBucketId = entry.getKey();
                     if (strBucketId == null) {
                         continue;
                     }
                     ilpParam.mBucketId = strBucketId;
-                    mIlVideos = ImageManager.makeImageList(getActivity()
-                            .getContentResolver(), ilpParam);
+                    mIlVideos = ImageManager.makeImageList(getActivity().getContentResolver(), ilpParam);
+                    if (null == mIlVideos) {
+                        continue;
+                    }
                     int count = 0;
                     for (int nTmp = 0; nTmp < mIlVideos.getCount(); nTmp++) {
                         IVideo videoInfo = (IVideo) mIlVideos.getImageAt(nTmp);
-                        if (videoInfo == null
-                                || TextUtils.isEmpty(videoInfo.getDataPath())) {
+                        if (videoInfo == null || TextUtils.isEmpty(videoInfo.getDataPath())) {
                             continue;
                         }
-                        if (videoInfo.getId() <= 0
-                                || videoInfo.getDuration() < 1500) {
-                            // || videoInfo.getWidth() == 0
-                            // || videoInfo.getHeight() == 0
+                        if (videoInfo.getId() <= 0 || videoInfo.getDuration() < 1500) {
                             continue;
                         }
-                        if (new File(videoInfo.getDataPath()).exists()) {
+                        if (FileUtils.isExist(videoInfo.getDataPath())) {
                             count++;
                         }
                     }
@@ -385,14 +350,12 @@ public class VideoSelectFragment extends BaseV4Fragment {
                         continue;
                     }
                     mBucketIdList.add(strBucketId);
-                    mBucketNameList.add(hmAllBucketIds.get(strBucketId));
+                    bucketNameList.add(hmAllBucketIds.get(strBucketId));
                 }
-                mhandler.sendEmptyMessage(SHOW_POPUP);
+                mhandler.obtainMessage(SHOW_POPUP, bucketNameList).sendToTarget();
             }
         });
-        thread.start();
-
-        BucketListView lvBuckets = (BucketListView) (contentView.findViewById(R.id.lvBucket));
+        BucketListView lvBuckets = Utils.$(contentView, R.id.lvBucket);
         lvBuckets.setAdapter(mBucketListAdapter);
 
         mPopupWindow = new PopupWindow(contentView, LayoutParams.WRAP_CONTENT,
@@ -406,20 +369,16 @@ public class VideoSelectFragment extends BaseV4Fragment {
 
                 if (position == 0) {
                     tvBucketName.setText(R.string.allvideo);
-
                     rebakeVideos(false, false, false);
                 } else {
-                    tvBucketName.setText(mBucketNameList.get(position - 1));
-
+                    tvBucketName.setText(mBucketListAdapter.getItem(position - 1));
                     ImageManager.ImageListParam ilpParam = ImageManager
                             .allVideos(true, false);
 
                     ilpParam.mBucketId = mBucketIdList.get(position - 1); // 某个分类id,获取指定分类的视频或图片
                     mIlVideos = ImageManager.makeImageList(getActivity()
                             .getContentResolver(), ilpParam);
-
                     refreshGridViewData(true);
-
                 }
                 mPopupWindow.dismiss();
             }
@@ -441,42 +400,35 @@ public class VideoSelectFragment extends BaseV4Fragment {
         });
     }
 
-    public void showPopup(View v) {
-        showPopupWindow(v);
-    }
 
     private final int GETVIDEO_NO = 6;
     private final int SHOW_POPUP = 11;
     private Handler mhandler = new Handler(Looper.getMainLooper()) {
 
+        @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case GETVIDEO_NO:
-                    mRlNoVideos
-                            .setVisibility(mAdapterMedias.getCount() > 0 ? View.GONE
-                                    : View.VISIBLE);
+                    if (getActivity() != null && !getActivity().isDestroyed()) {
+                        mRlNoVideos
+                                .setVisibility(mAdapter.getCount() > 0 ? View.GONE
+                                        : View.VISIBLE);
+                    }
                     break;
                 case SHOW_POPUP:
-                    mPopupWindow.showAsDropDown(mPopupView);
-                    ivSelectBucket.setImageResource(R.drawable.select_bucket_dropup);
+                    if (getActivity() != null && !getActivity().isDestroyed()) {
+                        List<String> list = (List<String>) msg.obj;
+                        mBucketListAdapter.update(list);
+                        mPopupWindow.showAsDropDown(mPopupView);
+                        ivSelectBucket.setImageResource(R.drawable.select_bucket_dropup);
+                    }
                     break;
                 default:
                     break;
             }
         }
-
-        ;
     };
 
-    public SparseArray<IImage> getMedia() {
-        return mVideoSelected;
-    }
-
-    @Override
-    public void onDestroyView() {
-        mVideoSelected.clear();
-        super.onDestroyView();
-    }
 
     @Override
     public void onDestroy() {
@@ -484,6 +436,7 @@ public class VideoSelectFragment extends BaseV4Fragment {
             mIlVideos.close();
             mIlVideos = null;
         }
+        mAdapter.recycle();
         mGridVideosSelector.setAdapter(null);
         mGifVideoThumbnail.cleanUpCache();
         mGifVideoThumbnail = null;

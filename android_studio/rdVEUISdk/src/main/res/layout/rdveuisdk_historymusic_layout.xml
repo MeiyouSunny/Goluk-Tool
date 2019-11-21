@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/llTitle"
         android:layout_width="match_parent"
         android:layout_height="45dp"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <com.rd.lib.ui.ExtButton
             android:id="@+id/delete_history"
             style="@style/music_library_titlemenu"
             android:layout_centerInParent="true"
             android:drawableRight="@drawable/music_library_delete"
-            android:text="@string/music_history_delete" />
+            android:text="@string/music_history_delete"/>
 
         <CheckBox
             android:id="@+id/cbSelectAll"
@@ -25,10 +25,10 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/music_library_deleteall"
-            android:button="@null" />
+            android:button="@null"/>
     </RelativeLayout>
 
-    <com.rd.veuisdk.hb.views.PinnedSectionListView
+    <ListView
         android:id="@+id/expandable_mymusic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -39,12 +39,12 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:listSelector="@color/transparent"
-        android:scrollbars="@null" />
+        />
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/llTitle"
-        android:background="@color/edit_music_divider" />
+        android:background="@color/edit_music_divider"/>
 
 </RelativeLayout>

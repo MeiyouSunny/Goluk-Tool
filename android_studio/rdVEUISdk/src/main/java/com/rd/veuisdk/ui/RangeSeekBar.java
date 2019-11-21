@@ -18,8 +18,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
 
-import com.rd.lib.utils.PaintUtils;
 import com.rd.veuisdk.R;
+import com.rd.veuisdk.hb.views.MyRefreshLayout;
 import com.rd.veuisdk.utils.DateTimeUtils;
 
 /***
@@ -70,7 +70,6 @@ public class RangeSeekBar extends View {
     private boolean mIsDragging;
     private Bitmap tempBgBmp;
     private Bitmap rangSbarHintBmp;
-    private int textHeight;
     private int mTouchedWidth;
     private boolean isAutoScroll = true;
 
@@ -147,7 +146,7 @@ public class RangeSeekBar extends View {
                 R.color.progress_between);
         progressProgressColor = getResources().getColor(
                 R.color.progress_progress);
-        progresTextColor = getResources().getColor(R.color.kxblue);
+        progresTextColor = getResources().getColor(R.color.main_color);
         mPaint.setColor(progresTextColor);
 
         mPaint.setAntiAlias(true);
@@ -181,14 +180,12 @@ public class RangeSeekBar extends View {
 
         lineHeight = 0.1f * 0.5f * mMinBmp.getHeight();
 
-        int[] wh = PaintUtils.getHeight(mPaint);
-        textHeight = wh[0];
         padding = thumbWidth / 2;
         setFocusable(true);
         setFocusableInTouchMode(true);
 
         mTouchedWidth = rangSbarHintBmp.getWidth();
-        init();
+        mScaledTouchSlop = ViewConfiguration.get(getContext()).getScaledTouchSlop();
     }
 
     /**
@@ -202,11 +199,6 @@ public class RangeSeekBar extends View {
         this.mMax = mMax;
         progress = 0;
         invalidate();
-    }
-
-    private void init() {
-        mScaledTouchSlop = ViewConfiguration.get(getContext())
-                .getScaledTouchSlop();
     }
 
 
@@ -260,8 +252,12 @@ public class RangeSeekBar extends View {
                 if (pressedThumb == null) {
                     getParent().requestDisallowInterceptTouchEvent(false);
                     invalidate();
+                    ExtViewPager.setNoScroll(false);
+                    MyRefreshLayout.setNoScroll(false);
                     return super.onTouchEvent(event);
                 } else {
+                    ExtViewPager.setNoScroll(true);
+                    MyRefreshLayout.setNoScroll(true);
                     getParent().requestDisallowInterceptTouchEvent(true);
                     isAutoScroll = false;
                     setPressed(true);
@@ -269,7 +265,6 @@ public class RangeSeekBar extends View {
                     onStartTrackingTouch();
                     trackTouchEvent(event);
                     attemptClaimDrag();
-
                     if (null != listener) {
                         listener.onActionDown(progress);
                     }
@@ -285,7 +280,7 @@ public class RangeSeekBar extends View {
                         trackTouchEvent(event);
                     } else {
                         pointerIndex = event.findPointerIndex(mActivePointerId);
-                        final float x = event.getX(pointerIndex);
+                        float x = event.getX(pointerIndex);
                         if (Math.abs(x - mDownMotionX) > mScaledTouchSlop) {
                             setPressed(true);
                             invalidate();
@@ -294,12 +289,9 @@ public class RangeSeekBar extends View {
                             attemptClaimDrag();
                         }
                     }
-
                     mMinStr = DateTimeUtils.stringForTime(getSelectedMinValue());
-
                     if (listener != null) {
-                        listener.onRangeSeekBarValuesChanged(this,
-                                getSelectedMinValue(), getSelectedMaxValue());
+                        listener.onRangeSeekBarValuesChanged(this, getSelectedMinValue(), getSelectedMaxValue());
                     }
                     invalidate();
                 } else {
@@ -311,7 +303,8 @@ public class RangeSeekBar extends View {
             case MotionEvent.ACTION_UP: {
                 getParent().requestDisallowInterceptTouchEvent(false);
                 isAutoScroll = true;
-
+                ExtViewPager.setNoScroll(false);
+                MyRefreshLayout.setNoScroll(false);
                 if (pressedThumb == null) {
                     return super.onTouchEvent(event);
                 }
@@ -330,6 +323,7 @@ public class RangeSeekBar extends View {
                     listener.onPlay(progress);
                 }
                 invalidate();
+
                 break;
             }
             case MotionEvent.ACTION_POINTER_DOWN: {
@@ -341,11 +335,15 @@ public class RangeSeekBar extends View {
                 break;
             }
             case MotionEvent.ACTION_POINTER_UP:
+                ExtViewPager.setNoScroll(false);
+                MyRefreshLayout.setNoScroll(false);
                 isAutoScroll = true;
                 onSecondaryPointerUp(event);
                 invalidate();
                 break;
             case MotionEvent.ACTION_CANCEL:
+                ExtViewPager.setNoScroll(false);
+                MyRefreshLayout.setNoScroll(false);
                 getParent().requestDisallowInterceptTouchEvent(false);
                 isAutoScroll = true;
                 if (mIsDragging) {
@@ -370,7 +368,6 @@ public class RangeSeekBar extends View {
 
     private final void onSecondaryPointerUp(MotionEvent ev) {
         final int pointerIndex = (ev.getAction() & ACTION_POINTER_INDEX_MASK) >> ACTION_POINTER_INDEX_SHIFT;
-
         final int pointerId = ev.getPointerId(pointerIndex);
         if (pointerId == mActivePointerId) {
             final int newPointerIndex = pointerIndex == 0 ? 1 : 0;
@@ -721,7 +718,7 @@ public class RangeSeekBar extends View {
                     }
 
                 }
-                c.save(Canvas.ALL_SAVE_FLAG);// 保存
+                c.save();// 保存
                 c.restore();// 存储
             }
         }

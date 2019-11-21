@@ -2,10 +2,8 @@ package com.rd.veuisdk.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Handler;
-import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,47 +13,59 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.rd.cache.GalleryImageFetcher;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.rd.downfile.utils.DownLoadUtils;
-import com.rd.downfile.utils.IDownFileListener;
+import com.rd.downfile.utils.IDownListener;
 import com.rd.lib.utils.CoreUtils;
+import com.rd.lib.utils.LogUtil;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.database.TTFData;
 import com.rd.veuisdk.model.TtfInfo;
+import com.rd.veuisdk.net.TTFUtils;
 import com.rd.veuisdk.ui.CircleProgressBarView;
+import com.rd.veuisdk.ui.SimpleDraweeViewUtils;
 import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.PathUtils;
+import com.rd.veuisdk.utils.Utils;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
+/**
+ * 字体
+ */
 public class TTFAdapter extends BaseAdapter {
 
     public static final String ACTION_TTF = "action_ttf";
-
     private ArrayList<TtfInfo> mTTFList = new ArrayList<TtfInfo>();
     private Context mContext;
     private LayoutInflater mInflater;
-    private GalleryImageFetcher mFetcher;
-    private float mDensity;
+    private boolean isHDIcon = false;
+    private boolean bCustomApi = false; //是否是自定义的网络字体
+    private int textColorN;
+    private int textColorP;
 
-    public TTFAdapter(Context c, GalleryImageFetcher _fetcher) {
+    /**
+     * @param c
+     * @param customApi 是否自定义字体网络接口
+     */
+    public TTFAdapter(Context c, boolean customApi) {
+        bCustomApi = customApi;
         mContext = c;
-        mDensity = mContext.getResources().getDisplayMetrics().density;
         mTTFList.clear();
         mInflater = LayoutInflater.from(mContext);
-        mFetcher = _fetcher;
-
+        textColorN = mContext.getResources().getColor(
+                R.color.transparent_white);
+        textColorP = mContext.getResources().getColor(
+                R.color.main_orange);
+        isHDIcon = TTFUtils.isHDIcon(mContext);
     }
 
     public void add(ArrayList<TtfInfo> _list) {
         mTTFList.clear();
         mTTFList.addAll(_list);
-        mMaps.clear();
+        mSparseArray.clear();
         notifyDataSetChanged();
     }
 
@@ -96,11 +106,10 @@ public class TTFAdapter extends BaseAdapter {
         if (null == convertView) {
             vh = new ViewHolder();
             convertView = mInflater.inflate(R.layout.item_ttf_layout, null);
-            vh.tv = (TextView) convertView.findViewById(R.id.ttf_tv);
-            vh.img = (ImageView) convertView.findViewById(R.id.ttf_img);
-            vh.ivState = (ImageView) convertView.findViewById(R.id.ttf_state);
-            vh.progressBar = (CircleProgressBarView) convertView
-                    .findViewById(R.id.ttf_pbar);
+            vh.tv = Utils.$(convertView, R.id.ttf_tv);
+            vh.cover = Utils.$(convertView, R.id.ttf_img);
+            vh.ivState = Utils.$(convertView, R.id.ttf_state);
+            vh.progressBar = Utils.$(convertView, R.id.ttf_pbar);
             listener = new onDownLoadListener();
             vh.ivState.setOnClickListener(listener);
             vh.ivState.setTag(listener);
@@ -110,72 +119,58 @@ public class TTFAdapter extends BaseAdapter {
             vh = (ViewHolder) convertView.getTag();
             listener = (onDownLoadListener) vh.ivState.getTag();
         }
-
         TtfInfo info = getItem(position);
+
         if (null != info) {
             if (position == 0) {
                 vh.tv.setVisibility(View.VISIBLE);
                 vh.tv.setText(info.local_path);
-                vh.img.setVisibility(View.GONE);
+                vh.cover.setVisibility(View.GONE);
             } else {
                 vh.tv.setText("");
                 vh.tv.setVisibility(View.GONE);
-                vh.img.setVisibility(View.VISIBLE);
+                vh.cover.setVisibility(View.VISIBLE);
+
+                //字体icon
+                if (bCustomApi) {
+                    //435, 84  原图，*0.65x    0.4X 174， 34    0.45X  195,38
+                    loadCover(vh.cover, info.icon);
+                } else {
+                    if (FileUtils.isExist(info.icon)) {
+                        loadCover(vh.cover, info.icon);
+                    }
+                }
             }
-
-            if (mDensity > 2.01) {
-                mFetcher.loadImage(PathUtils.getRdTtfPath() + "/icon/icon_2_"
-                        + info.code + "_n_@3x.png", vh.img);
-            } else {
-                mFetcher.loadImage(PathUtils.getRdTtfPath() + "/icon/icon_2_"
-                        + info.code + "_n_@2x.png", vh.img);
-            }
-
-            vh.tv.setTextColor(mContext.getResources().getColor(
-                    R.color.transparent_white));
-
+            vh.tv.setTextColor(textColorN);
+            vh.ivState.setVisibility(View.GONE);
             if (info.isdownloaded() || position == 0) {
                 vh.progressBar.setVisibility(View.GONE);
-                vh.ivState.setVisibility(View.GONE);
-
                 if (mCheckPosition == position) {
                     if (position == 0) {
-                        vh.tv.setTextColor(mContext.getResources().getColor(
-                                R.color.main_orange));
-
+                        if (!bCustomApi) {
+                            vh.tv.setTextColor(textColorP);
+                        } else {
+                            vh.ivState.setVisibility(View.VISIBLE);
+                            vh.ivState.setImageResource(R.drawable.public_menu_sure);
+                        }
                     } else {
-                        try {
-                            FileInputStream fis;
-
-                            if (mDensity > 2.01) {
-                                fis = new FileInputStream(
-                                        info.local_path.substring(0,
-                                                info.local_path
-                                                        .lastIndexOf("/"))
-                                                + "/selected/icon_2_"
-                                                + info.code + "_s_@3x.png");
-                            } else {
-                                fis = new FileInputStream(
-                                        info.local_path.substring(0,
-                                                info.local_path
-                                                        .lastIndexOf("/"))
-                                                + "/selected/icon_2_"
-                                                + info.code + "_s_@2x.png");
-                            }
-                            Bitmap bm = BitmapFactory.decodeStream(fis);
-                            vh.img.setImageBitmap(bm);
-                        } catch (FileNotFoundException e) {
-                            e.printStackTrace();
+                        if (!bCustomApi) {
+                            getFixIcon(info.local_path, info.code, vh.cover);
+                        } else {
+                            //网络字体已下载的被选中状态
+                            vh.ivState.setVisibility(View.VISIBLE);
+                            vh.ivState.setImageResource(R.drawable.public_menu_sure);
                         }
                     }
                 }
             } else {
-                boolean isloading = mMaps.containsKey((long) info.id);
-                if (isloading) {
+                LineProgress lineProgress = mSparseArray.get(info.id);
+                if (null != lineProgress) {
                     vh.ivState.setVisibility(View.GONE);
                     vh.progressBar.setVisibility(View.VISIBLE);
-                    vh.progressBar.setProgress(mMaps.get((long) info.id).getProgress());
+                    vh.progressBar.setProgress(lineProgress.getProgress());
                 } else {
+                    vh.ivState.setImageResource(R.drawable.down_btn);
                     vh.ivState.setVisibility(View.VISIBLE);
                     vh.progressBar.setVisibility(View.GONE);
                 }
@@ -187,6 +182,27 @@ public class TTFAdapter extends BaseAdapter {
         return convertView;
     }
 
+    /***
+     * 选中状态下的图片
+     * @param local_path
+     * @param code
+     * @param img
+     */
+    @Deprecated
+    private void getFixIcon(String local_path, String code, SimpleDraweeView img) {
+        String path;
+        if (isHDIcon) {
+            path = local_path.substring(0, local_path.lastIndexOf("/")) + "/selected/icon_2_" + code + "_s_@3x.png";
+        } else {
+            path = local_path.substring(0, local_path.lastIndexOf("/")) + "/selected/icon_2_" + code + "_s_@2x.png";
+        }
+        loadCover(img, path);
+    }
+
+    private void loadCover(SimpleDraweeView img, String path) {
+        SimpleDraweeViewUtils.setCover(img, path, false, 348, 67);
+    }
+
     private GridView listview;
 
     public void setListview(GridView _listview) {
@@ -195,15 +211,12 @@ public class TTFAdapter extends BaseAdapter {
     }
 
     private View getChildAt(int position) {
-
         try {
-            return listview.getChildAt(position
-                    - listview.getFirstVisiblePosition());
+            return listview.getChildAt(position - listview.getFirstVisiblePosition());
         } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
-
     }
 
     private class onDownLoadListener implements OnClickListener {
@@ -220,168 +233,141 @@ public class TTFAdapter extends BaseAdapter {
 
         @Override
         public void onClick(View v) {
-
             onDown(position, ivState, progressBar);
-
         }
 
     }
 
-    private HashMap<Long, LineProgress> mMaps = new HashMap<Long, LineProgress>();
+    private int mItemHeight = 0;
+
+    public void setItemHeight(int height) {
+        mItemHeight = height;
+    }
+
+    private SparseArray<LineProgress> mSparseArray = new SparseArray<LineProgress>();
     private ArrayList<Integer> mArrPosition = new ArrayList<Integer>();
 
     public static final String TTF_ITEM = "ttf_item";
     public static final String TTF_ITEM_POSITION = "ttf_item_position";
+    private String TAG = "TTFAdapter";
 
     /**
      * 执行下载
-     *
      */
+
     public void onDown(final int position, ImageView ivState, CircleProgressBarView progressBar) {
-        if (mMaps.size() > 3) { // 最多同时下载3个
+        if (mSparseArray.size() > 3) { // 最多同时下载3个
             return;
         }
-        if (CoreUtils.checkNetworkInfo(ivState.getContext()) == CoreUtils.UNCONNECTED) {
-            com.rd.veuisdk.utils.Utils.autoToastNomal(ivState.getContext(),
-                    R.string.please_check_network);
+        if (null != mContext && CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
+            Utils.autoToastNomal(mContext, R.string.please_check_network);
             return;
         }
-        for (int p : mArrPosition) {
+        for (Integer p : mArrPosition) {
             if (p == position) {
                 return;
             }
         }
 
         final TtfInfo info = getItem(position);
+        if (info.isdownloaded()) {
+            //防止已下载再次点击
+            return;
+        }
         mArrPosition.add(position);
-        DownLoadUtils utils = new DownLoadUtils(info.id, info.url, "zipp");
+        String localPath = PathUtils.getTempFileNameForSdcard(PathUtils.TEMP + "_" + info.code
+                , bCustomApi ? "zip" : "zipp");
+        DownLoadUtils utils = new DownLoadUtils(mContext, info.id, info.url, localPath);
         utils.setConfig(0, 10, 500);
-        utils.DownFile(new IDownFileListener() {
+        utils.DownFile(new IDownListener() {
+
+            @Override
+            public void onFailed(long mid, int i) {
+                Log.e(TAG, "onFailed: " + mid + ">>" + i);
+                mSparseArray.remove((int) mid);
+                notifyDataSetChanged();
+            }
 
             @Override
             public void onProgress(long mid, int progress) {
-                // Log.e("onprogres...." + mid, progress + "......");
-                LineProgress line = mMaps.get(mid);
+                LogUtil.i(TAG, "onProgress:" + mid + " >" + progress);
+                int key = (int) mid;
+                LineProgress line = mSparseArray.get(key);
                 if (null != line) {
                     line.setProgress(progress);
-                    mMaps.put(mid, line);
-                    mhandler.sendMessage(mhandler.obtainMessage(PROGRESS, mid));
+                    View child = getChildAt(line.getPosition());
+                    if (null != child) {
+                        View ivState = Utils.$(child, R.id.ttf_state);
+                        if (null != ivState) {
+                            ivState.setVisibility(View.GONE);
+                        }
+                        CircleProgressBarView progressBar = Utils.$(child, R.id.ttf_pbar);
+                        if (null != progressBar) {
+                            progressBar.setProgress(progress);
+                            progressBar.setVisibility(View.VISIBLE);
+                        }
+                        line.setProgress(progress);
+                    }
+
                 }
             }
 
             @Override
             public void Canceled(long mid) {
-                // Log.e("Canceled....", mid + ".........");
-                mMaps.remove(mid);
-                mhandler.sendMessage(mhandler.obtainMessage(CANCEL,
-                        String.valueOf(mid)));
-
+                Log.e(TAG, "Canceled: " + mid);
+                mSparseArray.remove((int) mid);
+                notifyDataSetChanged();
             }
 
             @Override
             public void Finished(long mid, String localPath) {
+                LogUtil.i(TAG, "Finished:" + mid);
                 mCheckPosition = position;
                 mArrPosition.remove((Object) position);
-                File fold = new File(localPath);
-                File zip = new File(fold.getParent() + "/" + info.code
-                        + ".zipp");
-                fold.renameTo(zip);
-                String dirpath = null;
-                if (zip.exists()) { // 解压
-                    try {
-                        dirpath = FileUtils.unzip(zip.getAbsolutePath(),
-                                PathUtils.getRdTtfPath());
-                        if (!TextUtils.isEmpty(dirpath)) {
-                            zip.delete(); // 删除原mv的临时文件
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                try {
+                    // 解压
+                    String dirpath = FileUtils.unzip(localPath, PathUtils.getRdTtfPath());
+                    //字体路径
+                    info.local_path = new File(dirpath, info.code + ".ttf").getAbsolutePath();
+                    // 更新单个
+                    TTFData.getInstance().replace(info);
+                    notifyDataSetChanged();
+                    if (null != mContext) {
+                        Intent intent = new Intent(ACTION_TTF);
+                        intent.putExtra(TTF_ITEM, info.local_path);
+                        intent.putExtra(TTF_ITEM_POSITION, position);
+                        mContext.sendBroadcast(intent);
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                // Log.e("onfisish....", localPath + "......." +
-                // info.toString());
-                // 更新单个
-
-                info.local_path = dirpath.substring(0,
-                        dirpath.lastIndexOf("selected/"))
-                        + info.code + ".ttf";
-                long re = TTFData.getInstance().replace(info);
-                // Log.e("onfisish....", re + "....." + localPath);
-                mMaps.remove(mid);
-
-                mhandler.sendMessage(mhandler.obtainMessage(FINISHED,
-                        String.valueOf(mid)));
-                Intent bsen = new Intent(ACTION_TTF);
-                bsen.putExtra(TTF_ITEM, info.local_path);
-                bsen.putExtra(TTF_ITEM_POSITION, position);
-                mContext.sendBroadcast(bsen);
-
+                mSparseArray.remove((int) mid);
             }
         });
-        mMaps.put((long) info.id, new LineProgress(position, 0));
-        ivState.setVisibility(View.GONE);
-        progressBar.setVisibility(View.VISIBLE);
-
-        progressBar.setProgress(0);
-
+        mSparseArray.put((int) info.id, new LineProgress(position, 0));
+        if (null != ivState) {
+            ivState.setVisibility(View.GONE);
+        }
+        if (null != progressBar) {
+            progressBar.setVisibility(View.VISIBLE);
+            progressBar.setProgress(0);
+        }
     }
 
-    private final int PROGRESS = 2, FINISHED = 3, CANCEL = 4;
-    private long lastReflesh = System.currentTimeMillis();
-    private Handler mhandler = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            switch (msg.what) {
-                case PROGRESS:
-                    if (System.currentTimeMillis() - lastReflesh > 1500) { // 减少刷新频率
-
-                        LineProgress temp = mMaps.get(Long.parseLong(msg.obj
-                                .toString()));
-
-                        // Log.e("progress...1111111.", msg.arg1 + "..........."
-                        // + msg.arg2 + "////" + temp.toString());
-                        View child = getChildAt(temp.getPosition());
-                        if (null != child) {
-                            View ivState = child.findViewById(R.id.ttf_state);
-                            ivState.setVisibility(View.GONE);
-                            CircleProgressBarView progressBar = (CircleProgressBarView) child
-                                    .findViewById(R.id.ttf_pbar);
-                            progressBar.setProgress(temp.getProgress());
-                            progressBar.setVisibility(View.VISIBLE);
-                            // Log.e("progress....", temp.toString());
-
-                        } else {
-
-                        }
-                        lastReflesh = System.currentTimeMillis();
-                    }
-                    break;
-                case FINISHED:
-                    notifyDataSetChanged();
-                    break;
-                case CANCEL:
-                    notifyDataSetChanged();
-                    break;
-
-                default:
-                    break;
-            }
-        }
-
-        ;
-    };
 
     /**
      * 退出全部下载
      */
     public void onDestory() {
-        if (null != mMaps && mMaps.size() > 0) {
-            mMaps.clear();
+        if (null != mSparseArray && mSparseArray.size() > 0) {
+            mSparseArray.clear();
             DownLoadUtils.forceCancelAll();
         }
     }
 
     private class ViewHolder {
-        private ImageView img, ivState;
+        private ImageView ivState;
+        private SimpleDraweeView cover;
         private TextView tv;
         private CircleProgressBarView progressBar;
     }

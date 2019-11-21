@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.rd.veuisdk.ui.exoplayer.AspectRatioFrameLayout
+        android:id="@+id/rd_exo_content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+
+
+    </com.rd.veuisdk.ui.exoplayer.AspectRatioFrameLayout>
+
+
+
+</merge>

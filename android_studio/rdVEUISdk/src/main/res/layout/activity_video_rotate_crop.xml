@@ -2,18 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/crop_rotate_main_bg"
+              android:background="@color/dark_bg"
               android:orientation="vertical">
 
-    <include layout="@layout/rdveuisdk_public_title_bar"/>
-
-    <!-- 16:9 的视频 -->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="@color/crop_rotate_main_bg"
         android:gravity="center">
 
         <com.rd.lib.ui.PreviewFrameLayout
@@ -31,10 +27,11 @@
             <com.rd.veuisdk.crop.CropView
                 android:id="@+id/cvVideoCrop"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
 
             <ImageView
-                android:id="@+id/ivVideoConver"
+                android:id="@+id/ivVideoCover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/public_editor_backgroup"
@@ -43,56 +40,197 @@
         </com.rd.lib.ui.PreviewFrameLayout>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/llRotateMirror"
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="77.5dp"
-        android:background="@color/public_menu_back_color"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:visibility="visible">
+        android:background="@color/black"
+        android:layout_height="wrap_content">
 
-        <ImageView
-            android:id="@+id/ivRotateCounterClock"
-            style="@style/crop_rotate_mirror_style"
-            android:onClick="clickView"
-            android:src="@drawable/crop_rotate_counter_clockwise"/>
+        <LinearLayout
+            android:id="@+id/llReplace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/ivMirrorUpdown"
-            style="@style/crop_rotate_mirror_style"
-            android:onClick="clickView"
-            android:src="@drawable/crop_mirror_updown"/>
+            <include layout="@layout/filter_lookup_sbar_layout"/>
 
-        <ImageView
-            android:id="@+id/ivMirrorLeftright"
-            style="@style/crop_rotate_mirror_style"
-            android:onClick="clickView"
-            android:src="@drawable/crop_mirror_leftright"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvResetAll"
-            android:layout_width="wrap_content"
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerViewFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- 旋转和裁剪-->
+        <LinearLayout
+            android:id="@+id/mRCLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:onClick="clickView"
-            android:padding="10dp"
-            android:text="@string/crop_mirror_reset"
-            android:textColor="@color/main_orange"
-            android:textSize="@dimen/text_size_14"/>
+            android:orientation="vertical"
+            android:visibility="visible">
 
-        <ImageView
-            android:id="@+id/ivProportion"
-            style="@style/crop_rotate_mirror_style"
-            android:onClick="clickView"
-            android:src="@drawable/edit_proportion"/>
-    </LinearLayout>
+            <CheckBox
+                android:id="@+id/cbApplyToAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:layout_marginLeft="10dp"
+                android:layout_gravity="center_vertical"
+                android:button="@drawable/toning_all"
+                android:text="@string/transition_apply_to_all"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_13"/>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@color/public_menu_back_color">
+            <LinearLayout
+                android:id="@+id/llRotateMirror"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
 
-        <include layout="@layout/public_menu"/>
-    </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/tvResetAll"
+                        style="@style/crop_rotate_mirror_style"
+                        android:onClick="clickView"
+                        android:padding="10dp"
+                        android:background="@drawable/btn_subtitle_color_default"
+                        />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="15dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ivMirrorUpdown"
+                            style="@style/crop_rotate_mirror_style"
+                            android:onClick="clickView"
+                            android:text="@string/mirror_ver"
+                            android:background="@drawable/shape_rb_button"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ivMirrorLeftright"
+                            style="@style/crop_rotate_mirror_style"
+                            android:text="@string/mirror_hor"
+                            android:onClick="clickView"
+                            android:background="@drawable/shape_rb_button"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/ivRotate"
+                            style="@style/crop_rotate_mirror_style"
+                            android:onClick="clickView"
+                            android:text="@string/crop_rotate"
+                            android:background="@drawable/shape_rb_button"/>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/transparent20_white"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"></View>
+
+
+            <LinearLayout
+                android:id="@+id/ivProportionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="68dp"
+                android:padding="1dp"
+                android:gravity="center_vertical"
+                android:background="@color/black"
+                android:clickable="false"
+                android:orientation="horizontal"
+                >
+
+                <RadioGroup
+                    android:id="@+id/rgCropProportionLine"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbCropOriginal"
+                        style="@style/rb_proportion_style"
+                        android:drawableTop="@drawable/crop_original"
+                        android:checked="true"
+                        android:text="@string/proportion_ori"/>
+
+                    <RadioButton
+                        android:id="@+id/rbCropFree"
+                        style="@style/rb_proportion_style"
+                        android:drawableTop="@drawable/crop_free"
+                        android:text="@string/crop_free"/>
+
+                    <RadioButton
+                        android:id="@+id/rbProportion1x1"
+                        style="@style/rb_proportion_style"
+                        android:drawableTop="@drawable/proportion_1x1"
+                        android:text="@string/proportion_1x1"/>
+
+                    <RadioButton
+                        android:id="@+id/rbProportion169"
+                        style="@style/rb_proportion_style"
+                        android:drawableTop="@drawable/proportion_169"
+                        android:text="@string/proportion_16x9"/>
+
+                    <RadioButton
+                        android:id="@+id/rbProportion916"
+                        style="@style/rb_proportion_style"
+                        android:drawableTop="@drawable/proportion_916"
+                        android:text="@string/proportion_9x16"/>
+
+                </RadioGroup>
+
+
+            </LinearLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <include layout="@layout/layout_bottom_menu"/>
 
 </LinearLayout>

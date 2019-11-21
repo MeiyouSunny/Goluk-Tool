@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="2dp"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:minWidth="55dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/subtitle_seekbar_stroke"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="@dimen/text_size_12"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="@string/subtitle_thin"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12"/>
+
+            </LinearLayout>
+
+
+            <SeekBar
+                android:id="@+id/sbStrokeWdith"
+                style="@style/seekbar_style"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="-5dp"
+                android:layout_marginRight="-15dp"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:minWidth="45dp"
+                android:text="@string/subtitle_wide"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

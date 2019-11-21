@@ -10,7 +10,11 @@ public class FrameInfo {
         return "FrameInfo [time=" + time + ", pic=" + pic + "]";
     }
 
-    //当前帧的显示时刻
+    public FrameInfo() {
+    }
+
+
+    //当前帧的显示时刻  单位：ms
     public int time;
     //当前帧的背景图路径
     public String pic;

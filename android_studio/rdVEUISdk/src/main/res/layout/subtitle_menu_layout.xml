@@ -3,21 +3,22 @@
               android:id="@+id/subtitle_menu_layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#3C3B43"
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/thelocation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <!--动态调整Y-->
         <LinearLayout
+            android:id="@+id/thelocation"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/input_edit_parent_height"
             android:layout_gravity="center_vertical"
-            android:background="#242424"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone"
+            >
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -43,93 +44,148 @@
                     <EditText
                         android:id="@+id/subtitle_et"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_toLeftOf="@+id/ivClear"
                         android:background="@drawable/subtitle_edittext_background"
                         android:hint="@string/sub_hint"
+                        android:imeOptions="actionDone"
                         android:maxLength="100"
                         android:padding="5dp"
-                        android:maxLines="1"
+                        android:singleLine="false"
                         android:textColor="@color/transparent_white"
                         android:textSize="@dimen/text_size_16"/>
                 </RelativeLayout>
             </RelativeLayout>
 
-            <TextView
+            <com.rd.lib.ui.ExtButton
                 android:id="@+id/subtitle_save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginRight="3dp"
                 android:background="@drawable/music_library_additem_bg"
                 android:gravity="center"
-                android:minHeight="25dp"
                 android:minWidth="45dp"
-                android:text="@string/add"
+                android:minHeight="25dp"
+                android:text="@string/complete"
                 android:textColor="@color/special_bg"/>
         </LinearLayout>
 
-        <RadioGroup
-            android:id="@+id/subtitle_menu_group"
+        <RelativeLayout
+            android:id="@+id/rlStApplyToAll"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#3C3B43"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content">
 
-            <RadioButton
-                android:id="@+id/subtitle_style"
-                style="@style/sub_menu_rbtn_style"
-                android:checked="true"
-                android:text="@string/subtitle_style"/>
+            <CheckBox
+                android:id="@+id/cbStApplyToAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:button="@null"
+                android:drawableLeft="@drawable/toning_all"
+                android:text="@string/st_style_apply_to_all"
+                android:textColor="@drawable/subtitle_apply_to_all_text_color"
+                android:textSize="@dimen/text_size_13"/>
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/edit_music_divider"/>
+        </RelativeLayout>
 
-            <RadioButton
-                android:id="@+id/subtitle_ttf"
-                style="@style/sub_menu_rbtn_style"
-                android:text="@string/subtitle_font_style"/>
 
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/edit_music_divider"/>
-
-            <RadioButton
-                android:id="@+id/subtitle_color"
-                style="@style/sub_menu_rbtn_style"
-                android:text="@string/subtitle_color"/>
-
-            <View
-                android:layout_width="0.5dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center_vertical"
-                android:background="@color/edit_music_divider"/>
-
-            <RadioButton
-                android:id="@+id/subtitle_size"
-                style="@style/sub_menu_rbtn_style"
-                android:text="@string/subtitle_size"/>
-        </RadioGroup>
     </LinearLayout>
 
     <FrameLayout
+        android:id="@+id/stMenuContentLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/sub_menu_bgcolor">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
 
         <include layout="@layout/subtitle_ttf_layout"/>
 
         <include layout="@layout/subtitle_color_layout"/>
 
+        <include layout="@layout/subtitle_stroke_layout"/>
+
         <include layout="@layout/subtitle_size_layout"/>
 
         <include layout="@layout/subtitle_style_layout"/>
+
+        <include layout="@layout/subtitle_anim_layout"/>
+
+        <include layout="@layout/subtitle_position_layout"/>
     </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llSubtitleMenu"
+        android:layout_width="match_parent"
+        android:minHeight="45dp"
+        android:layout_height="wrap_content"
+        android:background="@color/fragment_titlebar_bg"
+        android:orientation="horizontal">
+
+
+        <ImageView
+            android:id="@+id/ivAddSubCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_bottom_cancel"/>
+
+
+        <RadioGroup
+            android:id="@+id/subtitle_menu_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/subtitle_style"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_style"/>
+
+            <RadioButton
+                android:id="@+id/subtitle_anim"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_anim"/>
+
+
+            <RadioButton
+                android:id="@+id/subtitle_color"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_color"/>
+
+            <RadioButton
+                android:id="@+id/subtitle_stroke"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_stroke"/>
+
+
+            <RadioButton
+                android:id="@+id/subtitle_font"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_font"/>
+
+            <RadioButton
+                android:id="@+id/subtitle_size"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_size"/>
+
+            <RadioButton
+                android:id="@+id/subtitle_position"
+                style="@style/sub_menu_rbtn_style"
+                android:drawableTop="@drawable/subtitle_effect_position"/>
+
+        </RadioGroup>
+
+        <ImageView
+            android:id="@+id/ivAddSubSure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/btn_bottom_sure"/>
+
+
+    </LinearLayout>
 
 </LinearLayout>

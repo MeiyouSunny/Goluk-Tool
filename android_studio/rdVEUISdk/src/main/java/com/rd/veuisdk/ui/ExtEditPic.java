@@ -1,24 +1,24 @@
 package com.rd.veuisdk.ui;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.support.v7.widget.AppCompatEditText;
+import android.util.AttributeSet;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputConnection;
+
+import com.rd.veuisdk.R;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.util.AttributeSet;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputConnection;
-import android.widget.EditText;
-
-import com.rd.veuisdk.R;
-
 /***
  * 文字板， 输入字导出图片
  */
-public class ExtEditPic extends EditText {
+public class ExtEditPic extends AppCompatEditText {
     private int mBgColor;
     private int mTextColor;
     private int mTextSide;
@@ -49,8 +49,9 @@ public class ExtEditPic extends EditText {
     }
 
     public void setTextColor(int color) {
-        super.setTextColor(color);
         mTextColor = color;
+        super.setTextColor(mTextColor);
+
     }
 
 

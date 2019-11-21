@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.rd.lib.ui.RotateRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                    android:id="@+id/rrlIndicatorBar"
                                     android:layout_width="match_parent"
                                     android:layout_height="0dp"
                                     android:layout_weight="1">
@@ -24,7 +23,6 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="12dp"
                 android:background="@null"
                 android:padding="8dp"
                 android:src="@drawable/edit_back_button"
@@ -266,7 +264,6 @@
                         android:paddingLeft="4dp"
                         android:paddingTop="5dp"
                         android:scrollHorizontally="false"
-                        android:text="@string/add_music"
                         android:textColor="#b3ffffff"
                         android:textSize="@dimen/text_size_12"/>
 

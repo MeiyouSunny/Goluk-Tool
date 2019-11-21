@@ -12,13 +12,16 @@ import com.rd.gallery.IVideo;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.lib.ui.RotateImageView;
 import com.rd.veuisdk.R;
-import com.rd.veuisdk.SelectMediaActivity;
 import com.rd.veuisdk.model.ImageItem;
-import com.rd.veuisdk.ui.NumItemView;
+import com.rd.veuisdk.ui.ExtImageView;
 import com.rd.veuisdk.utils.DateTimeUtils;
+import com.rd.veuisdk.utils.Utils;
 
 import java.util.ArrayList;
 
+/**
+ * 图库adapter
+ */
 public class MediaListAdapter extends BaseAdapter {
 
     private Context mContext;
@@ -26,20 +29,20 @@ public class MediaListAdapter extends BaseAdapter {
     private GalleryImageFetcher mGifVideoThumbnail; // 获取视频缩略图
     private boolean bHideText;
 
-    public MediaListAdapter(Context c, GalleryImageFetcher fetcher, boolean hideText) {
-        this.mContext = c;
+    public MediaListAdapter(Context context, GalleryImageFetcher fetcher, boolean hideText) {
+        mContext = context;
         mGifVideoThumbnail = fetcher;
-        mArrImageItems = new ArrayList<ImageItem>();
+        mArrImageItems = new ArrayList<>();
         bHideText = hideText;
     }
 
     public void addAll(ArrayList<ImageItem> list) {
         mArrImageItems.clear();
-        if (SelectMediaActivity.mIsAppend && !bHideText) {
+        if (mIAdapterListener.isAppend() && !bHideText) {
             mArrImageItems.add(null);
         }
         mArrImageItems.addAll(list);
-        this.notifyDataSetChanged();
+         notifyDataSetChanged();
     }
 
     public void clear() {
@@ -47,7 +50,7 @@ public class MediaListAdapter extends BaseAdapter {
             mArrImageItems.clear();
             mArrImageItems = null;
         }
-        mArrImageItems = new ArrayList<ImageItem>();
+        mArrImageItems = new ArrayList<>();
     }
 
     @Override
@@ -69,36 +72,50 @@ public class MediaListAdapter extends BaseAdapter {
         return 0;
     }
 
+
+    public void recycle() {
+        mGifVideoThumbnail = null;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
-        PreviewFrameLayout pflConvertView = (PreviewFrameLayout) convertView;
+        AddClickListener listener;
         if (null == convertView) {
-            pflConvertView = (PreviewFrameLayout) LayoutInflater.from(mContext)
+            PreviewFrameLayout pflConvertView = (PreviewFrameLayout) LayoutInflater.from(mContext)
                     .inflate(R.layout.select_photo_list_item, null);
             holder = new ViewHolder();
-            holder.thumbnail = (RotateImageView) pflConvertView
-                    .findViewById(R.id.ivPhotoListThumbnail);
+            holder.thumbnail = Utils.$(pflConvertView, R.id.ivPhotoListThumbnail);
+            holder.btnAdd = Utils.$(pflConvertView, R.id.part_add);
+            holder.btnAdd.setRepeatClickIntervalTime(400);
+            holder.tvDuration = Utils.$(pflConvertView, R.id.ivVideoDur);
+            listener = new AddClickListener();
+            holder.btnAdd.setOnClickListener(listener);
             pflConvertView.setAspectRatio(1f);
+
+
+            holder.btnAdd.setTag(listener);
             convertView = pflConvertView;
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
+            listener = (AddClickListener) holder.btnAdd.getTag();
         }
+        listener.setPosition(position);
+        ImageItem item = getItem(position);
 
-        ImageItem item = mArrImageItems.get(position);
-        TextView videoDur = (TextView) convertView
-                .findViewById(R.id.ivVideoDur);
+        holder.btnAdd.setVisibility(mIAdapterListener.isShowAddBtn() ? View.VISIBLE : View.GONE);
 
         if (null != item) {
             if (item.image.isValid()) {
-                if (item.image.equals(holder.thumbnail.getTag())) {
-                    mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
-                } else {
-                    mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
-                    holder.thumbnail.setTag(item.image);
+                if (null != mGifVideoThumbnail) {
+                    if (item.image.equals(holder.thumbnail.getTag())) {
+                        mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
+                    } else {
+                        mGifVideoThumbnail.loadImage(item.image, holder.thumbnail);
+                        holder.thumbnail.setTag(item.image);
+                    }
                 }
-
             } else {
                 if (item.image instanceof IVideo) {
                     holder.thumbnail.setImageResource(R.drawable.gallery_video_failed);
@@ -107,42 +124,65 @@ public class MediaListAdapter extends BaseAdapter {
                 }
             }
             if (item.image instanceof IVideo) {
-                videoDur.setVisibility(View.VISIBLE);
-                videoDur.setText(DateTimeUtils
-                        .stringForTime((int) ((IVideo) item.image)
-                                .getDuration()));
+                holder.tvDuration.setVisibility(View.VISIBLE);
+                holder.tvDuration.setText(DateTimeUtils.stringForTime((int) ((IVideo) item.image).getDuration()));
             } else {
-                videoDur.setVisibility(View.GONE);
-                videoDur.setText(null);
+                holder.tvDuration.setVisibility(View.GONE);
+                holder.tvDuration.setText(null);
             }
-            refreashItemSelectedState(convertView, item);
         } else {
+            holder.btnAdd.setVisibility(View.GONE);
             holder.thumbnail.setImageResource(R.drawable.word_broad);
-            videoDur.setVisibility(View.GONE);
-            NumItemView selected = (NumItemView) convertView
-                    .findViewById(R.id.ivPhotoListSelected);
-            selected.setVisibility(View.GONE);
+            holder.tvDuration.setVisibility(View.GONE);
         }
         return convertView;
     }
 
-    public void refreashItemSelectedState(View convertView, ImageItem item) {
-        if (null != convertView) {
-            NumItemView selected = (NumItemView) convertView
-                    .findViewById(R.id.ivPhotoListSelected);
-            if (item.selected) {
-                selected.setVisibility(View.VISIBLE);
-                selected.setPosition(item.position);
-            } else {
-                selected.setVisibility(View.GONE);
-            }
-            selected.setSelected(item.selected);
-
-        }
-    }
 
     private class ViewHolder {
         RotateImageView thumbnail;
+        ExtImageView btnAdd;
+        TextView tvDuration;
     }
+
+    class AddClickListener implements View.OnClickListener {
+        private int position = 0;
+
+        public void setPosition(int position) {
+            this.position = position;
+        }
+
+        @Override
+        public void onClick(View v) {
+
+            if (null != mIAdapterListener) {
+                mIAdapterListener.onAdd(getItem(position));
+            }
+        }
+    }
+
+    public void setIAdapterListener(IAdapterListener IAdapterListener) {
+        mIAdapterListener = IAdapterListener;
+    }
+
+    private IAdapterListener mIAdapterListener;
+
+    /**
+     * 状态回调
+     */
+    public static interface IAdapterListener {
+
+        /**
+         * 点击添加按钮
+         *
+         * @param item
+         */
+        void onAdd(ImageItem item);
+
+        boolean isShowAddBtn();
+
+        boolean isAppend();
+    }
+
 
 }

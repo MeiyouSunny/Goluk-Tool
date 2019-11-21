@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+    android:orientation="vertical">
+
+    <!--顶部-->
+    <RelativeLayout
+        style="@style/public_titlebar_style"
+        android:splitMotionEvents="false">
+
+        <!--返回-->
+        <com.rd.lib.ui.ExtButton
+            android:id="@+id/btnLeft"
+            style="@style/public_title_bar_button"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:drawableLeft="@drawable/edit_back_button"
+            android:gravity="left|center_vertical"
+            android:paddingRight="15dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_18"/>
+
+        <!--标题-->
+        <TextView
+            style="@style/public_shadow_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@null"
+            android:fadingEdge="none"
+            android:gravity="center"
+            android:lines="1"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:paddingBottom="3dp"
+            android:paddingTop="3dp"
+            android:singleLine="true"
+            android:text="@string/zishuo_inscription_detail"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_18"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="@dimen/text_size_18"
+        android:textColor="@color/white"
+        android:text="你除了努力别无选择"
+        android:layout_marginTop="@dimen/dimen_10"/>
+
+    <com.rd.veuisdk.demo.zishuo.ListTextView
+        android:id="@+id/ltv_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginTop="@dimen/dimen_10"/>
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btn_use"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/zishuo_inscription"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16"
+        android:padding="@dimen/dimen_10"
+        android:layout_margin="@dimen/dimen_10"
+        android:background="@drawable/voice_text_tv_bg"/>
+
+</LinearLayout>

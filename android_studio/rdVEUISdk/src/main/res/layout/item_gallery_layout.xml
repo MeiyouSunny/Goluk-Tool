@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.lib.ui.PreviewFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                  android:id="@+id/itemGalleryPreview"
+                                  android:layout_width="match_parent"
+                                  android:layout_height="match_parent"
+    >
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="1dp">
+
+
+        <TextView
+            android:id="@+id/tvOtherGallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/other_gallery"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_16"
+            android:visibility="gone"/>
+
+
+        <RelativeLayout
+            android:id="@+id/frameThumbnailLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/ivPhotoListThumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:contentDescription="@null"
+                android:minHeight="@dimen/video_list_grid_item_height"
+                android:minWidth="@dimen/video_list_grid_item_width"/>
+
+            <TextView
+                android:id="@+id/ivVideoDuration"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="2dp"
+                android:contentDescription="@null"
+                android:gravity="left|center_vertical"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"
+                />
+        </RelativeLayout>
+    </FrameLayout>
+
+
+</com.rd.lib.ui.PreviewFrameLayout>
+    <!--</RelativeLayout>-->

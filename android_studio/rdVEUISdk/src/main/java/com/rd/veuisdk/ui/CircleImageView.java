@@ -10,7 +10,6 @@ import android.widget.Checkable;
 import com.rd.lib.ui.RotateImageView;
 import com.rd.veuisdk.utils.GraphicsHelper;
 
-import static com.rd.veuisdk.utils.GraphicsHelper.drawRoundedCornerBitmap;
 
 /***
  * 圆形边框，可旋转
@@ -29,10 +28,11 @@ public class CircleImageView extends RotateImageView implements Checkable {
 
     public CircleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
     }
 
     public CircleImageView(Context context) {
-        super(context);
+        this(context, null);
     }
 
     @Override
@@ -47,10 +47,8 @@ public class CircleImageView extends RotateImageView implements Checkable {
             if (null != bitmap) {
                 int w = this.getWidth();
                 int h = this.getHeight();
-                drawRoundedCornerBitmap(canvas, w, h, bitmap,
+                GraphicsHelper.drawRoundedCornerBitmap(canvas, w, h, bitmap,
                         w / 2, mBorderWeight, mDrawBorderColor, mDrawBgColor, isChecked(), 100);
-//                GraphicsHelper.drawRoundedCornerBitmap(canvas, w, h, bitmap,
-//                        w / 2, mBorderWeight, mDrawBorderColor, mDrawBgColor);
                 bitmap.recycle();
             }
         } catch (Exception e) {

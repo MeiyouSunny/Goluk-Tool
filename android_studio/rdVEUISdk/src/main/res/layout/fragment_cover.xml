@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:id="@+id/add_video_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_alignParentBottom="true"
+            android:clipChildren="false"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <include layout="@layout/cover_virtual_layout"/>
+
+                <View
+                    android:id="@+id/word_hint_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/black"/>
+            </FrameLayout>
+
+        </FrameLayout>
+
+
+        <LinearLayout
+            android:id="@+id/cover_add_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvAddVideo"
+                style="@style/partedit_add_btn_style"
+                android:drawableTop="@drawable/btn_add_video"
+                android:onClick="onPreviewOptionClick"
+                android:text="@string/cover_select_video"/>
+
+            <TextView
+                android:id="@+id/tvAddAblum"
+                style="@style/partedit_add_btn_style"
+                android:drawableTop="@drawable/btn_add_image"
+                android:onClick="onPreviewOptionClick"
+                android:text="@string/cover_select_ablum"/>
+
+
+            <TextView
+                android:id="@+id/tvAddText"
+                style="@style/partedit_add_btn_style"
+                android:drawableTop="@drawable/btn_add_text"
+                android:onClick="onPreviewOptionClick"
+                android:visibility="gone"
+                android:text="@string/preview_text"/>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
+
+    <include layout="@layout/fragment_title_layout"/>
+
+
+</LinearLayout>

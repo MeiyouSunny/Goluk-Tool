@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <RadioGroup
+        android:id="@+id/rgProportion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbProportion1x1"
+            style="@style/rb_proportion_style"
+            android:drawableTop="@drawable/proportion_1x1"
+            android:text="@string/proportion_1x1"/>
+
+        <RadioButton
+            android:id="@+id/rbProportion34"
+            style="@style/rb_proportion_style"
+            android:drawableTop="@drawable/proportion_34"
+            android:text="@string/proportion_3x4"/>
+
+        <RadioButton
+            android:id="@+id/rbProportion43"
+            style="@style/rb_proportion_style"
+            android:drawableTop="@drawable/proportion_43"
+            android:text="@string/proportion_4x3"/>
+
+        <RadioButton
+            android:id="@+id/rbProportion169"
+            style="@style/rb_proportion_style"
+            android:drawableTop="@drawable/proportion_169"
+            android:text="@string/proportion_16x9"/>
+
+        <RadioButton
+            android:id="@+id/rbProportion916"
+            style="@style/rb_proportion_style"
+            android:drawableTop="@drawable/proportion_916"
+            android:text="@string/proportion_9x16"/>
+
+    </RadioGroup>
+</LinearLayout>

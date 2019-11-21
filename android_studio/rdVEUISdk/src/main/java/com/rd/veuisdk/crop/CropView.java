@@ -19,8 +19,8 @@ import android.view.View;
 import com.rd.veuisdk.R;
 
 public class CropView extends View {
-    private static final String LOGTAG = "CropView";
-
+    private final String LOGTAG = "CropView";
+    private final String TAG = "CropView";
     private RectF mImageBounds = new RectF();
     private RectF mScreenBounds = new RectF();
     private RectF mScreenImageBounds = new RectF();
@@ -34,7 +34,6 @@ public class CropView extends View {
     private Drawable[] mCropIndicators;
     private int mIndicatorSize;
     private int mRotation = 0;
-    @SuppressWarnings("unused")
     private boolean mMovingBlock = false;
     private Matrix mDisplayMatrix = null;
     private Matrix mDisplayMatrixInverse = null;
@@ -79,6 +78,15 @@ public class CropView extends View {
         setup(context);
     }
 
+    /**
+     * 底部遮罩颜色
+     *
+     * @param color
+     */
+    public void setOverlayShadowColor(int color) {
+        mOverlayShadowColor = color;
+    }
+
     private void setup(Context context) {
         if (isInEditMode()) {
             return;
@@ -107,6 +115,11 @@ public class CropView extends View {
         mAspectTextSize = rsc.getDimension(R.dimen.crop_aspect_text_size);
     }
 
+    /**
+     * @param newCropBounds  单位：像素
+     * @param newPhotoBounds 单位：像素
+     * @param rotation
+     */
     public void initialize(RectF newCropBounds, RectF newPhotoBounds,
                            int rotation) {
         mImageBounds.set(newPhotoBounds);
@@ -118,12 +131,32 @@ public class CropView extends View {
                 mRotation = rotation;
                 mCropObj.resetBoundsTo(newCropBounds, newPhotoBounds);
                 clearDisplay();
+            } else {
+                invalidate();
             }
         } else {
             mRotation = rotation;
             mCropObj = new CropObject(newPhotoBounds, newCropBounds, 0);
             clearDisplay();
         }
+    }
+
+    /**
+     * 获取要保留的相对位置 0~1.0f
+     *
+     * @return
+     */
+    public RectF getCropF() {
+        RectF clip = new RectF(getCrop());
+        RectF photo = getPhoto();
+        if (photo == null) {
+            return new RectF(0, 0, 1f, 1f);
+        }
+        clip.left /= photo.width();
+        clip.top /= photo.height();
+        clip.right /= photo.width();
+        clip.bottom /= photo.height();
+        return clip;
     }
 
     public RectF getCrop() {
@@ -133,23 +166,17 @@ public class CropView extends View {
         return mCropObj.getInnerBounds();
     }
 
-    public RectF getPhoto() {
+    private RectF getPhoto() {
+        if (mCropObj == null) {
+            return null;
+        }
         return mCropObj.getOuterBounds();
     }
 
+
     private int px = 0, py = 0;
     private final int MAXOFF = 5;
-    String TAG = "CropView";
 
-//    @Override
-//    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        Log.e(TAG, "onInterceptTouchEvent: " + ev.getAction());
-//        if (mEnableScroll) {
-//            return super.onInterceptTouchEvent(ev);
-//        } else {
-//            return false;
-//        }
-//    }
 
     private boolean bLock = false;
 
@@ -179,8 +206,12 @@ public class CropView extends View {
                 px = (int) event.getX();
                 py = (int) event.getY();
 
-                if (null != icropListener)
 
+                if (null != mTouchListener) {
+                    mTouchListener.onTouchDown();
+                }
+
+                if (null != icropListener)
                     // 播放视频的时候，是不可以移动的
                     if (!isCanMove) {
                         return false;
@@ -200,9 +231,11 @@ public class CropView extends View {
                 }
                 break;
             case (MotionEvent.ACTION_UP):
-
+            case (MotionEvent.ACTION_CANCEL):
+                if (null != mTouchListener) {
+                    mTouchListener.onTouchUp();
+                }
                 if (null != icropListener) {
-
                     if ((Math.abs(event.getY() - py) > MAXOFF || Math.abs(event
                             .getX() - px) > MAXOFF)) {
                         mCropObj.selectEdge(CropObject.MOVE_NONE);
@@ -234,7 +267,9 @@ public class CropView extends View {
                 break;
             case (MotionEvent.ACTION_MOVE):
                 if (mState == Mode.MOVE) {
-                    icropListener.onMove();
+                    if (null != icropListener) {
+                        icropListener.onMove();
+                    }
                     float dx = x - mPrevX;
                     float dy = y - mPrevY;
                     mCropObj.moveCurrentSelection(dx, dy);
@@ -318,6 +353,23 @@ public class CropView extends View {
         invalidate();
     }
 
+    /**
+     * 是否需要绘制拖拽区域内的frame
+     *
+     * @param enableDrawSelectionFrame
+     */
+    public void setEnableDrawSelectionFrame(boolean enableDrawSelectionFrame) {
+        this.enableDrawSelectionFrame = enableDrawSelectionFrame;
+    }
+
+    private boolean enableDrawSelectionFrame = true;
+
+
+    /***
+     * 自定义被选中的Frame
+     * @param spotlightX 分割矩形
+     * @param spotlightY
+     */
     public void setWallpaperSpotlight(float spotlightX, float spotlightY) {
         mSpotX = spotlightX;
         mSpotY = spotlightY;
@@ -371,6 +423,7 @@ public class CropView extends View {
         }
     }
 
+
     @Override
     public void onDraw(Canvas canvas) {
         if (mDirty) {
@@ -379,6 +432,7 @@ public class CropView extends View {
         }
         // mImageBounds.set(0, 0, canvas.getWidth(), canvas.getHeight());
         mScreenBounds.set(0, 0, canvas.getWidth(), canvas.getHeight());
+
         mScreenBounds.inset(mMargin, mMargin);
 
         // If crop object doesn't exist, create it and update it from master
@@ -436,10 +490,10 @@ public class CropView extends View {
 
             if (mUnableBorder) {
 
-                mTextPaint.setAntiAlias(true);
-                mTextPaint.setColor(Color.WHITE);
-                mTextPaint.setTextSize(mAspectTextSize);
-                mTextPaint.setShadowLayer(5, 1, 1, Color.BLACK);
+//                mTextPaint.setAntiAlias(true);
+//                mTextPaint.setColor(Color.WHITE);
+//                mTextPaint.setTextSize(mAspectTextSize);
+//                mTextPaint.setShadowLayer(5, 1, 1, Color.BLACK);
 
             } else {
                 // 画播放状态按钮
@@ -454,19 +508,21 @@ public class CropView extends View {
                                     .getHeight()) / 2, null);
             }
 
-            if (!mDoSpot) {
-                CropDrawingUtils.drawRuleOfThird(canvas, mScreenCropBounds);
-            } else {
-                Paint wpPaint = new Paint();
-                wpPaint.setColor(mWPMarkerColor);
-                wpPaint.setStrokeWidth(3);
-                wpPaint.setStyle(Paint.Style.STROKE);
-                wpPaint.setPathEffect(new DashPathEffect(new float[]{
-                        mDashOnLength, mDashOnLength + mDashOffLength}, 0));
-                mShadowPaint.setColor(mOverlayWPShadowColor);
-                CropDrawingUtils.drawWallpaperSelectionFrame(canvas,
-                        mScreenCropBounds, mSpotX, mSpotY, wpPaint,
-                        mShadowPaint);
+            if (enableDrawSelectionFrame) {
+                if (!mDoSpot) {
+                    CropDrawingUtils.drawRuleOfThird(canvas, mScreenCropBounds);
+                } else {
+                    Paint wpPaint = new Paint();
+                    wpPaint.setColor(mWPMarkerColor);
+                    wpPaint.setStrokeWidth(3);
+                    wpPaint.setStyle(Paint.Style.STROKE);
+                    wpPaint.setPathEffect(new DashPathEffect(new float[]{
+                            mDashOnLength, mDashOnLength + mDashOffLength}, 0));
+                    mShadowPaint.setColor(mOverlayWPShadowColor);
+                    CropDrawingUtils.drawWallpaperSelectionFrame(canvas,
+                            mScreenCropBounds, mSpotX, mSpotY, wpPaint,
+                            mShadowPaint);
+                }
             }
 
             CropDrawingUtils.drawIndicators(canvas, mCropIndicators,
@@ -514,6 +570,25 @@ public class CropView extends View {
          * 响应触摸move
          */
         void onMove();
+    }
+
+    public void setTouchListener(ITouchListener touchListener) {
+        mTouchListener = touchListener;
+    }
+
+    private ITouchListener mTouchListener;
+
+    public interface ITouchListener {
+
+        /**
+         * 按住
+         */
+        void onTouchDown();
+
+        /**
+         * 松开
+         */
+        void onTouchUp();
     }
 
 }

@@ -56,32 +56,33 @@ public class VideoThumbNailAlterView extends View {
 
     /***
      * 设置视频资源
-     * @param isTrim
      * @param player
      * @return
      */
-    public int[] setVirtualVideo(boolean isTrim, VirtualVideo player) {
+    public int[] setVirtualVideo(float asp, VirtualVideo player) {
+        asp = Math.max(3 / 4.0f, Math.min(asp, 4 / 3.0f));
         mVirtualVideo = player;
-        if (isTrim) {
-            thumbH = getResources().getDimensionPixelSize(
-                    R.dimen.preview_rangseekbarplus_trim_height);
-        } else {
+
+        thumbH = getHeight();
+        if (thumbH == 0) {
             thumbH = getResources().getDimensionPixelSize(
                     R.dimen.preview_rangseekbarplus_height);
         }
-        int nduration = Utils.s2ms(mVirtualVideo.getDuration());
-        if (nduration < 5000) {
+
+
+        int duration = Math.max(10, Utils.s2ms(mVirtualVideo.getDuration()));
+        if (duration < 5000) {
             maxCount = 2;
-        } else if (nduration < 10000) {
+        } else if (duration < 10000) {
             maxCount = 8;
-        } else if (nduration < 60000) {
-            maxCount = nduration / 2000;
+        } else if (duration < 60000) {
+            maxCount = duration / 2000;
         } else {
             maxCount = 40;
         }
-        mDuration = nduration;
+        mDuration = duration;
 
-        thumbW = (int) (thumbH * 9 / 16);
+        thumbW = (int) (thumbH * (asp));
 
         maxCount = getWidth() / thumbW + 1;
         params[0] = thumbW * maxCount;
@@ -246,7 +247,7 @@ public class VideoThumbNailAlterView extends View {
                                 Config.ARGB_8888);
 
                         if (null != mVirtualVideo
-                                && mVirtualVideo.getSnapshot(getContext(),Utils.ms2s(nTime), bitmap)) {
+                                && mVirtualVideo.getSnapshot(getContext(), Utils.ms2s(nTime), bitmap)) {
                             // 将Bitmap 加入内存缓存
                             addBitmapToMemoryCache(nTime, src, dst, isleft,
                                     isright, bitmap);

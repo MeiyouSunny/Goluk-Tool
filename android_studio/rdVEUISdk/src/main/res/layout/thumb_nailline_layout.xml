@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:gravity="center_vertical"
+              android:orientation="horizontal">
+
+
+    <!--所有的fragment中缩略图组件-->
+    <ImageView
+        android:id="@+id/ivPlayerState"
+        android:layout_width="@dimen/add_sub_play_state_size"
+        android:layout_height="@dimen/add_sub_play_state_size"
+        android:contentDescription="@string/empty"
+        android:minWidth="28dp"
+        android:minHeight="28dp"
+        android:onClick="clickView"
+        android:padding="5dp"
+        android:scaleType="center"
+        android:src="@drawable/edit_music_play"/>
+
+    <com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView
+        android:id="@+id/priview_sticker_line"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/subtitleline_media"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.rd.veuisdk.ui.ThumbNailLine
+                android:id="@+id/subline_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView>
+</LinearLayout>

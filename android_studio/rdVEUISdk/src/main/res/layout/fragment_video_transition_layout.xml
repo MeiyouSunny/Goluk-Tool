@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/sceneLayout"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:clipChildren="false"
+              android:gravity="center"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tvAddTransition"
+            style="@style/partedit_add_btn_style"
+            android:drawableTop="@drawable/addmenu_transition"
+            android:onClick="onPreviewOptionClick"
+            android:text="@string/addmenu_transition"/>
+
+        <TextView
+            android:id="@+id/tvAddImage"
+            style="@style/partedit_add_btn_style"
+            android:drawableTop="@drawable/addmenu_addvideo"
+            android:onClick="onPreviewOptionClick"
+            android:text="@string/addmenu_addimage"/>
+
+        <TextView
+            android:id="@+id/tvAddVideo"
+            style="@style/partedit_add_btn_style"
+            android:drawableTop="@drawable/addmenu_addimage"
+            android:onClick="onPreviewOptionClick"
+            android:text="@string/addmenu_addvideo"/>
+
+
+        <TextView
+            android:id="@+id/tvAddText"
+            style="@style/partedit_add_btn_style"
+            android:drawableTop="@drawable/addmenu_addtext"
+            android:onClick="onPreviewOptionClick"
+            android:text="@string/addmenu_addtext"/>
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="vertical">
+
+        <com.rd.veuisdk.ui.DraggableAddGridView
+            android:id="@+id/gridVideosDstArray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scrollbars="none"/>
+
+    </LinearLayout>
+</LinearLayout>

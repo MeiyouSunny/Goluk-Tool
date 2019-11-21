@@ -38,7 +38,6 @@ import com.rd.veuisdk.net.TTFUtils;
 import com.rd.veuisdk.utils.BitmapUtils;
 import com.rd.veuisdk.utils.CommonStyleUtils;
 import com.rd.veuisdk.utils.CommonStyleUtils.STYPE;
-import com.rd.veuisdk.utils.FileLog;
 
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -58,14 +57,6 @@ public class SinglePointRotate extends View {
      */
     private static final int DRAG = 1;
 
-    /**
-     * 缩放状态
-     */
-    private static final int ZOOM = 2;
-    /**
-     * 旋转状态
-     */
-    private static final int ROTATE = 3;
     /**
      * 缩放和旋转状态
      */
@@ -149,7 +140,7 @@ public class SinglePointRotate extends View {
     /**
      * 画刷
      */
-    private Paint mPaint = new Paint();
+    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
     /**
      * 图片中心坐标
@@ -165,10 +156,6 @@ public class SinglePointRotate extends View {
      */
     private float mRotateAngle;
 
-    /**
-     * 缩放系数 = disf
-     */
-    private float mZoomFactor;
     /**
      * 缩放系数 = mZoomFactor
      */
@@ -220,7 +207,7 @@ public class SinglePointRotate extends View {
 
     private float mTextSize = 28;
 
-    private StyleInfo msi;
+    private StyleInfo mStyleInfo;
     private int duration = 1000;// ms
     private int progress = 0, mItemDelayMillis = 0;
 
@@ -233,7 +220,7 @@ public class SinglePointRotate extends View {
      * 字符串画刷
      */
     private TextPaint mTextPaint = new TextPaint();
-    private Point end;
+    private Point mParentSize;
     private boolean drawControl = false; // 设置是否支持拖拽(编辑模式下、预览模式下的区别)
 
     /**
@@ -250,36 +237,48 @@ public class SinglePointRotate extends View {
 
     private int textcolor;
 
+    private boolean bExport = false;
+
+    public SinglePointRotate(Context context, float mRotate, String text,
+                             int textColor, String ttfLocal, float mdisf, Point mend,
+                             Point center, int textSize, int shadowColor, StyleInfo styleInfo,
+                             String bgPath) {
+
+        this(context, mRotate, text,
+                textColor, ttfLocal, mdisf, mend,
+                center, textSize, shadowColor, styleInfo,
+                bgPath, false);
+
+    }
+
     /**
      * init初始化有完整信息的字幕
      *
      * @param context
      * @param mRotate
      * @param text
-     * @param bgPath
      * @param textColor
      * @param ttfLocal
-     * @param mdisf
-     * @param mend
+     * @param zoomFactor
+     * @param parentSize
      * @param center
+     * @param textSize
+     * @param shadowColor
+     * @param styleInfo
+     * @param bgPath
      */
     public SinglePointRotate(Context context, float mRotate, String text,
-                             int textColor, String ttfLocal, float mdisf, Point mend,
-                             Point center, int textSize, int shadowColor, StyleInfo styleinfo,
-                             String bgPath) {
+                             int textColor, String ttfLocal, float zoomFactor, Point parentSize,
+                             Point center, int textSize, int shadowColor, StyleInfo styleInfo,
+                             String bgPath, boolean export) {
         super(context);
+        bExport = export;
         display = CoreUtils.getMetrics();
         this.shadowColor = shadowColor;
-        this.end = mend;
+        this.mParentSize = parentSize;
         this.mRotateAngle = mRotate;
-        this.disf = mdisf;// 初始化要操作的原始图片， 先将图片引入到工程中
-        if (styleinfo.zoomFactor == 0.0) {
-            mZoomFactor = mdisf;
-        } else {
-            mZoomFactor = styleinfo.zoomFactor;
-        }
-
-        this.disf = mZoomFactor;
+        // 初始化要操作的原始图片， 先将图片引入到工程中
+        this.disf = zoomFactor;
         this.textcolor = textColor;
         this.mTextPaint.setTextSize(textSize);
         this.mTextPaint.setAntiAlias(true);
@@ -287,21 +286,28 @@ public class SinglePointRotate extends View {
         this.mPaint.setAntiAlias(true);
         // 初始化删除图片
         mDeleteBitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.edit_del);
+                R.drawable.subtitle_effect_delete_new);
         // 初始化控制图片
         mContralBitmap = BitmapFactory.decodeResource(getResources(),
-                R.drawable.edit_control);
+                R.drawable.subtitle_effect_controller_new);
         // 删除图片的半宽
         this.mOutLayoutImageWidth = mDeleteBitmap.getWidth() / 2;
         this.mOutLayoutImageHeight = mDeleteBitmap.getHeight() / 2;
         this.drawFrame(bgPath);
         this.setTTFLocal(ttfLocal, false);
         setCenter(center);
-        setStyleInfo(false, styleinfo, 1000, false, disf);
+        setStyleInfo(false, styleInfo, 1000, false, disf);
         this.isUserWriting = false;
         setInputText(text);
         this.isUserWriting = true;
-        setDisf(mdisf);
+        setDisf(zoomFactor);
+
+        // 设置画笔的宽度
+        mPaint.setColor(Color.WHITE);
+        mPaint.setStrokeWidth(3);
+        //设置阴影
+        setLayerType(LAYER_TYPE_SOFTWARE, null);
+        mPaint.setShadowLayer(0.5f, 1, 1, 0x47000000);
     }
 
 
@@ -309,6 +315,11 @@ public class SinglePointRotate extends View {
         if (!center.equals(mImageCenterPoint.x, mImageCenterPoint.y)) {
             this.mImageCenterPoint = center;
         }
+    }
+
+    public void updateCenter(Point center) {
+        this.mImageCenterPoint = center;
+        invaView(true);
     }
 
     public void setFirstIn(boolean bFirstin) {
@@ -323,12 +334,12 @@ public class SinglePointRotate extends View {
         }
     }
 
-    public void setStyleInfo(boolean isMain, StyleInfo si, int nduration,
-                             boolean drawFrame, float mdisf) {
+    public void setStyleInfo(boolean isMain, StyleInfo si, int nduration, boolean drawFrame, float mdisf) {
+
         duration = nduration;
-        msi = si;
-        if (!TextUtils.isEmpty(msi.tFont)) {
-            String localttf = TTFData.getInstance().quweryOne(msi.tFont);
+        mStyleInfo = si;
+        if (!TextUtils.isEmpty(mStyleInfo.tFont)) {
+            String localttf = TTFData.getInstance().quweryOne(mStyleInfo.tFont);
             if (null != localttf) {
                 setTTFLocal(localttf, false);
             }
@@ -336,41 +347,34 @@ public class SinglePointRotate extends View {
         if (isMain) {
             isRunning = false;
             mhandler.removeCallbacks(runnable);
-            textcolor = msi.getTextDefaultColor();
-
-            if (msi.shadow) {
-                this.shadowColor = msi.strokeColor;
+            textcolor = mStyleInfo.getTextDefaultColor();
+            if (mStyleInfo.shadow) {
+                this.shadowColor = mStyleInfo.strokeColor;
             } else {
                 this.shadowColor = 0;
             }
         }
-
+//        Log.e(TAG, "setStyleInfo: " + disf + ">>" + mdisf);
         disf = mdisf;
-        // mZoomFactor = disf;
         progress = 0;
-
-        if (msi.st == com.rd.veuisdk.utils.CommonStyleUtils.STYPE.special) {
+        if (mStyleInfo.st == com.rd.veuisdk.utils.CommonStyleUtils.STYPE.special) {
             invaView(drawFrame);
-            try {
-                mItemDelayMillis = msi.frameArray.valueAt(1).time
-                        - msi.frameArray.valueAt(0).time;
-            } catch (Exception e) {
-                e.printStackTrace();
-                FileLog.writeLog(e.getMessage() + "...->" + msi.code + "...."
-                        + msi.frameArray.size());
-                mItemDelayMillis = 100;
-            }
+            mItemDelayMillis = mStyleInfo.getFrameDuration();
+//            Log.e(TAG, "setStyleInfo: " + mStyleInfo.n +"   "+ bExport);
             if (drawFrame) {
-                mhandler.obtainMessage(MSG_CHANG_FRAME,
-                        msi.frameArray.valueAt(0).pic).sendToTarget();
-
+                if (bExport && !TextUtils.isEmpty(mStyleInfo.filterPng)) {
+                    mhandler.obtainMessage(MSG_CHANG_FRAME,
+                            mStyleInfo.filterPng).sendToTarget();
+                } else {
+                    mhandler.obtainMessage(MSG_CHANG_FRAME,
+                            mStyleInfo.frameArray.valueAt(0).pic).sendToTarget();
+                }
             }
-        } else if (msi.frameArray.size() > 0) {
-
-            if (msi.lashen) {
-                drawFrame(msi.frameArray.valueAt(0).pic);
+        } else if (mStyleInfo.frameArray.size() > 0) {
+            if (mStyleInfo.lashen) {
+                drawFrame(mStyleInfo.frameArray.valueAt(0).pic);
             } else {
-                setImageStyle(msi.frameArray.valueAt(0).pic, drawFrame);
+                setImageStyle(mStyleInfo.frameArray.valueAt(0).pic, drawFrame);
             }
         }
 
@@ -384,17 +388,16 @@ public class SinglePointRotate extends View {
             mhandler.removeCallbacks(this);
             progress += mItemDelayMillis;
 
-            if (null != msi) {
+            if (null != mStyleInfo) {
                 int itemTime = mItemDelayMillis;
                 int np = (int) (progress);
                 int tdu = np;
-                int timeArrayCount = msi.timeArrays.size();
-//                Log.e(TAG, "runnable" + timeArrayCount + "............." + np + "...msi.du." + msi.du);
-                // runnable2.............8850...msi.du.1050
+                int timeArrayCount = mStyleInfo.timeArrays.size();
+//                Log.e(TAG, "runnable" + timeArrayCount + "............." + np + "...mStyleInfo.du." + mStyleInfo.du);
                 if (timeArrayCount == 2) {
-                    int headdu = msi.timeArrays.get(0).getDuration();
+                    int headdu = mStyleInfo.timeArrays.get(0).getDuration();
                     if (np > headdu) { // 循环后面部分
-                        TimeArray loopArray = msi.timeArrays.get(1);
+                        TimeArray loopArray = mStyleInfo.timeArrays.get(1);
                         int loopdu = loopArray.getDuration();
                         int j = 0;
                         int item = 0;
@@ -407,13 +410,13 @@ public class SinglePointRotate extends View {
                             }
                         }
                         tdu = item + headdu;
-                        if (tdu >= msi.du)
-                            tdu = tdu % msi.du;
+                        if (tdu >= mStyleInfo.du)
+                            tdu = tdu % mStyleInfo.du;
                     }
 
                 } else if (timeArrayCount == 3) {
-                    int headdu = msi.timeArrays.get(0).getDuration();
-                    TimeArray lastArray = msi.timeArrays.get(2);
+                    int headdu = mStyleInfo.timeArrays.get(0).getDuration();
+                    TimeArray lastArray = mStyleInfo.timeArrays.get(2);
                     if (np > headdu) { // 循环后面部分
 
                         int mLastP = (int) (duration - lastArray.getDuration());
@@ -421,7 +424,7 @@ public class SinglePointRotate extends View {
                             int off = np - mLastP;
                             tdu = lastArray.getBegin() + off;
                         } else { // 循环中间部分
-                            TimeArray loopArray = msi.timeArrays.get(1);
+                            TimeArray loopArray = mStyleInfo.timeArrays.get(1);
                             int loopdu = loopArray.getDuration();
                             int j = 0;
                             int item = 0;
@@ -439,12 +442,12 @@ public class SinglePointRotate extends View {
 
                     }
                 } else {
-                    if (np > msi.du) {
+                    if (np > mStyleInfo.du) {
                         int j = 1;
-                        int item = msi.du + itemTime;
+                        int item = 0;
                         while (true) {
-                            item = np - msi.du * j;
-                            if (item <= msi.du) {
+                            item = np - mStyleInfo.du * j;
+                            if (item <= mStyleInfo.du) {
                                 break;
                             } else {
                                 j++;
@@ -454,15 +457,18 @@ public class SinglePointRotate extends View {
                     }
                 }
 
-                FrameInfo st = CommonStyleUtils.search(tdu, msi.frameArray, msi.timeArrays, true, 0);
-//                android.util.Log.e(TAG, "st" + ((null != st) ? (st.pic + "--->" + st.time) : "null")+"....tdu:"+tdu);
+                FrameInfo st = CommonStyleUtils.search(tdu, mStyleInfo.getFrameDuration(), mStyleInfo.frameArray, mStyleInfo.timeArrays, true, 0);
                 if (null != st) {
                     mhandler.removeMessages(MSG_CHANG_FRAME);
-                    mhandler.obtainMessage(MSG_CHANG_FRAME,
-                            st.pic).sendToTarget();
+                    if (bExport && !TextUtils.isEmpty(mStyleInfo.filter)) {
+                        mhandler.obtainMessage(MSG_CHANG_FRAME,
+                                mStyleInfo.filter).sendToTarget();
+                    } else {
+                        mhandler.obtainMessage(MSG_CHANG_FRAME,
+                                st.pic).sendToTarget();
+                    }
                 }
             }
-
         }
     };
 
@@ -470,14 +476,12 @@ public class SinglePointRotate extends View {
         progress = 0;
         mhandler.removeMessages(MSG_CHANG_FRAME);
         mhandler.obtainMessage(MSG_CHANG_FRAME,
-                msi.frameArray.valueAt(0).pic).sendToTarget();
+                mStyleInfo.frameArray.valueAt(0).pic).sendToTarget();
     }
 
     private boolean isRunning = false;
 
-    //houtai bu update
     public void onPasue() {
-
         mhandler.removeCallbacks(runnable);
     }
 
@@ -492,19 +496,18 @@ public class SinglePointRotate extends View {
         public void handleMessage(android.os.Message msg) {
             switch (msg.what) {
                 case MSG_CHANG_FRAME:
-//                    Log.e(TAG, "handleMessage: " + msg.obj + "----------->" + itemdelayMillis);
                     setImageStyle((String) msg.obj, true);
                     mhandler.removeCallbacks(runnable);
                     isRunning = true;
-                    mhandler.postDelayed(runnable, mItemDelayMillis);
+                    if (mStyleInfo.needWhileDraw()) {
+                        mhandler.postDelayed(runnable, mItemDelayMillis);
+                    }
                     break;
 
                 default:
                     break;
             }
         }
-
-        ;
     };
 
     private String lastFramePic = "";
@@ -517,7 +520,6 @@ public class SinglePointRotate extends View {
     private void drawFrame(String picPath) {
         if (!TextUtils.equals(lastFramePic, picPath)) {
             lastFramePic = picPath;
-//            Log.e(TAG, "drawframe" + this.toString() + "..." + picPath);
             if (null != mOriginalBitmap && !mOriginalBitmap.isRecycled()) {
                 mOriginalBitmap.recycle();
                 mOriginalBitmap = null;
@@ -532,7 +534,8 @@ public class SinglePointRotate extends View {
             } else {
                 Log.e(TAG, "drawFrame pic is null");
             }
-            if (null == mOriginalBitmap) { // -1的情况
+            if (null == mOriginalBitmap) {
+                // -1的情况
                 GradientDrawable gd = new GradientDrawable();// 创建drawable
                 gd.setColor(Color.TRANSPARENT);
                 gd.setCornerRadius(5);
@@ -550,7 +553,6 @@ public class SinglePointRotate extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-//        Log.e(TAG, "ondraw-->" + this.toString());
         mOnDraw(canvas);
     }
 
@@ -560,7 +562,7 @@ public class SinglePointRotate extends View {
      * @return
      */
     private boolean isLaShen() {
-        return (msi.lashen);
+        return (mStyleInfo.lashen);
     }
 
     private Point mTemp = new Point(); // 减少获取字体大小
@@ -568,18 +570,14 @@ public class SinglePointRotate extends View {
             mapWords = new HashMap<Long, Bitmap>();
 
     private void mOnDraw(Canvas canvas) {
+
         clearSomeBitmap();
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
                 | Paint.FILTER_BITMAP_FLAG));
-        // canvas.drawColor(Color.CYAN);// 测试用。查看区域
-        // 设置画笔的颜色
-        mPaint.setARGB(255, 138, 43, 226);
-        // 设置画笔的宽度
-        mPaint.setStrokeWidth(1);
-        mPaint.setColor(Color.WHITE);
+//        canvas.drawColor(Color.CYAN);// 测试用。查看区域
         // 画图片的包围框 ，顺时针画
         if (drawControl) {
-            if (msi.pid == spId) {
+            if (mStyleInfo.pid != spId) {
                 canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y,
                         mPaint);
                 canvas.drawLine(mPoint2.x, mPoint2.y, mPoint3.x, mPoint3.y,
@@ -590,48 +588,56 @@ public class SinglePointRotate extends View {
                         mPaint);
             }
         }
-        //测试专用
-//        mPaint.setColor(Color.RED);
-//        canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y,
-//                mPaint);
-//        canvas.drawLine(mPoint2.x, mPoint2.y, mPoint3.x, mPoint3.y,
-//                mPaint);
-//        canvas.drawLine(mPoint3.x, mPoint3.y, mPoint4.x, mPoint4.y,
-//                mPaint);
-//        canvas.drawLine(mPoint4.x, mPoint4.y, mPoint1.x, mPoint1.y,
-//                mPaint);
-
+//        {
+//            //测试专用
+//            mPaint.setColor(Color.RED);
+//            canvas.drawLine(mPoint1.x, mPoint1.y, mPoint2.x, mPoint2.y,
+//                    mPaint);
+//            canvas.drawLine(mPoint2.x, mPoint2.y, mPoint3.x, mPoint3.y,
+//                    mPaint);
+//            canvas.drawLine(mPoint3.x, mPoint3.y, mPoint4.x, mPoint4.y,
+//                    mPaint);
+//            canvas.drawLine(mPoint4.x, mPoint4.y, mPoint1.x, mPoint1.y,
+//                    mPaint);
+//        }
         if (null == mOriginalBitmap || mOriginalBitmap.isRecycled()) {
             Log.e("mOriginalBitmap...", "no has mOriginalBitmap.... ");
             return;
         }
-        int bwidth = 100, bheight = 50;
+        int bwidth, bheight;
         boolean isLaShen = isLaShen();
         if (isLaShen) {
             bwidth = mOriginalBitmap.getWidth();
             bheight = mOriginalBitmap.getHeight();
         } else {
             //非横向拉升的字幕，以json定义的宽高为准
-            bwidth = (int) msi.w;
-            bheight = (int) msi.h;
+            bwidth = (int) mStyleInfo.w;
+            bheight = (int) mStyleInfo.h;
         }
+
+
+//        Log.e(TAG, "mOnDraw: " + mStyleInfo.mlocalpath + "   " + bwidth + "*" + bheight + "  >>>" + mStyleInfo.w + "*" + mStyleInfo.h + "  >" + isLaShen + " " +
+//                " mOriginalBitmap:" + mOriginalBitmap.getWidth() + "*" + mOriginalBitmap.getHeight());
+        if (bwidth <= 0 || bheight <= 0) {
+            Log.e(TAG, "mOnDraw:  size  error ：" + bwidth + "*" + bheight + "  mStyleInfo:" + mStyleInfo);
+            return;
+        }
+
         Bitmap newb = Bitmap.createBitmap(bwidth, bheight, Config.ARGB_8888);
 
         Canvas canvasTmp = new Canvas();
-        canvasTmp.drawColor(Color.BLUE);
+
         canvasTmp.setBitmap(newb);
         canvasTmp.setDrawFilter(new PaintFlagsDrawFilter(0,
                 Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
-        canvasTmp.drawBitmap(mOriginalBitmap, new Rect(0, 0, mOriginalBitmap.getWidth(), mOriginalBitmap.getHeight()), new Rect(0, 0, bwidth, bheight), null);
-        RectF rectF = msi.getTextRectF();
+//        canvasTmp.drawColor(Color.BLUE);
+        canvasTmp.drawBitmap(mOriginalBitmap, null, new Rect(0, 0, bwidth, bheight), null);
+        RectF rectF = mStyleInfo.getTextRectF();
         if (null != rectF) {
-
             int mleft = (int) (bwidth * rectF.left);
             int mtop = (int) (bheight * rectF.top);
-
             int mright = (int) (bwidth * rectF.right);
             int mbottom = (int) (bheight * rectF.bottom);
-
             // 左上角的坐标
             Point mp11 = new Point(mleft, mtop);
 
@@ -662,10 +668,10 @@ public class SinglePointRotate extends View {
                     (mImageCenterPoint.x - mRotatedImageWidth / 2),
                     (mImageCenterPoint.y - mRotatedImageHeight / 2));
 
-            canvas.drawBitmap(newb, mMatrix, mPaint);
+            canvas.drawBitmap(newb, mMatrix, null);
             maps.put(System.currentTimeMillis(), newb);
             if (!TextUtils.isEmpty(mText)) {
-                if (!msi.lashen) {
+                if (!mStyleInfo.lashen) {
 
                     /**
                      * 新增部分 画text
@@ -704,18 +710,18 @@ public class SinglePointRotate extends View {
                     int wwidth = mp22.x - mp12.x;
                     int wheight = mp32.y - mp22.y;
                     int topy = mpa + mp12.y;
-                    if (msi.pid != spId) {
+                    if (mStyleInfo.pid != spId) {
 
                         if (!mTemp.equals(mp42.x, mp42.y)) {
                             mTemp.set(mp42.x, mp42.y);
                             getTSize(wwidth, wheight);
                         }
                         boolean bStroke = false;
-                        if (msi.st == STYPE.special) {
-                            if (msi.strokeWidth > 0) {// && msi.strokeColor !=
+                        if (mStyleInfo.st == STYPE.special) {
+                            if (mStyleInfo.strokeWidth > 0) {// && mStyleInfo.strokeColor !=
                                 // textcolor
-                                mTextPaint.setColor(msi.strokeColor);
-                                mTextPaint.setStrokeWidth(msi.strokeWidth);
+                                mTextPaint.setColor(mStyleInfo.strokeColor);
+                                mTextPaint.setStrokeWidth(mStyleInfo.strokeWidth);
                                 mTextPaint.setStyle(Style.FILL_AND_STROKE); // 描边种类
                                 mTextPaint.setFakeBoldText(true); // 外层text采用粗体
                                 StaticLayout myStaticLayout = new StaticLayout(
@@ -792,18 +798,16 @@ public class SinglePointRotate extends View {
                                 mTextPaint.setFakeBoldText(true); // 外层text采用粗体
                                 bword.drawText(mText, bx, basey, mTextPaint); //
                                 // 向上移动
-
                             }
 
                         } else {
-                            if (null != msi && msi.strokeWidth > 0
-                                    && msi.strokeColor != textcolor) {
-                                mTextPaint.setColor(msi.strokeColor);
-                                mTextPaint.setStrokeWidth(msi.strokeWidth);
+                            if (null != mStyleInfo && mStyleInfo.strokeWidth > 0
+                                    && mStyleInfo.strokeColor != textcolor) {
+                                mTextPaint.setColor(mStyleInfo.strokeColor);
+                                mTextPaint.setStrokeWidth(mStyleInfo.strokeWidth);
                                 mTextPaint.setStyle(Style.FILL_AND_STROKE); // 描边种类
                                 mTextPaint.setFakeBoldText(true); // 外层text采用粗体
                                 bword.drawText(mText, bx, basey, mTextPaint); //
-
                             }
 
                         }
@@ -851,6 +855,7 @@ public class SinglePointRotate extends View {
 
     }
 
+
     private void getTSize(int wwidth, int wheight) {
         int temp = (int) (mTextSize + 100);
         StaticLayout myStaticLayout = null;
@@ -891,7 +896,6 @@ public class SinglePointRotate extends View {
                     }
                     b = null;
                 }
-
                 mapWords.remove(item.getKey());
             }
             mapWords.clear();
@@ -932,10 +936,7 @@ public class SinglePointRotate extends View {
      * @param path
      */
     public void save(String path) {
-        int w = getWidth();
-        int h = getHeight();
-        Bitmap bm = Bitmap.createBitmap(getWidth(), getHeight(),
-                Config.ARGB_8888);
+        Bitmap bm = Bitmap.createBitmap(getWidth(), getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(bm);
         mOnDraw(canvas);
         BitmapUtils.saveBitmapToFile(bm, path, true);
@@ -1000,10 +1001,10 @@ public class SinglePointRotate extends View {
                     }
                     break;
                 case MotionEvent.ACTION_MOVE:
-//                    CaptionFilterInfo currentFilter = msi.getCaptionFilter();
+//                    CaptionFilterInfo currentFilter = mStyleInfo.getCaptionFilter();
                     // 如果为移动缩放模式
                     if (mDefautMode == ZOOM_ROTATE) {
-                        if (msi.pid != spId) {
+                        if (mStyleInfo.pid != spId) {
                             disf = MAX_SCALE;
                         }
 
@@ -1016,8 +1017,8 @@ public class SinglePointRotate extends View {
                             tmpW = mOriginalBitmap.getWidth();
                             tmpH = mOriginalBitmap.getHeight();
                         } else {
-                            tmpW = (int) (msi.w);
-                            tmpH = (int) (msi.h);
+                            tmpW = (int) (mStyleInfo.w);
+                            tmpH = (int) (mStyleInfo.h);
                         }
                         float realL = (float) Math
                                 .sqrt((float) (tmpW * tmpW + tmpH * tmpH) / 4);
@@ -1100,7 +1101,7 @@ public class SinglePointRotate extends View {
                         if (disf <= MIN_SCALE) {
                             disf = MIN_SCALE;
                         } else if (disf >= MAX_SCALE) {
-                            if (msi.pid != spId) {
+                            if (mStyleInfo.pid != spId) {
                                 disf = MAX_SCALE;
                             }
                         }
@@ -1181,18 +1182,18 @@ public class SinglePointRotate extends View {
         int mbheight = mOutLayoutImageHeight;
         int mright = mImageViewLeft + mImageViewWidth;
         int mbottom = mImageViewTop + mImageViewHeight;
-        if (null != end) {
+        if (null != mParentSize) {
             if (mright < mbwidth) {
                 mImageViewLeft = mbwidth - mImageViewWidth;
             }
             if (mbottom < mbheight) {
                 mImageViewTop = mbottom - mImageViewHeight;
             }
-            if (mImageViewLeft > end.x - mbwidth) {
-                mImageViewLeft = end.x - mbwidth;
+            if (mImageViewLeft > mParentSize.x - mbwidth) {
+                mImageViewLeft = mParentSize.x - mbwidth;
             }
-            if (mImageViewTop > end.y - mbheight) {
-                mImageViewTop = end.y - mbheight;
+            if (mImageViewTop > mParentSize.y - mbheight) {
+                mImageViewTop = mParentSize.y - mbheight;
             }
 
         }
@@ -1215,8 +1216,7 @@ public class SinglePointRotate extends View {
     /**
      * 设置图片的中心点，
      */
-    private void setImageViewParams(Bitmap bm, Point centerPoint,
-                                    float rotateAngle, float zoomFactor) {
+    private void setImageViewParams(Bitmap bm, Point centerPoint, float rotateAngle, float zoomFactor) {
         // 要缩放的原始图片
         mOriginalBitmap = bm;
         // 图片的中心坐标
@@ -1230,11 +1230,10 @@ public class SinglePointRotate extends View {
                 sbmpW = (int) (mOriginalBitmap.getWidth() * zoomFactor);
                 sbmpH = (int) (mOriginalBitmap.getHeight() * zoomFactor);
             } else {
-                sbmpW = (int) (msi.w * zoomFactor);
-                sbmpH = (int) (msi.h * zoomFactor);
+                sbmpW = (int) (mStyleInfo.w * zoomFactor);
+                sbmpH = (int) (mStyleInfo.h * zoomFactor);
             }
-//            false....2.0setImageViewParams: 234.0*88.0......sb:720*272
-//            Log.e(TAG, zoomFactor + "...." + isLaShen() + "...." + zoomFactor + "setImageViewParams: " + msi.w + "*" + msi.h + "......sb:" + sbmpW + "*" + sbmpH);
+//            Log.e(TAG, "setImageViewParams: zoomFactor:" + zoomFactor + " isLaShen:" + isLaShen() + " mStyleInfo:" + mStyleInfo.w + "*" + mStyleInfo.h + " sbmpW:" + sbmpW + "*" + sbmpH);
         } catch (Exception e) {
             sbmpW = 100;
             sbmpH = 100;
@@ -1249,11 +1248,13 @@ public class SinglePointRotate extends View {
         // 设置旋转比例
         mMatrix.postRotate(rotateAngle % 360, sbmpW / 2, sbmpH / 2);
         // 设置移动
-        mMatrix.postTranslate(dx + mOutLayoutImageWidth, dy
-                + mOutLayoutImageHeight);
 
-//        setImageViewParams: 744*346...center:568*317
-//        Log.e(TAG, "setImageViewParams: " + mRotatedImageWidth + "*" + mRotatedImageHeight + "...center:" + mImageCenterPoint.x + "*" + mImageCenterPoint.y);
+        int tdx = dx + mOutLayoutImageWidth;
+        int tdy = dy + mOutLayoutImageHeight;
+        mMatrix.postTranslate(tdx, tdy);
+
+//        Log.e(TAG, "setImageViewParams: " + mRotatedImageWidth + "*" + mRotatedImageHeight + " " +
+//                " mImageCenterPoint:" + mImageCenterPoint.x + "*" + mImageCenterPoint.y + " trans: " + tdx + "*" + tdy);
 
         // 设置小图片的宽高
         setImageViewWH(mRotatedImageWidth, mRotatedImageHeight,
@@ -1528,10 +1529,10 @@ public class SinglePointRotate extends View {
      * 设置显示样式
      */
     public void setImageStyle(StyleInfo info) {
-        msi = info;
-        mTextPaint.setColor(msi.getTextDefaultColor());
+        mStyleInfo = info;
+        mTextPaint.setColor(mStyleInfo.getTextDefaultColor());
         if (TextUtils.isEmpty(mText)) {
-            mText = msi.getHint();
+            mText = mStyleInfo.getHint();
         }
         invaView(true);
     }
@@ -1548,8 +1549,7 @@ public class SinglePointRotate extends View {
      * 刷新图片信息的配置，缩放比
      */
     private void invaView(boolean minvalidate) {
-        setImageViewParams(mOriginalBitmap, mImageCenterPoint, mRotateAngle,
-                disf);
+        setImageViewParams(mOriginalBitmap, mImageCenterPoint, mRotateAngle, disf);
         if (minvalidate)
             invalidate();
     }
@@ -1563,8 +1563,7 @@ public class SinglePointRotate extends View {
         if (mdisf <= MIN_SCALE) {
             mdisf = MIN_SCALE;
         } else if (mdisf >= MAX_SCALE) {
-
-            if (msi.pid != spId) {
+            if (mStyleInfo.pid != spId) {
                 mdisf = MAX_SCALE;
             }
         }
@@ -1573,7 +1572,6 @@ public class SinglePointRotate extends View {
             disf = mdisf;
             invaView(true);
         }
-
     }
 
     /**
@@ -1585,26 +1583,25 @@ public class SinglePointRotate extends View {
 
     private void setSameParamWithText(boolean isWriting) {
         // 根据屏幕最大宽度获取文字最大绘制宽度 display.widthPixels mDeleteBitmap mContralBitmap
-        int newtTop = msi.tTop, newtButtom = msi.tButtom;
-        if (msi.tHeight > 40) {
-            newtTop = msi.tTop + (msi.tHeight - 40) / 2;
-            newtButtom = msi.tButtom
-                    + (msi.tHeight - 40 - (msi.tHeight - 40) / 2);
+        int newtTop = mStyleInfo.tTop, newtButtom = mStyleInfo.tButtom;
+        if (mStyleInfo.tHeight > 40) {
+            newtTop = mStyleInfo.tTop + (mStyleInfo.tHeight - 40) / 2;
+            newtButtom = mStyleInfo.tButtom
+                    + (mStyleInfo.tHeight - 40 - (mStyleInfo.tHeight - 40) / 2);
         }
-        int nMaxTextDrawWidth = end.x - msi.tLeft - msi.tRight
+        int nMaxTextDrawWidth = mParentSize.x - mStyleInfo.tLeft - mStyleInfo.tRight
                 - mDeleteBitmap.getWidth() / 2 - mContralBitmap.getWidth() / 2;
 
-        mZoomFactor = disf;
         nMaxTextDrawWidth = (int) (nMaxTextDrawWidth / disf);
         // 获取原图宽\高
-//        int bwidth = (int) msi.w;
-//        int bheight = (int) msi.h;
+//        int bwidth = (int) mStyleInfo.w;
+//        int bheight = (int) mStyleInfo.h;
         int bwidth = mOriginalBackupBitmap.getWidth();
         int bheight = mOriginalBackupBitmap.getHeight();
 
 //        Log.e(TAG, "setSameParamWithText: " + mOriginalBackupBitmap.getWidth() + "*" + mOriginalBackupBitmap.getHeight());
         // 获取文字原始可写入区域的高度
-        int nSourceDrawTextWidth = bwidth - msi.tLeft - msi.tRight;
+        int nSourceDrawTextWidth = bwidth - mStyleInfo.tLeft - mStyleInfo.tRight;
         int nSourceDrawTextHeight = bheight - newtTop - newtButtom;
         int nNewDrawTextHeight = 0;
         // 如果可写区域的预留的高度太小，自动加大
@@ -1623,7 +1620,7 @@ public class SinglePointRotate extends View {
             if (shadowColor != textcolor) {
                 textPaint.setColor(shadowColor);
                 textPaint.setStyle(Style.STROKE);
-                textPaint.setStrokeWidth(msi.strokeWidth);
+                textPaint.setStrokeWidth(mStyleInfo.strokeWidth);
                 textPaint.setFakeBoldText(true); // 外层text采用粗体
             }
         }
@@ -1667,7 +1664,7 @@ public class SinglePointRotate extends View {
         }
         int addWPix = 0;
         int addHPix = 0;
-        if (msi.onlyone) {
+        if (mStyleInfo.onlyone) {
             Rect onlyOneLineRect = new Rect();
             textPaint.getTextBounds(getText(), 0, getText().length(),
                     onlyOneLineRect);
@@ -1690,7 +1687,7 @@ public class SinglePointRotate extends View {
         // 创建一个原图
         Bitmap newb = Bitmap.createBitmap(bwidth, bheight, Config.ARGB_8888);
         Canvas canvasTmp = new Canvas();
-        canvasTmp.drawColor(Color.BLUE);
+//        canvasTmp.drawColor(Color.BLUE);
         canvasTmp.setBitmap(newb);
         canvasTmp.setDrawFilter(new PaintFlagsDrawFilter(0,
                 Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG));
@@ -1699,29 +1696,29 @@ public class SinglePointRotate extends View {
 //        canvasTmp.drawBitmap(mOriginalBackupBitmap, 0, 0, null);
 
         // 把原图按从走到右从上倒下依次分割成9张小图，用于拉伸 分割的的1 3 7 9 小图分别处于四个边角，不需要拉伸处理
-        Bitmap bitmap1 = Bitmap.createBitmap(newb, 0, 0, (int) (msi.left),
-                (int) (msi.top));
-        Bitmap bitmap2 = Bitmap.createBitmap(newb, (int) (msi.left), 0, bwidth
-                - (int) (msi.left) - (int) (msi.right), (int) (msi.top));
-        Bitmap bitmap3 = Bitmap.createBitmap(newb, bwidth - (int) (msi.right),
-                0, (int) (msi.right), (int) (msi.top));
-        Bitmap bitmap4 = Bitmap.createBitmap(newb, 0, (int) (msi.top),
-                (int) (msi.left), bheight - (int) (msi.top)
-                        - (int) (msi.buttom));
-        Bitmap bitmap5 = Bitmap.createBitmap(newb, (int) (msi.left),
-                (int) (msi.top), bwidth - (int) (msi.left) - (int) (msi.right),
-                bheight - (int) (msi.top) - (int) (msi.buttom));
-        Bitmap bitmap6 = Bitmap.createBitmap(newb, bwidth - (int) (msi.right),
-                (int) (msi.top), (int) (msi.right), bheight - (int) (msi.top)
-                        - (int) (msi.buttom));
+        Bitmap bitmap1 = Bitmap.createBitmap(newb, 0, 0, (int) (mStyleInfo.left),
+                (int) (mStyleInfo.top));
+        Bitmap bitmap2 = Bitmap.createBitmap(newb, (int) (mStyleInfo.left), 0, bwidth
+                - (int) (mStyleInfo.left) - (int) (mStyleInfo.right), (int) (mStyleInfo.top));
+        Bitmap bitmap3 = Bitmap.createBitmap(newb, bwidth - (int) (mStyleInfo.right),
+                0, (int) (mStyleInfo.right), (int) (mStyleInfo.top));
+        Bitmap bitmap4 = Bitmap.createBitmap(newb, 0, (int) (mStyleInfo.top),
+                (int) (mStyleInfo.left), bheight - (int) (mStyleInfo.top)
+                        - (int) (mStyleInfo.buttom));
+        Bitmap bitmap5 = Bitmap.createBitmap(newb, (int) (mStyleInfo.left),
+                (int) (mStyleInfo.top), bwidth - (int) (mStyleInfo.left) - (int) (mStyleInfo.right),
+                bheight - (int) (mStyleInfo.top) - (int) (mStyleInfo.buttom));
+        Bitmap bitmap6 = Bitmap.createBitmap(newb, bwidth - (int) (mStyleInfo.right),
+                (int) (mStyleInfo.top), (int) (mStyleInfo.right), bheight - (int) (mStyleInfo.top)
+                        - (int) (mStyleInfo.buttom));
         Bitmap bitmap7 = Bitmap.createBitmap(newb, 0, bheight
-                - (int) (msi.buttom), (int) (msi.left), (int) (msi.buttom));
-        Bitmap bitmap8 = Bitmap.createBitmap(newb, (int) (msi.left), bheight
-                - (int) (msi.buttom), bwidth - (int) (msi.left)
-                - (int) (msi.right), (int) (msi.buttom));
-        Bitmap bitmap9 = Bitmap.createBitmap(newb, bwidth - (int) (msi.right),
-                bheight - (int) (msi.buttom), (int) (msi.right),
-                (int) (msi.buttom));
+                - (int) (mStyleInfo.buttom), (int) (mStyleInfo.left), (int) (mStyleInfo.buttom));
+        Bitmap bitmap8 = Bitmap.createBitmap(newb, (int) (mStyleInfo.left), bheight
+                - (int) (mStyleInfo.buttom), bwidth - (int) (mStyleInfo.left)
+                - (int) (mStyleInfo.right), (int) (mStyleInfo.buttom));
+        Bitmap bitmap9 = Bitmap.createBitmap(newb, bwidth - (int) (mStyleInfo.right),
+                bheight - (int) (mStyleInfo.buttom), (int) (mStyleInfo.right),
+                (int) (mStyleInfo.buttom));
         // 释放canvasTmp 和 newb
         canvasTmp = null;
         newb.recycle();
@@ -1844,9 +1841,9 @@ public class SinglePointRotate extends View {
         newHeight = newBitmap.getHeight();
         // 文字可绘制的矩形区域
         Rect TextRect = new Rect();
-        TextRect.left = 0 + msi.tLeft;
+        TextRect.left = 0 + mStyleInfo.tLeft;
         TextRect.top = 0 + newtTop;
-        TextRect.right = newWidth - msi.tRight;
+        TextRect.right = newWidth - mStyleInfo.tRight;
         TextRect.bottom = newHeight - newtButtom;
         // 最后加上文字的Bitmap
 
@@ -1861,7 +1858,7 @@ public class SinglePointRotate extends View {
         float offY = fontTotalHeight / 2 - fontMetrics.bottom;
         float newY = TextRect.top + offY * 2 + 4;
 
-        if (msi.onlyone) {
+        if (mStyleInfo.onlyone) {
 
             String strTempLine = getText();
             if (strTempLine == null)
@@ -1875,7 +1872,7 @@ public class SinglePointRotate extends View {
             if (shadowColor != 0) {
                 if (shadowColor != textcolor) {
                     textPaint.setColor(shadowColor);
-                    textPaint.setStrokeWidth(msi.strokeWidth);
+                    textPaint.setStrokeWidth(mStyleInfo.strokeWidth);
                     textPaint.setStyle(Style.STROKE);
                     textPaint.setFakeBoldText(true); // 外层text采用粗体
                     TextCanvas.drawText(strTempLine, TextRect.left + moveLeft,
@@ -1905,7 +1902,7 @@ public class SinglePointRotate extends View {
                 if (shadowColor != 0) {
                     if (shadowColor != textcolor) {
                         textPaint.setColor(shadowColor);
-                        textPaint.setStrokeWidth(msi.strokeWidth);
+                        textPaint.setStrokeWidth(mStyleInfo.strokeWidth);
                         textPaint.setStyle(Style.STROKE);
                         textPaint.setFakeBoldText(true); // 外层text采用粗体
                         TextCanvas.drawText(strTempLine, TextRect.left
@@ -1934,15 +1931,15 @@ public class SinglePointRotate extends View {
         bitmap7.recycle();
         bitmap8.recycle();
         bitmap9.recycle();
-        // textBitmap.recycle();
+        // textBitmap.removeSelf();
         newBitmap.recycle();
 
         calculateImagePosition(0, 0, ((int) (newWidth * disf)),
                 ((int) (newHeight * disf)), mRotateAngle);
         if (bFirstIn) {
             // 计算中心点
-            mImageCenterPoint.y = (int) (this.end.y * msi.centerxy[1]);
-            mImageCenterPoint.x = (int) (this.end.x * msi.centerxy[0] + mRotatedImageWidth / 2);
+            mImageCenterPoint.y = (int) (this.mParentSize.y * mStyleInfo.centerxy[1]);
+            mImageCenterPoint.x = (int) (this.mParentSize.x * mStyleInfo.centerxy[0] + mRotatedImageWidth / 2);
             bFirstIn = false;
         }
         if (isWriting)// 1.用户自己手动改动文字的时候2.用户切换不同字幕选项的时候 isWriting为true
@@ -1956,25 +1953,25 @@ public class SinglePointRotate extends View {
             {
                 mImageCenterPoint.y = mRotatedImageHeight / 2 + nMark;
             }
-            if (!msi.onlyone)// 多行
+            if (!mStyleInfo.onlyone)// 多行
             {
-                if ((mImageCenterPoint.x + mRotatedImageWidth / 2) > this.end.x)// 右边超出范围
+                if ((mImageCenterPoint.x + mRotatedImageWidth / 2) > this.mParentSize.x)// 右边超出范围
                 {
-                    mImageCenterPoint.x = this.end.x - mRotatedImageWidth / 2
+                    mImageCenterPoint.x = this.mParentSize.x - mRotatedImageWidth / 2
                             - nMark;
                 }
-                if ((mImageCenterPoint.y + mRotatedImageHeight / 2) > this.end.y)// 下边超出范围
+                if ((mImageCenterPoint.y + mRotatedImageHeight / 2) > this.mParentSize.y)// 下边超出范围
                 {
-                    mImageCenterPoint.y = this.end.y - mRotatedImageHeight / 2
+                    mImageCenterPoint.y = this.mParentSize.y - mRotatedImageHeight / 2
                             - nMark;
                 }
             } else// 单行
             {
-                if ((mImageCenterPoint.x - mRotatedImageWidth / 2) > this.end.x)// 右边超出范围
+                if ((mImageCenterPoint.x - mRotatedImageWidth / 2) > this.mParentSize.x)// 右边超出范围
                 {
-                    // if (mRotatedImageWidth/2 > this.end.x)
+                    // if (mRotatedImageWidth/2 > this.mParentSize.x)
                     // mImageCenterPoint.x = mRotatedImageWidth/2-nMark;
-                    // if (mRotatedImageHeight/2 > this.end.y)
+                    // if (mRotatedImageHeight/2 > this.mParentSize.y)
                     // mImageCenterPoint.y = mRotatedImageHeight/2-nMark;
                 }
             }
@@ -2015,11 +2012,11 @@ public class SinglePointRotate extends View {
     public void setInputText(String text) {
         this.mText = text;
         mTemp.set(0, 0);
-        if (msi.pid == spId) {
+        if (mStyleInfo.pid == spId) {
             mTextPaint.setTextSize(24f);
             int mwidth = (int) mTextPaint.measureText(text);
 
-            int mRectWidth = (int) (mOriginalBitmap.getWidth() * msi.getTextRectF().width()); // 原始图片可填充字幕的区域的宽度
+            int mRectWidth = (int) (mOriginalBitmap.getWidth() * mStyleInfo.getTextRectF().width()); // 原始图片可填充字幕的区域的宽度
 
             int mscaWidth = (int) (mRectWidth * disf);
 
@@ -2042,7 +2039,7 @@ public class SinglePointRotate extends View {
                 }
                 setDisf(targetDisf);
             }
-        } else if (msi.lashen) {
+        } else if (mStyleInfo.lashen) {
             setSameParamWithText(isUserWriting);
         }
 
@@ -2058,7 +2055,7 @@ public class SinglePointRotate extends View {
      */
     public void setInputTextColor(int textColor) {
         this.textcolor = textColor;
-        if (msi.lashen) {
+        if (mStyleInfo.lashen) {
             setSameParamWithText();
         }
         this.invalidate();
@@ -2080,7 +2077,7 @@ public class SinglePointRotate extends View {
         if (shadowColor != shadow) {
             shadowColor = shadow;
         }
-        if (msi.lashen) {
+        if (mStyleInfo.lashen) {
             setSameParamWithText();
         }
         if (minvalidate)
@@ -2109,12 +2106,11 @@ public class SinglePointRotate extends View {
                 this.mTextPaint.setTypeface(tf);
             } else {
                 this.ttfLocal = null;
-                this.mTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT,
-                        Typeface.NORMAL));
+                this.mTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.NORMAL));
             }
 
             if (postInvalidateEnable) {
-                if (msi.lashen) {
+                if (mStyleInfo.lashen) {
                     setSameParamWithText();
                 }
                 this.invalidate();
@@ -2141,7 +2137,7 @@ public class SinglePointRotate extends View {
         this.mTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT,
                 Typeface.NORMAL));
         if (postInvalidateEnable) {
-            if (msi.lashen) {
+            if (mStyleInfo.lashen) {
                 setSameParamWithText();
             }
             this.invalidate();
@@ -2170,9 +2166,6 @@ public class SinglePointRotate extends View {
         return disf;
     }
 
-    public float getZoomFactor() {
-        return mZoomFactor;
-    }
 
     public int getShadowColor() {
         return shadowColor;
@@ -2214,6 +2207,42 @@ public class SinglePointRotate extends View {
         /**
          * 删除当前字幕
          */
-        public void onDelete(SinglePointRotate single);
+        void onDelete(SinglePointRotate single);
+    }
+
+    /**
+     * 获取未旋转时，图片的显示位置  （当前角度矩阵信息，逆向旋转同大小的角度，再获取4个顶点的坐标）
+     */
+
+    public Rect getOriginalRect() {
+//        Log.e(TAG, "getOriginalRect: " + this + "   src:" + mPoint1 + "  " + mPoint2 + " " + mPoint3 + "  >" + mPoint4);
+
+        Matrix tmp = createMatrix();
+        float[] arr1 = new float[2];
+        float[] arr2 = new float[2];
+        float[] arr3 = new float[2];
+        float[] arr4 = new float[2];
+        tmp.mapPoints(arr1, new float[]{mPoint1.x, mPoint1.y});
+        tmp.mapPoints(arr2, new float[]{mPoint2.x, mPoint2.y});
+        tmp.mapPoints(arr3, new float[]{mPoint3.x, mPoint3.y});
+        tmp.mapPoints(arr4, new float[]{mPoint4.x, mPoint4.y});
+//        Log.e(TAG, "getOriginalRect: " + Arrays.toString(arr1) + "  " + Arrays.toString(arr2) + "  " + Arrays.toString(arr3) + "  >" + Arrays.toString(arr4));
+        RectF rect = new RectF(arr1[0], arr1[1], arr3[0], arr3[1]);
+
+        float centerX = getLeft() + getWidth() / 2;
+        float centerY = getTop() + getHeight() / 2;
+        tmp.reset();
+
+        float halfW = rect.width() / 2.0f;
+        float halfH = rect.height() / 2.0f;
+        return new Rect((int) (centerX - halfW), (int) (centerY - halfH), (int) (centerX + halfW), (int) (centerY + halfH));
+    }
+
+    private Matrix createMatrix() {
+        Matrix tempMatrix = new Matrix();
+        tempMatrix.setScale(1f, 1f);
+        // 设置逆向的旋转角度
+        tempMatrix.postRotate(-(mRotateAngle % 360), (getWidth() / 2), (getHeight() / 2));
+        return tempMatrix;
     }
 }

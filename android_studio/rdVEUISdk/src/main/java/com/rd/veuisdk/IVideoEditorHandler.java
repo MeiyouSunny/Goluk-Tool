@@ -1,36 +1,29 @@
 package com.rd.veuisdk;
 
-import android.graphics.RectF;
+import android.widget.FrameLayout;
 
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
-import com.rd.vecore.models.MediaObject;
-import com.rd.vecore.models.Scene;
+import com.rd.veuisdk.ae.model.AETemplateInfo;
+import com.rd.veuisdk.fragment.helper.IFilterHandler;
 
-import java.util.List;
-
-//import com.rd.xpk.editor.modal.ImageObject;
 
 /**
  * 视频编辑预览抽象接口
  *
  * @author abreal
  */
-public interface IVideoEditorHandler {
+public interface IVideoEditorHandler extends IFilterHandler, IVideoMusicEditor {
     /**
      * 获取到编辑器
      *
-     * @return
      */
     VirtualVideoView getEditor();
 
     /**
-     * 获取到编辑器
-     *
-     * @return
+     * 字幕容器
      */
-    VirtualVideo getEditorVideo();
-
+    FrameLayout getSubEditorParent();
 
     /**
      * 获取缩略图编辑器
@@ -38,48 +31,9 @@ public interface IVideoEditorHandler {
     VirtualVideo getSnapshotEditor();
 
     /**
-     * 获取准备剪辑的图片或视频媒体列表
-     *
-     * @return
-     */
-    List<MediaObject> getEditingMediaObjectsWithTransition();
-
-    /**
-     * 编辑预览重新加载
-     *
-     * @param bFastPreview     是否为快速预览
-     * @param lstEditingScenes 不为空时代表预览加载指定场景列表
-     */
-    void reload(boolean bFastPreview, List<Scene> lstEditingScenes);
-
-    /**
-     * 编辑预览重新加载
-     *
-     * @param bOnlyAudio 只重新加载音频
-     */
-    void reload(boolean bOnlyAudio);
-
-    /**
      * 取消loading...
      */
     void cancelLoading();
-
-    /**
-     * 开始播放
-     */
-    void start();
-
-    /**
-     * 暂停预览
-     */
-    void pause();
-
-    /**
-     * 跳转到指定时间点
-     *
-     * @param msec 单位：毫秒
-     */
-    void seekTo(int msec);
 
     /**
      * 停止播放
@@ -87,40 +41,14 @@ public interface IVideoEditorHandler {
     void stop();
 
     /**
-     * 是否播放中...
-     *
-     * @return
+     * 改变动画模板
      */
-    boolean isPlaying();
+    void changeAnimation(int animation);
 
     /**
-     * @return 获取播放持续时间(ms)
+     * 改变AE模板
      */
-    int getDuration();
-
-    /**
-     * @return 获取当前播放器的时间点 单位：毫秒
-     */
-    int getCurrentPosition();
-
-    /**
-     * 想要点击多段配乐
-     */
-    void onMenuChanged();
-
-    /**
-     * 改变滤镜
-     *
-     * @param nFilterType 滤镜类型:<br>
-     */
-    void changeFilterType(int nFilterType);
-
-    /**
-     * 获取当前滤镜
-     *
-     * @return 滤镜类型:<br>
-     */
-    int getCurrentFilterType();
+    void setAETemplateInfo(AETemplateInfo aeTemplateInfo);
 
     /**
      * 注册获取编辑器预览进度
@@ -161,25 +89,16 @@ public interface IVideoEditorHandler {
         void onEditorPreviewComplete();
     }
 
-    interface IEditorThemeTitleHandler {
-        /**
-         * 设置主题标题是否显示，以及显示区域
-         *
-         * @param bShowing
-         * @param rectTitleBack
-         */
-        void showTitleBack(boolean bShowing, RectF rectTitleBack);
-    }
-
-    /**
-     * 视频资源是否静音
-     *
-     * @return
-     */
-    boolean isMediaMute();
-
     /**
      * 切换配乐强制清除mv中的音乐 (同理：切换mv，清除配乐)
      */
     void removeMvMusic(boolean remove);
+
+    void onProportionChanged(float aspect);
+
+    void onBackgroundModeChanged(boolean isEnableBg);
+
+    void onBackgroundColorChanged(int color);
+
+
 }

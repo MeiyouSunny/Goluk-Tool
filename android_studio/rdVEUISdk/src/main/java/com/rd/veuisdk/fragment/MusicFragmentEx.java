@@ -1,8 +1,8 @@
 package com.rd.veuisdk.fragment;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -12,23 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.rd.cache.HttpImageFetcher;
-import com.rd.cache.ImageCache.ImageCacheParams;
-import com.rd.cache.ImageResizer;
 import com.rd.downfile.utils.DownLoadUtils;
 import com.rd.downfile.utils.IDownListener;
 import com.rd.http.MD5;
 import com.rd.http.NameValuePair;
 import com.rd.lib.utils.CoreUtils;
+import com.rd.lib.utils.LogUtil;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.net.RdHttpClient;
 import com.rd.vecore.Music;
 import com.rd.vecore.VirtualVideo;
-import com.rd.veuisdk.IVideoEditorHandler;
+import com.rd.veuisdk.IVideoMusicEditor;
 import com.rd.veuisdk.MoreMusicActivity;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.TempVideoParams;
@@ -36,10 +35,14 @@ import com.rd.veuisdk.VideoEditActivity;
 import com.rd.veuisdk.database.HistoryMusicCloud;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.model.AudioMusicInfo;
-import com.rd.veuisdk.model.WebInfo;
-import com.rd.veuisdk.ui.HorizontalListViewMV;
-import com.rd.veuisdk.ui.HorizontalListViewMV.OnListViewItemSelectListener;
+import com.rd.veuisdk.model.CloudAuthorizationInfo;
+import com.rd.veuisdk.model.IApiInfo;
+import com.rd.veuisdk.ui.HorizontalListViewFresco;
+import com.rd.veuisdk.ui.HorizontalListViewFresco.OnListViewItemSelectListener;
 import com.rd.veuisdk.utils.FileUtils;
+import com.rd.veuisdk.utils.IParamData;
+import com.rd.veuisdk.utils.IParamHandler;
+import com.rd.veuisdk.utils.ModeDataUtils;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
@@ -49,22 +52,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
 /**
- * 配乐方式2
+ * 配乐
  */
 public class MusicFragmentEx extends BaseFragment {
-    private final int MENU_ORIGIN = 0, MENU_NONE = 1, MENU_LOCAL = 2,
-            MENU_YUN = 3;
-    private View mBtnVoice;
+    public static final int MENU_NONE = 1;
+    private static final int MENU_ORIGIN = 0, MENU_LOCAL = 2, MENU_YUN = 3;
     /**
      * Music下载地址
      */
-    private String mMusicUrl;
+    private String mBGMUrl;
     /**
      * 防止videoEditActivity oncreate
      */
@@ -73,11 +76,11 @@ public class MusicFragmentEx extends BaseFragment {
     /**
      * 编辑界面控制类对象
      */
-    private IVideoEditorHandler mHlrVideoEditor;
+    private IVideoMusicEditor mHlrVideoEditor;
     /**
      * 选择标记
      */
-    private int mThemeType = 0;
+    private int mMenuIndex = 0;
     /**
      * 片尾时长
      */
@@ -86,75 +89,92 @@ public class MusicFragmentEx extends BaseFragment {
      * 云音乐地址
      */
     private String mCloudMusicUrl = null;
+    private String mMusicTypeUrl = null;
+    private CloudAuthorizationInfo mCloudAuthorizationInfo = null;
+    private boolean isNewCloudApi = false;
     /**
      * 控制混音等级
      */
     private SeekBar mFactor;
+    /**
+     * 原音音量
+     */
+    private LinearLayout mLlVoiceVolume;
+    private SeekBar mSbVoiceVolume;
+    private int mOldVolume;
+    private boolean mIsVolumeVisibility = false;
+
+    public static MusicFragmentEx newInstance() {
+
+        Bundle args = new Bundle();
+
+        MusicFragmentEx fragment = new MusicFragmentEx();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public MusicFragmentEx() {
         super();
     }
 
-    private int voiceLayout = UIConfiguration.VOICE_LAYOUT_1;
+    private int mVoiceLayout = UIConfiguration.VOICE_LAYOUT_1;
     /**
      * 监听回调
      */
     private IMusicListener mMusicListener;
     private boolean enableLocalMusic = true;
     private boolean isHideDubbing = false;
+    private boolean isNewBGMApi = false;
+    private Music mInitalMusic;  // 初始音乐
+    private int mInitalItemId;  // 初始标记
+    private String mInitalMusicName;
+    private boolean mInitIsMute;
+    private int mInitMusicFactor;
 
     /**
-     * 当前选中id
+     * @param isNewBGM          是否是新的背景音乐接口
+     * @param bgmUrl            背景音乐url
+     * @param cloudMusicTypeUrl 云音乐分类的url
+     * @param cloudMusicUrl     云音乐地址
+     * @param isNewCloud        是否启用新的云音乐
+     * @param enableLocalMusic  是否显示本地音乐
+     * @param isHideDubbing     是否隐藏配音
+     * @param info              云音乐版权证书相关
      */
-    private int mCurrentItemId;
-
-    /**
-     * @param trailerDuration
-     * @param _musicUrl        背景音乐
-     * @param _voiceLayout
-     * @param ilistener
-     * @param url              云音乐
-     * @param enableLocalMusic 是否显示本地音乐
-     * @param isHideDubbing    是否隐藏配音
-     */
-    public void init(float trailerDuration, String _musicUrl,
-                     int _voiceLayout, IMusicListener ilistener, String url, boolean enableLocalMusic, boolean isHideDubbing) {
+    public void init(boolean isNewBGM, float trailerDuration, String bgmUrl, int voiceLayout, IMusicListener listener,
+                     String cloudMusicTypeUrl, String cloudMusicUrl, boolean isNewCloud, boolean enableLocalMusic, boolean isHideDubbing, CloudAuthorizationInfo info) {
+        isNewBGMApi = isNewBGM;
         mTrailerDuration = trailerDuration;
-        mMusicListener = ilistener;
-        voiceLayout = _voiceLayout;
+        mMusicListener = listener;
+        mVoiceLayout = voiceLayout;
         this.enableLocalMusic = enableLocalMusic;
         this.isHideDubbing = isHideDubbing;
-        mMusicUrl = TextUtils.isEmpty(_musicUrl) ? "" : _musicUrl.trim();
-        mCloudMusicUrl = TextUtils.isEmpty(url) ? "" : url.trim();
+        mBGMUrl = TextUtils.isEmpty(bgmUrl) ? "" : bgmUrl.trim();
+        this.isNewCloudApi = isNewCloud;
+        mCloudMusicUrl = TextUtils.isEmpty(cloudMusicUrl) ? "" : cloudMusicUrl.trim();
+        mMusicTypeUrl = TextUtils.isEmpty(cloudMusicTypeUrl) ? "" : cloudMusicTypeUrl.trim();
+        mCloudAuthorizationInfo = info;
     }
 
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mContext = activity;
-        mHlrVideoEditor = (IVideoEditorHandler) activity;
-    }
 
-    /**
-     * 缓存图片用
-     */
-    private ImageResizer mFetcher;
+    private IParamData mParamData;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mPageName = getString(R.string.music2);
-        ImageCacheParams cacheParams = new ImageCacheParams(mContext,
-                null);
-        cacheParams.compressFormat = CompressFormat.PNG;
-        cacheParams.setMemCacheSizePercent(0.05f);
-        mFetcher = new HttpImageFetcher(mContext, 150, 150);
-        mFetcher.addImageCache(mContext, cacheParams);
-
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        mHlrVideoEditor = (IVideoMusicEditor) context;
+        mParamData = ((IParamHandler) context).getParamData();
+        mMenuIndex = mParamData.getMusicIndex();
+        mInitalMusicName = mParamData.getMusicName();
+        lastItemId = mMenuIndex;
+        mInitalItemId = mMenuIndex;
+        mInitIsMute = mHlrVideoEditor.isMediaMute();
+        mInitMusicFactor = mParamData.getMusicFactor();
     }
 
-    private HorizontalListViewMV mListView;
+
+    private HorizontalListViewFresco mListView;
 
     /**
      * 是否仅重新加载music
@@ -165,77 +185,115 @@ public class MusicFragmentEx extends BaseFragment {
         mHlrVideoEditor.reload(onlyMusic);
         mHlrVideoEditor.seekTo(0);
         mHlrVideoEditor.start();
-        mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(mFactor.getProgress());
     }
 
-    private boolean loadWeb = true;
+    private TextView tvFactorType;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        mRoot = inflater.inflate(R.layout.music_fragment, null);
-        mFactor = (SeekBar) findViewById(R.id.musicfactor);
-
-        if (null != mFactor) {
-            mFactor.setProgress(100 - factor);
-            mFactor.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-                Music audio;
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    if (null != audio) {
-                        factor = 100 - mFactor.getProgress();
-                        if (mCurrentItemId != MENU_NONE && mFactor.isEnabled()) {
-                            mMusicFactor = mFactor.getProgress();
-                        }
-                        audio.setMixFactor(factor);
-                    }
-                    mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(mFactor.getProgress());
-                }
-
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-
-                    audio = TempVideoParams.getInstance().getMusic();
-
-                }
-
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress,
-                                              boolean fromUser) {
-                    if (null != audio) {
-                        factor = 100 - progress;
-                        audio.setMixFactor(factor);
-                    }
-                    mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(progress);
-                }
-            });
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.music_fragment, container, false);
+        mFactor = $(R.id.sbFactor);
+        tvFactorType = $(R.id.tvFactorType);
+        tvFactorType.setText(R.string.music);
+        mInitalMusic = TempVideoParams.getInstance().getMusic();
+        if (mInitalMusic == null) {
+            lastItemId = MENU_NONE;
+            mInitalItemId = MENU_NONE;
         }
+        musicName = mParamData.getMusicName();
+        mFactor.setProgress(mParamData.getMusicFactor());
+        mFactor.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+            Music audio;
 
-        mBtnVoice = findViewById(R.id.btnVoice2);
-        if (isHideDubbing) {
-            mBtnVoice.setVisibility(View.GONE);
-        } else {
-            if (voiceLayout == UIConfiguration.VOICE_LAYOUT_2) {
-                mBtnVoice.setVisibility(View.VISIBLE);
-                mBtnVoice.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                if (null != audio) {
+                    mParamData.setMusicFactor(seekBar.getProgress());
+                    audio.setMixFactor(mParamData.getMusicFactor());
+                }
+            }
 
-                    @Override
-                    public void onClick(View v) {
-                        if (null != mMusicListener) {
-                            mMusicListener.onVoiceClick(v);
-                        }
-                    }
-                });
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                audio = TempVideoParams.getInstance().getMusic();
+            }
 
-            } else {
-                mBtnVoice.setVisibility(View.GONE);
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if (null != audio && fromUser) {
+                    mParamData.setMusicFactor(progress);
+                    audio.setMixFactor(mParamData.getMusicFactor());
+                }
+            }
+        });
+
+        //原音
+        mLlVoiceVolume = $(R.id.ll_voice_volume);
+        if (mIsVolumeVisibility) {
+            mLlVoiceVolume.setVisibility(View.VISIBLE);
+        }
+        mSbVoiceVolume = $(R.id.sb_voice);
+        mSbVoiceVolume.setMax(100);
+        mOldVolume = mParamData.getFactor();
+        mSbVoiceVolume.setProgress(mParamData.getFactor());
+        mSbVoiceVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+                if (fromUser) {
+                    mParamData.setFactor(progress);
+                    mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(mParamData.getFactor());
+                }
 
             }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        View btnVoice = $(R.id.btnVoice2);
+        if (!isHideDubbing && mVoiceLayout == UIConfiguration.VOICE_LAYOUT_2) {
+            btnVoice.setVisibility(View.VISIBLE);
+            btnVoice.setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    if (null != mMusicListener) {
+                        mMusicListener.onVoiceClick(v);
+                    }
+                }
+            });
+        } else {
+            btnVoice.setVisibility(View.GONE);
         }
+        $(R.id.ivCancel).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                backToInit();
+                if (mIsVolumeVisibility) {
+                    mParamData.setFactor(mOldVolume);
+                    mHlrVideoEditor.getEditorVideo().setOriginalMixFactor(mParamData.getFactor());
+                }
+                mHlrVideoEditor.onBack();
+            }
+        });
+        $(R.id.ivSure).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHlrVideoEditor.onSure();
+            }
+        });
+        ((TextView) $(R.id.tvBottomTitle)).setText(R.string.music);
         initHandler();
         initListener();
-        mListView = (HorizontalListViewMV) findViewById(R.id.lvListView);
+        mListView = $(R.id.lvListView);
         mListView.setIsMusic();
         mListView.setListItemSelectListener(listener);
         mListView.setCheckFastRepeat(true);
@@ -250,63 +308,63 @@ public class MusicFragmentEx extends BaseFragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // Log.e("onActivityResult", resultCode + "");
         if (requestCode == VideoEditActivity.REQUSET_MUSICEX) {
             onCheckMediaMute();
             if (resultCode == Activity.RESULT_OK) {
-                AudioMusicInfo audioMusic = (AudioMusicInfo) data
+                AudioMusicInfo audioMusic = data
                         .getParcelableExtra(MoreMusicActivity.MUSIC_INFO);
-                mFactor.setEnabled(true);
-                if (mThemeType == MENU_LOCAL) {
-                    try {
-                        mListView.setCurrentCaption(audioMusic.getName());
-                        mListView.setCaption(MENU_YUN,
-                                getString(R.string.music_yun));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (mThemeType == MENU_YUN) {
-                    try {
-                        mListView.setCurrentCaption(audioMusic.getName());
-                        mListView.setCaption(MENU_LOCAL,
-                                getString(R.string.local));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                //配乐
+                mParamData.setMusicFactor(mFactor.getProgress());
+                musicName = audioMusic.getName();
+                if (null != mListView) {
+                    mListView.setCurrentCaption(musicName);
+                    if (mMenuIndex == MENU_LOCAL) {
+                        mListView.setCaption(MENU_YUN, getString(R.string.music_yun));
+                    } else if (mMenuIndex == MENU_YUN) {
+                        mListView.setCaption(MENU_LOCAL, getString(R.string.local));
                     }
                 }
-                lastItemId = mThemeType;
-                musicName = audioMusic.getName();
-
-                HistoryMusicCloud.getInstance().replaceMusic(
-                        audioMusic.getPath(), audioMusic.getName(),
-                        audioMusic.getDuration());
+                mParamData.setMusicIndex(mMenuIndex, musicName);
+                lastItemId = mMenuIndex;
+//                HistoryMusicCloud.getInstance().replaceMusic(audioMusic.getPath(), musicName, audioMusic.getDuration());
                 Music ao = VirtualVideo.createMusic(audioMusic.getPath());
                 ao.setTimeRange(Utils.ms2s(audioMusic.getStart()), Utils.ms2s(audioMusic.getEnd()));
-                ao.setMixFactor(factor);
+                ao.setMixFactor(mParamData.getMusicFactor());
                 onMusicChecked(ao, false);
             } else {
                 if (lastItemId != MENU_ORIGIN) {// 非原音开关
-                    if (lastItemId != mThemeType) {
+                    if (null != mListView && lastItemId != mMenuIndex) {
                         mListView.selectListItem(lastItemId, false);
                     }
-                    lastItemId = mThemeType;
+                    lastItemId = mMenuIndex;
                     mHlrVideoEditor.reload(false);
                     mHlrVideoEditor.seekTo(0);
                     mHlrVideoEditor.start();
                 }
             }
-
         }
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mIsFirstCreate = true;
-        mFetcher.cleanUpCache();
-        mFetcher = null;
-        mListView = null;
+
+    /**
+     * 回到初始音乐状态
+     */
+    private void backToInit() {
+        mFactor.setProgress(mInitMusicFactor);
+        if (null == mInitalMusic) {// 防止mv 清空配乐
+            lastItemId = MENU_NONE;
+            //清除配乐 防止已经添加
+            TempVideoParams.getInstance().setMusicObject(mInitalMusic);
+            onlyReloadMusic(true);
+        } else {
+            onMusicChecked(mInitalMusic, true);
+        }
+        mParamData.setMusicIndex(mInitalItemId, mInitalMusicName);
+        mListView.selectListItem(mInitalItemId, mInitalItemId > MENU_YUN);
+        if (mInitIsMute != mHlrVideoEditor.isMediaMute()) {
+            onSelectedImp(MENU_ORIGIN, true);
+        }
     }
 
     @Override
@@ -316,17 +374,28 @@ public class MusicFragmentEx extends BaseFragment {
             DownLoadUtils.forceCancelAll();
             mDownloading.clear();
         }
-        if (null != mListView) {
-            mListView.recycle();
-        }
         mHanlder = null;
         listener = null;
-        mRoot = null;
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mIsFirstCreate = true;
+    }
+
+
     public interface IMusicListener {
+        /**
+         * 原音开/关
+         *
+         * @param isChecked
+         */
         void onVoiceChanged(boolean isChecked);
 
+        /**
+         * 配音按钮
+         */
         void onVoiceClick(View v);
 
     }
@@ -338,13 +407,7 @@ public class MusicFragmentEx extends BaseFragment {
 
             @Override
             public void onSelected(View view, int nItemId, boolean user) {
-                // Log.e("onSelected", nItemId + "--" + mIsFirstCreate + "/..."
-                // + user);
-                if (nItemId != MENU_ORIGIN) {
-                    mCurrentItemId = nItemId;
-                }
                 onSelectedImp(nItemId, user);
-
             }
 
             @Override
@@ -359,13 +422,7 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void onMusicLocal() {
         HistoryMusicCloud.getInstance().initilize(mContext);
-        Intent music = new Intent(getActivity(), MoreMusicActivity.class);
-        music.putExtra(MoreMusicActivity.PARAM_TYPE,
-                MoreMusicActivity.TYPE_MUSIC_LOCAL);
-        getActivity().startActivityForResult(music,
-                VideoEditActivity.REQUSET_MUSICEX);
-        getActivity().overridePendingTransition(R.anim.push_bottom_in,
-                R.anim.push_top_out);
+        MoreMusicActivity.onLocalMusic(getActivity(), VideoEditActivity.REQUSET_MUSICEX);
     }
 
     /**
@@ -373,14 +430,7 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void onMusicYUN() {
         HistoryMusicCloud.getInstance().initilize(mContext);
-        Intent music = new Intent(getActivity(), MoreMusicActivity.class);
-        music.putExtra(MoreMusicActivity.PARAM_TYPE,
-                MoreMusicActivity.TYPE_MUSIC_YUN);
-        music.putExtra(MoreMusicActivity.PARAM_CLOUDMUSIC, mCloudMusicUrl);
-        getActivity().startActivityForResult(music,
-                VideoEditActivity.REQUSET_MUSICEX);
-        getActivity().overridePendingTransition(R.anim.push_bottom_in,
-                R.anim.push_top_out);
+        MoreMusicActivity.onYunMusic(getActivity(), isNewCloudApi, mMusicTypeUrl, mCloudMusicUrl, mCloudAuthorizationInfo);
     }
 
     /**
@@ -392,8 +442,7 @@ public class MusicFragmentEx extends BaseFragment {
             if (mTrailerDuration > 0) {
                 ao.setFadeInOut(mTrailerDuration, mTrailerDuration);
             } else {
-                ao.setFadeInOut(Utils.ms2s(800),
-                        Utils.ms2s(800));
+                ao.setFadeInOut(Utils.ms2s(800), Utils.ms2s(800));
             }
             TempVideoParams.getInstance().setMusicObject(ao);
         } catch (Exception e) {
@@ -404,60 +453,34 @@ public class MusicFragmentEx extends BaseFragment {
         onlyReloadMusic(onlyMusic);
     }
 
-    private int factor = 0;
-    private int mMusicFactor = 50;
+    private boolean isDoing = false;
 
     /**
      * 音乐列表选中处理
      */
     private void onSelectedImp(int nItemId, boolean user) {
-        boolean bReload = true;
-//        Log.e("onSelectedImp", mThemeType + "...." + nItemId + "..." +
-//                user + "...." + lastItemId);
-        mThemeType = nItemId;
+        mMenuIndex = nItemId;
         mFactor.setEnabled(true);
         if (nItemId == MENU_ORIGIN) {
             if (user) {
-                boolean isOriginMute = mHlrVideoEditor.isMediaMute();
-                Log.e(TAG, "onSelectedImp: " + isOriginMute);
-                mListView.setItemSrc(nItemId,
-                        isOriginMute ? R.drawable.video_origin_n
-                                : R.drawable.video_origin_p,
-                        isOriginMute ? R.string.video_voice_n
-                                : R.string.video_voice_p);
-
-                if (isOriginMute) {
-                    factor = 100 - factor;
-                    if (null != mFactor) {
-                        if (mCurrentItemId == MENU_NONE) {
-                            mFactor.setProgress(100);
-                        } else {
-                            mFactor.setProgress(mMusicFactor);
+                if (!isDoing) {
+                    isDoing = true;
+                    boolean isOriginMute = mHlrVideoEditor.isMediaMute();
+                    mListView.setItemSrc(nItemId, isOriginMute ? R.drawable.video_origin_n : R.drawable.video_origin_p, isOriginMute ? R.string.video_voice_n : R.string.video_voice_p);
+                    if (null != mMusicListener) {
+                        mMusicListener.onVoiceChanged(isOriginMute);
+                    }
+                    //防止频繁点击
+                    mHanlder.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            isDoing = false;
                         }
-                        mFactor.setEnabled(true);
-                    }
-                } else {
-                    factor = 100;
-                    if (null != mFactor) {
-                        mFactor.setProgress(0);
-                        mFactor.setEnabled(false);
-                    }
+                    }, 500);
                 }
-                Music audio = TempVideoParams.getInstance().getMusic();
-                if (null != audio) {
-                    audio.setMixFactor(factor);
-                } else {
-                    if (null != mFactor) {
-                        mFactor.setEnabled(false);
-                    }
-                }
-                if (null != mMusicListener) {
-                    mMusicListener.onVoiceChanged(isOriginMute);
-                }
-
             }
-            // lastItemId = nItemId; 原音开关特别处理，不记录当前位置
         } else if (nItemId == MENU_NONE) {
+            mParamData.setMusicIndex(nItemId, "");
             if (user) {
                 try {
                     mListView.setCaption(MENU_LOCAL, getString(R.string.local));
@@ -465,10 +488,8 @@ public class MusicFragmentEx extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                //原音关闭时，设置配乐->最大（100)
-                boolean isOriginMute = mHlrVideoEditor.isMediaMute();
-                factor = isOriginMute ? 100 : 0;
-                mFactor.setProgress(100 - factor);
+                mFactor.setProgress(50);
+                mFactor.setEnabled(false);
                 TempVideoParams.getInstance().recycleMusicObject();
                 onlyReloadMusic(true);
                 mListView.onItemChecked(nItemId);
@@ -489,39 +510,32 @@ public class MusicFragmentEx extends BaseFragment {
         } else {
             if (user) {
                 onCheckMediaMute();
-                WebInfo info = mlist.get(nItemId - (MENU_YUN + 1));
+                IApiInfo info = mlist.get(nItemId - (MENU_YUN + 1));
                 if (info.existsMusic()) {
                     try {
-                        mListView.setCaption(MENU_LOCAL,
-                                getString(R.string.local));
-                        mListView.setCaption(MENU_YUN,
-                                getString(R.string.music_yun));
+                        mListView.setCaption(MENU_LOCAL, getString(R.string.local));
+                        mListView.setCaption(MENU_YUN, getString(R.string.music_yun));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    if (null != mMusicListener) {
-                        Music ao = VirtualVideo.createMusic(info.getLocalPath());
-                        ao.setMixFactor(100-mMusicFactor);
-                        onMusicChecked(ao, true);
-                    }
+                    mParamData.setMusicIndex(nItemId, info.getName());
+                    Music ao = VirtualVideo.createMusic(info.getLocalPath());
+                    ao.setEnableRepeat(true);
+                    ao.setMixFactor(mParamData.getMusicFactor());
+                    onMusicChecked(ao, true);
                     lastItemId = nItemId;
-
                 } else {
-                    if (CoreUtils.checkNetworkInfo(mContext
-                            .getApplicationContext()) == CoreUtils.UNCONNECTED) {
+                    if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
                         int temp = nItemId;
                         mListView.resetItem(temp);
                         mListView.selectListItem(lastItemId, true);
-                        onToast(getString(R.string.please_open_wifi));
-                    } else {
-                        // 下载
+                        onToast(R.string.please_open_wifi);
+                    } else { // 下载
                         downMusic(nItemId, info);
                     }
                 }
             }
-
         }
-
     }
 
     /**
@@ -529,16 +543,8 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void onCheckMediaMute() {
         //当前是否关闭原音
-        boolean isOriginMute = mHlrVideoEditor.isMediaMute();
-        if (isOriginMute) {
-            if (null != mFactor) {
-                mFactor.setEnabled(false);
-            }
-        } else {
-            if (null != mFactor) {
-                mFactor.setEnabled(true);
-                mFactor.setProgress(mMusicFactor);
-            }
+        if (null != mFactor) {
+            mFactor.setEnabled(true);
         }
     }
 
@@ -547,20 +553,21 @@ public class MusicFragmentEx extends BaseFragment {
     /**
      * 下载音乐
      */
-    private void downMusic(int itemId, final WebInfo info) {
+    private void downMusic(int itemId, final IApiInfo info) {
         if (null == mDownloading) {
             mDownloading = new ArrayList<Long>();
         }
         if (!mDownloading.contains((long) itemId)) {
+
+            String local = info.getLocalPath();
             final DownLoadUtils download = new DownLoadUtils(getContext(), itemId,
-                    info.getUrl(), "mp3");
+                    info.getUrl(), local);
             download.setConfig(0, 50, 100);
-            download.setMethod(true);
             download.DownFile(new IDownListener() {
 
                 @Override
                 public void onFailed(long mid, int code) {
-//                    Log.e(TAG, "onFailed" + mid + "---" + code);
+                    Log.e(TAG, "onFailed: " + mid + ">>" + code);
                     if (isRunning) {
                         if (null != mHanlder) {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
@@ -575,9 +582,6 @@ public class MusicFragmentEx extends BaseFragment {
 
                 @Override
                 public void onProgress(long mid, int progress) {
-                    // Log.e("onProgress" + Thread.currentThread().toString(),
-                    // mid
-                    // + "---" + progress);
                     if (null != mHanlder) {
                         mHanlder.obtainMessage(MSG_WEB_DOWNLOADING, (int) mid,
                                 progress).sendToTarget();
@@ -586,14 +590,8 @@ public class MusicFragmentEx extends BaseFragment {
 
                 @Override
                 public void Finished(long mid, String localPath) {
-//                    Log.e(TAG, "Finished: " + localPath);
+                    LogUtil.i(TAG, "Finished : " + mid + " >" + localPath);
                     if (isRunning) {
-                        try {
-                            File ftar = new File(localPath);
-                            ftar.renameTo(new File(info.getLocalPath()));
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
                         if (null != mHanlder) {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_END, (int) mid, 0)
                                     .sendToTarget();
@@ -608,8 +606,7 @@ public class MusicFragmentEx extends BaseFragment {
 
                 @Override
                 public void Canceled(long mid) {
-//                    Log.e(TAG, "Canceled" + Thread.currentThread().toString() + "..." + mid
-//                            + "---");
+                    Log.e(TAG, "Canceled: " + mid);
                     if (isRunning) {
                         if (null != mHanlder) {
                             mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
@@ -641,7 +638,6 @@ public class MusicFragmentEx extends BaseFragment {
      */
     private void getWebMusic() {
 
-
         if (null != mHanlder) {
             mHanlder.obtainMessage(MSG_LOCAL_MENU).sendToTarget();
         }
@@ -649,45 +645,12 @@ public class MusicFragmentEx extends BaseFragment {
 
             @Override
             public void run() {
-
-                if (TextUtils.isEmpty(mMusicUrl)) {
-                    Log.i(TAG, "mMusicUrl is null");
+                if (isNewBGMApi) {
+                    //新的音乐接口模式（推荐）
+                    getNewBgMusic();
                 } else {
-                    File cacheDir = mContext.getCacheDir();
-                    File f = new File(cacheDir, MD5.getMD5("music_data.json"));
-                    if (!bLoadWebDataSuccessed) {
-                        int netState = CoreUtils.checkNetworkInfo(mContext);
-                        if (netState == CoreUtils.UNCONNECTED) {
-                            String offline = null;
-                            if (null != f && f.exists() && !TextUtils.isEmpty(offline = FileUtils.readTxtFile(f
-                                    .getAbsolutePath()))) {// 加载离线数据
-                                try {
-                                    offline = URLDecoder.decode(offline, "UTF-8");
-                                    if (!TextUtils.isEmpty(offline)) {
-                                        onParseJson(offline);
-                                    }
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-                            } else {
-                                onToast(getString(R.string.please_open_wifi));
-                            }
-                        } else {
-                            String str = RdHttpClient.PostJson(mMusicUrl,
-                                    new NameValuePair("type", "android"));
-                            if (!TextUtils.isEmpty(str)) {// 加载网络数据
-                                onParseJson(str);
-                                try {
-                                    String data = URLEncoder.encode(str, "UTF-8");
-                                    FileUtils.writeText2File(data,
-                                            f.getAbsolutePath());
-                                    bLoadWebDataSuccessed = true;
-                                } catch (UnsupportedEncodingException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
+                    //旧的背景音乐接口
+                    getBgMusic();
                 }
                 if (null != mHanlder) {
                     mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();
@@ -696,16 +659,103 @@ public class MusicFragmentEx extends BaseFragment {
         });
     }
 
+    /**
+     * 背景音乐
+     */
+    private void getNewBgMusic() {
+        if (TextUtils.isEmpty(mBGMUrl)) {
+            Log.i(TAG, "mBGMUrl is null " + isNewBGMApi);
+        } else {
+            File cacheDir = mContext.getCacheDir();
+            File f = new File(cacheDir, MD5.getMD5("rd_new_bgMusic.url"));
+            if (!bLoadWebDataSuccessed) {
+                int netState = CoreUtils.checkNetworkInfo(mContext);
+                if (netState == CoreUtils.UNCONNECTED) {
+                    String offline = null;
+                    if (null != f && f.exists() && !TextUtils.isEmpty(offline = FileUtils.readTxtFile(f
+                            .getAbsolutePath()))) {// 加载离线数据
+                        try {
+                            offline = URLDecoder.decode(offline, "UTF-8");
+                            if (!TextUtils.isEmpty(offline)) {
+                                onParseJson2(offline);
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        onToast(R.string.please_open_wifi);
+                    }
+                } else {
+                    String str = ModeDataUtils.getModeData(mBGMUrl, ModeDataUtils.TYPE_MUSIC);
+                    if (!TextUtils.isEmpty(str)) {// 加载网络数据
+                        onParseJson2(str);
+                        try {
+                            String data = URLEncoder.encode(str, "UTF-8");
+                            FileUtils.writeText2File(data,
+                                    f.getAbsolutePath());
+                            bLoadWebDataSuccessed = true;
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
 
-    private void onToast(String msg) {
-        SysAlertDialog
-                .showAutoHideDialog(mContext, "", msg, Toast.LENGTH_SHORT);
     }
+
+    /**
+     * 获取背景音乐，兼容老接口
+     */
+    @Deprecated
+    private void getBgMusic() {
+        if (TextUtils.isEmpty(mBGMUrl)) {
+            Log.i(TAG, "mBGMUrl is null");
+        } else {
+            File cacheDir = mContext.getCacheDir();
+            File f = new File(cacheDir, MD5.getMD5("music_data.json"));
+            if (!bLoadWebDataSuccessed) {
+                int netState = CoreUtils.checkNetworkInfo(mContext);
+                if (netState == CoreUtils.UNCONNECTED) {
+                    String offline = null;
+                    if (null != f && f.exists() && !TextUtils.isEmpty(offline = FileUtils.readTxtFile(f
+                            .getAbsolutePath()))) {// 加载离线数据
+                        try {
+                            offline = URLDecoder.decode(offline, "UTF-8");
+                            if (!TextUtils.isEmpty(offline)) {
+                                onParseJson(offline);
+                            }
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
+                        onToast(R.string.please_open_wifi);
+                    }
+                } else {
+                    String str = RdHttpClient.PostJson(mBGMUrl,
+                            new NameValuePair("type", "android"));
+                    if (!TextUtils.isEmpty(str)) {// 加载网络数据
+                        onParseJson(str);
+                        try {
+                            String data = URLEncoder.encode(str, "UTF-8");
+                            FileUtils.writeText2File(data,
+                                    f.getAbsolutePath());
+                            bLoadWebDataSuccessed = true;
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
 
     /**
      * 音乐列表
      */
-    private ArrayList<WebInfo> mlist = new ArrayList<WebInfo>();
+    private ArrayList<IApiInfo> mlist = new ArrayList<IApiInfo>();
 
     /**
      * 解析返回的MUSIC的json，把音乐信息写入mlist
@@ -720,7 +770,6 @@ public class MusicFragmentEx extends BaseFragment {
                     int len = jarr.length();
                     JSONObject jt;
                     mlist.clear();
-                    loadWeb = false;
                     for (int i = 0; i < len; i++) {
                         jt = jarr.getJSONObject(i);
                         if (null != jt) {
@@ -728,8 +777,7 @@ public class MusicFragmentEx extends BaseFragment {
                             String name = jt.getString("name");
                             String localPath = (PathUtils.getRdMusic() + "/"
                                     + MD5.getMD5(url) + ".mp3").trim();
-                            mlist.add(new WebInfo(url, jt.getString("icon"),
-                                    name, localPath));
+                            mlist.add(new IApiInfo(name, url, jt.getString("icon"), localPath, 0));
 
                         }
                     }
@@ -740,6 +788,54 @@ public class MusicFragmentEx extends BaseFragment {
         }
 
     }
+
+    /**
+     * 解析返回的MUSIC的json，把音乐信息写入mlist
+     */
+    private void onParseJson2(String data) {
+        try {
+            JSONObject jobj = new JSONObject(data);
+            if (null != jobj && jobj.optInt("code", -1) == 0) {
+                JSONArray jarr = jobj.optJSONArray("data");
+                if (null != jarr) {
+                    int len = jarr.length();
+                    JSONObject jt;
+                    mlist.clear();
+                    //找出已经下载的音频文件
+                    String[] fs = new File(PathUtils.getRdMusic()).list(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File file, String s) {
+                            if (s.endsWith(".mp3")) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    });
+                    for (int i = 0; i < len; i++) {
+                        jt = jarr.getJSONObject(i);
+                        if (null != jt) {
+                            String url = jt.getString("file");
+                            String name = jt.getString("name");
+                            long updatetime = jt.optLong("updatetime");
+
+                            String md5 = MD5.getMD5(url) + "_";
+                            //判断是否需要删除旧的音频
+                            deleteLastConstainFile(md5, fs, updatetime);
+                            String localPath = (PathUtils.getRdMusic() + "/"
+                                    + md5 + updatetime + ".mp3").trim();
+                            mlist.add(new IApiInfo(name, url, jt.getString("cover"), localPath, updatetime));
+
+
+                        }
+                    }
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     private final int MSG_ASSET_EXPORT_START = 51;
     private final int MSG_WEB_PREPARED = 53;
@@ -771,7 +867,6 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mListView) {
                             mListView.removeAllListItem();
                             nItemId = 0;
-
                             boolean isMute = mHlrVideoEditor.isMediaMute();
                             if (isMute) {
                                 mListView.addListItem(nItemId, R.drawable.video_origin_p,
@@ -803,21 +898,23 @@ public class MusicFragmentEx extends BaseFragment {
                         if (null != mListView) {
                             int len = mlist.size();
                             for (int i = 0; i < len; i++) {
-                                WebInfo info = mlist.get(i);
-                                mListView.addListItem(nItemId, info.getImg(),
-                                        info.getName(), mFetcher);
+                                IApiInfo info = mlist.get(i);
+                                mListView.addListItem(nItemId, info.getCover(),
+                                        info.getName());
                                 mListView.setDownLayout(nItemId, info.existsMusic());
                                 nItemId++;
                             }
 
-                            Music audio = TempVideoParams.getInstance()
-                                    .getMusic();
+                            Music audio = TempVideoParams.getInstance().getMusic();
                             if (null == audio) {// 防止mv 清空配乐
                                 lastItemId = MENU_NONE;
                             }
-                            mListView.selectListItem(lastItemId, mThemeType > MENU_YUN);
+                            mListView.selectListItem(lastItemId, lastItemId > MENU_YUN);
                             if (lastItemId == MENU_LOCAL || lastItemId == MENU_YUN) {
-                                mListView.setCurrentCaption(musicName);
+                                if (!TextUtils.isEmpty(musicName)) {
+                                    //防止草稿箱中配乐没有记录音乐名称
+                                    mListView.setCurrentCaption(musicName);
+                                }
                             }
                         }
                     }
@@ -838,10 +935,10 @@ public class MusicFragmentEx extends BaseFragment {
                         int id = msg.arg1;
                         if (null != mListView) {
                             mListView.setdownEnd(id);
-                            if (mCurrentItemId == id) {
-                                mListView.selectListItem(id, true);
-                            } else {
+                            if (mParamData.getMusicIndex() == id) {
                                 mListView.resetItem(id);
+                            } else {
+                                mListView.selectListItem(id, true);
                             }
                         }
 
@@ -851,7 +948,7 @@ public class MusicFragmentEx extends BaseFragment {
                         int id = msg.arg1;
                         if (null != mListView) {
                             if (isRunning) {
-                                onToast(getString(R.string.please_open_wifi));
+                                onToast(R.string.please_open_wifi);
                             }
                             mListView.setdownFailedUI(id);
                             mListView.selectListItem(lastItemId, true);
@@ -863,6 +960,43 @@ public class MusicFragmentEx extends BaseFragment {
                 }
             }
         };
+    }
+
+
+    /**
+     * 更加网络文件路径不变，删除旧的文件或文件夹
+     *
+     * @param lastMusic  要删除的文件的前部分名字
+     * @param fs
+     * @param updateTime 服务器上对应的最新版本
+     * @return 是否执行了删除
+     */
+    private boolean deleteLastConstainFile(String lastMusic, String[] fs, long updateTime) {
+        boolean result = false;
+        if (null != fs) {
+            int len = fs.length;
+            for (int i = 0; i < len; i++) {
+                String path = fs[i];
+                if (path.contains(lastMusic)) {
+                    if (!path.contains(Long.toString(updateTime))) {
+                        //与服务器版本不一致，直接删除
+                        result = true;
+                        FileUtils.deleteAll(path);
+                    }
+                    break;
+                }
+            }
+
+        }
+        return result;
+
+    }
+
+    /**
+     * 原音显示
+     */
+    public void checkEnableVolume() {
+        mIsVolumeVisibility = true;
     }
 
 }

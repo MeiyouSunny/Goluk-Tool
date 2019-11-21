@@ -34,6 +34,10 @@ public class VideoMetadataRetriever {
      * 检索视频时长
      */
     public static final int METADATA_KEY_VIDEO_DURATION = 5;
+    /**
+     * 检索音频码率
+     */
+    public static final int METADATA_KEY_AUDIO_BIT_RATE = 6;
 
     private String mPath;
     private VideoConfig mVideoConfig;
@@ -67,6 +71,8 @@ public class VideoMetadataRetriever {
             str = mVideoConfig.getVideoFrameRate() + "";
         } else if (metadataKey == METADATA_KEY_VIDEO_DURATION) {
             str = mDuration + "";
+        } else if (metadataKey == METADATA_KEY_AUDIO_BIT_RATE) {
+            str = mVideoConfig.getAudioBitrate() + "";
         }
         return str;
     }

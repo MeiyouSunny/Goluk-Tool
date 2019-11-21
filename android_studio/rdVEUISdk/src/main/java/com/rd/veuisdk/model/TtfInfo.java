@@ -4,10 +4,25 @@ import com.rd.veuisdk.utils.FileUtils;
 
 public class TtfInfo {
 
-	public String code, url, local_path;
+	@Override
+	public String toString() {
+		return "TtfInfo{" +
+				"code='" + code + '\'' +
+				", url='" + url + '\'' +
+				", local_path='" + local_path + '\'' +
+				", icon='" + icon + '\'' +
+				", id=" + id +
+				", timeunix=" + timeunix +
+				", index=" + index +
+				", bCustomApi=" + bCustomApi +
+				'}';
+	}
+
+	public String code, url, local_path,icon;
 	public int id;
 	public long timeunix;
 	public int index;
+	public	boolean bCustomApi=false;
 
 	/**
 	 * 文件是否已下载

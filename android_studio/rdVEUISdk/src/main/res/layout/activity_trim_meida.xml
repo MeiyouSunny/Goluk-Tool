@@ -2,8 +2,9 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/public_menu_back_color">
+                android:background="@color/black">
 
+    <!--播放器-->
     <RelativeLayout
         android:id="@+id/rlPlayer"
         android:layout_width="match_parent"
@@ -24,7 +25,7 @@
                     android:id="@+id/rlPreview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/black">
+                    >
 
                     <com.rd.lib.ui.PreviewFrameLayout
                         android:id="@+id/rlPreview_player"
@@ -73,8 +74,7 @@
                 <com.rd.lib.ui.PreviewFrameLayout
                     android:id="@+id/rlPreviewHori"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/black">
+                    android:layout_height="wrap_content">
 
                     <com.rd.lib.ui.PreviewFrameLayout
                         android:id="@+id/rlPreview_playerHori"
@@ -145,239 +145,392 @@
                 android:textSize="@dimen/text_size_18"/>
         </RelativeLayout>
     </RelativeLayout>
-    <!--  android:background="@color/public_menu_back_color"-->
-    <LinearLayout
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
         android:layout_above="@+id/llmenu"
         android:layout_below="@+id/rlPlayer"
-
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/mTrimLayout"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="2"
-            android:gravity="bottom"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/progresslayout"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/preview_intercept_margintop"
-                android:layout_marginBottom="-15dp">
-
-                <TextView
-                    android:id="@+id/tvRemainDuration"
-                    style="@style/styleEditorDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:textColor="@color/main_orange"
-                    android:textSize="@dimen/text_size_16"/>
-
-                <TextView
-                    android:id="@+id/tvInterceptFrontTime"
-                    style="@style/styleEditorDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:textSize="@dimen/text_size_14"/>
-
-                <TextView
-                    android:id="@+id/tvInterceptBehindTime"
-                    style="@style/styleEditorDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@null"
-                    android:textSize="@dimen/text_size_14"/>
-            </RelativeLayout>
-
-            <FrameLayout
-                android:id="@+id/rlSeekbarplus"
+                android:id="@+id/mTrimLayout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/preview_rangseekbarplus_height_hint"
-                android:layout_below="@id/progresslayout"
-                android:layout_marginTop="-15dp">
+                android:layout_height="wrap_content"
+                android:minHeight="105dp"
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <LinearLayout
-                    android:id="@+id/timeline_media"
+                <ImageView
+                    android:id="@+id/btnRotate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/progresslayout"
+                    android:layout_marginBottom="-5dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"
+                    android:src="@drawable/crop_rotate_counter_clockwise"
+                    android:visibility="gone"/>
+
+                <RelativeLayout
+                    android:id="@+id/progresslayout"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/preview_intercept_margintop"
-                    android:orientation="horizontal"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp">
+                    android:layout_height="wrap_content"
+                    android:layout_above="@+id/rlSeekbarplus">
 
-                    <com.rd.veuisdk.ui.VideoThumbNailAlterView
-                        android:id="@+id/split_videoview"
+                    <TextView
+                        android:id="@+id/tvRemainDuration"
+                        style="@style/styleEditorDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:textColor="@color/main_orange"
+                        android:textSize="@dimen/text_size_16"/>
+
+                    <TextView
+                        android:id="@+id/tvInterceptFrontTime"
+                        style="@style/styleEditorDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:textSize="@dimen/text_size_14"/>
+
+                    <TextView
+                        android:id="@+id/tvInterceptBehindTime"
+                        style="@style/styleEditorDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:background="@null"
+                        android:textSize="@dimen/text_size_14"/>
+
+                </RelativeLayout>
+
+                <FrameLayout
+                    android:id="@+id/rlSeekbarplus"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/preview_rangseekbarplus_height">
+
+                    <LinearLayout
+                        android:id="@+id/timeline_media"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/preview_rangseekbarplus_height"
-                        android:layout_gravity="center_vertical"/>
-                </LinearLayout>
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp">
 
-                <com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus
-                    android:id="@+id/m_extRangeSeekBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </FrameLayout>
-        </LinearLayout>
+                        <com.rd.veuisdk.ui.VideoThumbNailAlterView
+                            android:id="@+id/split_videoview"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_gravity="center_vertical"/>
+                    </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_below="@id/mTrimLayout"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            >
+                    <com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus
+                        android:id="@+id/m_extRangeSeekBar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
+
+                    <com.rd.veuisdk.ui.extrangseekbar.VideoTrimFixedView
+                        android:id="@+id/vtfv_fixed"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/black"
+                        android:visibility="gone"/>
+
+                </FrameLayout>
+
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:gravity="center_vertical"
-                >
+                android:layout_height="wrap_content"
+                android:gravity="center">
 
-                <TextView
-                    android:id="@+id/tv_single_fixed_time"
-                    android:layout_width="48dp"
-                    android:layout_height="25dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/menu_item_checked"
-                    android:button="@null"
-                    android:checked="true"
-                    android:gravity="center"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/text_size_18"
-                    android:visibility="gone"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="65dp"
+                    android:gravity="center_vertical">
 
-                <RadioGroup
-                    android:id="@+id/trim_menu_group"
-                    android:layout_width="97dp"
-                    android:layout_height="26dp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/menu_bg"
-                    android:clickable="true"
-                    android:gravity="center_horizontal"
-                    android:orientation="horizontal">
+                    <!--音量-->
+                    <LinearLayout
+                        android:id="@+id/ll_factor"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:visibility="gone"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
 
-                    <RadioButton
-                        android:id="@+id/trim_shot"
-                        android:layout_width="48dp"
-                        android:layout_height="25dp"
-                        android:background="@null"
+                        <include layout="@layout/factor_layout"/>
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tv_single_fixed_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/single_text_bg"
                         android:button="@null"
                         android:checked="true"
                         android:gravity="center"
-                        android:textColor="@drawable/trim_menu_radiobtn"
-                        android:textSize="@dimen/text_size_18"/>
+                        android:text="@string/duration_fix_format_f"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/text_size_16"
+                        android:visibility="gone"/>
 
-                    <RadioButton
-                        android:id="@+id/trim_long"
-                        android:layout_width="48dp"
-                        android:layout_height="25dp"
-                        android:background="@null"
-                        android:button="@null"
-                        android:gravity="center"
-                        android:textColor="@drawable/trim_menu_radiobtn"
-                        android:textSize="@dimen/text_size_18"/>
-                </RadioGroup>
+                    <RadioGroup
+                        android:id="@+id/trim_menu_group"
+                        android:layout_width="97dp"
+                        android:layout_height="26dp"
+                        android:layout_centerInParent="true"
+                        android:background="@drawable/menu_bg"
+                        android:clickable="true"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal">
 
-                <CheckBox
-                    android:id="@+id/cbTrim1x1"
-                    android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/trim_shot"
+                            android:layout_width="48dp"
+                            android:layout_height="25dp"
+                            android:background="@null"
+                            android:button="@null"
+                            android:checked="true"
+                            android:gravity="center"
+                            android:textColor="@drawable/trim_menu_radiobtn"
+                            android:textSize="@dimen/text_size_18"/>
+
+                        <RadioButton
+                            android:id="@+id/trim_long"
+                            android:layout_width="48dp"
+                            android:layout_height="25dp"
+                            android:background="@null"
+                            android:button="@null"
+                            android:gravity="center"
+                            android:textColor="@drawable/trim_menu_radiobtn"
+                            android:textSize="@dimen/text_size_18"/>
+                    </RadioGroup>
+
+                    <CheckBox
+                        android:id="@+id/cbTrim1x1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:background="@drawable/trim_1x1_button"
+                        android:button="@null"/>
+
+                </RelativeLayout>
+
+                <!--滤镜-->
+                <LinearLayout
+                    android:id="@+id/llFilter"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:background="@drawable/trim_1x1_button"
-                    android:button="@null"/>
+                    android:gravity="center_vertical"
+                    android:visibility="gone"
+                    android:orientation="vertical">
+
+                    <include layout="@layout/filter_lookup_sbar_layout"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recyclerViewFilter"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
 
             </RelativeLayout>
-        </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
+        </LinearLayout>
+
+    </ScrollView>
+
+    <!--底部-->
+    <FrameLayout
         android:id="@+id/llmenu"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true">
+
+        <LinearLayout
+            android:id="@+id/menuTrim"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <include layout="@layout/layout_bottom_menu"/>
+
+            <RelativeLayout
+                android:id="@+id/public_menu_cancel"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginRight="1dp"
+                android:layout_weight="1"
+                android:background="@color/sub_menu_bgcolor"
+                android:gravity="bottom"
+                android:onClick="clickView"
+                android:visibility="gone">
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/ebtnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="bottom"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/bottom_menu_cancel"
+                    android:gravity="center"
+                    android:onClick="clickView"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"/>
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/menu_line"
+                android:layout_width="1dp"
+                android:layout_height="match_parent"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:id="@+id/public_menu_sure"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="1dp"
+                android:layout_weight="1"
+                android:background="@color/sub_menu_bgcolor"
+                android:gravity="bottom"
+                android:onClick="clickView"
+                android:visibility="gone">
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/ebtnSure"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"
+                    android:layout_gravity="bottom"
+                    android:background="@null"
+                    android:drawableLeft="@drawable/bottom_menu_sure"
+                    android:gravity="center"
+                    android:onClick="clickView"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"/>
+            </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
-            android:id="@+id/public_menu_cancel"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
+            android:id="@+id/menuTrimAE"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
             android:background="@color/sub_menu_bgcolor"
-            android:gravity="bottom"
-            android:onClick="clickView">
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <com.rd.lib.ui.ExtButton
-                android:id="@+id/ebtnCancel"
+                android:id="@+id/btnLeft"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_gravity="bottom"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:background="@null"
-                android:drawableLeft="@drawable/bottom_menu_cancel"
+                android:drawableLeft="@drawable/public_menu_cancel"
                 android:gravity="center"
+                android:minWidth="80dp"
                 android:onClick="clickView"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_16"/>
-        </RelativeLayout>
-
-        <View
-            android:id="@+id/menu_line"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"/>
-
-        <RelativeLayout
-            android:id="@+id/public_menu_sure"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="1dp"
-            android:layout_weight="1"
-            android:background="@color/sub_menu_bgcolor"
-            android:gravity="bottom"
-            android:onClick="clickView">
+                android:paddingLeft="8dp"/>
 
             <com.rd.lib.ui.ExtButton
-                android:id="@+id/ebtnSure"
+                android:id="@+id/btnRight"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_centerInParent="true"
-                android:layout_gravity="bottom"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:background="@null"
-                android:drawableLeft="@drawable/bottom_menu_sure"
+                android:drawableRight="@drawable/public_menu_sure"
                 android:gravity="center"
+                android:minWidth="80dp"
                 android:onClick="clickView"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_16"/>
+                android:paddingRight="8dp"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_toLeftOf="@id/btnRight"
+                android:layout_toRightOf="@id/btnLeft"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tvFilter"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/filter"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"/>
+
+                <TextView
+                    android:id="@+id/tvVolume"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true"
+                    android:gravity="center"
+                    android:text="@string/volume"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"/>
+
+
+            </LinearLayout>
+
         </RelativeLayout>
-    </LinearLayout>
+
+    </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/rlTitleBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/public_titlebar_minheight"
-        android:background="@color/transparent_black">
+        android:background="@color/transparent_black"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="@string/preview_intercept"
+            android:text="@string/preview_trim"
             android:textSize="@dimen/text_size_18"/>
 
     </RelativeLayout>
+
 </RelativeLayout>
+
+
+

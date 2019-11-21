@@ -24,7 +24,7 @@ import com.rd.veuisdk.utils.SysAlertDialog;
  * @author JIAN
  */
 public class DragItemScrollView extends View {
-    private final float MIN_DURATION = 0.2f;
+    private float mMinDuration = 0;
 
     private final int MPADDING = 30;
     private final int BORDER_WIDTH = 4;
@@ -71,7 +71,7 @@ public class DragItemScrollView extends View {
                 .abs(fm.descent)) / 2 - Math.abs(fm.descent));
 
         mTextPaint.setAntiAlias(true);
-        mTextPaint.setColor(getResources().getColor(R.color.speed_item_text_ed));
+        mTextPaint.setColor(getResources().getColor(R.color.public_menu_back_color));
         mTextPaint.setTextSize(getResources().getDimensionPixelSize(
                 R.dimen.text_size_30));
         fm = mTextPaint.getFontMetrics();
@@ -87,6 +87,10 @@ public class DragItemScrollView extends View {
         mItemP = (mItemSizeP - mItemSizeN) / 2;
 
 
+    }
+
+    public void setMinDuration(float minDuration) {
+        mMinDuration = minDuration;
     }
 
     private GestureDetector mGesDetector;
@@ -260,30 +264,32 @@ public class DragItemScrollView extends View {
             if (mCurrentCheckedRect.left >= tempRect.left - mHalfItemWidth
                     && mCurrentCheckedRect.right < tempRect.right
                     + mHalfItemWidth) {
-                int scale = i - mIndex;
-                float speed = 1;
-                if (scale > 0) {
-                    for (int n = 0; n < scale; n++) {
-                        speed *= 2;
+                if (mMinDuration != 0) {
+                    int scale = i - mIndex;
+                    float speed = 1;
+                    if (scale > 0) {
+                        for (int n = 0; n < scale; n++) {
+                            speed *= 2;
+                        }
+                    } else {
+                        for (int n = 0; n < Math.abs(scale); n++) {
+                            speed /= 2;
+                        }
                     }
-                } else {
-                    for (int n = 0; n < Math.abs(scale); n++) {
-                        speed /= 2;
+                    if (mDuration / speed < mMinDuration) {
+                        mIsLimit = true;
+                        break;
                     }
+                    mIsLimit = false;
+                    mDuration /= speed;
                 }
-                if (mDuration / speed < MIN_DURATION) {
-                    mIsLimit = true;
-                    break;
-                }
-                mIsLimit = false;
-                mDuration /= speed;
                 mIndex = i;
                 break;
             }
         }
         if (setLocation) {
-            if(mIsLimit){
-                SysAlertDialog.showAutoHideDialog(getContext(),0,R.string.video_speed_duration_too_short_to_change,2000);
+            if (mIsLimit) {
+                SysAlertDialog.showAutoHideDialog(getContext(), 0, R.string.video_speed_duration_too_short_to_change, 2000);
             }
             setLocation(user);
         }

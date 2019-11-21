@@ -2,11 +2,13 @@ package com.rd.veuisdk.ui;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.rd.lib.ui.ExtTextView;
 import com.rd.veuisdk.R;
 
 /***
@@ -20,26 +22,26 @@ public class AutoView extends LinearLayout {
 
     private double mPcenterX;
     private View mAutoView;
-    private TextView mTextView;
+    private ExtTextView mTextView;
     private String mText;
     private int mAutoViewMargin = -1;
 
 
     public AutoView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        float textSize = getResources().getDimensionPixelSize(
-                R.dimen.text_size_10);
+        float textSize = 15;
         this.setOrientation(LinearLayout.VERTICAL);
-        mTextView = new TextView(context);
+        mTextView = new ExtTextView(context,null);
         mTextView.setText(mText);
-        textSize = 15;
         mTextView.setTextSize(textSize);
         mTextPaint.setTextSize(textSize);
         mTextPaint.setAntiAlias(true);
         mTextView.setTextColor(getResources().getColor(R.color.black));
         mTextView.setPadding(8, 8, 8, 8);
         mTextView.setBackgroundResource(R.drawable.autoview_bg);
-
+        mTextView.setSingleLine(true);
+        mTextView.setMarqueeRepeatLimit(1);
+        mTextView.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         mAutoView = new View(context);
 
     }

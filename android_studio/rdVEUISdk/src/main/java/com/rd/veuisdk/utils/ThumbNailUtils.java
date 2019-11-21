@@ -23,7 +23,7 @@ public class ThumbNailUtils {
 	private ThumbNailUtils(Context context) {
 		Resources res = context.getResources();
 		THUMB_HEIGHT = res.getDimensionPixelSize(R.dimen.thumbnail_height);
-		THUMB_WIDTH = res.getDimensionPixelSize(R.dimen.thumbnail_width);
+		THUMB_WIDTH = res.getDimensionPixelSize(R.dimen.thumbnail_height);
 
 	}
 

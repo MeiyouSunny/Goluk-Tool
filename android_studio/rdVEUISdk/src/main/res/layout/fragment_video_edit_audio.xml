@@ -63,12 +63,16 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/rlBottomMenu"
         android:layout_below="@id/llPlayState">
+
+        <include layout="@layout/layout_item_edit"/>
 
         <RelativeLayout
             android:id="@+id/rlBottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:layout_centerVertical="true">
 
             <TextView
@@ -136,5 +140,7 @@
         android:textColor="#545454"
         android:textSize="@dimen/text_size_14"
         android:visibility="invisible"/>
+
+    <include layout="@layout/layout_bottom_menu"/>
 
 </RelativeLayout>

@@ -4,7 +4,7 @@
                 android:id="@+id/split_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/public_menu_back_color"
+                android:background="@color/black"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -13,7 +13,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/rlBottom"
+        android:layout_above="@+id/rlBottomMenu"
         >
 
         <com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView
@@ -49,8 +49,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:drawablePadding="3dp"
             android:drawableTop="@drawable/edit_split_line"
+            android:drawablePadding="3dp"
             android:paddingLeft="4dp"
             android:paddingTop="21dp"
             android:text="@string/edit_click_split"
@@ -93,8 +93,8 @@
                 android:id="@+id/tvEnd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
                 android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginRight="9dp"
                 android:gravity="center"
                 android:minHeight="20dp"
@@ -108,20 +108,13 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_above="@+id/priview_edit_split"
-            android:gravity="center_horizontal"
             android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
             android:paddingLeft="80dp"
-            autoview:sText="@string/drag_for_listview"/>
+            autoview:sText="@string/drag_for_sort"/>
     </RelativeLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/rlBottom"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
-
-        <include layout="@layout/public_menu"/>
-    </RelativeLayout>
+    <include layout="@layout/layout_bottom_menu"/>
 
 </RelativeLayout>

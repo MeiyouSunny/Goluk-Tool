@@ -36,6 +36,10 @@ public class CompressConfiguration implements Parcelable {
      */
     private final double bitRate;
     /**
+     * 帧率
+     */
+    private final int frameRate;
+    /**
      * 是否显示水印
      */
     public final boolean enableWatermark;
@@ -62,7 +66,7 @@ public class CompressConfiguration implements Parcelable {
     private final RectF compressWatermarkRectF;
 
     public ExportUtils.CompressConfig toCompressConfig() {
-        return new ExportUtils.CompressConfig(bitRate, enableWatermark, enableHWCode, watermarkPosition, videoWidth, videoHeight, compressWatermarkRectF);
+        return new ExportUtils.CompressConfig(bitRate, frameRate, enableWatermark, enableHWCode, watermarkPosition, videoWidth, videoHeight, compressWatermarkRectF);
     }
 
     public CompressConfiguration(Builder builder) {
@@ -74,6 +78,7 @@ public class CompressConfiguration implements Parcelable {
         enableHWCode = builder.mEnableHWCode;
         savePath = builder.mSavePath;
         compressWatermarkRectF = builder.mCompressWatermarkRectF;
+        frameRate = builder.frameRate;
     }
 
     /**
@@ -82,6 +87,7 @@ public class CompressConfiguration implements Parcelable {
     public static class Builder {
 
         double mBitRate = 4;
+        int frameRate = 25;
         boolean mEnableWatermark = false;
         int mWatermarkPosition = WATERMARK_LEFT_BOTTOM;
         int mVideoWidth = 0;
@@ -96,7 +102,18 @@ public class CompressConfiguration implements Parcelable {
          * @param bitRate 码流大小（单位：M）
          */
         public Builder setBitRate(double bitRate) {
-            this.mBitRate = Math.max(1, bitRate);
+            this.mBitRate = Math.max(0.01, bitRate);
+            return this;
+        }
+
+        /**
+         * 视频帧率
+         *
+         * @param frameRate
+         * @return
+         */
+        public Builder setFrameRate(int frameRate) {
+            this.frameRate = Math.min(60, Math.max(1, frameRate));
             return this;
         }
 
@@ -166,10 +183,10 @@ public class CompressConfiguration implements Parcelable {
          */
         public Builder setVideoSize(int width, int height) {
             if (width != 0) {
-                this.mVideoWidth = Math.max(240, Math.min(width, 1280));
+                this.mVideoWidth = Math.max(240, Math.min(width, 1920));
             }
             if (height != 0) {
-                this.mVideoHeight = Math.max(240, Math.min(height, 1280));
+                this.mVideoHeight = Math.max(240, Math.min(height, 1920));
             }
             return this;
         }
@@ -194,8 +211,18 @@ public class CompressConfiguration implements Parcelable {
         return 0;
     }
 
+    //唯一指定标识，以后不能再更改
+    private static final String VER_TAG = "190426CompressConfigBuilder";
+    private static final int VER = 1;
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        //特别标识
+        {
+            dest.writeString(VER_TAG);
+            dest.writeInt(VER);
+        }
+        dest.writeInt(this.frameRate);
         dest.writeDouble(this.bitRate);
         dest.writeByte(this.enableWatermark ? (byte) 1 : (byte) 0);
         dest.writeByte(this.enableHWCode ? (byte) 1 : (byte) 0);
@@ -207,6 +234,18 @@ public class CompressConfiguration implements Parcelable {
     }
 
     protected CompressConfiguration(Parcel in) {
+
+        //当前读取的position
+        int oldPosition = in.dataPosition();
+        String tmp = in.readString();
+        if (VER_TAG.equals(tmp)) {
+            int tVer = in.readInt();
+            this.frameRate = in.readInt();
+        } else {
+            //恢复到读取之前的index
+            in.setDataPosition(oldPosition);
+            this.frameRate = 25;
+        }
         this.bitRate = in.readDouble();
         this.enableWatermark = in.readByte() != 0;
         this.enableHWCode = in.readByte() != 0;

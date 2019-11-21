@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/public_menu_back_color"
+    android:orientation="vertical"
+    >
+
+    <include layout="@layout/rdveuisdk_public_title_bar"></include>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <com.rd.lib.ui.PreviewFrameLayout
+            android:id="@+id/rlPreviewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/black">
+
+            <com.rd.lib.ui.PreviewFrameLayout
+                android:id="@+id/rlPreview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                >
+
+                <com.rd.vecore.VirtualVideoView
+                    android:id="@+id/epvPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <FrameLayout
+                    android:id="@+id/linear_mix"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_horizontal"/>
+
+                <ImageView
+                    android:id="@+id/ivPlayerState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:contentDescription="@string/empty"
+                    android:scaleType="center"
+                    android:src="@drawable/btn_play"/>
+            </com.rd.lib.ui.PreviewFrameLayout>
+
+            <TextView
+                android:id="@+id/tvEditorDuration"
+                style="@style/styleEditorDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/pbPreview"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"/>
+        </com.rd.lib.ui.PreviewFrameLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/fl_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottomLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        >
+
+        <include layout="@layout/public_menu"/>
+    </LinearLayout>
+</LinearLayout>

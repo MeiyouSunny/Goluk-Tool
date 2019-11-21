@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/osd_menu_layout"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+    >
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="18dp"
+        android:background="#131313"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginRight="1dp"
+            android:orientation="horizontal"
+            >
+
+            <RadioGroup
+                android:id="@+id/rgMosaic"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rb_blur"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/osd_menu_bg"
+                    android:textSize="@dimen/text_size_14"
+                    android:textColor="@drawable/rb_osd_txcolor"
+                    android:singleLine="true"
+                    android:text="@string/osd_rb_blur"
+                    android:paddingLeft="4dp"
+                    android:button="@drawable/mosaic_blur"
+                    />
+
+                <RadioButton
+                    android:id="@+id/rb_pixl"
+                    android:layout_width="0dp"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/osd_rb_pixl"
+                    android:textColor="@drawable/rb_osd_txcolor"
+                    android:layout_marginRight="5dp"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="4dp"
+                    android:textSize="@dimen/text_size_14"
+                    android:singleLine="true"
+                    android:layout_weight="1"
+                    android:background="@drawable/osd_menu_bg"
+                    android:button="@drawable/mosaic_square"
+                    />
+
+                <RadioButton
+                    android:id="@+id/rb_osd"
+                    android:layout_width="0dp"
+                    android:text="@string/osd_rb_osd"
+                    android:layout_height="wrap_content"
+                    android:textColor="@drawable/rb_osd_txcolor"
+                    android:layout_marginLeft="5dp"
+                    android:layout_weight="1"
+                    android:textSize="@dimen/text_size_14"
+                    android:paddingLeft="4dp"
+                    android:singleLine="true"
+                    android:background="@drawable/osd_menu_bg"
+                    android:button="@drawable/osd_square"
+                    />
+
+
+            </RadioGroup>
+
+
+        </LinearLayout>
+
+
+        <include layout="@layout/filter_lookup_sbar_layout"/>
+    </LinearLayout>
+
+
+</FrameLayout>

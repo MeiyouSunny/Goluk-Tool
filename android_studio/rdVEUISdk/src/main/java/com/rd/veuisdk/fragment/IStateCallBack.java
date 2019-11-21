@@ -5,5 +5,7 @@ package com.rd.veuisdk.fragment;
  */
 
 public interface IStateCallBack {
-    public  boolean isHideText();
+
+    boolean isHideText();
+
 }

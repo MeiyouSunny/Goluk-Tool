@@ -16,9 +16,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rd.lib.utils.ThreadPoolUtils;
+import com.rd.veuisdk.fragment.LocalVideoMusicFragment;
 import com.rd.veuisdk.model.MusicItem;
 import com.rd.veuisdk.model.MusicItems;
 import com.rd.veuisdk.ui.CircleProgressBar;
@@ -27,7 +27,6 @@ import com.rd.veuisdk.utils.ExtScanMediaDialog;
 import com.rd.veuisdk.utils.ExtScanMediaDialog.onScanMusicClickInterface;
 import com.rd.veuisdk.utils.HanziToPinyin;
 import com.rd.veuisdk.utils.StorageUtils;
-import com.rd.veuisdk.utils.SysAlertDialog;
 
 import java.io.File;
 import java.io.FileFilter;
@@ -52,7 +51,6 @@ public class SightseeingFileActivity extends BaseActivity {
      */
     private CheckBox mCheckAll;
     private ImageButton m_btnBackRootPath;
-    private TextView tvBackRootPath;
 
     private MusicItems m_alLocalMusicItems = new MusicItems(this);
 
@@ -70,7 +68,6 @@ public class SightseeingFileActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mStrActivityPageName = getString(R.string.activity_label_sightseeing_file);
         setContentView(R.layout.rdveuisdk_sightseeing_file_folder);
         // 获取SD入口根目录
         sdRootPath = new File(StorageUtils.getStorageDirectory());
@@ -85,7 +82,6 @@ public class SightseeingFileActivity extends BaseActivity {
 
             @Override
             public void onClick(View v) {
-                // onBackPressed();
                 finish();
             }
         });
@@ -119,7 +115,7 @@ public class SightseeingFileActivity extends BaseActivity {
         });
 
         // 开始扫描
-        this.findViewById(R.id.tv_BeginScan).setOnClickListener(
+        findViewById(R.id.tv_BeginScan).setOnClickListener(
                 new OnClickListener() {
 
                     @Override
@@ -127,12 +123,10 @@ public class SightseeingFileActivity extends BaseActivity {
                         loadScanMusics();
                     }
                 });
-        m_cpbLoadFileProgress = (CircleProgressBar) this
-                .findViewById(R.id.cpb_loadFileProgress);
+        m_cpbLoadFileProgress = (CircleProgressBar) findViewById(R.id.cpb_loadFileProgress);
         m_cpbLoadFileProgress.setVisibility(View.GONE);
         if (!CheckSDSize.ExistSDCard()) {
-            SysAlertDialog.showAutoHideDialog(this, R.string.dialog_tips,
-                    R.string.sd_umount, Toast.LENGTH_SHORT);
+            onToast(getString(R.string.sd_umount));
             finish();
         } else {
             loadingFileList(sdRootPath.getAbsolutePath());
@@ -147,41 +141,57 @@ public class SightseeingFileActivity extends BaseActivity {
     }
 
     private void loadScanMusics() {
-        // Log.d(TAG, "选中路径的集合：" + mFileNameAdapter.getSelectFile());
         if (mFileNameAdapter.getSelectFile().size() <= 0) {
-            SysAlertDialog.showAutoHideDialog(this, "",
-                    getString(R.string.p_select_dir), Toast.LENGTH_SHORT);
+            onToast(getString(R.string.p_select_dir));
             return;
         }
         ExtScanMediaDialog musicDialog = new ExtScanMediaDialog(this);
-        musicDialog
-                .setonScanMusicClickInterface(new onScanMusicClickInterface() {
+        if (mListener != null) {
+            musicDialog.setVideo();
+        }
+        musicDialog.setonScanMusicClickInterface(new onScanMusicClickInterface() {
 
-                    @Override
-                    public void cancel() {
-                        m_alLocalMusicItems.setIsCancel(true);
-                    }
+            @Override
+            public void cancel() {
+                if (mListener != null) {
+                    mListener.cancelScan();
+                } else {
+                    m_alLocalMusicItems.setIsCancel(true);
+                }
+            }
 
-                    @Override
-                    public void accomplish() {
-                        Intent intent = new Intent(
-                                ExtScanMediaDialog.INTENT_SIGHTSEEING_UPATE);
-                        intent.putExtra(
-                                ExtScanMediaDialog.INTENT_SIGHTSEEING_DATA,
-                                true);
-                        sendBroadcast(intent);
-                        finish();
-                    }
-                });
+            @Override
+            public void accomplish() {
+                if (mListener != null) {
+                    mListener.complete();
+                    finish();
+                } else {
+                    Intent intent = new Intent(
+                            ExtScanMediaDialog.INTENT_SIGHTSEEING_UPATE);
+                    intent.putExtra(
+                            ExtScanMediaDialog.INTENT_SIGHTSEEING_DATA,
+                            true);
+                    sendBroadcast(intent);
+                    finish();
+                }
+            }
+        });
         musicDialog.show();
         // 注册显示音乐文件的回调接口
-        m_alLocalMusicItems.setOnShowScanFileInterface(musicDialog);
-        ThreadPoolUtils.execute(new Runnable() {
+        if (mListener != null) {
+            mListener.setOnShowScanFileInterface(musicDialog);
+        } else {
+            m_alLocalMusicItems.setOnShowScanFileInterface(musicDialog);
+        }
+        ThreadPoolUtils.executeEx(new Runnable() {
             @Override
             public void run() {
-                m_alLocalMusicItems.setIsCancel(false);
-                m_alLocalMusicItems.loadMusicItems(3,
-                        mFileNameAdapter.getSelectFile());
+                if (mListener != null) {
+                    mListener.begin(mFileNameAdapter.getSelectFile());
+                } else {
+                    m_alLocalMusicItems.setIsCancel(false);
+                    m_alLocalMusicItems.loadMusicItems(3, mFileNameAdapter.getSelectFile());
+                }
             }
         });
     }
@@ -256,16 +266,15 @@ public class SightseeingFileActivity extends BaseActivity {
                     }
 
                     if (files != null) {
-                        File tStorageRootDir = new File(StorageUtils
-                                .getStorageDirectory());
-                        for (int i = 0; i < files.length; i++) { // 循环File数组
+                        File tStorageRootDir = new File(StorageUtils.getStorageDirectory());
+                        for (int i = 0; i < files.length; i++) {
+                            // 循环File数组
                             if (isCancelLoad) {
                                 isLoading = false;
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        m_cpbLoadFileProgress
-                                                .setVisibility(View.GONE);
+                                        m_cpbLoadFileProgress.setVisibility(View.GONE);
                                     }
                                 });
                                 return;
@@ -276,27 +285,16 @@ public class SightseeingFileActivity extends BaseActivity {
                                 if (isFilterDirectoryOrFile(files[i].getName())) {
                                     continue;
                                 }
-                                if (!files[i].getParent().equals(
-                                        tStorageRootDir.getParent())
-                                        || files[i].getPath().equals(
-                                        tStorageRootDir.getPath())) {
-                                    fileNameItem
-                                            .setImageRes(R.drawable.select_music_scan_content);
-                                    fileNameItem.setMfileName(files[i]
-                                            .getName());
-                                    fileNameItem.setMfilePath(files[i]
-                                            .getAbsolutePath());
-
+                                if (!files[i].getParent().equals(tStorageRootDir.getParent()) || files[i].getPath().equals(tStorageRootDir.getPath())) {
+                                    fileNameItem.setImageRes(R.drawable.select_music_scan_content);
+                                    fileNameItem.setMfileName(files[i].getName());
+                                    fileNameItem.setMfilePath(files[i].getAbsolutePath());
                                     showFileNames.add(fileNameItem);
                                 }
-                            } else if (files[i].isFile()
-                                    && isMusicAvaliable(files[i]
-                                    .getAbsolutePath())) {
-                                fileNameItem
-                                        .setImageRes(R.drawable.select_music_list_left_icon);
+                            } else if (files[i].isFile() && isMusicAvaliable(files[i].getAbsolutePath())) {
+                                fileNameItem.setImageRes(R.drawable.select_music_list_left_icon);
                                 fileNameItem.setMfileName(files[i].getName());
-                                fileNameItem.setMfilePath(files[i]
-                                        .getAbsolutePath());
+                                fileNameItem.setMfilePath(files[i].getAbsolutePath());
                                 showFileNames.add(fileNameItem);
                             }
                         }
@@ -310,8 +308,7 @@ public class SightseeingFileActivity extends BaseActivity {
                             if (mFileNameAdapter != null) {
                                 mCheckAll.setChecked(false);
                                 mFileNameAdapter.clearUp();
-                                mFileNameAdapter.addAllShowFileNames(
-                                        showFileNames, true);
+                                mFileNameAdapter.addAllShowFileNames(showFileNames, true);
                             }
                         }
                     });
@@ -325,16 +322,13 @@ public class SightseeingFileActivity extends BaseActivity {
      *
      * @author johnny
      */
-    private static class MusicItemsComparator implements
-            Comparator<ShowFileNameItem> {
+    private static class MusicItemsComparator implements Comparator<ShowFileNameItem> {
         private final Collator mCollator = Collator.getInstance();
 
         @Override
         public int compare(ShowFileNameItem lhs, ShowFileNameItem rhs) {
-            String strLHSTitle = HanziToPinyin
-                    .getPinyinName(lhs.getMfileName());
-            String strRHSTitle = HanziToPinyin
-                    .getPinyinName(rhs.getMfileName());
+            String strLHSTitle = HanziToPinyin.getPinyinName(lhs.getMfileName());
+            String strRHSTitle = HanziToPinyin.getPinyinName(rhs.getMfileName());
             return mCollator.compare(strLHSTitle, strRHSTitle);
         }
     }
@@ -367,14 +361,20 @@ public class SightseeingFileActivity extends BaseActivity {
         private ArrayList<ShowFileNameItem> showFileNameItems;
         private Context mContext;
 
-        public ShowFileNameAdapter(Context c) {
-            this.mContext = c;
+        private ShowFileNameAdapter() {
+
         }
 
-        public void addAllShowFileNames(
-                ArrayList<SightseeingFileActivity.ShowFileNameItem> arrayList,
-                boolean notify) {
-            showFileNameItems = arrayList;
+        public ShowFileNameAdapter(Context c) {
+            this.mContext = c;
+            showFileNameItems = new ArrayList<>();
+        }
+
+        public void addAllShowFileNames(ArrayList<ShowFileNameItem> arrayList, boolean notify) {
+            showFileNameItems.clear();
+            if (null != arrayList && arrayList.size() > 0) {
+                showFileNameItems.addAll(arrayList);
+            }
             if (notify) {
                 this.notifyDataSetChanged();
             }
@@ -382,10 +382,11 @@ public class SightseeingFileActivity extends BaseActivity {
 
         public ArrayList<String> getSelectFile() {
             ArrayList<String> filePaths = new ArrayList<String>();
-            for (ShowFileNameItem fileNameItem : showFileNameItems) {
-                if (fileNameItem.getIsSelectFile()) {
-                    String pathString = fileNameItem.getMfilePath();
-                    filePaths.add(pathString);
+            if (null != showFileNameItems) {
+                for (ShowFileNameItem fileNameItem : showFileNameItems) {
+                    if (fileNameItem.getIsSelectFile()) {
+                        filePaths.add(fileNameItem.getMfilePath());
+                    }
                 }
             }
             return filePaths;
@@ -393,8 +394,7 @@ public class SightseeingFileActivity extends BaseActivity {
 
         @Override
         public int getCount() {
-            return showFileNameItems != null && showFileNameItems.size() > 0 ? showFileNameItems
-                    .size() : 0;
+            return showFileNameItems != null && showFileNameItems.size() > 0 ? showFileNameItems.size() : 0;
         }
 
         @Override
@@ -409,11 +409,9 @@ public class SightseeingFileActivity extends BaseActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            final ShowFileNameItem showFileNameItem = showFileNameItems
-                    .get(position);
+            final ShowFileNameItem showFileNameItem = getItem(position);
             if (null == convertView) {
-                convertView = LayoutInflater.from(mContext).inflate(
-                        R.layout.folder_item, null);
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.folder_item, null);
             }
             final TextView m_tvFlieName = (TextView) convertView
                     .findViewById(R.id.tv_folderPathName);
@@ -434,20 +432,14 @@ public class SightseeingFileActivity extends BaseActivity {
                     });
 
             // 如果是选择状态
-            if (showFileNameItem.getIsSelectFile()) {
-                m_cbSelectOneFolder.setChecked(true);
-            } else {
-                m_cbSelectOneFolder.setChecked(false);
-            }
+            m_cbSelectOneFolder.setChecked(showFileNameItem.getIsSelectFile());
             convertView.setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
                     File file = new File(showFileNameItem.getMfilePath());
                     if (file.isDirectory()) {
-                        SightseeingFileActivity.this
-                                .loadingFileList(showFileNameItem
-                                        .getMfilePath());
+                        loadingFileList(showFileNameItem.getMfilePath());
                     }
                 }
             });
@@ -455,8 +447,11 @@ public class SightseeingFileActivity extends BaseActivity {
         }
 
         public void setSelectAllFile(boolean isSelected) {
-            for (int i = 0; i < showFileNameItems.size(); i++) {
-                showFileNameItems.get(i).setIsSelectFile(isSelected);
+            if (null != showFileNameItems) {
+                int len = showFileNameItems.size();
+                for (int i = 0; i < len; i++) {
+                    showFileNameItems.get(i).setIsSelectFile(isSelected);
+                }
             }
             this.notifyDataSetChanged();
         }
@@ -464,7 +459,6 @@ public class SightseeingFileActivity extends BaseActivity {
         public void clearUp() {
             if (showFileNameItems != null) {
                 showFileNameItems.clear();
-                showFileNameItems = null;
             }
         }
     }
@@ -530,4 +524,11 @@ public class SightseeingFileActivity extends BaseActivity {
         }
 
     }
+
+    private static LocalVideoMusicFragment.ScanCustomizeListener mListener;
+
+    public static void setScanListener(LocalVideoMusicFragment.ScanCustomizeListener listener) {
+        mListener = listener;
+    }
+
 }

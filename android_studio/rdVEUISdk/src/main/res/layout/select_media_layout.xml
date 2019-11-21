@@ -2,25 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/rdveuisdk_main_bg_color"
-              android:orientation="vertical"
-    >
+              android:fitsSystemWindows="true"
+              android:background="@color/public_background_color"
+              android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/ll_to_video_selected_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/mainbg"
-        android:minHeight="@dimen/public_titlebar_minheight" >
+        android:minHeight="@dimen/public_titlebar_minheight">
 
-        <ImageView
+        <com.rd.lib.ui.ExtButton
             android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:src="@drawable/public_menu_cancel" />
+            android:background="@null"
+            android:drawableLeft="@drawable/edit_back_button"
+            />
+
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="wrap_content"
@@ -28,13 +30,14 @@
             android:layout_centerInParent="true"
             android:textColor="@drawable/video_selected_rb_textcolor"
             android:textSize="@dimen/text_size_18"
-            android:visibility="gone" />
+            android:visibility="gone"/>
+
         <RadioGroup
             android:id="@+id/rgFormat"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:orientation="horizontal" >
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/rbVideo"
@@ -48,7 +51,7 @@
                 android:gravity="center"
                 android:text="@string/select_media_title_video"
                 android:textColor="@drawable/video_selected_rb_textcolor"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/text_size_16"/>
 
             <RadioButton
                 android:id="@+id/rbPhoto"
@@ -61,7 +64,7 @@
                 android:gravity="center"
                 android:text="@string/select_media_title_photo"
                 android:textColor="@drawable/video_selected_rb_textcolor"
-                android:textSize="@dimen/text_size_16" />
+                android:textSize="@dimen/text_size_16"/>
         </RadioGroup>
 
         <ImageView
@@ -71,48 +74,83 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@drawable/select_camera_button" />
+            android:src="@drawable/select_camera_button"/>
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#ffffff" >
+        android:background="#ffffff">
 
         <com.rd.veuisdk.ui.ExtViewPagerNoScroll
             android:id="@+id/mediaViewPager"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="5dp" />
+            android:paddingTop="5dp"/>
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/rlAlbumBottomBar"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:background="@color/rdveuisdk_main_bg_color"
-        android:gravity="center_vertical" >
+        android:layout_height="135dp"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/import_info_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="@dimen/text_size_14"
-            android:textColor="@color/white"
-            android:textSize="@dimen/text_size_16" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:gravity="center_vertical">
 
-        <ImageButton
-            android:id="@+id/import_btn"
-            android:layout_width="70dp"
+            <TextView
+                android:id="@+id/import_info_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/text_size_14"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_16"/>
+
+            <com.rd.lib.ui.ExtButton
+                android:id="@+id/import_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/btn_next_bg_shape"
+                android:enabled="false"
+                android:text="@string/next_step"/>
+        </RelativeLayout>
+
+
+        <FrameLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@color/main_orange"
-            android:src="@drawable/import_btn_sure" />
-    </RelativeLayout>
+            android:layout_gravity="bottom">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rvCheckedMedia"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:clipToPadding="false"/>
+
+
+            <TextView
+                android:id="@+id/tv_media_hint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/select_media_hint"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_16"/>
+
+        </FrameLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

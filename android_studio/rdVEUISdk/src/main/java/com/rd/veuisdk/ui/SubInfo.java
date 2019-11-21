@@ -1,17 +1,61 @@
 package com.rd.veuisdk.ui;
 
 import android.graphics.Rect;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-import com.rd.veuisdk.model.WordInfo;
+import com.rd.veuisdk.model.ICommon;
 
 /**
  * 记录每一块字幕 、特效的区域
  */
-public class SubInfo {
+public class SubInfo implements Parcelable {
     private int id;
     private String str = "";
     private int timelinefrom = 0, timelineTo = 0;
     private Rect rect = new Rect();
+
+    public SubInfo clone() {
+        SubInfo subInfo = new SubInfo(timelinefrom, timelineTo, id);
+        if (null != rect) {
+            subInfo.rect.set(rect);
+        }
+        return subInfo;
+    }
+
+    protected SubInfo(Parcel in) {
+        id = in.readInt();
+        str = in.readString();
+        timelinefrom = in.readInt();
+        timelineTo = in.readInt();
+        rect = in.readParcelable(Rect.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(str);
+        dest.writeInt(timelinefrom);
+        dest.writeInt(timelineTo);
+        dest.writeParcelable(rect, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SubInfo> CREATOR = new Creator<SubInfo>() {
+        @Override
+        public SubInfo createFromParcel(Parcel in) {
+            return new SubInfo(in);
+        }
+
+        @Override
+        public SubInfo[] newArray(int size) {
+            return new SubInfo[size];
+        }
+    };
 
     private void SubInfoData(int startP, int endP, int height, String str,
                              int id) {
@@ -26,7 +70,7 @@ public class SubInfo {
         this.id = id;
     }
 
-    public SubInfo(WordInfo info) {
+    public SubInfo(ICommon info) {
         setTimeLine((int) info.getStart(), (int) info.getEnd());
         this.id = info.getId();
     }
@@ -65,11 +109,14 @@ public class SubInfo {
     public String toString() {
         return "SubInfo [str=" + str + ", id=" + id + ", rect=" + rect.toShortString()
                 + ", timelinefrom=" + timelinefrom + ", timelineTo="
-                + timelineTo + "]";
+                + timelineTo +
+                " hash:"+ hashCode() +
+
+                "]";
     }
 
     public String getStr() {
-        return str;
+        return null == str ? "" : str;
     }
 
 
@@ -82,6 +129,12 @@ public class SubInfo {
         return rect;
     }
 
+    /**
+     * 单位：ms
+     *
+     * @param nstart
+     * @param nend
+     */
     public void setTimeLine(int nstart, int nend) {
         this.timelinefrom = nstart;
         this.timelineTo = nend;

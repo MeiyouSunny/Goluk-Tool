@@ -66,15 +66,13 @@ public class GraphicsHelper {
                 bitmap.getHeight(), Config.ARGB_8888);
         Canvas canvas = new Canvas(output);
 
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-        final float roundRadius = radius;
+        Paint paint = new Paint();
+        Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        RectF rectF = new RectF(rect);
+        float roundRadius = radius;
 
         paint.setAntiAlias(true);// 设置去锯齿
-        paint.setColor(color);
-
+        paint.setColor(Color.BLACK);
         canvas.drawARGB(0, 0, 0, 0);
         canvas.drawRoundRect(rectF, roundRadius, roundRadius, paint);
 
@@ -84,7 +82,6 @@ public class GraphicsHelper {
         paint.setStyle(Paint.Style.STROKE);// 设置为空心
         paint.setColor(borderColor);
         paint.setStrokeWidth(border);
-        // paint.setXfermode(new PorterDuffXfermode(Mode.SRC_IN));
         canvas.drawRoundRect(rectF, roundRadius, roundRadius, paint);
         return output;
     }
@@ -238,6 +235,7 @@ public class GraphicsHelper {
             BitmapDrawable bd = (BitmapDrawable) drawable;
             if (bd.getBitmap().isRecycled()) {
                 bitmap.recycle();
+                Log.e(TAG, "getBitmap:  is recyced");
                 return null;
             }
         }
@@ -246,6 +244,8 @@ public class GraphicsHelper {
         return bitmap;
     }
 
+    private static final String TAG = "GraphicsHelper";
+
     /**
      * 将Drawable转化为Bitmap
      *
@@ -253,12 +253,20 @@ public class GraphicsHelper {
      * @return
      */
     public static Bitmap getBitmap(Drawable drawable) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        if (width <= 0 || height <= 0) {
-            return null;
+
+
+        Rect rect = drawable.getBounds();
+        if (null != rect && !rect.isEmpty()) {
+            return getBitmap(drawable, rect.width(), rect.height());
+        } else {
+            int width = drawable.getIntrinsicWidth();
+            int height = drawable.getIntrinsicHeight();
+//            Log.e(TAG, "getBitmap: " + width + "*" + height + " rect:  " + rect);
+            if (width <= 0 || height <= 0) {
+                return null;
+            }
+            return getBitmap(drawable, width, height);
         }
-        return getBitmap(drawable, width, height);
     }
 
     /**
@@ -330,7 +338,7 @@ public class GraphicsHelper {
     /**
      * 按横竖视频裁切获取模糊的图片
      *
-     * @param drawable
+     * @param bmp
      * @return
      */
     public static Drawable ImageCropWithRectAndBlurFilter(Bitmap bmp) {
@@ -598,6 +606,36 @@ public class GraphicsHelper {
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(borderWidth);
         canvas.drawRoundRect(dst, cornersRadius, cornersRadius, paint);
+
+    }
+
+    /**
+     * 绘制顶层的选中状态和下载进度
+     *
+     * @param canvas
+     * @param width
+     * @param height
+     * @param borderWidth
+     * @param borderColor
+     * @param ischeck
+     * @param progress
+     */
+    public static void drawRoundedBorderCorner(Canvas canvas, int width,
+                                               int height, int borderWidth,
+                                               int borderColor, boolean ischeck, int progress) {
+        if (ischeck) {// 被选中的背景空心圆
+//            Rect dst = new Rect(0, 0, width - 0,
+//                    height - 0);
+            int rBorderWidth = borderWidth / 2;
+            Rect dst = new Rect(rBorderWidth, rBorderWidth, width - rBorderWidth, height - rBorderWidth);
+            Paint paint = new Paint();
+            paint.setAntiAlias(true);// 设置去锯齿
+            paint.setColor(borderColor);
+            paint.setStyle(Paint.Style.STROKE);
+            paint.setStrokeWidth(borderWidth);
+            canvas.drawArc(new RectF(dst), 270, progress * 360 / 100, false,
+                    paint);
+        }
 
     }
 }

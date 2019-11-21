@@ -3,21 +3,21 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/public_menu_back_color"
+              android:background="@color/black"
               android:orientation="vertical">
 
-    <include layout="@layout/rdveuisdk_public_title_bar"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <com.rd.lib.ui.PreviewFrameLayout
+        <RelativeLayout
             android:id="@+id/rlPreviewLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@color/black">
 
             <com.rd.lib.ui.PreviewFrameLayout
@@ -59,21 +59,41 @@
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/pbPreview"
                 android:layout_alignParentRight="true"/>
-        </com.rd.lib.ui.PreviewFrameLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical">
 
-        <com.rd.veuisdk.ui.DragItemScrollView
+        <CheckBox
+            android:id="@+id/cbSpeedApplyToAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:button="@drawable/toning_all"
+            android:text="@string/transition_apply_to_all"
+            android:textColor="@color/transparent_white"
+            android:textSize="@dimen/text_size_13"/>
+
+        <TextView
+            android:id="@+id/tvCurSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="x1.00"
+            android:textColor="@color/white"
+            android:textSize="18dp"/>
+
+        <com.rd.veuisdk.ui.RulerSeekbar
             android:id="@+id/dragViewSpeed"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/speed_height"
+            android:layout_height="100dp"
             android:layout_gravity="center"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             attrdata:sArrays="@array/speed_array"/>
     </LinearLayout>
 
@@ -83,7 +103,7 @@
         android:layout_gravity="bottom"
         >
 
-        <include layout="@layout/public_menu"/>
+        <include layout="@layout/layout_bottom_menu"/>
     </LinearLayout>
 
 </LinearLayout>

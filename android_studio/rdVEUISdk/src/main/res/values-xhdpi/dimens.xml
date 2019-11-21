@@ -10,9 +10,9 @@
     <dimen name="add_media_width">61dp</dimen>
 
     <!-- thumbnail -->
-
-    <dimen name="thumbnail_width">124dp</dimen>
-    <dimen name="thumbnail_height">70dp</dimen>
+    <!--16*6-->
+    <dimen name="thumbnail_width">96dp</dimen>
+    <dimen name="thumbnail_height">54dp</dimen>
     <dimen name="thumbnail_trim_height">75dp</dimen>
     <dimen name="style_src_margin">8dp</dimen>
     <dimen name="radio_btn_padding">12dp</dimen>
@@ -24,8 +24,7 @@
     <dimen name="frag_music_menu_height">124dp</dimen>
     <dimen name="frag_music_menu_border_width">1dp</dimen>
     <dimen name="preview_rangseekbar_height">30dp</dimen>
-    <dimen name="preview_rangseekbarplus_height">70dp</dimen>
-    <dimen name="preview_rangseekbarplus_height_hint">100dp</dimen>
+    <dimen name="preview_rangseekbarplus_height">60dp</dimen>
     <dimen name="preview_intercept_margintop">30dp</dimen>
     <dimen name="preview_intercept_marginbottom">-30dp</dimen>
     <dimen name="preview_rangseekbarplus_trim_height">75dp</dimen>
@@ -40,11 +39,24 @@
     <dimen name="speed_height">110dp</dimen>
     <dimen name="record_titlebar_height">60dp</dimen>
     <dimen name="music_bar_height">47dp</dimen>
+    <dimen name="music_content_margin_top">3dp</dimen>
     <dimen name="filter_list_item_size">64dp</dimen>
     <dimen name="record_filter_parent_layout_height_horizontal">160dp</dimen>
     <dimen name="record_filter_parent_layout_height_vertical">260dp</dimen>
 
-    <dimen name="record_filter_item_size_horizontal">48dp</dimen>
+    <dimen name="record_filter_item_size_horizontal">35dp</dimen>
     <dimen name="record_faceu_item_size_horizontal">55dp</dimen>
     <dimen name="camera_radiogroup_height">40dp</dimen>
+
+    <dimen name="quik_setting_margin">20dp</dimen>
+    <dimen name="media_add_btn">40dp</dimen>
+
+    <dimen name="cover_layout_height">65dp</dimen>
+
+
+    <dimen name="rd_sbar_thumb_size">30dp</dimen>
+    <dimen name="rd_sbar_thumb_stroke">12dp</dimen>
+    <dimen name="rd_sbar_thumb_offset">15dp</dimen>
+
+
 </resources>

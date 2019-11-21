@@ -22,7 +22,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
         android:layout_toRightOf="@id/tvHistoryMusicDuration"
-        android:text="@string/music_library"
+        android:text=" "
         android:textColor="@color/transparent_white"
         android:textSize="@dimen/text_size_16" />
 

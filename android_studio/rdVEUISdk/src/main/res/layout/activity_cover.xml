@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.rd.veuisdk.ui.NoneMultiTouchLinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:attrdata="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dark_bg"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--播放器-->
+        <RelativeLayout
+            android:id="@+id/rlPreviewLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black">
+
+            <RelativeLayout
+                android:id="@+id/tmp1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/fragment_cover_height"
+                android:layout_alignParentBottom="true">
+
+            </RelativeLayout>
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="match_parent"
+               android:layout_above="@id/tmp1"
+               android:layout_centerInParent="true"
+               android:gravity="center">
+
+               <!--播放器-->
+               <com.rd.lib.ui.PreviewFrameLayout
+                   android:id="@+id/rlPlayerContainer"
+                   android:layout_width="match_parent"
+                   android:layout_height="match_parent">
+
+                   <com.rd.vecore.VirtualVideoView
+                       android:id="@+id/epvPreview"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"/>
+
+                   <com.rd.lib.ui.PreviewFrameLayout
+                       android:id="@+id/rlPreview"
+                       android:layout_width="match_parent"
+                       android:layout_height="match_parent"
+                       android:layout_centerInParent="true">
+
+                       <FrameLayout
+                           android:id="@+id/linear_words"
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:layout_gravity="center_horizontal"/>
+
+                   </com.rd.lib.ui.PreviewFrameLayout>
+
+               </com.rd.lib.ui.PreviewFrameLayout>
+
+           </LinearLayout>
+
+            <!--播放进度-->
+            <LinearLayout
+                android:id="@+id/rlPlayerBottomMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tmp1"
+                android:background="@color/transparent"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="0dp"
+                android:orientation="horizontal">
+
+                <SeekBar
+                    android:id="@+id/sbEditor"
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:layout_centerVertical="true"
+                    android:maxHeight="8px"
+                    android:minHeight="8px"
+                    android:paddingLeft="10dp"
+                    android:layout_toLeftOf="@+id/tvEditorDuration"
+                    android:layout_toRightOf="@+id/tvEditorCurrentPos"
+                    android:paddingRight="15dp"
+                    android:progressDrawable="@drawable/video_editor_progress"
+                    android:thumb="@drawable/seekbar_thumb"
+                    android:thumbOffset="23dp"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- 功能区-->
+        <RelativeLayout
+            android:id="@+id/rlEditorMenuAndSubLayout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/fragment_cover_height"
+            android:gravity="bottom"
+            android:layout_alignParentBottom="true"
+            android:background="@color/dark_bg"
+            android:layout_gravity="bottom">
+
+            <!--底部取消、确认-->
+            <FrameLayout
+                android:id="@+id/tmp3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <include layout="@layout/layout_bottom_menu"/>
+
+            </FrameLayout>
+
+            <!--时长、缩略图-->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:gravity="center"
+                android:layout_height="match_parent"
+                android:background="@color/dark_bg"
+                android:layout_above="@id/tmp3">
+
+                <!--添加图片 添加文字 时长-->
+                <LinearLayout
+                    android:id="@+id/cover_add_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:orientation="vertical"
+                    android:background="@color/dark_bg">
+
+                    <!--片头 片尾-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="5dp">
+
+                        <com.rd.lib.ui.ExtButton
+                            android:id="@+id/btnHead"
+                            style="@style/public_title_bar_button"
+                            android:background="@drawable/cover_head_p"
+                            android:gravity="center"
+                            android:text="@string/cover_head"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/text_size_16"
+                            android:visibility="visible"/>
+
+                        <com.rd.lib.ui.ExtButton
+                            android:id="@+id/btnTail"
+                            style="@style/public_title_bar_button"
+                            android:background="@drawable/cover_tail_n"
+                            android:gravity="center"
+                            android:text="@string/cover_tail"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_16"
+                            android:visibility="visible"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center">
+
+                        <TextView
+                            android:id="@+id/tvAddPicture"
+                            style="@style/partedit_add_btn_style"
+                            android:drawableTop="@drawable/cover_picture"
+                            android:onClick="onPreviewOptionClick"
+                            android:text="@string/cover_add_picture"/>
+
+                        <TextView
+                            android:id="@+id/tvAddText"
+                            style="@style/partedit_add_btn_style"
+                            android:drawableTop="@drawable/cover_text"
+                            android:onClick="onPreviewOptionClick"
+                            android:text="@string/cover_add_text"/>
+
+
+                        <TextView
+                            android:id="@+id/tvDuration"
+                            style="@style/partedit_add_btn_style"
+                            android:drawableTop="@drawable/cover_time"
+                            android:onClick="onPreviewOptionClick"
+                            android:text="@string/cover_duration"/>
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--时长-->
+                <RelativeLayout
+                    android:id="@+id/cover_change_duration"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/dark_bg"
+                    android:visibility="gone"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvShowDuration"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:text="1s"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:layout_centerHorizontal="true"/>
+
+                    <com.rd.veuisdk.ui.RulerSeekbar
+                        android:id="@+id/cover_duration"
+                        android:layout_width="match_parent"
+                        android:layout_below="@id/tvShowDuration"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        attrdata:sArrays="@array/cover_duration_array"/>
+
+                </RelativeLayout>
+
+                <!--缩略图-->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/cover_thumbnail"
+                    android:gravity="center"
+                    android:visibility="gone">
+
+                    <include layout="@layout/cover_virtual_layout"/>
+
+                    <View
+                        android:id="@+id/word_hint_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/black"/>
+
+                </RelativeLayout>
+
+            </FrameLayout>
+
+            <!--字幕-->
+            <LinearLayout
+                android:id="@+id/cover_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+</com.rd.veuisdk.ui.NoneMultiTouchLinearLayout>

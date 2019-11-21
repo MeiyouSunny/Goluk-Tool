@@ -3,9 +3,6 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content">
 
-    <!--<RelativeLayout-->
-    <!--android:layout_width="wrap_content"-->
-    <!--android:layout_height="wrap_content" >-->
     <RelativeLayout
         android:layout_width="@dimen/priview_item_width_plus"
         android:layout_height="@dimen/priview_item_height_plus">

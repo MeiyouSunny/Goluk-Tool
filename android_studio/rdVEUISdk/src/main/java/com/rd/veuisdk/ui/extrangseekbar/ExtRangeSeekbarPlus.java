@@ -24,8 +24,8 @@ import com.rd.veuisdk.utils.DateTimeUtils;
  * @author JIAN
  */
 public class ExtRangeSeekbarPlus extends RangSeekBarBase {
-    private final String TAG = ExtRangeSeekbarPlus.class.getName();
-    
+    private final String TAG = "ExtRangeSeekbarPlus";
+
     public final int HANDLE_LEFT = 1;
     public final int HANDLE_RIGHT = 2;
     public final int HANDLE_NONE = 0;
@@ -75,7 +75,7 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
         mThumbHeight = mResources
                 .getDimensionPixelSize(R.dimen.preview_rangseekbarplus_height);
         mHeight = mResources
-                .getDimensionPixelSize(R.dimen.preview_rangseekbarplus_height_hint);
+                .getDimensionPixelSize(R.dimen.preview_rangseekbarplus_height);
         mTop = mResources.getDimensionPixelSize(R.dimen.preview_intercept_margintop);
         // 84*52
         double scaleSize = mTop / 52.0; // 滑动把手进度背景图宽高84px*52px
@@ -92,11 +92,24 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
         mColorTransparent = mResources.getColor(R.color.transparent);
     }
 
+    /**
+     * 单位：秒
+     *
+     * @return
+     */
+    public long getDuration() {
+        return mDuration;
+    }
+
     private long mDuration;
 
+    /**
+     * 单位：秒
+     *
+     * @param duration
+     */
     public void setDuration(long duration) {
         mDuration = duration;
-//        Log.e(". extrangplus...", mDuration + "--setduration");
         max = mDuration;
         invalidate();
     }
@@ -123,13 +136,18 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
     private final int DEFAULTMINDURATION = 1000;// 两个把手距离 默认最少1s
     private int minthumbDuration = DEFAULTMINDURATION;
 
+    /**
+     * 单位：秒
+     *
+     * @param mMin
+     * @param mMax
+     */
     public void setSeekBarRangeValues(long mMin, long mMax) {
         setMax(mMax);
         setMin(mMin);
     }
 
     public void setMax(long mMax) {
-//        Log.e("setmax","..."+mMax);
         if (mMax > mDuration) {
             mMax = mDuration;
         }
@@ -155,9 +173,6 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
     }
 
     public void setProgress(long progress) {
-
-//        Log.e(TAG, "setProgress: " + progress);
-
         if (mDuration > 0) {
             int left = 0;
             if (isByHand) {
@@ -231,7 +246,6 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
         canvas.drawRect(mShadowLeftRect, mShadowPaint);
         canvas.drawRect(mShadowRightRect, mShadowPaint);
 
-        // Log.e("---draw-", mShadowRightRect.toShortString());
 
         // draw highLight 关键点
 
@@ -242,16 +256,12 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
             len = lights.length;
             int cy = top + mLeftRect.height() / 2;
             for (int i = 0; i < len; i++) {
-                // Log.e("---" + i, lights[i] + "");
                 int left = (int) (HANDWIDTH / 2 + ((lights[i] + 0.0)
                         / mDuration * getSeekbarWith()));
                 canvas.drawCircle(left, cy, mHighLight, pLight);
             }
         }
 
-        // Log.e("isByHand", isByHand + "..." + mLeftRect.toShortString() + "..."
-        // + mRightRect.toShortString() + "---" + getLeft() + "--"
-        // + getRight() + "---" + getWidth());
         if (isByHand) {
             mDrawableLeft.setBounds(mLeftRect);
             mDrawableLeft.draw(canvas);
@@ -272,33 +282,27 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
         }
         canvas.drawRect(mProgressRect, mProgressPaint);
 
-        // Log.e("---mRightRect-", mRightRect.toShortString());
-
-
         // 滑动当前进度
         if (isFocusing) {
             int x = mProgressRect.left + (mProgressRect.width() / 2);
             int mleft = x - (mHandleWidht / 2);
             mPositionRect.set(mleft, getTop(), mleft + mHandleWidht, getTop() + mHandleHeight);
-            mDrawablePosition.setBounds(mPositionRect);
-            mDrawablePosition.draw(canvas);
+            {
+//            mDrawablePosition.setBounds(mPositionRect);
+//            mDrawablePosition.draw(canvas);
 
-            long mPstion = (long) ((mProgressRect.left
-                    + (mProgressRect.width() / 2) - HANDWIDTH)
-                    / getSeekbarWith() * mDuration);
-            //
-            // Log.e("re",
-            // mHeight + "" + getPaddingTop() + "---" + getTop() + "..."
-            // + getBottom() + "-------------"
-            // + mPositionRect.toShortString() + "----" + mPstion);
-            String str = gettime((int) Math.max(0,
-                    Math.min(max - min, (mPstion - min))));
+//            long mPstion = (long) ((mProgressRect.left
+//                    + (mProgressRect.width() / 2) - HANDWIDTH)
+//                    / getSeekbarWith() * mDuration);
+//            String str = gettime((int) Math.max(0,
+//                    Math.min(max - min, (mPstion - min))));
 
-            int mwidth = (int) mTextPaint.measureText(str);
+//            int mwidth = (int) mTextPaint.measureText(str);
 
-            canvas.drawText(str, (mPositionRect.left
-                            + (mPositionRect.width() / 2) - (mwidth / 2)),
-                    (mPositionRect.top + (mPositionRect.height() / 2)), mTextPaint);
+//            canvas.drawText(str, (mPositionRect.left
+//                            + (mPositionRect.width() / 2) - (mwidth / 2)),
+//                    (mPositionRect.top + (mPositionRect.height() / 2)), mTextPaint);
+            }
         }
 
     }
@@ -380,7 +384,7 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                     } else {
 
                     }
-                    mlistener.beginTouch(pressedThumb);
+                    mRangeSeekBarChangeListener.beginTouch(pressedThumb);
                 } else {
 
                     pressedThumb = evalPressedThumb(mx);
@@ -402,8 +406,8 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
 
                     lastMax = max;
                     onPress();
-                    if (null != itemVideoListener) {
-                        itemVideoListener.onItemVideoPasue((int) min);
+                    if (null != mRangDurationListener) {
+                        mRangDurationListener.onItemVideoPasue((int) min);
                     }
                     invalidate();
                 }
@@ -413,12 +417,12 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
 
                 if (event.getY() > getHeight() || 0 > event.getY()
                         || event.getX() < getLeft() || event.getX() > getRight()) {
-                    if (null != itemVideoListener) {
+                    if (null != mRangDurationListener) {
                         long max = (long) ((mRightRect.left - HANDWIDTH)
                                 / getSeekbarWith() * mDuration);
                         if (max <= mDuration) {
                             min = max - ItemDuration;
-                            itemVideoListener.onItemVideoChanged(min, max);
+                            mRangDurationListener.onItemVideoChanged(min, max);
                         }
                     }
                     invalidate();
@@ -438,7 +442,7 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                             }
                             setHandle(HANDLE_LEFT);
                             setMin(setValue);
-                            mlistener.rangeSeekBarValuesChanging(setValue);
+                            mRangeSeekBarChangeListener.rangeSeekBarValuesChanging(setValue);
                         } else if (MAX_THUMB_PRESSED == pressedThumb) {
 
                             long mMinMax = min + minthumbDuration;
@@ -447,13 +451,13 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                             }
                             setHandle(HANDLE_RIGHT);
                             setMax(setValue);
-                            mlistener.rangeSeekBarValuesChanging(setValue);
+                            mRangeSeekBarChangeListener.rangeSeekBarValuesChanging(setValue);
                         } else if (CURRENT_THUMB_PRESSED == pressedThumb) {
                             // Log.e("movetrue", min + "---" + max + "--current-"
                             // + setValue);
                             if (min < setValue && setValue < max) {
                                 setProgress(setValue);
-                                mlistener.rangeSeekBarValuesChanging(setValue);
+                                mRangeSeekBarChangeListener.rangeSeekBarValuesChanging(setValue);
                             }
                         }
 
@@ -462,17 +466,17 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                 } else {
 
                     onPress();
-                    if (null != itemVideoListener) {
+                    if (null != mRangDurationListener) {
 
                         if (pressedThumb == CURRENT_THUMB_PRESSED) {
                             long setValue = (long) ((event.getX() - HANDWIDTH)
                                     / getSeekbarWith() * mDuration);
                             if (min < setValue && setValue < max) {
                                 setProgress(setValue);
-                                itemVideoListener.onSeekto(setValue);
+                                mRangDurationListener.onSeekto(setValue);
                             } else if (setValue > max) {
                                 setProgress(max);
-                                itemVideoListener.onSeekto(max);
+                                mRangDurationListener.onSeekto(max);
                             }
 
                         } else {
@@ -490,7 +494,7 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                                 nstart = nend - ItemDuration;
                             }
                             setSeekBarRangeValues(nstart, nend);
-                            itemVideoListener.onItemVideoChanging(nstart, nend);
+                            mRangDurationListener.onItemVideoChanging(nstart, nend);
                         }
                     }
                 }
@@ -506,11 +510,11 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                         long current = (long) ((mProgressRect.left - HANDWIDTH)
                                 / getSeekbarWith() * mDuration);
 
-                        mlistener.rangeSeekBarValuesChanged(min, max, current);
+                        mRangeSeekBarChangeListener.rangeSeekBarValuesChanged(min, max, current);
                     }
                 } else {
                     onUnPress();
-                    if (null != itemVideoListener) {
+                    if (null != mRangDurationListener) {
                         // long min = (long) ((mLeftRect.left) / getSeekbarWith() *
                         // mDuration);
                         if (pressedThumb != CURRENT_THUMB_PRESSED) {
@@ -518,7 +522,7 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                                     / getSeekbarWith() * mDuration);
                             if (max <= mDuration) {
                                 min = max - ItemDuration;
-                                itemVideoListener.onItemVideoChanged(min, max);
+                                mRangDurationListener.onItemVideoChanged(min, max);
                             }
                         }
                     }
@@ -541,9 +545,6 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
      */
     private int evalPressedThumb(float touchX) {
         int result = NONE_THUMB_PRESSED;
-        // Log.e("evalPressedThumb....", touchX + "..." +
-        // mLeftRect.toShortString()
-        // + "..mRightRect.." + mRightRect.toShortString());
         boolean minThumbPressed = isInThumbRange(touchX, mLeftRect);
         boolean maxThumbPressed = isInThumbRange(touchX, mRightRect);
         boolean progressPressed = isInThumbRange(touchX, mProgressRect);
@@ -574,10 +575,15 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
                 && touchX < rect.right + HANDWIDTH;
     }
 
-    private onRangDurationListener itemVideoListener;
+    private onRangDurationListener mRangDurationListener;
 
+    /**
+     * 定长截取
+     *
+     * @param listener
+     */
     public void setItemVideo(onRangDurationListener listener) {
-        itemVideoListener = listener;
+        mRangDurationListener = listener;
     }
 
     public static interface onRangDurationListener {
@@ -592,11 +598,16 @@ public class ExtRangeSeekbarPlus extends RangSeekBarBase {
 
     }
 
-    private OnRangeSeekBarChangeListener mlistener;
+    private OnRangeSeekBarChangeListener mRangeSeekBarChangeListener;
 
+    /**
+     * 自由截取
+     *
+     * @param listener
+     */
     public void setOnRangSeekBarChangeListener(
             OnRangeSeekBarChangeListener listener) {
-        mlistener = listener;
+        mRangeSeekBarChangeListener = listener;
     }
 
     public void setHandle(int handleType) {

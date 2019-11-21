@@ -9,5 +9,5 @@
         android:id="@+id/auto_listview_drag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        autoview:sText="@string/drag_for_listview" />
+        autoview:sText="@string/drag_for_sort" />
 </LinearLayout>

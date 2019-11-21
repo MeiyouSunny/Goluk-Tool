@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/public_background_color"
+             android:orientation="vertical">
+
+
+    <EditText
+        android:id="@+id/etEditPic"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        android:focusable="true"
+        android:padding="15dp"
+        android:focusableInTouchMode="true"
+        android:gravity="left|top"
+        android:hint="@string/sub_hint"
+        android:maxLines="10"
+        android:singleLine="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_25"/>
+
+
+    <RelativeLayout
+        android:id="@+id/mFrameGroup"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/tmpBar"
+            android:orientation="vertical">
+
+            <GridView
+                android:id="@+id/gvTTF"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/sub_menu_bgcolor"
+                android:cacheColorHint="@null"
+                android:dividerHeight="1dp"
+                android:listSelector="@color/transparent"
+                android:visibility="gone"
+                />
+
+            <TextView
+                android:id="@+id/tv_ae_text_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal|bottom"
+                android:layout_marginBottom="5dp"
+                android:maxLines="1"
+                android:text="@string/ae_text_info"/>
+
+        </FrameLayout>
+
+
+        <RelativeLayout
+            android:id="@+id/tmpBar"
+            style="@style/public_titlebar_style"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#242423"
+            android:splitMotionEvents="false">
+
+            <com.rd.lib.ui.ExtButton
+                android:id="@+id/btnLeft"
+                style="@style/public_title_bar_button"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:drawableLeft="@drawable/edit_back_button"
+                android:gravity="left|center_vertical"
+                android:paddingRight="15dp"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18"/>
+
+            <com.rd.lib.ui.ExtButton
+                android:id="@+id/btnRight"
+                style="@style/public_title_bar_button"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="3dp"
+                android:background="@null"
+                android:gravity="center|right"
+                android:padding="5dp"
+                android:text="@string/right"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18"
+                />
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:background="@null"
+                android:fadingEdge="none"
+                android:gravity="center"
+                android:lines="1"
+                android:paddingTop="3dp"
+                android:paddingBottom="3dp"
+                android:singleLine="true"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_18"/>
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>
+

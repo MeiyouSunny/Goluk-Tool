@@ -19,6 +19,7 @@ public interface ISdkCallBack {
      *                   来自定长截取视频导出{@link SdkEntry#TRIMVIDEO_DURATION_EXPORT}<br>
      * @param videoPath
      */
+    @Deprecated
     void onGetVideoPath(Context context, int exportType, String videoPath);
 
     /**

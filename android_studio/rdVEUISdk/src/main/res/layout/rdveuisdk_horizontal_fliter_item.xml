@@ -11,12 +11,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal" >
 
-        <!-- <com.rd.xpkuisdk.ui.CircleImageView -->
-        <!-- android:id="@+id/ivFliter" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:layout_centerInParent="true" -->
-        <!-- android:background="@drawable/camare_filter_0" /> -->
 
         <com.rd.veuisdk.ui.ExtCircleImageView
             android:id="@+id/ivFliter"
@@ -28,12 +22,6 @@
             extCircle:circleBorderColor="@color/main_orange"
             extCircle:circleChecked="false" />
 
-        <!-- <ImageView -->
-        <!-- android:id="@+id/ivFliterSelectedBg" -->
-        <!-- android:layout_width="wrap_content" -->
-        <!-- android:layout_height="wrap_content" -->
-        <!-- android:layout_centerInParent="true" -->
-        <!-- android:background="@drawable/fliter_item_selected_bg" /> -->
     </RelativeLayout>
 
     <TextView

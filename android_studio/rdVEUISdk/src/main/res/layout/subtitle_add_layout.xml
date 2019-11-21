@@ -3,7 +3,6 @@
              android:id="@+id/subtitle_add_layout"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="@color/edit_menu_bg"
              android:orientation="vertical">
 
     <LinearLayout
@@ -11,12 +10,10 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center_vertical"
-            android:orientation="vertical">
+            android:layout_weight="5">
 
             <TextView
                 android:id="@+id/tvAddProgress"
@@ -24,111 +21,81 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center"
-                android:minHeight="23dp"
                 android:maxLines="1"
+                android:minHeight="23dp"
                 android:text="@string/subtitle_progress_default"
                 android:textColor="@color/white"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
                 android:textSize="@dimen/text_size_16"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical|bottom"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/ivPlayerState"
-                    android:layout_width="@dimen/add_sub_play_state_size"
-                    android:layout_height="@dimen/add_sub_play_state_size"
-                    android:contentDescription="@string/empty"
-                    android:minHeight="28dp"
-                    android:minWidth="28dp"
-                    android:onClick="clickView"
-                    android:padding="5dp"
-                    android:scaleType="center"
-                    android:src="@drawable/edit_music_play"/>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="bottom">
 
-                <com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView
-                    android:id="@+id/priview_subtitle_line"
+                    <ImageView
+                        android:id="@+id/ivPlayerState"
+                        android:layout_width="@dimen/add_sub_play_state_size"
+                        android:layout_height="@dimen/add_sub_play_state_size"
+                        android:contentDescription="@string/empty"
+                        android:minWidth="28dp"
+                        android:minHeight="28dp"
+                        android:onClick="clickView"
+                        android:padding="5dp"
+                        android:scaleType="center"
+                        android:src="@drawable/edit_music_play"/>
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fillViewport="true"
-                    android:scrollbars="none">
+                    android:layout_height="match_parent"
+                    android:gravity="bottom"
+                    android:clipChildren="false">
 
-                    <LinearLayout
-                        android:id="@+id/subtitleline_media"
+                    <com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView
+                        android:id="@+id/priview_subtitle_line"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:fillViewport="true"
+                        android:scrollbars="none"
+                        android:clipChildren="false">
 
-                        <com.rd.veuisdk.ui.ThumbNailLine
-                            android:id="@+id/subline_view"
+                        <LinearLayout
+                            android:id="@+id/subtitleline_media"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"/>
-                    </LinearLayout>
-                </com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView>
-            </LinearLayout>
-        </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:clipChildren="false">
 
-        <RelativeLayout
+                            <com.rd.veuisdk.ui.ThumbNailLine
+                                android:id="@+id/subline_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </LinearLayout>
+                    </com.rd.veuisdk.videoeditor.widgets.TimelineHorizontalScrollView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <include
+            layout="@layout/layout_item_edit"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:visibility="visible">
+            android:layout_weight="3"/>
 
-            <LinearLayout
-                android:id="@+id/ll_add"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_marginBottom="5dp"
-                android:orientation="vertical">
+        <include layout="@layout/fragment_title_layout"/>
 
-                <ImageView
-                    android:id="@+id/add_subtitle"
-                    android:layout_width="@dimen/land_right_button_width"
-                    android:layout_height="@dimen/land_right_button_height"
-                    android:layout_gravity="center"
-                    android:gravity="center_horizontal"
-                    android:src="@drawable/add_subtitle_btn">
-                </ImageView>
-
-                <TextView
-                    android:id="@+id/tv_add_subtitle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="4dp"
-                    android:gravity="center_horizontal"
-                    android:text="@string/add_subtitle"
-                    android:textColor="@color/message_text_hint"
-                    android:textSize="@dimen/text_size_9"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@+id/ll_add"
-                android:gravity="center_horizontal|bottom"
-                android:orientation="vertical">
-
-                <RadioButton
-                    android:id="@+id/subtitle_del_item"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:background="@null"
-                    android:button="@null"
-                    android:drawableTop="@drawable/subtitle_del_item"
-                    android:gravity="center_horizontal"
-                    android:text="@string/del"
-                    android:textColor="@color/message_text_hint"
-                    android:textSize="@dimen/text_size_9"
-                    android:visibility="gone"/>
-            </LinearLayout>
-        </RelativeLayout>
-        <!-- </FrameLayout> -->
     </LinearLayout>
 
     <View

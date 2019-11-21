@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="Theme.rd.main" parent="@android:style/Theme">
+        <!-- 非全屏状态，且状态栏同色-->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowEnableSplitTouch" tools:ignore="NewApi">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <!-- Navigation Bar -->
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+    <style name="Theme.rd.main2" parent="@style/Theme.AppCompat.NoActionBar">
+        <!--colorPrimary-->
+        <!--App Bar 的背景色，即 ActionBar，通常也是一个 App 的主题色调。不过 ActionBar 已经退出历史舞台，由 Toolbar 代替使用，但是 Toolbar 需要在 layout 文件中单独使用 background 属性设置背景色，如：-->
+        <!--colorPrimaryDark-->
+        <!--status bar（状态栏）背景色。仅作用于 Lollipop 及更高版本。-->
+        <!--colorAccent-->
+        <!--许多控件在选中状态或获取焦点状态下使用这个颜色，常见有：-->
+        <!--CheckBox：checked 状态-->
+        <!--RadioButton：checked 状态-->
+        <!--SwitchCompat：checked 状态-->
+        <!--EditText：获取焦点时的 underline 和 cursor 颜色-->
+        <!--TextInputLayout：悬浮 label 字体颜色-->
+        <!--等等-->
+        <!--除了这三种常见的控制颜色属性，事实上，还有一些颜色相关的属性也是非常实用的。-->
+
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowEnableSplitTouch" tools:ignore="NewApi">false</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textAllCaps">false</item>
+        <!-- Navigation Bar -->
+        <item name="android:windowTranslucentNavigation">true</item>
+    </style>
+
+</resources>

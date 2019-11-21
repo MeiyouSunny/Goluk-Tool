@@ -22,7 +22,7 @@
             android:gravity="center"
             android:minWidth="50dp"
             android:text="@string/fu_blue"
-            android:textColor="@color/color1"
+            android:textColor="@color/fu_menu_text_color"
             android:textSize="@dimen/text_size_16"/>
 
         <RadioGroup
@@ -149,7 +149,7 @@
             android:gravity="center"
             android:minWidth="50dp"
             android:text="@string/fu_color"
-            android:textColor="@color/color1"
+            android:textColor="@color/fu_menu_text_color"
             android:textSize="@dimen/text_size_16"/>
 
         <SeekBar
@@ -181,7 +181,7 @@
             android:gravity="center"
             android:minWidth="50dp"
             android:text="@string/fu_thin"
-            android:textColor="@color/color1"
+            android:textColor="@color/fu_menu_text_color"
             android:textSize="@dimen/text_size_16"/>
 
         <SeekBar
@@ -213,7 +213,7 @@
             android:gravity="center"
             android:minWidth="50dp"
             android:text="@string/fu_eye"
-            android:textColor="@color/color1"
+            android:textColor="@color/fu_menu_text_color"
             android:textSize="@dimen/text_size_16"/>
 
         <SeekBar

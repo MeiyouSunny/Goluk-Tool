@@ -1,13 +1,10 @@
 package com.rd.veuisdk;
 
 import android.content.Context;
-import android.text.TextUtils;
 
 import com.rd.vecore.utils.ExportUtils;
 import com.rd.veuisdk.callback.ICompressVideoCallback;
 import com.rd.veuisdk.utils.PathUtils;
-
-import java.io.File;
 
 /**
  * RDVEUISdk压缩视频工具
@@ -21,20 +18,11 @@ public class CompressVideo {
                                      final String mediaPath, final ICompressVideoCallback listener) {
         ExportUtils.CompressConfig compressConfig = SdkEntry.getSdkService()
                 .getCompressConfig().toCompressConfig();
-        String saveMp4FileName;
+
         iListener = listener;
         cancel = context.getString(R.string.compress_cancel);
 
-        if (!TextUtils.isEmpty(SdkEntry.getSdkService()
-                .getCompressConfig().savePath)) {
-            File path = new File(SdkEntry.getSdkService()
-                    .getCompressConfig().savePath);
-            PathUtils.checkPath(path);
-            saveMp4FileName = PathUtils.getTempFileNameForSdcard(
-                    SdkEntry.getSdkService().getCompressConfig().savePath, "VIDEO", "mp4");
-        } else {
-            saveMp4FileName = PathUtils.getMp4FileNameForSdcard();
-        }
+        String saveMp4FileName = PathUtils.getDstFilePath(SdkEntry.getSdkService().getCompressConfig().savePath);
 
         ExportUtils.compressVideo(context, mediaPath, saveMp4FileName, compressConfig, new ExportUtils.CompressVideoListener() {
             @Override
@@ -64,6 +52,7 @@ public class CompressVideo {
             }
         });
     }
+
 
     /**
      * 取消压缩

@@ -50,9 +50,9 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     private ScaleGestureDetector mScaleDetector;
     private int mLastScrollX;
     private boolean mIsScrolling;
-    private boolean mAppScroll;
+    private boolean mAppScroll=true;
     private boolean mEnableUserScrolling;
-
+    private String TAG = "TimelineHorizontalScrollView";
     // The runnable which executes when the scrolling ends
     private Runnable mScrollEndedRunnable = new Runnable() {
         @Override
@@ -111,23 +111,27 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
             @Override
             public void run() {
                 doingLonglistener = false;
-                // Log.e("onlongpressrunnable....", "长按事件");
+//                Log.e(TAG, "长按事件");
                 mCounter--;
                 // 计数器大于0，说明当前执行的Runnable不是最后一次down产生的。
                 if (mCounter > 0 || isReleased || isMoved)
                     return;
                 if (null != mLongListener) {
                     mLongListener.onLong(mXPosition, mYPosition);
-                }
-                performLongClick();// 回调长按事件
-                mHandler.postDelayed(new Runnable() {
+                    performLongClick();// 回调长按事件
+                    mHandler.postDelayed(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        beforce = false;
-                        mAppScroll = true;
-                    }
-                }, 400);
+                        @Override
+                        public void run() {
+                            beforce = false;
+                            mAppScroll = true;
+                        }
+                    }, 400);
+
+                } else {
+
+                }
+
 
             }
         };
@@ -183,12 +187,10 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
                     doingLonglistener = true;
                 } else if ((re == MotionEvent.ACTION_UP || re == MotionEvent.ACTION_CANCEL)
                         && beforce) {
-                    // Log.e("actionup....", "actionup.......viewontouch");
                     if (doingLonglistener) {
                         mViewTouchListener.onActionUp();
                     }
                     mLongdownX = (int) ev.getX();
-                    // mAppScroll = true;
                 }
             }
             if (re == MotionEvent.ACTION_DOWN) {
@@ -214,15 +216,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
                 return true;
             }
         } else {
-            //
-            // int re = ev.getAction();
-            // if (re == MotionEvent.ACTION_DOWN) {
-            // for (ScrollViewListener listener : mScrollListenerList) {
-            // listener.onScrollBegin(this, getScrollX(), getScrollY(),
-            // mAppScroll);
-            // }
-            // }
-            //
             return true;
         }
 
@@ -308,20 +301,14 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
     }
 
     public void resetForce() {
-
-        // Log.e(TAG, "resetForce...........");
-
         beforce = false;
+        mLastScrollX--;
         invalidate();
     }
 
     @Override
     public void computeScroll() {
         super.computeScroll();
-
-        // Log.e(TAG, "computeScroll-->beforce " + beforce + "....cantouch："
-        // + cantouch);
-
         if (cantouch) {
             int scrollX = getScrollX();
             if (mLastScrollX != scrollX) {
@@ -336,7 +323,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
 
                 // Cancel the previous event
                 mHandler.removeCallbacks(mScrollEndedRunnable);
-                // Log.e("compute......", (!beforce) + "......");
                 if (!beforce) {
                     // Post a new event
                     mHandler.postDelayed(mScrollEndedRunnable, 400);
@@ -348,11 +334,6 @@ public class TimelineHorizontalScrollView extends HorizontalScrollView {
                         }
                     } else {
                         mIsScrolling = true;
-                        // for (ScrollViewListener listener :
-                        // mScrollListenerList) {
-                        // listener.onScrollBegin(this, scrollX, scrollY,
-                        // mAppScroll);
-                        // }
                     }
                 }
 

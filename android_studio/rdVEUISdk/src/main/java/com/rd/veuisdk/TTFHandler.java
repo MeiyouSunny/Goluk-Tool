@@ -1,21 +1,22 @@
 package com.rd.veuisdk;
 
 import android.content.Context;
-import android.graphics.Bitmap.CompressFormat;
 import android.os.Handler;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
-import com.rd.cache.GalleryImageFetcher;
-import com.rd.cache.ImageCache.ImageCacheParams;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.veuisdk.adapter.TTFAdapter;
 import com.rd.veuisdk.database.TTFData;
 import com.rd.veuisdk.model.TtfInfo;
+import com.rd.veuisdk.net.IconUtils;
 import com.rd.veuisdk.net.TTFUtils;
 import com.rd.veuisdk.ui.CircleProgressBarView;
 import com.rd.veuisdk.utils.Utils;
@@ -26,63 +27,64 @@ import java.util.ArrayList;
 /**
  * 字幕->字体，文字版->字体
  */
-class TTFHandler {
+public class TTFHandler {
 
-    private GridView gridview;
-    private GalleryImageFetcher fetcher;
-    public TTFAdapter ttfAdapter;
-    private Context context;
+    private GridView mGridView;
+    public TTFAdapter mAdapter;
+    private Context mContext;
+    private boolean isHorizontal;
+    private String mFontUrl = null;
+    private boolean bCustomApi = false;
 
-    public TTFHandler(GridView ttf, ITTFHandlerListener listener) {
-        context = ttf.getContext();
+
+    public TTFHandler(GridView ttf, ITTFHandlerListener listener, boolean isHorizontal, String _fontUrl) {
+        mContext = ttf.getContext();
         this.listener = listener;
-        gridview = ttf;
-        ImageCacheParams cacheParams = new ImageCacheParams(context,
-                null);
-        cacheParams.compressFormat = CompressFormat.PNG;
-        // 缓冲占用系统内存的10%
-        cacheParams.setMemCacheSizePercent(0.1f);
-        fetcher = new GalleryImageFetcher(context, 220, 98);
-        fetcher.addImageCache(context, cacheParams);
-
-        ttfAdapter = new TTFAdapter(context, fetcher);
-
-        gridview.setAdapter(ttfAdapter);
-
-        gridview.setOnItemClickListener(onItemClickListener);
-
-        refleshData(false);
+        mGridView = ttf;
+        mFontUrl = _fontUrl;
+        bCustomApi = !(TextUtils.isEmpty(mFontUrl));
+        this.isHorizontal = isHorizontal;
+        mAdapter = new TTFAdapter(mContext, bCustomApi);
+        mGridView.setAdapter(mAdapter);
+        mGridView.setOnItemClickListener(onItemClickListener);
+        refleshData();
     }
 
-    void ToReset() {
-        if (null != ttfAdapter) {
-            ttfAdapter.ToReset();
+    public void ToReset() {
+        if (null != mAdapter) {
+            mAdapter.ToReset();
         }
     }
 
-    void refleshData(boolean toast) {
-
-        fetcher.setExitTasksEarly(false);
-        int count = ttfAdapter.getCount();
+    public void refleshData() {
+        int count = mAdapter.getCount();
         if (count == 0 || count == 1) {
-            int re = CoreUtils.checkNetworkInfo(gridview.getContext().getApplicationContext());
+            int re = CoreUtils.checkNetworkInfo(mGridView.getContext().getApplicationContext());
+            TTFData.getInstance().initilize(mContext);
             if (re == CoreUtils.UNCONNECTED) {
-                TTFData.getInstance().initilize(context);
-                Utils.autoToastNomal(gridview.getContext(),
+                Utils.autoToastNomal(mGridView.getContext(),
                         R.string.please_check_network);
-                list_ttf = TTFData.getInstance().getAll();
+                list_ttf = TTFData.getInstance().getAll(bCustomApi);
                 mHandler.sendEmptyMessage(TTF_PREPARED);
             } else {
                 ThreadPoolUtils.execute(new Runnable() {
 
                     @Override
                     public void run() {
-                        TTFData.getInstance().initilize(gridview.getContext());
-                        list_ttf = TTFUtils.getTTF();
+                        if (bCustomApi) {
+                            list_ttf = TTFUtils.getTTFNew(mFontUrl);
+                        } else {
+                            list_ttf = TTFUtils.getTTF(mGridView.getContext(), new IconUtils.IconListener() {
+                                @Override
+                                public void prepared() {
+                                    mHandler.obtainMessage(TTF_ICON_PREPARED).sendToTarget();
+                                }
+                            });
+                        }
                         if (null != list_ttf) {
                             TTFData.getInstance().replaceAll(list_ttf);
                         } else {
-                            list_ttf = TTFData.getInstance().getAll();
+                            list_ttf = TTFData.getInstance().getAll(bCustomApi);
                         }
                         mHandler.sendEmptyMessage(TTF_PREPARED);
 
@@ -96,19 +98,17 @@ class TTFHandler {
     private OnItemClickListener onItemClickListener = new OnItemClickListener() {
 
         @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position,
-                                long id) {
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            TtfInfo info = ttfAdapter.getItem(position);
+            TtfInfo info = mAdapter.getItem(position);
             if (info.isdownloaded() || position == 0) {
                 listener.onItemClick(info.local_path, position);
-                ttfAdapter.setCheck(position);
+                mAdapter.setCheck(position);
             } else {
-                ImageView state = (ImageView) view.findViewById(R.id.ttf_state);
-                CircleProgressBarView pbar = (CircleProgressBarView) view
-                        .findViewById(R.id.ttf_pbar);
+                ImageView state = Utils.$(view, R.id.ttf_state);
+                CircleProgressBarView pbar = Utils.$(view, R.id.ttf_pbar);
                 if (null != state && null != pbar) {
-                    ttfAdapter.onDown(position, state, pbar);
+                    mAdapter.onDown(position, state, pbar);
                 } else {
                     Utils.autoToastNomal(parent.getContext(),
                             R.string.download_error);
@@ -118,72 +118,96 @@ class TTFHandler {
     };
 
     void setChecked(int position) {
-        ttfAdapter.setCheck(position);
+        mAdapter.setCheck(position);
     }
 
     private ITTFHandlerListener listener;
 
-    interface ITTFHandlerListener {
+    public interface ITTFHandlerListener {
         /**
          * @param ttf
          */
-        public void onItemClick(String ttf, int position);
+        void onItemClick(String ttf, int position);
     }
 
     private ArrayList<TtfInfo> list_ttf;
     private final int TTF_PREPARED = 4;
+    private final int TTF_ICON_PREPARED = 5;
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(android.os.Message msg) {
 
             switch (msg.what) {
-
                 case TTF_PREPARED: {
                     if (list_ttf == null) {
                         break;
                     }
                     TtfInfo defaultTtf = new TtfInfo();
-                    defaultTtf.local_path = context.getString(R.string.default_ttf);
-                    defaultTtf.code = "fefaultttf";
+                    defaultTtf.local_path = mContext.getString(R.string.default_ttf);
+                    defaultTtf.code = "defaultttf";
                     list_ttf.add(defaultTtf);
                     for (int i = list_ttf.size() - 2; i >= 0; i--) {
                         list_ttf.set(i + 1, list_ttf.get(i));
                     }
                     list_ttf.set(0, defaultTtf);
 
-                    ttfAdapter.add(list_ttf);
+                    mAdapter.add(list_ttf);
                     this.postDelayed(new Runnable() {
 
                         @Override
                         public void run() {
-                            ttfAdapter.setListview(gridview);
+                            mAdapter.setListview(mGridView);
 
                         }
                     }, 300);
+                    if (isHorizontal) {
+                        setTTFGridView();
+                    }
                 }
                 break;
-
+                case TTF_ICON_PREPARED:
+                    if (null != mAdapter) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                    break;
                 default:
                     break;
             }
-
         }
-
-        ;
     };
 
-    void onPasue() {
-        if (null != fetcher) {
-            fetcher.setExitTasksEarly(true);
-            fetcher.flushCache();
-        }
-        ttfAdapter.onDestory();
+    private void setTTFGridView() {
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                DisplayMetrics metrics = CoreUtils.getMetrics();
+                int line = 2;
+                int count = mAdapter.getCount();
+                //列
+                int columns = (count % line == 0) ? (count / line) : (count / line) + 1;
+
+                int nItemWidth = metrics.widthPixels / 2;
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(columns * nItemWidth,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                mGridView.setLayoutParams(params);
+                mGridView.setColumnWidth(nItemWidth);
+                mGridView.setStretchMode(GridView.NO_STRETCH);
+                mGridView.setNumColumns(columns);
+            }
+        }, 1000);
     }
 
-    void onDestory() {
+    public void setItemHeight(int height) {
+        mAdapter.setItemHeight(height);
+    }
+
+    public void onPasue() {
+        mAdapter.onDestory();
+    }
+
+    public void onDestory() {
         onPasue();
-        fetcher.cleanUpCache();
-        fetcher = null;
         listener = null;
     }
 

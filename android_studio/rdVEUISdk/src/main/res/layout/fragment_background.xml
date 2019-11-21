@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+               android:background="@color/fragment_content_bg">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rlBottomMenu"
+        android:orientation="vertical">
+
+
+        <Switch
+            android:id="@+id/swNoBackgroundMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="5dp"
+            android:button="@null"
+            android:drawableRight="@drawable/subtitle_switch"
+            android:text="@string/no_background_mode"
+            android:textColor="@color/fu_menu_text_color"
+            android:textSize="15dp"/>
+
+        <LinearLayout
+            android:id="@+id/llBackgroundColor"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+
+            <RadioGroup
+                android:id="@+id/rgBackgroundColor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:orientation="vertical">
+
+                <RadioButton
+                    android:id="@+id/rbBgBlur"
+                    style="@style/background_color_style"
+                    android:drawableLeft="@drawable/rb_bg_blur"
+                    android:text="@string/blur"/>
+
+                <RadioButton
+                    android:id="@+id/rbBgWhite"
+                    style="@style/background_color_style"
+                    android:drawableLeft="@drawable/rb_bg_white"
+                    android:text="@string/white"/>
+
+                <RadioButton
+                    android:id="@+id/rbBgBlack"
+                    style="@style/background_color_style"
+                    android:drawableLeft="@drawable/rb_bg_black"
+                    android:text="@string/black"/>
+
+            </RadioGroup>
+
+            <com.rd.veuisdk.ui.ColorPicker
+                android:id="@+id/backgroundPicker"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <include layout="@layout/layout_bottom_menu"/>
+</RelativeLayout>

@@ -7,7 +7,30 @@ import com.rd.vecore.models.MediaObject;
 
 public class VideoObjectPack implements Parcelable {
 
-    public MediaObject mediaObject;
+    public MediaObject mediaObject;    /**
+     * 倒序文件，存入草稿
+     *
+     * @param basePath
+     */
+    public void moveToDraft(String basePath) {
+        if (null != mediaObject) {
+            //倒叙文件视频
+            mediaObject = mediaObject.moveToDraft(basePath);
+        }
+
+
+    }
+
+    @Override
+    public String toString() {
+        return "VideoObjectPack{" +
+                "mediaObject=" + mediaObject +
+                ", isReverse=" + isReverse +
+                ", originReverseStartTime=" + originReverseStartTime +
+                ", originReverseEndTime=" + originReverseEndTime +
+                '}';
+    }
+
     public boolean isReverse;
     public float originReverseStartTime;
     public float originReverseEndTime;
@@ -19,6 +42,8 @@ public class VideoObjectPack implements Parcelable {
         originReverseStartTime = reverseStartTime;
         originReverseEndTime = reverseEndTime;
     }
+
+
 
     public VideoObjectPack clone() {
         return new VideoObjectPack(mediaObject, isReverse,

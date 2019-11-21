@@ -21,8 +21,10 @@
                 android:id="@+id/priviewLayoutContent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="10dp"
-                android:orientation="vertical" >
+                android:orientation="vertical"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
 
                 <com.rd.veuisdk.ui.DraggableGridView
                     android:id="@+id/gridSceneDstArray"

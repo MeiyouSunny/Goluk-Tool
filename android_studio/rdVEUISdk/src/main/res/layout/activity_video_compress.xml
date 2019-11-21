@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:orientation="vertical"
+    tools:context=".demo.VideoCompressActivity">
+
+    <!--播放器-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <com.rd.lib.ui.PreviewFrameLayout
+                android:id="@+id/rlPreview_playerHori"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.rd.vecore.VirtualVideoView
+                    android:id="@+id/epvPreviewHori"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerInParent="true"/>
+
+            </com.rd.lib.ui.PreviewFrameLayout>
+
+        </LinearLayout>
+
+        <!--播放、全屏按钮-->
+        <RelativeLayout
+            android:id="@+id/rlPlayLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <ImageView
+                android:id="@+id/btnPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="5dp"
+                android:background="@null"
+                android:src="@drawable/btn_edit_play"
+                android:visibility="visible"/>
+
+            <ImageView
+                android:id="@+id/btnFullScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:background="@null"
+                android:src="@drawable/edit_intercept_fullscreen"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <!--菜单-->
+    <LinearLayout
+        android:id="@+id/menu_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!--菜单-->
+        <RelativeLayout
+            android:id="@+id/menu2_layout"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:gravity="center_vertical">
+
+            <!--自定义-->
+            <LinearLayout
+                android:id="@+id/customize_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:gravity="center_vertical"
+                android:background="@color/black">
+
+                <!--原始视频信息-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="5dp"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/compress_size"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+
+                        <TextView
+                            android:id="@+id/srcSize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/compress_fps"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+
+                        <TextView
+                            android:id="@+id/srcFrame"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="2dp"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/compress_bitrate"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+
+                        <TextView
+                            android:id="@+id/srcBitRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/main_orange"
+                            android:textSize="@dimen/text_size_12"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!--码率-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/dimen_10"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_14"
+                        android:textColor="@color/white"
+                        android:text="@string/compress_bitrate"/>
+
+                    <SeekBar
+                        android:id="@+id/sb_compress_bit"
+                        android:layout_width="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_height="44dp"
+                        android:maxHeight="8px"
+                        android:minHeight="8px"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:progressDrawable="@drawable/video_editor_progress"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:thumbOffset="23dp"/>
+
+                    <TextView
+                        android:id="@+id/tv_compress_bit"
+                        android:layout_width="50dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:layout_marginRight="@dimen/dimen_10"/>
+
+                </LinearLayout>
+
+                <!--分辨率-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/dimen_10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/text_size_14"
+                        android:textColor="@color/white"
+                        android:text="@string/compress_size"/>
+
+                    <RadioGroup
+                        android:id="@+id/rg_compress_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/dimen_10"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rb_size_original"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/compress_size_bg"
+                            android:button="@null"
+                            android:checked="true"
+                            android:text="@string/compress_size_original"
+                            android:textColor="@drawable/radio_music_txcolor"
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <RadioButton
+                            android:id="@+id/rb_size_480"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/compress_size_bg"
+                            android:button="@null"
+                            android:text="@string/compress_size_480"
+                            android:textColor="@drawable/radio_music_txcolor"
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <RadioButton
+                            android:id="@+id/rb_size_720"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/compress_size_bg"
+                            android:button="@null"
+                            android:text="@string/compress_size_720"
+                            android:textColor="@drawable/radio_music_txcolor"
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <RadioButton
+                            android:id="@+id/rb_size_1080"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/compress_size_bg"
+                            android:button="@null"
+                            android:text="@string/compress_size_1080"
+                            android:textColor="@drawable/radio_music_txcolor"
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <RadioButton
+                            android:id="@+id/rb_size_customize"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@drawable/compress_size_bg"
+                            android:button="@null"
+                            android:text="@string/compress_size_customize"
+                            android:textColor="@drawable/radio_music_txcolor"
+                            android:textSize="@dimen/text_size_14"/>
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <!--硬件加速-->
+                <CheckBox
+                    android:id="@+id/cb_hardware"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:checked="true"
+                    android:drawableLeft="@drawable/toning_all"
+                    android:text="@string/compress_hardware"
+                    android:textColor="@drawable/subtitle_apply_to_all_text_color"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <!--压缩后文件大小-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/dimen_10">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="@string/compress_file_old_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_compress_old_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:layout_marginLeft="@dimen/dimen_15"
+                        android:text="@string/compress_file_new_size"/>
+
+                    <TextView
+                        android:id="@+id/tv_compress_new_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--自定义尺寸-->
+            <LinearLayout
+                android:id="@+id/size_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/black"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:gravity="center_vertical">
+
+                <!--锁定比例-->
+                <CheckBox
+                    android:id="@+id/cb_size_constrain"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="@null"
+                    android:drawableLeft="@drawable/toning_all"
+                    android:text="@string/compress_size_constrain"
+                    android:textColor="@drawable/subtitle_apply_to_all_text_color"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <!--视频宽度-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:text="视频宽度："
+                            android:textColor="#ffffff"
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <TextView
+                            android:id="@+id/et_video_w"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:background="@drawable/compress_size_bg_n"
+                            android:gravity="center"
+                            android:padding="5dp"
+                            android:textSize="@dimen/text_size_14"
+                            android:textColor="#ffffff"/>
+
+                    </LinearLayout>
+
+                    <com.rd.veuisdk.ui.ExtSeekBar
+                        android:id="@+id/sb_video_w"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:progressDrawable="@null"
+                        android:thumb="@null"/>
+
+                </LinearLayout>
+
+                <!--视频高度-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10dp"
+                            android:textColor="#ffffff"
+                            android:text="视频高度："
+                            android:textSize="@dimen/text_size_14"/>
+
+                        <TextView
+                            android:id="@+id/et_video_h"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginRight="5dp"
+                            android:gravity="center"
+                            android:textSize="@dimen/text_size_14"
+                            android:background="@drawable/compress_size_bg_n"
+                            android:padding="5dp"
+                            android:textColor="#ffffff"/>
+
+                    </LinearLayout>
+
+                    <com.rd.veuisdk.ui.ExtSeekBar
+                        android:id="@+id/sb_video_h"
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp"
+                        android:progressDrawable="@null"
+                        android:thumb="@null"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!--输入尺寸-->
+            <LinearLayout
+                android:id="@+id/thelocation"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/input_edit_parent_height"
+                android:layout_gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:padding="5dp">
+
+                <EditText
+                    android:id="@+id/et_subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/ivClear"
+                    android:background="@drawable/subtitle_edittext_background"
+                    android:imeOptions="actionDone"
+                    android:maxLength="100"
+                    android:padding="5dp"
+                    android:numeric="integer"
+                    android:inputType="number"
+                    android:singleLine="false"
+                    android:textColor="@color/transparent_white"
+                    android:textSize="@dimen/text_size_16"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!--底部确认-->
+        <include layout="@layout/layout_bottom_menu"/>
+
+    </LinearLayout>
+
+
+</LinearLayout>

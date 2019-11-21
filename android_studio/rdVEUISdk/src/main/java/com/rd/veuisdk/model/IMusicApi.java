@@ -1,14 +1,14 @@
 package com.rd.veuisdk.model;
 
-import java.io.Serializable;
-import java.util.ArrayList;
+import com.rd.http.MD5;
+import com.rd.veuisdk.utils.PathUtils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.rd.http.MD5;
-import com.rd.veuisdk.utils.PathUtils;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * 新版配乐2->自定义网络音乐地址
@@ -55,6 +55,10 @@ public class IMusicApi implements Serializable {
 
 		}
 
+	}
+
+	public IMusicApi(String menu){
+		this.menu = menu;
 	}
 
 	public String getMenu() {

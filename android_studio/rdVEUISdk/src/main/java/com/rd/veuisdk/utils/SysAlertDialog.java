@@ -11,19 +11,25 @@ import android.content.res.Resources.NotFoundException;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.StringRes;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.WindowManager.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.ui.ExtProgressDialog;
@@ -79,7 +85,7 @@ public class SysAlertDialog {
      * @param strId
      * @return
      */
-    public static ExtProgressDialog showLoadingDialog(Context context, int strId) {
+    public static ExtProgressDialog showLoadingDialog(Context context,@StringRes int strId) {
         return showLoadingDialog(context, context.getString(strId));
     }
 
@@ -678,15 +684,14 @@ class AlertListViewDialog extends Dialog {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        View view = inflater.inflate(R.layout.alert_listview_dialog, null);
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.alert_listview_dialog, null);
         view.setMinimumWidth(10000);
-        TextView tvTitle = (TextView) view.findViewById(R.id.tvTitle);
+        TextView tvTitle = Utils.$(view, R.id.tvTitle);
         if (!TextUtils.isEmpty(m_strTitle)) {
             tvTitle.setVisibility(View.VISIBLE);
             tvTitle.setText(m_strTitle);
         }
-        ListView lvContent = (ListView) view.findViewById(R.id.lvContent);
+        ListView lvContent = Utils.$(view, R.id.lvContent);
         lvContent.setAdapter(new ArrayAdapter<CharSequence>(getContext(),
                 R.layout.alert_listview_dialog_item, m_arrItems));
         if (null != m_listenerItemClick) {
@@ -701,7 +706,11 @@ class AlertListViewDialog extends Dialog {
                         }
                     });
         }
-        Button btnAlertCancel = (Button) view.findViewById(R.id.btnAlertCancel);
+        lvContent.setFooterDividersEnabled(false);
+        LinearLayout.LayoutParams listLp = (LinearLayout.LayoutParams) lvContent.getLayoutParams();
+        int dividerHeight = CoreUtils.dip2px(getContext(), 1);
+        listLp.height = (getContext().getResources().getDimensionPixelSize(R.dimen.alert_listview_dialog_item_height) + dividerHeight) * lvContent.getCount() - dividerHeight;
+        Button btnAlertCancel = Utils.$(view, R.id.btnAlertCancel);
         if (m_bSelect) {
             btnAlertCancel.setVisibility(View.GONE);
         }
@@ -716,12 +725,21 @@ class AlertListViewDialog extends Dialog {
             }
         });
         if (m_bSelect) {
-            view.findViewById(R.id.tvTitle).setPadding(10, 10, 10, 10);
+            Utils.$(view, R.id.tvTitle).setPadding(10, 10, 10, 10);
         }
         setContentView(view);
-        LayoutParams lp = getWindow().getAttributes();
-        lp.gravity = m_bSelect ? Gravity.CENTER_VERTICAL : Gravity.BOTTOM;
-        onWindowAttributesChanged(lp);
+        {
+            //放在show()之后，不然有些属性是没有效果的，比如height和width
+            Window dialogWindow = getWindow();
+            DisplayMetrics display = CoreUtils.getMetrics();
+            WindowManager.LayoutParams p = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+            // 设置宽度
+            p.width = (int) (display.widthPixels * 0.9); // 宽度设置为屏幕的0.9
+            p.gravity = Gravity.CENTER_VERTICAL;
+            p.gravity = m_bSelect ? Gravity.CENTER_VERTICAL : Gravity.BOTTOM;
+            //p.alpha = 0.8f;//设置透明度
+            dialogWindow.setAttributes(p);
+        }
     }
 
 }

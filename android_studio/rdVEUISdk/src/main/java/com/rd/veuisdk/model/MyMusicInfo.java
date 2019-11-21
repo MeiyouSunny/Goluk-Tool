@@ -27,9 +27,6 @@ public class MyMusicInfo implements Serializable {
 
     private WebMusicInfo mInfo;
 
-    public String getDowntimes() {
-	return downtimes;
-    }
 
     public void setDowntimes(String downtimes) {
 	this.downtimes = downtimes;

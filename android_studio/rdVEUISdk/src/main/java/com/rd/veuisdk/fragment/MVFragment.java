@@ -1,9 +1,7 @@
 package com.rd.veuisdk.fragment;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap.CompressFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -11,18 +9,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.rd.cache.HttpImageFetcher;
-import com.rd.cache.ImageCache.ImageCacheParams;
-import com.rd.cache.ImageResizer;
 import com.rd.downfile.utils.DownLoadUtils;
 import com.rd.downfile.utils.IDownFileListener;
 import com.rd.http.MD5;
-import com.rd.http.NameValuePair;
 import com.rd.lib.utils.CoreUtils;
-import com.rd.lib.utils.ThreadPoolUtils;
-import com.rd.net.RdHttpClient;
+import com.rd.lib.utils.LogUtil;
 import com.rd.vecore.RdVECore;
 import com.rd.vecore.models.MVInfo;
 import com.rd.veuisdk.IVideoEditorHandler;
@@ -30,22 +23,21 @@ import com.rd.veuisdk.R;
 import com.rd.veuisdk.TempVideoParams;
 import com.rd.veuisdk.database.MVData;
 import com.rd.veuisdk.model.MVWebInfo;
-import com.rd.veuisdk.ui.HorizontalListViewMV;
-import com.rd.veuisdk.ui.HorizontalListViewMV.OnListViewItemSelectListener;
-import com.rd.veuisdk.utils.FileUtils;
+import com.rd.veuisdk.mvp.model.ICallBack;
+import com.rd.veuisdk.mvp.model.MVFragmentModel;
+import com.rd.veuisdk.ui.HorizontalListViewFresco;
+import com.rd.veuisdk.ui.HorizontalListViewFresco.OnListViewItemSelectListener;
+import com.rd.veuisdk.utils.IParamData;
+import com.rd.veuisdk.utils.IParamHandler;
+import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -56,83 +48,115 @@ public class MVFragment extends BaseFragment {
 
     private String mMvUrl;
     private boolean mIsFirstCreate = true;// 防止videoEditActivity oncreate 首选MV
+    private Context mContext;
+    private IVideoEditorHandler mHlrVideoEditor;
+    private IParamData mIMenu;
 
     public MVFragment() {
         super();
     }
 
-    private final String WEB_MV_URL = "http://dianbook.17rd.com/api/shortvideo/getmvprop2";
+    private final String WEB_MV_URL = "http://d.56show.com/filemanage/public/filemanage/file/appData";
+    private boolean bUseNewMV = false;
 
+    /**
+     * @param useMV    新的mv网络接口
+     * @param _url
+     * @param _isfirst
+     */
     @SuppressLint("ValidFragment")
-    public MVFragment(String _url, boolean _isfirst) {
+    public MVFragment(boolean useMV, String _url, boolean _isfirst) {
+        bUseNewMV = useMV;
         //启用mv功能未设置mvUrl
-        mMvUrl = TextUtils.isEmpty(_url) ? WEB_MV_URL : _url.trim();
+        if (TextUtils.isEmpty(_url)) {
+            mMvUrl = WEB_MV_URL;
+            bUseNewMV = false;
+        } else {
+            mMvUrl = _url.trim();
+        }
         mIsFirstCreate = _isfirst;
     }
 
-    private Context mContext;
+    private MVFragmentModel mModel;
 
-    private IVideoEditorHandler mHlrVideoEditor;
-
-    @SuppressWarnings("deprecation")
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        mContext = activity;
-        mHlrVideoEditor = (IVideoEditorHandler) activity;
-    }
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+        mHlrVideoEditor = (IVideoEditorHandler) context;
+        mIMenu = ((IParamHandler) context).getParamData();
 
-    private ImageResizer mFetcher;
-    private int mThemeType = 0;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageName = getString(R.string.mv);
-        // Log.e("onCreate", this.toString() + "---" + mThemeType);
+        MVData.getInstance().initilize(getContext());
+        TAG = "MVFragment";
+        mModel = new MVFragmentModel(getContext(), new ICallBack<MVWebInfo>() {
+            @Override
+            public void onSuccess(List<MVWebInfo> list) {
+                mlist = list;
+                mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();
+            }
 
-
-        ImageCacheParams cacheParams = new ImageCacheParams(mContext,
-                null);
-        cacheParams.compressFormat = CompressFormat.PNG;
-        cacheParams.setMemCacheSizePercent(0.05f);
-        mFetcher = new HttpImageFetcher(mContext, 150, 150);
-        mFetcher.addImageCache(mContext, cacheParams);
-
-        mThemeType = TempVideoParams.getInstance().getThemeId();
-
+            @Override
+            public void onFailed() {
+                mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();
+            }
+        });
     }
 
-    private HorizontalListViewMV mListView;
+
+    private HorizontalListViewFresco mListView;
+
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Log.e("onCreateView", this.toString());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         initHandler();
         initListener();
-        mRoot = inflater.inflate(R.layout.fragment_video_short_mv, null);
-        mListView = (HorizontalListViewMV) findViewById(R.id.lvListView);
+        mRoot = inflater.inflate(R.layout.fragment_video_short_mv, container, false);
+        mListView = $(R.id.lvListView);
         mListView.setListItemSelectListener(mOnMvSelectListener);
         mListView.setRepeatSelection(false);
         mListView.setCheckFastRepeat(true);
-        getWebMV();
+
+        mRoot.findViewById(R.id.ivCancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBack();
+            }
+        });
+
+        mRoot.findViewById(R.id.ivSure).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mHlrVideoEditor.onSure();
+            }
+        });
+        ((TextView) $(R.id.tvBottomTitle)).setText(R.string.mv);
+        if (null != mHanlder) {
+            mHanlder.obtainMessage(MSG_NONE_PREPARED).sendToTarget();
+        }
+        mModel.getWebMV(mMvUrl, bUseNewMV);
         return mRoot;
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        // Log.e("ondestory", this.toString());
-        mIsFirstCreate = true;
-        mFetcher.cleanUpCache();
-        mFetcher = null;
+    public void onBack() {
+        if (defaultIndex != -1) {
+            mListView.selectListItem(defaultIndex);
+        }
+        mHlrVideoEditor.onBack();
     }
+
 
     @Override
     public void onDestroyView() {
+        if (null != mModel) {
+            mModel.recycle();
+        }
         super.onDestroyView();
 
         if (null != mDownloading) {
@@ -157,59 +181,66 @@ public class MVFragment extends BaseFragment {
 
     }
 
-    private int lastMVId = 0;//记录当前被应用的MVId
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (null != mModel) {
+            mModel.recycle();
+        }
+        MVData.getInstance().close();
+        mHanlder = null;
+        mIsFirstCreate = true;
 
-    public int getCurrentMVId() {
-        return lastMVId;
     }
+
 
     private int lastItemId = 0;
 
     private void onSelectedImp(int nItemId, boolean user) {
         boolean bReload = true;
-        mThemeType = nItemId;
-        TempVideoParams.getInstance().setThemeId(mThemeType);
+        TempVideoParams.getInstance().setThemeId(nItemId);
         if (nItemId >= 1) {
-            MVWebInfo info = mlist.get(nItemId - 1);
-            if (lastMVId != info.getId()) {
-                if (info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED) {//已注册此MV,直接使用
-                    lastMVId = info.getId();
-                    TempVideoParams.getInstance().setThemeHeader(info.getHeadDuration());
-                    TempVideoParams.getInstance().setThemeLast(info.getLastDuration());
-                    mHlrVideoEditor.getEditorVideo().setMV(lastMVId);
-                    lastItemId = nItemId;
-                    mListView.onItemChecked(nItemId);
-                } else {  //此MV未注册，下载该MV
-                    bReload = false;
-                    if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
-                        mListView.selectListItem(lastItemId, true);
-                        mListView.resetItem(nItemId);
-                        onToast(getString(R.string.please_open_wifi));
-                    } else {
-                        // 下载
-                        lastMVId = 0;
-                        downMV(nItemId, info);
+            int index = nItemId - 1;
+            if (index >= 0 && index < mlist.size()) {
+                MVWebInfo info = mlist.get(index);
+                if (mIMenu.getMVId() != info.getId()) {
+                    if (info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED) {//已注册此MV,直接使用
+                        TempVideoParams.getInstance().setThemeHeader(info.getHeadDuration());
+                        TempVideoParams.getInstance().setThemeLast(info.getLastDuration());
+                        mIMenu.setMVId(info.getId());
+                        mHlrVideoEditor.getEditorVideo().setMV(info.getId());
+                        lastItemId = nItemId;
                         mListView.onItemChecked(nItemId);
+                    } else {  //此MV未注册，下载该MV
+                        bReload = false;
+                        if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
+                            mListView.selectListItem(lastItemId, true);
+                            mListView.resetItem(nItemId);
+                            onToast(R.string.please_open_wifi);
+                        } else {
+                            // 下载
+                            downMV(nItemId, info);
+                            mListView.onItemChecked(nItemId);
+                        }
                     }
                 }
             }
-
-
         } else {
             TempVideoParams.getInstance().setThemeHeader(0);
             TempVideoParams.getInstance().setThemeLast(0);
-            lastMVId = 0;
+            mIMenu.setMVId(RdVECore.DEFAULT_MV_ID);
             mHlrVideoEditor.getEditorVideo().setMV(RdVECore.DEFAULT_MV_ID);
             mListView.onItemChecked(nItemId);
         }
-
-
         if (mIsFirstCreate) {
             mIsFirstCreate = false;// 第一次创建fragment
         } else {
             if (user) {
                 mHlrVideoEditor.removeMvMusic(false);
-                TempVideoParams.getInstance().recycleMusicObject();// 清空配乐
+                if (nItemId != 0) {
+                    //切换mv时m,  清空配乐
+                    TempVideoParams.getInstance().recycleMusicObject();
+                }
             }
             if (bReload) {
                 mHlrVideoEditor.reload(false);
@@ -242,25 +273,35 @@ public class MVFragment extends BaseFragment {
         };
     }
 
-    private File mCacheDir;
     private ArrayList<Long> mDownloading = null;
+
+
+    /**
+     * mv的sd 完整路径
+     *
+     * @param info
+     * @return
+     */
+    private String getMVFilePath(MVWebInfo info) {
+        return PathUtils.getRdMVPath() + "/" + MD5.getMD5(info.getUrl()) + ".zip";
+    }
 
     private void downMV(int itemId, final MVWebInfo info) {
         if (null == mDownloading) {
             mDownloading = new ArrayList<Long>();
         }
         if (!mDownloading.contains((long) itemId)) {
-            final DownLoadUtils download = new DownLoadUtils(itemId,
-                    info.getUrl(), "zip");
+
+            /**
+             * 支持指定下载文件的存放位置
+             */
+            final DownLoadUtils download = new DownLoadUtils(getContext(), itemId,
+                    info.getUrl(), getMVFilePath(info));
             download.setConfig(0, 50, 100);
-            download.setMethod(true);
             download.DownFile(new IDownFileListener() {
 
                 @Override
                 public void onProgress(long mid, int progress) {
-                    // Log.e("onProgress" + Thread.currentThread().toString(),
-                    // mid
-                    // + "---" + progress);
                     if (isRunning && null != mHanlder) {
                         mHanlder.obtainMessage(MSG_WEB_DOWNLOADING, (int) mid,
                                 progress).sendToTarget();
@@ -269,13 +310,13 @@ public class MVFragment extends BaseFragment {
 
                 @Override
                 public void Finished(long mid, String localPath) {
-//                    Log.e("Finished" + Thread.currentThread().toString(), mid
-//                            + "---" + localPath);
+                    LogUtil.i(TAG, "Finished : " + localPath);
+
                     //注册当前下载的MV，返回当前MV的Id、片头、片尾
                     if (isRunning && null != mHanlder) {
-                        MVInfo temp = null;
+
                         try {
-                            temp = RdVECore.registerMV(localPath);
+                            MVInfo temp = RdVECore.registerMV(localPath);
                             if (null != temp) {
                                 info.setId(temp.getId());
                                 info.setHeadDuration(Utils.s2ms(temp.getHeadDuration()));
@@ -296,9 +337,7 @@ public class MVFragment extends BaseFragment {
 
                 @Override
                 public void Canceled(long mid) {
-                    // Log.e("Canceled" + Thread.currentThread().toString(), mid
-                    // + "---");
-
+                    Log.e(TAG, "Canceled: " + mid);
                     if (isRunning && null != mHanlder) {
                         mHanlder.obtainMessage(MSG_WEB_DOWN_FAILED, (int) mid,
                                 0).sendToTarget();
@@ -318,132 +357,9 @@ public class MVFragment extends BaseFragment {
         }
     }
 
-    //防止频繁获取网络数据（一次加载成功即可加载本地离线数据）
-    private boolean mLoadWebDataSuccessed = false;
 
-    private void getWebMV() {
-        mCacheDir = mContext.getCacheDir();
-        if (null != mHanlder) {
-            mHanlder.obtainMessage(MSG_NONE_PREPARED).sendToTarget();
-        }
-        ThreadPoolUtils.execute(new Runnable() {
+    private List<MVWebInfo> mlist = new ArrayList<>();
 
-            @Override
-            public void run() {
-                if (TextUtils.isEmpty(mMvUrl)) {
-                    Log.e(TAG, "mv  config.getUrl()  is null");
-                    if (null != mHanlder) {
-                        mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();
-                    }
-                } else {
-                    File f = new File(mCacheDir, MD5.getMD5("mv_data.json"));
-                    if (!mLoadWebDataSuccessed && CoreUtils.checkNetworkInfo(mContext) != CoreUtils.UNCONNECTED) {
-                        String str = RdHttpClient.PostJson(mMvUrl,
-                                new NameValuePair("type", "android"));
-                        if (!TextUtils.isEmpty(str)) {// 加载网络数据
-                            onParseJson(str);
-                            try {
-                                String data = URLEncoder.encode(str, "UTF-8");
-                                FileUtils.writeText2File(data,
-                                        f.getAbsolutePath());
-                                mLoadWebDataSuccessed = true;
-                            } catch (UnsupportedEncodingException e) {
-                                e.printStackTrace();
-
-                            }
-                        }
-                    }
-                    if (!mLoadWebDataSuccessed && null != f && f.exists()) {// 加载离线数据
-                        String offline = FileUtils.readTxtFile(f
-                                .getAbsolutePath());
-                        Log.e(TAG, "offline" + offline);
-                        try {
-                            offline = URLDecoder.decode(offline, "UTF-8");
-                            if (!TextUtils.isEmpty(offline)) {
-                                onParseJson(offline);
-                            }
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-
-                        }
-
-                    }
-                    if (isRunning && null != mHanlder) {
-                        mHanlder.obtainMessage(MSG_WEB_PREPARED).sendToTarget();
-                    }
-                }
-            }
-        });
-    }
-
-    private void onToast(String msg) {
-        SysAlertDialog
-                .showAutoHideDialog(mContext, "", msg, Toast.LENGTH_SHORT);
-    }
-
-    private ArrayList<MVWebInfo> mlist = new ArrayList<MVWebInfo>();
-    ;
-
-    private void onParseJson(String data) {
-        try {
-            JSONObject jobj = new JSONObject(data);
-            JSONObject jtemp = jobj.optJSONObject("result");
-            if (null != jtemp) {
-                JSONArray jarr = jtemp.optJSONArray("mvlist");
-                if (null == jarr) {
-                    jarr = jtemp.optJSONArray("data");
-                }
-                if (null != jarr) {
-                    int len = jarr.length();
-                    JSONObject jt;
-                    mlist.clear();
-                    for (int i = 0; i < len; i++) {
-                        jt = jarr.getJSONObject(i);
-                        if (null != jt) {
-                            String url = jt.getString("url");
-                            String name = jt.getString("name");
-                            String localPath = "";
-                            MVWebInfo local = MVData.getInstance().quweryOne(
-                                    url);
-
-                            if (null != local) {
-                                localPath = local.getLocalPath();
-                                if (!TextUtils.isEmpty(localPath)) {
-                                    MVInfo mv = null;
-                                    try {
-                                        mv = RdVECore.registerMV(localPath);
-                                        if (null != mv) {
-                                            local.setHeadDuration(Utils.s2ms(mv.getHeadDuration()));
-                                            local.setLastDuration(Utils.s2ms(mv.getLastDuration()));
-                                            local.setId(mv.getId());
-                                            local.setImg(jt.getString("img"));
-                                            mlist.add(local);
-                                        } else {
-                                            mlist.add(new MVWebInfo(MVWebInfo.DEFAULT_MV_NO_REGISTED, url, jt.getString("img"),
-                                                    name, localPath));
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                        mlist.add(new MVWebInfo(MVWebInfo.DEFAULT_MV_NO_REGISTED, url, jt.getString("img"),
-                                                name, localPath));
-                                    }
-
-                                } else {
-                                    mlist.add(new MVWebInfo(MVWebInfo.DEFAULT_MV_NO_REGISTED, url, jt.getString("img"),
-                                            name, localPath));
-                                }
-                            } else {
-                                mlist.add(new MVWebInfo(MVWebInfo.DEFAULT_MV_NO_REGISTED, url, jt.getString("img"),
-                                        name, localPath));
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     private final int MSG_ASSET_EXPORT_START = 51;
     private final int MSG_WEB_PREPARED = 53;
@@ -453,6 +369,7 @@ public class MVFragment extends BaseFragment {
     private final int MSG_WEB_DOWN_END = 56;
     private final int MSG_WEB_DOWN_FAILED = -58;
     private Handler mHanlder = null;
+    private int defaultIndex = -1;
 
     private void initHandler() {
         mHanlder = new Handler() {
@@ -462,17 +379,15 @@ public class MVFragment extends BaseFragment {
             public void handleMessage(android.os.Message msg) {
                 switch (msg.what) {
                     case MSG_ASSET_EXPORT_START:
-                        SysAlertDialog.showLoadingDialog(
-                                mContext.getApplicationContext(),
-                                R.string.prepareMV);
+                        SysAlertDialog.showLoadingDialog(getContext(), R.string.prepareMV);
                         break;
 
                     case MSG_NONE_PREPARED: {
                         if (null != mListView) {
                             mListView.removeAllListItem();
                             nItemId = 0;
-                            mListView.addListItem(nItemId, R.drawable.none_filter_n,
-                                    getString(R.string.none));
+                            mListView.addListItem(nItemId, R.drawable.none_filter_n, getString(R.string.none));
+                            $(R.id.tvLoading).setVisibility(View.GONE);
                         }
                         nItemId++;
                         break;
@@ -482,15 +397,20 @@ public class MVFragment extends BaseFragment {
                         SysAlertDialog.cancelLoadingDialog();
                         int len = mlist.size();
                         if (null != mListView) {
+                            int dst = 0;
+                            int mvId = mIMenu.getMVId();
                             for (int i = 0; i < len; i++) {
                                 MVWebInfo info = mlist.get(i);
-                                mListView.addListItem(nItemId, info.getImg(),
-                                        info.getName(), mFetcher);
+                                mListView.addListItem(nItemId, info.getCover(), info.getName());
                                 mListView.setDownLayout(nItemId, info.getId() != MVWebInfo.DEFAULT_MV_NO_REGISTED);
+                                if (mvId == info.getId()) {
+                                    dst = nItemId;
+                                    defaultIndex = dst;
+                                }
                                 nItemId++;
                             }
-
-                            mListView.selectListItem(mThemeType);
+                            mListView.selectListItem(dst);
+                            $(R.id.tvLoading).setVisibility(View.GONE);
                         }
                     }
 
@@ -527,6 +447,7 @@ public class MVFragment extends BaseFragment {
                     default:
                         break;
                 }
+
             }
         };
     }

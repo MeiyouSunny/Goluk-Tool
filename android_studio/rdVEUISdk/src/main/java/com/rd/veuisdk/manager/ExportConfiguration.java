@@ -4,16 +4,20 @@ import android.graphics.RectF;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.rd.vecore.models.Watermark;
 import com.rd.veuisdk.SdkEntry;
 
 /**
  * RdVEUISdk导出视频配置类
  */
 public class ExportConfiguration implements Parcelable {
+
+    private static final int EXPORT_SIZE_MAX_SIDE = 3840;
+
     /**
-     * 视频保存路径
+     * 视频保存路径（文件夹）
      */
-    public final String savePath;
+    public final String saveDir;
     /**
      * 淡入淡出时长(单位秒)
      */
@@ -56,10 +60,9 @@ public class ExportConfiguration implements Parcelable {
      */
     public int textWatermarkShadowColor;
     /**
-     * 设置水印显示区域
+     * 水印显示区域
      */
     public final RectF watermarkShowRectF;
-
     /**
      * 导出视频帧率
      */
@@ -71,11 +74,35 @@ public class ExportConfiguration implements Parcelable {
     /**
      * 视频分辨率
      */
-    private int exportVideoMaxWH = 640;
+    private int exportVideoMaxWH = 960;
     /**
      * 添加媒体时长限制
      */
     public float importVideoDuration;
+
+    /**
+     * 水印显示模式
+     */
+    public int watermarkShowMode = Watermark.MODE_DEFAULT;
+
+    /**
+     * 使用自定义导出引导界面
+     */
+    public boolean useCustomExportGuide = false;
+
+    /**
+     * 是否弹出导出分辨率界面
+     */
+    public boolean useExportVideoSizeDialog = false;
+    /**
+     * 水印显示区域(竖屏)
+     */
+    public RectF watermarkPortLayoutRectF;
+
+    /**
+     * 水印显示区域(横屏)
+     */
+    public RectF watermarkLandLayoutRectF;
 
     /**
      * 获取导出视频的最大边
@@ -83,7 +110,7 @@ public class ExportConfiguration implements Parcelable {
      * @return 最大边
      */
     public int getVideoMaxWH() {
-        return Math.min(3480, exportVideoMaxWH);
+        return Math.min(EXPORT_SIZE_MAX_SIDE, exportVideoMaxWH);
     }
 
     /**
@@ -96,7 +123,7 @@ public class ExportConfiguration implements Parcelable {
     }
 
     private ExportConfiguration(Builder builder) {
-        this.savePath = builder.mSavePath;
+        this.saveDir = builder.mSavePath;
         this.trailerPath = builder.mTrailerPath;
         this.trailerDuration = builder.trailerDuration;
         this.trailerFadeDuration = builder.mTrailerFadeDuration;
@@ -108,18 +135,24 @@ public class ExportConfiguration implements Parcelable {
         this.textWatermarkColor = builder.mTextWatermarkColor;
         this.textWatermarkShadowColor = builder.mTextWatermarkShadowColor;
         this.watermarkShowRectF = builder.mWatermarkShowRectF;
+        this.watermarkLandLayoutRectF = builder.mWatermarkLandLayout;
+        this.watermarkPortLayoutRectF = builder.mWatermarkPortLayout;
+        this.watermarkShowMode = builder.mWatermarkShowMode;
 
         this.exportVideoBitRate = builder.mExportVideoBitRate;
         this.exportVideoDuration = builder.mExportVideoDuration;
         this.exportVideoFrameRate = builder.mExportVideoFrameRate;
         this.importVideoDuration = builder.mImportVideoDuration;
+
+        this.useCustomExportGuide = builder.mUseCustomExportGuide;
+        this.useExportVideoSizeDialog = builder.mUseExportVideoSizeDialog;
     }
 
     /**
      * Builder class for {@link ExportConfiguration} objects.
      */
     public static class Builder {
-        private int mExportVideoMaxWH = 640;
+        private int mExportVideoMaxWH = 960; //默认544*960
         private double mExportVideoBitRate = 4;
         private int mExportVideoFrameRate = 30;
 
@@ -135,7 +168,13 @@ public class ExportConfiguration implements Parcelable {
         private int mTextWatermarkColor = 0;
         private int mTextWatermarkShadowColor = 0;
         private RectF mWatermarkShowRectF = null;
+        private RectF mWatermarkPortLayout = null;
+        private RectF mWatermarkLandLayout = null;
         private float mImportVideoDuration = 0;
+        private int mWatermarkShowMode;
+
+        private boolean mUseCustomExportGuide = false;
+        private boolean mUseExportVideoSizeDialog = false;
 
         /**
          * 设置导出视频路径
@@ -153,7 +192,7 @@ public class ExportConfiguration implements Parcelable {
          * @param maxWH 导出视频最大边
          */
         public Builder setVideoMaxWH(int maxWH) {
-            mExportVideoMaxWH = Math.max(176, Math.min(maxWH, 3840));
+            mExportVideoMaxWH = Math.max(176, Math.min(maxWH, EXPORT_SIZE_MAX_SIDE));
             return this;
         }
 
@@ -278,7 +317,7 @@ public class ExportConfiguration implements Parcelable {
         }
 
         /**
-         * 设置水印显示区域
+         * 设置水印显示区域 与 setWatermarkLayout互斥
          *
          * @param rectF rectF.left 代表在x轴的位置 <br>
          *              rectF.top 代表在y轴的位置 <br>
@@ -296,7 +335,50 @@ public class ExportConfiguration implements Parcelable {
                     rectF.bottom = 1;
                 }
                 mWatermarkShowRectF = rectF;
+                mWatermarkPortLayout = null;
+                mWatermarkLandLayout = null;
             }
+            return this;
+        }
+
+        /**
+         * 设置水印显示区域 与 setWatermarkPosition互斥
+         *
+         * @param landRectF 横屏水印<br>
+         *                  rectF.left 代表水印在x轴left位置(范围0-1 下同) <br>
+         *                  rectF.top 代表水印在y轴top位置 <br>
+         *                  rectF.right 代表水印在x轴right位置 <br>
+         *                  rectF.bottom 代表水印在y轴bottom位置<br>
+         * @param portRectF 竖屏水印<br>
+         *                  同上
+         */
+        public Builder setWatermarkLayout(RectF landRectF, RectF portRectF) {
+            if (portRectF != null) {
+                portRectF.left = Math.max(0, Math.min(1, portRectF.left));
+                portRectF.right = Math.max(0, Math.min(1, portRectF.right));
+                portRectF.top = Math.max(0, Math.min(1, portRectF.top));
+                portRectF.bottom = Math.max(0, Math.min(1, portRectF.bottom));
+            }
+            if (landRectF != null) {
+                landRectF.left = Math.max(0, Math.min(1, landRectF.left));
+                landRectF.right = Math.max(0, Math.min(1, landRectF.right));
+                landRectF.top = Math.max(0, Math.min(1, landRectF.top));
+                landRectF.bottom = Math.max(0, Math.min(1, landRectF.bottom));
+            }
+            mWatermarkPortLayout = portRectF;
+            mWatermarkLandLayout = landRectF;
+            mWatermarkShowRectF = null;
+            return this;
+        }
+
+        /**
+         * 设置水印显示模式
+         *
+         * @param showMode 显示模式
+         * @return
+         */
+        public Builder setWatermarkShowMode(int showMode) {
+            mWatermarkShowMode = showMode;
             return this;
         }
 
@@ -314,6 +396,28 @@ public class ExportConfiguration implements Parcelable {
             return this;
         }
 
+        /**
+         * 设置是否使用自定义导出引导界面
+         *
+         * @param useCustomExportGuide
+         * @return
+         */
+        public Builder useCustomExportGuide(boolean useCustomExportGuide) {
+            mUseCustomExportGuide = useCustomExportGuide;
+            return this;
+        }
+
+        /**
+         * 设置是否弹出导出分辨率界面
+         *
+         * @param useExportVideoSizeDialog
+         * @return
+         */
+        public Builder useExportVideoSizeDialog(boolean useExportVideoSizeDialog) {
+            mUseExportVideoSizeDialog = useExportVideoSizeDialog;
+            return this;
+        }
+
         public ExportConfiguration get() {
             return new ExportConfiguration(this);
         }
@@ -324,9 +428,25 @@ public class ExportConfiguration implements Parcelable {
         return 0;
     }
 
+    //唯一指定标识，以后不能再更改
+    private static final String VER_TAG = "190108ExportConfig";
+    private static final int VER = 2;
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.savePath);
+        //特别标识
+        {
+            dest.writeString(VER_TAG);
+            dest.writeInt(VER);
+        }
+
+        dest.writeInt(this.watermarkShowMode);
+        dest.writeByte(this.useCustomExportGuide ? (byte) 1 : (byte) 0);
+        dest.writeByte(this.useExportVideoSizeDialog ? (byte) 1 : (byte) 0);
+        dest.writeParcelable(this.watermarkPortLayoutRectF, flags);
+        dest.writeParcelable(this.watermarkLandLayoutRectF, flags);
+
+        dest.writeString(this.saveDir);
         dest.writeFloat(this.trailerFadeDuration);
         dest.writeString(this.trailerPath);
         dest.writeFloat(this.trailerDuration);
@@ -342,10 +462,30 @@ public class ExportConfiguration implements Parcelable {
         dest.writeDouble(this.exportVideoBitRate);
         dest.writeInt(this.exportVideoMaxWH);
         dest.writeFloat(this.importVideoDuration);
+
     }
 
     protected ExportConfiguration(Parcel in) {
-        this.savePath = in.readString();
+        //当前读取的position
+        int oldPosition = in.dataPosition();
+        String tmp = in.readString();
+        if (VER_TAG.equals(tmp)) {
+            int tVer = in.readInt();
+
+            this.watermarkShowMode = in.readInt();
+            this.useCustomExportGuide = in.readByte() != 0;
+            this.useExportVideoSizeDialog = in.readByte() != 0;
+            if (tVer >= 2) {
+                this.watermarkPortLayoutRectF = in.readParcelable(RectF.class.getClassLoader());
+                this.watermarkLandLayoutRectF = in.readParcelable(RectF.class.getClassLoader());
+            }
+        } else {
+            //恢复到读取之前的index
+            in.setDataPosition(oldPosition);
+
+        }
+
+        this.saveDir = in.readString();
         this.trailerFadeDuration = in.readFloat();
         this.trailerPath = in.readString();
         this.trailerDuration = in.readFloat();
@@ -361,6 +501,7 @@ public class ExportConfiguration implements Parcelable {
         this.exportVideoBitRate = in.readDouble();
         this.exportVideoMaxWH = in.readInt();
         this.importVideoDuration = in.readFloat();
+
     }
 
     public static final Creator<ExportConfiguration> CREATOR = new Creator<ExportConfiguration>() {

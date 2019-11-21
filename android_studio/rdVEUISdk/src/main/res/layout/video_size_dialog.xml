@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="#323232"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv480p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/edit_music_arrow_n"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dimen_20"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/video_size_480"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#292929"/>
+
+    <TextView
+        android:id="@+id/tv720p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/edit_music_arrow_n"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dimen_20"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/video_size_720"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#292929"/>
+
+
+    <TextView
+        android:id="@+id/tv1080p"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawableRight="@drawable/edit_music_arrow_n"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dimen_20"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/video_size_1080"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#292929"/>
+
+    <CheckBox
+        android:id="@+id/cbSaveDraft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:button="@null"
+        android:drawableRight="@drawable/music_library_checkbox"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/dimen_20"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/export_with_draft"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_14"/>
+</LinearLayout>

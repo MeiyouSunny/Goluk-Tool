@@ -1,18 +1,33 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             android:gravity="center_vertical"
-             android:orientation="vertical"
-    >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-    <com.rd.veuisdk.ui.HorizontalListViewMV
-        android:id="@+id/lvListView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rlBottomMenu">
 
-        <include layout="@layout/camare_filters_container"/>
-    </com.rd.veuisdk.ui.HorizontalListViewMV>
+        <TextView
+            android:id="@+id/tvLoading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="加载中..."/>
 
-</FrameLayout>
+        <com.rd.veuisdk.ui.HorizontalListViewFresco
+            android:id="@+id/lvListView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:scrollbars="none">
+
+            <include layout="@layout/camare_filters_container"/>
+
+        </com.rd.veuisdk.ui.HorizontalListViewFresco>
+
+    </FrameLayout>
+
+    <include
+        layout="@layout/layout_bottom_menu"/>
+
+</RelativeLayout>

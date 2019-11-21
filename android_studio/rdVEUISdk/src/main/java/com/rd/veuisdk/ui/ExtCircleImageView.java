@@ -28,6 +28,7 @@ public class ExtCircleImageView extends RotateImageView implements Checkable {
 
     public ExtCircleImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setLayerType(LAYER_TYPE_SOFTWARE,null);
         TypedArray tArray = context.obtainStyledAttributes(attrs,
                 R.styleable.ExtCircle);
 

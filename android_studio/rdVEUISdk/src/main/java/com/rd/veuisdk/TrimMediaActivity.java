@@ -1,6 +1,7 @@
 package com.rd.veuisdk;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -12,41 +13,48 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.FrameLayout;
-import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.lib.utils.CoreUtils;
-import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.exception.InvalidStateException;
 import com.rd.vecore.listener.ExportListener;
+import com.rd.vecore.models.AspectRatioFitMode;
+import com.rd.vecore.models.EffectInfo;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.vecore.models.VisualFilterConfig;
+import com.rd.veuisdk.adapter.FilterLookupAdapter;
 import com.rd.veuisdk.crop.CropView;
+import com.rd.veuisdk.fragment.helper.FilterLookupLocalHandler;
+import com.rd.veuisdk.listener.OnItemClickListener;
 import com.rd.veuisdk.manager.TrimConfiguration;
-import com.rd.veuisdk.mix.ModeUtils;
 import com.rd.veuisdk.model.VideoOb;
-import com.rd.veuisdk.ui.ExtProgressDialog;
+import com.rd.veuisdk.model.WebFilterInfo;
 import com.rd.veuisdk.ui.HorizontalProgressDialog;
 import com.rd.veuisdk.ui.HorizontalScrollViewEx;
 import com.rd.veuisdk.ui.ProgressView;
@@ -54,7 +62,9 @@ import com.rd.veuisdk.ui.VideoThumbNailAlterView;
 import com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus;
 import com.rd.veuisdk.ui.extrangseekbar.ExtRangeSeekbarPlus.onRangDurationListener;
 import com.rd.veuisdk.ui.extrangseekbar.RangSeekBarBase;
+import com.rd.veuisdk.ui.extrangseekbar.VideoTrimFixedView;
 import com.rd.veuisdk.utils.DateTimeUtils;
+import com.rd.veuisdk.utils.EffectManager;
 import com.rd.veuisdk.utils.FileLog;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.PathUtils;
@@ -63,6 +73,7 @@ import com.rd.veuisdk.utils.Utils;
 import com.rd.veuisdk.utils.ViewUtils;
 
 import java.io.File;
+import java.util.ArrayList;
 
 
 /**
@@ -72,27 +83,22 @@ import java.io.File;
  */
 @SuppressLint("HandlerLeak")
 public class TrimMediaActivity extends BaseActivity {
-    private static final String TAG = "TrimMediaActivity";
+    private final String TAG = "TrimMediaActivity";
 
     private final int MIN_THUMB_DURATION = 1000;
     private int TRIM_LONG = 4;
     private int TRIM_SHOT = 2;
     private int TRIM_SINGLE = 0;
-    private final String ISFIRST = "thisisfirst";
+    private final String PARAM_IS_FIRST = "param_is_first";
 
     private PreviewFrameLayout mPflVideoPreview;
     private TextView mTvRemainDuration;
     private TextView mTvFrontTime;
     private TextView mTvBehindTime;
     private RelativeLayout mRlTitleBar;
-
     private ImageView mIvVideoPlayState;
-
     private boolean mHasChanged = false;
     private VirtualVideoView mMediaPlayer;
-    private boolean mIsLongClick;
-    private int mFrameCount;
-
     private Scene mScene;
     private MediaObject mMediaObject;
     private VideoOb mOb;
@@ -103,7 +109,7 @@ public class TrimMediaActivity extends BaseActivity {
     private RadioGroup mMenuGroup;
     private TextView mTvSingleFixedTime;
     private RadioButton mRbShotTime, mRbLongTime;
-    private int mSingleFixText = 0;
+    private float mSingleFixText = 0;
     private int mShotText = 2;
     private int mLongText = 4;
 
@@ -112,16 +118,12 @@ public class TrimMediaActivity extends BaseActivity {
     private TextView mTvOldTime;
     private boolean mOnChange = true;
     private int mOldSeekbarTime;
-
     private CheckBox mCbSquare;
     private boolean mIsSquare;
-
     private int mPlaybackWidth;
-
     private float mMediaRatio;
-
-    ScrollView mSvPlayer;
-    HorizontalScrollViewEx mHsvPlayer;
+    private ScrollView mSvPlayer;
+    private HorizontalScrollViewEx mHsvPlayer;
     private boolean mIsLandVideo;
 
     private boolean mEnableSquare = true;
@@ -132,66 +134,334 @@ public class TrimMediaActivity extends BaseActivity {
 
     private int mTrimType;
 
-    public static boolean mTrimFromEdit = false;
+    private boolean mTrimFromEdit = false;
+
+
+    static final int RESULT_AE_REPLACE = -20;
 
     //直接返回数据(画中画直接返回trim之后的视频路径)
-    public static final String RESULT_DATA = "result_data";
+    private static final String RESULT_DATA = "result_data";
     //仅裁剪时间轴
-    public static final String ONLYLINE = "only_line_trime";
     public static final String CROP_ASPECTRATIO = "crop_aspectratio";
+    public static final String PARAM_FROM_AE = "param_from_ae";
+    public static final String PARAM_ROTATE = "param_rotate";
+    public static final String PARAM_SINGLEFIXTRIM_DURATION = "param_singlefixtrim_duration";
     //bFromMix  true, 画中画裁剪，预览时，视频内容完全显示，裁剪指定比例的视频内容
     private boolean bFromMix = false;
     private boolean bOnlyLine = true;
     private CropView cvCropView;
     private float cropAspRatio = 1f;
+    //ae模式显示时，完整显示视频，需要锁定比例动态裁剪
+    private boolean bFromAE = false;
+
+    /**
+     * @param context
+     * @param scene
+     * @param fromEdit
+     * @param maxTrim
+     * @param cropAspRatio
+     * @param requestCode
+     */
+    static void onAETrim(Context context, Scene scene, boolean fromEdit, float maxTrim, float cropAspRatio, int requestCode) {
+        // 视频 截取
+        Intent intent = new Intent(context, TrimMediaActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(IntentConstants.TRIM_FROM_EDIT, fromEdit);
+        intent.putExtra(TrimMediaActivity.CROP_ASPECTRATIO, cropAspRatio);
+        intent.putExtra(TrimMediaActivity.PARAM_FROM_AE, true);
+        intent.putExtra(TrimMediaActivity.PARAM_SINGLEFIXTRIM_DURATION, maxTrim);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+
+    }
+
+    //是否显示旋转按钮 (只有相册导入时才为true)
+    private boolean bRotateVisible = false;
+
+    /**
+     * 相册导入时，截取视频
+     *
+     * @param context
+     * @param mediaObject
+     * @param requestCode
+     */
+    static void onImportTrim(Context context, MediaObject mediaObject, int requestCode) {
+        Intent intent = new Intent(context, TrimMediaActivity.class);
+        Scene scene = VirtualVideo.createScene();
+        scene.addMedia(mediaObject);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(IntentConstants.TRIM_FROM_EDIT, true);
+        intent.putExtra(TrimMediaActivity.PARAM_FROM_AE, false);
+        intent.putExtra(TrimMediaActivity.PARAM_ROTATE, true);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+
+
+    }
+
+    private int rotateAngle = 0;
+    private ArrayList<EffectInfo> mEffectInfos;
+    private ViewGroup menuTrim, menuTrimAE;
+
+    private boolean bNeedLoadCover = true;
+    private TextView mBtnVolume, mBtnFilter;
+    //音量
+    private LinearLayout mLlVolume;
+    private SeekBar mSbVolume;
+    //滤镜
+    private LinearLayout mLlFilter;
+    private RecyclerView mRvFilter;
+    private FilterLookupAdapter mAdapter;
+    private SeekBar mSbStrength;
+    private TextView mTvFilter;
+    private int tmpIndex = 0;
+    private int lastItemId = 0;
+    private int mLastPageIndex = 0;
+    protected VisualFilterConfig tmpLookup = null;
+    private VideoTrimFixedView mVtfvFixed;
+    /**
+     * 默认的锐度
+     */
+    protected float mDefaultValue = Float.NaN;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Intent in = getIntent();
-        mTrimFromEdit = in.getBooleanExtra(IntentConstants.TRIM_FROM_EDIT, false);
-        bFromMix = in.getBooleanExtra(RESULT_DATA, false);
-        bOnlyLine = in.getBooleanExtra(ONLYLINE, true);
-        cropAspRatio = in.getFloatExtra(CROP_ASPECTRATIO, 1f);
-        super.onCreate(savedInstanceState);
+        bFromAE = in.getBooleanExtra(TrimMediaActivity.PARAM_FROM_AE, false);
+        bRotateVisible = in.getBooleanExtra(TrimMediaActivity.PARAM_ROTATE, false);
+        if (bFromAE) {
+            mTrimFromEdit = true;
+            bFromMix = true;
+            bOnlyLine = false;
+        } else {
+            mTrimFromEdit = in.getBooleanExtra(IntentConstants.TRIM_FROM_EDIT, false);
+            bFromMix = in.getBooleanExtra(RESULT_DATA, false);
+        }
 
-        mStrActivityPageName = getString(R.string.preview_intercept);
+        cropAspRatio = in.getFloatExtra(CROP_ASPECTRATIO, 1f);
+        mStrActivityPageName = getString(R.string.preview_trim);
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trim_meida);
+        registerReceiver(mReceiver, new IntentFilter(SdkEntry.TRIM_RETURN));
+
+        mVtfvFixed = $(R.id.vtfv_fixed);
+        mLlVolume = $(R.id.ll_factor);
+        mSbVolume = $(R.id.sbFactor);
+        menuTrim = $(R.id.menuTrim);
+        menuTrimAE = $(R.id.menuTrimAE);
+        menuTrim.setVisibility(bFromAE ? View.GONE : View.VISIBLE);
+        menuTrimAE.setVisibility(bFromAE ? View.VISIBLE : View.GONE);
+
+        bNeedLoadCover = true;
 
         mTrimConfig = SdkEntry.getSdkService().getTrimConfig();
-        mPlaybackWidth = getWindowManager().getDefaultDisplay().getWidth();
+        mPlaybackWidth = CoreUtils.getMetrics().widthPixels;
 
         mEnableSquare = mTrimConfig.enable1x1;
         mTrimReturnType = mTrimConfig.trimReturnMode;
 
         mShotText = mTrimConfig.trimDuration1;
         mLongText = mTrimConfig.trimDuration2;
-        mSingleFixText = mTrimConfig.trimSingleFixDuration;
-        TRIM_SHOT = mShotText * 1000;
-        TRIM_LONG = mLongText * 1000;
-        TRIM_SINGLE = mSingleFixText * 1000;
-        mTrimType = mTrimConfig.trimType;
-        mScene = in.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
-        if (mTrimFromEdit) {
-            mEnableSquare = false;
-            mTrimType = TrimConfiguration.TRIM_TYPE_FREE;
+        if (bFromAE) {
+            mSingleFixText = in.getFloatExtra(PARAM_SINGLEFIXTRIM_DURATION, 1f);
+        } else {
+            mSingleFixText = mTrimConfig.trimSingleFixDuration;
+            mTrimType = mTrimConfig.trimType;
         }
-        registerReceiver(mReceiver, new IntentFilter(SdkEntry.TRIM_RETURN));
+        mScene = in.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
         if (mScene == null) {
             Log.w(TAG, "Trim media object not exists!");
             finish();
             return;
         }
         mMediaObject = mScene.getAllMedia().get(0);
-        mOb = (VideoOb) mMediaObject.getTag();
 
+        if (bFromAE) {
+            float duration = VirtualVideo.getMediaInfo(mMediaObject.getMediaPath(), null);
+            if (duration > 0) {
+                mSingleFixText = Math.min(duration, mSingleFixText);
+            }
+        }
+
+
+        TRIM_SHOT = mShotText * 1000;
+        TRIM_LONG = mLongText * 1000;
+        TRIM_SINGLE = (int) (mSingleFixText * 1000);
+
+        if (mTrimFromEdit) {
+            mEnableSquare = false;
+            mTrimType = TrimConfiguration.TRIM_TYPE_FREE;
+        }
+
+
+        mEffectInfos = new ArrayList<>();
+        if (null != mMediaObject.getEffectInfos()) {
+            mEffectInfos.addAll(mMediaObject.getEffectInfos());
+        }
+        mMediaObject.setEffectInfos(null);
+
+//        Log.e(TAG, "onCreate: " + mMediaObject.getWidth() + "*" + mMediaObject.getHeight() + "   " +
+//                "" + mMediaObject.getAngle() + "  " + mMediaObject.getClipRectF() + "   " + mMediaObject.getShowRectF());
+        mOb = (VideoOb) mMediaObject.getTag();
+//        Log.e(TAG, "onCreate: " + mOb);
         mMediaRatio = (float) mMediaObject.getWidth() / mMediaObject.getHeight();
+
         if (mMediaRatio >= 1.0) {
             mIsLandVideo = true;
         } else {
             mIsLandVideo = false;
         }
-        if (bFromMix) {//画中画裁剪，固定显示方式
-            mIsLandVideo = true;
+        if (bFromAE) {
+            mTrimType = TrimConfiguration.TRIM_TYPE_SINGLE_FIXED;
+            bFromMix = true;
+        } else {
+            if (bFromMix) {//画中画裁剪，固定显示方式
+                mIsLandVideo = true;
+            }
+        }
+
+        rotateAngle = mMediaObject.getAngle();
+
+        //AE
+        if (bFromAE) {
+            //截取滑动控件
+            mVtfvFixed.setVisibility(View.VISIBLE);
+            mVtfvFixed.setListener(new VideoTrimFixedView.OnChangeListener() {
+                @Override
+                public void OnChanged(long start, long end) {
+                    prepareMedia(start, end);
+                }
+
+                @Override
+                public void OnPause() {
+                    pauseVideo();
+                }
+
+                @Override
+                public void OnSeek(long time) {
+                    seekTo(time);
+                }
+            });
+            mBtnVolume = $(R.id.tvVolume);
+            mBtnFilter = $(R.id.tvFilter);
+            //滤镜
+            mLlFilter = $(R.id.llFilter);
+            mRvFilter = $(R.id.recyclerViewFilter);
+            mSbStrength = $(R.id.sbarStrength);
+            mTvFilter = $(R.id.tvFilterValue);
+            $(R.id.strengthLayout).setVisibility(View.VISIBLE);
+            mSbStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mDefaultValue = progress / 100.0f;
+                    mTvFilter.setText(progress + "%");
+                    if (fromUser && tmpLookup != null) {
+                        tmpLookup.setDefaultValue(mDefaultValue);
+                        try {
+                            if (buildMedia != null) {
+                                buildMedia.changeFilter(tmpLookup);
+                            }
+                            if (null != mMediaObject) {
+                                mMediaObject.changeFilter(tmpLookup);
+                            }
+                        } catch (InvalidArgumentException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            mBtnVolume.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //onMediaVolumeClick();
+                    mLlFilter.setVisibility(View.GONE);
+                    mLlVolume.setVisibility(View.VISIBLE);
+                    mBtnVolume.setTextColor(getResources().getColor(R.color.main_orange));
+                    mBtnFilter.setTextColor(getResources().getColor(R.color.white));
+                }
+            });
+            mBtnVolume.setVisibility(View.VISIBLE);
+            mBtnFilter.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mLlFilter.setVisibility(View.VISIBLE);
+                    mLlVolume.setVisibility(View.GONE);
+                    mBtnVolume.setTextColor(getResources().getColor(R.color.white));
+                    mBtnFilter.setTextColor(getResources().getColor(R.color.main_orange));
+                }
+            });
+            mLlFilter.setVisibility(View.VISIBLE);
+            mBtnFilter.setVisibility(View.VISIBLE);
+            mBtnVolume.setTextColor(getResources().getColor(R.color.white));
+            mBtnFilter.setTextColor(getResources().getColor(R.color.main_orange));
+
+            ArrayList<WebFilterInfo> infos = (new FilterLookupLocalHandler(this)).getArrayList();
+            mSbStrength.setMax(100);
+            if (mMediaObject != null && mMediaObject.getFilterList() != null && mMediaObject.getFilterList().size() > 0) {
+                tmpLookup = mMediaObject.getFilterList().get(0);
+                int value = Float.isNaN(tmpLookup.getSharpen()) ? 100 : (int) (tmpLookup.getSharpen() * 100);
+                mSbStrength.setProgress(value);
+                if (!TextUtils.isEmpty(tmpLookup.getFilterFilePath())) {
+                    for (int i = 0; i < infos.size(); i++) {
+                        if (tmpLookup.getFilterFilePath().equals(infos.get(i).getLocalPath())) {
+                            mLastPageIndex = i;
+                            tmpIndex = i;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                mSbStrength.setProgress(100);
+            }
+
+            mRvFilter.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            //设置添加或删除item时的动画，这里使用默认动画
+            mRvFilter.setItemAnimator(new DefaultItemAnimator());
+            mAdapter = new FilterLookupAdapter(this);
+            mAdapter.addAll(true, infos, mLastPageIndex);
+            mAdapter.setEnableRepeatClick(true);
+            mAdapter.setOnItemClickListener(new OnItemClickListener<Object>() {
+                @Override
+                public void onItemClick(int position, Object item) {
+                    onSelectedImp(position);
+                    mSbStrength.setEnabled(position > 0);
+                }
+            });
+            mSbStrength.setEnabled(tmpIndex > 0);
+            //设置适配器
+            mRvFilter.setAdapter(mAdapter);
+            //音量
+            mSbVolume.setMax(100);
+            mSbVolume.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    if (buildMedia != null && fromUser) {
+                        buildMedia.setMixFactor(progress);
+                    }
+                    if (null != mMediaObject && fromUser) {
+                        mMediaObject.setMixFactor(progress);
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
         }
         initView();
         loadVideo();
@@ -199,34 +469,64 @@ public class TrimMediaActivity extends BaseActivity {
 
     private void loadVideo() {
         Intent in = getIntent();
-        mIsShowLight = in.getBooleanExtra(ISFIRST, true);
-
-
+        mIsShowLight = in.getBooleanExtra(PARAM_IS_FIRST, true);
         if (mOb == null) {
             mOb = new VideoOb(mMediaObject.getTrimStart(),
                     mMediaObject.getTrimEnd(), mMediaObject.getTrimStart(),
                     mMediaObject.getTrimEnd(), mMediaObject.getTrimStart(),
-                    mMediaObject.getTrimEnd(), 0, null, 0);
+                    mMediaObject.getTrimEnd(), 0, null, VideoOb.DEFAULT_CROP);
         }
-
-
         mMediaObject.setTimeRange(mOb.TStart, mOb.TEnd);
+        virtualVideo = new VirtualVideo();
+        initPlayerData();
+    }
 
-        VirtualVideo virtualVideo = new VirtualVideo();
+    private ExtRangeSeekbarPlus mRangeSeekBar;
+    private View btnRotate;
+    private VirtualVideo virtualVideo;
+    private MediaObject buildMedia;
+
+    private void initPlayerData() {
+        mMediaPlayer.reset();
+        virtualVideo.reset();
         Scene scene = VirtualVideo.createScene();
-        scene.addMedia(mMediaObject);
+        buildMedia = mMediaObject.clone();
+        buildMedia.setClipRectF(null); //清理之前的裁剪区域，完全显示 （否则会越裁越小）
+        buildMedia.setShowRectF(null);
+        buildMedia.setAngle(rotateAngle);
+        buildMedia.setClipRect(null);
+        buildMedia.setTimeRange(0, buildMedia.getIntrinsicDuration());
+        scene.addMedia(buildMedia);
         virtualVideo.addScene(scene);
+        mMediaPlayer.setAutoRepeat(true);
         try {
             virtualVideo.build(mMediaPlayer);
         } catch (InvalidStateException e) {
             e.printStackTrace();
         }
+
     }
 
-    private ExtRangeSeekbarPlus mRangeSeekBar;
-
+    private void onRotateClick() {
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.pause();
+        }
+        rotateAngle += 90;
+        SysAlertDialog.showLoadingDialog(TrimMediaActivity.this, R.string.isloading);
+        initPlayerData();
+    }
 
     private void initView() {
+        btnRotate = $(R.id.btnRotate);
+        if (bRotateVisible) {
+            btnRotate.setVisibility(View.VISIBLE);
+            btnRotate.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onRotateClick();
+                }
+            });
+        }
         mSavePath = mTrimConfig.savePath;
         String strTitle = mTrimConfig.title;
         int titleBarColor = mTrimConfig.titleBarColor;
@@ -234,32 +534,31 @@ public class TrimMediaActivity extends BaseActivity {
         String confirmText = mTrimConfig.buttonConfirmText;
         int buttonColor = mTrimConfig.buttonColor;
 
-        mSvPlayer = (ScrollView) findViewById(R.id.svPlayer);
-        mHsvPlayer = (HorizontalScrollViewEx) findViewById(R.id.hsvPlayer);
+        mSvPlayer = $(R.id.svPlayer);
+        mHsvPlayer = $(R.id.hsvPlayer);
 
-        mRlAddTime = (RelativeLayout) findViewById(R.id.rlAddTime);
-        mTvAddtime = (TextView) findViewById(R.id.tvAddTime);
-        mTvOldTime = (TextView) findViewById(R.id.tvOldTime);
+        mRlAddTime = $(R.id.rlAddTime);
+        mTvAddtime = $(R.id.tvAddTime);
+        mTvOldTime = $(R.id.tvOldTime);
 
         if (mIsLandVideo) {
             mSvPlayer.setVisibility(View.GONE);
             mHsvPlayer.setVisibility(View.VISIBLE);
-            mProgressView = (ProgressView) findViewById(R.id.progressViewHori);
+            mProgressView = $(R.id.progressViewHori);
             //外层框
-            mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreviewHori);
+            mPflVideoPreview = $(R.id.rlPreviewHori);
             //播放器的框
-            mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_playerHori);
-            mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreviewHori);
-            cvCropView = (CropView) findViewById(R.id.cvVideoCropHori);
-
+            mPreviewPlayer = $(R.id.rlPreview_playerHori);
+            mMediaPlayer = $(R.id.epvPreviewHori);
+            cvCropView = $(R.id.cvVideoCropHori);
         } else {
             mSvPlayer.setVisibility(View.VISIBLE);
             mHsvPlayer.setVisibility(View.GONE);
-            mPflVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
-            mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_player);
-            mMediaPlayer = (VirtualVideoView) findViewById(R.id.epvPreview);
-            cvCropView = (CropView) findViewById(R.id.cvVideoCrop);
-            mProgressView = (ProgressView) findViewById(R.id.progressView);
+            mPflVideoPreview = $(R.id.rlPreview);
+            mPreviewPlayer = $(R.id.rlPreview_player);
+            mMediaPlayer = $(R.id.epvPreview);
+            cvCropView = $(R.id.cvVideoCrop);
+            mProgressView = $(R.id.progressView);
         }
         if (bFromMix) {
             if (bOnlyLine) {
@@ -270,6 +569,7 @@ public class TrimMediaActivity extends BaseActivity {
                 cvCropView.setIcropListener(new CropView.ICropListener() {
                     @Override
                     public void onPlayState() {
+                        playOrPause();
                     }
 
                     @Override
@@ -277,41 +577,46 @@ public class TrimMediaActivity extends BaseActivity {
                     }
                 });
             }
-
-
         } else {
             cvCropView.setVisibility(View.GONE);
         }
+
+        mHsvPlayer.enableScroll(false);
+        mRlTitleBar = $(R.id.rlTitleBar);
+
         LinearLayout.LayoutParams rlVideolp = new LinearLayout.LayoutParams(
                 mPlaybackWidth, mPlaybackWidth);
         mPflVideoPreview.setLayoutParams(rlVideolp);
-        mHsvPlayer.enableScroll(false);
-        mRlTitleBar = (RelativeLayout) findViewById(R.id.rlTitleBar);
         mPflVideoPreview.setAspectRatio(1);
+        if (bFromAE) {
+            mPreviewPlayer.setAspectRatio(mMediaRatio);
+            mMediaPlayer.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO);
+        }
+        mMediaPlayer.setBackgroundColor(getResources().getColor(R.color.black));
+        ((TextView) $(R.id.tvBottomTitle)).setText(R.string.preview_trim);
         if (strTitle != null) {
-            ((TextView) findViewById(R.id.tvTitle)).setText(strTitle);
+            ((TextView) $(R.id.tvTitle)).setText(strTitle);
+            ((TextView) $(R.id.tvBottomTitle)).setText(strTitle);
         }
         if (titleBarColor != 0) {
             mRlTitleBar.setBackgroundColor(titleBarColor);
         }
         if (buttonColor != 0) {
-            findViewById(R.id.public_menu_sure).setBackgroundColor(
-                    buttonColor);
-            findViewById(R.id.public_menu_cancel).setBackgroundColor(
-                    buttonColor);
+            $(R.id.public_menu_sure).setBackgroundColor(buttonColor);
+            $(R.id.public_menu_cancel).setBackgroundColor(buttonColor);
         }
         if (confirmText != null) {
-            ExtButton ebtnSure = (ExtButton) findViewById(R.id.ebtnSure);
+            ExtButton ebtnSure = $(R.id.ebtnSure);
             ebtnSure.setText(confirmText);
             ebtnSure.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         if (cancelText != null) {
-            ExtButton ebtnCancel = (ExtButton) findViewById(R.id.ebtnCancel);
+            ExtButton ebtnCancel = $(R.id.ebtnCancel);
             ebtnCancel.setText(cancelText);
             ebtnCancel.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         }
         // 切换裁切比例
-        mCbSquare = (CheckBox) findViewById(R.id.cbTrim1x1);
+        mCbSquare = $(R.id.cbTrim1x1);
         mCbSquare.setOnCheckedChangeListener(mOnSquareCheckListener);
         if (bFromMix) {
             mCbSquare.setVisibility(View.INVISIBLE);
@@ -326,26 +631,30 @@ public class TrimMediaActivity extends BaseActivity {
             }
         }
 
-        mMenuGroup = (RadioGroup) findViewById(R.id.trim_menu_group);
-        mTvSingleFixedTime = (TextView) findViewById(R.id.tv_single_fixed_time);
-        mRbShotTime = (RadioButton) findViewById(R.id.trim_shot);
-        mRbLongTime = (RadioButton) findViewById(R.id.trim_long);
+        mMenuGroup = $(R.id.trim_menu_group);
+        mTvSingleFixedTime = $(R.id.tv_single_fixed_time);
+        mRbShotTime = $(R.id.trim_shot);
+        mRbLongTime = $(R.id.trim_long);
 
-        if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
+        mThumbNailView = $(R.id.split_videoview);
+        mRangeSeekBar = $(R.id.m_extRangeSeekBar);
+
+        if (isFromAEPreview()) {
             mMenuGroup.setVisibility(View.INVISIBLE);
-            mTvSingleFixedTime.setVisibility(View.VISIBLE);
-            mTvSingleFixedTime.setText(mSingleFixText + "s");
-        } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
-            mMenuGroup.setVisibility(View.VISIBLE);
-            mTvSingleFixedTime.setVisibility(View.INVISIBLE);
+        } else {
+            if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
+                mMenuGroup.setVisibility(View.INVISIBLE);
+                mTvSingleFixedTime.setVisibility(View.VISIBLE);
+                mTvSingleFixedTime.setText(getString(R.string.duration_fix_format_f, mSingleFixText));
+            } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
+                mMenuGroup.setVisibility(View.VISIBLE);
+                mRbShotTime.setText(getString(R.string.duration_fix_format_int, mShotText));
+                mRbLongTime.setText(getString(R.string.duration_fix_format_int, mLongText));
+                mTvSingleFixedTime.setVisibility(View.INVISIBLE);
+            } else {
+                mMenuGroup.setVisibility(View.INVISIBLE);
+            }
         }
-        mRbShotTime.setText(mShotText + "s");
-        mRbLongTime.setText(mLongText + "s");
-        mMenuGroup.setVisibility(View.INVISIBLE);
-
-        mThumbNailView = (VideoThumbNailAlterView) findViewById(R.id.split_videoview);
-
-        mRangeSeekBar = (ExtRangeSeekbarPlus) findViewById(R.id.m_extRangeSeekBar);
 
         // 不将边缘变成灰色
         mRangeSeekBar.setHorizontalFadingEdgeEnabled(false);
@@ -353,8 +662,7 @@ public class TrimMediaActivity extends BaseActivity {
 
         if (mTrimType == TrimConfiguration.TRIM_TYPE_FREE) {
             mRangeSeekBar.setMoveMode(true);  //自由截取把手
-            mRangeSeekBar
-                    .setOnRangSeekBarChangeListener(mRangeSeekBarChangeListener);
+            mRangeSeekBar.setOnRangSeekBarChangeListener(mRangeSeekBarChangeListener);
         } else {
             mRangeSeekBar.setMoveMode(false);  //定长截取框
             mRangeSeekBar.setItemVideo(mOnVideoTrimListener);
@@ -363,16 +671,25 @@ public class TrimMediaActivity extends BaseActivity {
 
         mPreviewPlayer.setOnClickListener(mOnPlayListener);
 
-        mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
+        mIvVideoPlayState = $(R.id.ivPlayerState);
         mIvVideoPlayState.setOnClickListener(mOnPlayListener);
 
-        mTvFrontTime = (TextView) findViewById(R.id.tvInterceptFrontTime);
-        mTvBehindTime = (TextView) findViewById(R.id.tvInterceptBehindTime);
-        mTvRemainDuration = (TextView) findViewById(R.id.tvRemainDuration);
+        mTvFrontTime = $(R.id.tvInterceptFrontTime);
+        mTvBehindTime = $(R.id.tvInterceptBehindTime);
+        mTvRemainDuration = $(R.id.tvRemainDuration);
 
         mMediaPlayer.setOnPlaybackListener(mPlayViewListener);
         mMediaPlayer.setOnInfoListener(mPlayerInfoListener);
 
+    }
+
+    /**
+     * 来自AE模板预览页（AEPreivewActiviity）
+     *
+     * @return
+     */
+    private boolean isFromAEPreview() {
+        return bFromAE && mTrimFromEdit;
     }
 
     private Handler mHideTitleHandler = new Handler();
@@ -462,7 +779,7 @@ public class TrimMediaActivity extends BaseActivity {
         if (mMediaPlayer.isPlaying()) {
             pauseVideo();
             mHideTitleHandler.postDelayed(mHideTitleRunnable, 5000);
-            mRlTitleBar.setVisibility(View.VISIBLE);
+//            mRlTitleBar.setVisibility(View.VISIBLE);
         } else {
             if (mRightHandleChanged) {
                 mMediaPlayer.seekTo(mOb.nStart);
@@ -491,8 +808,7 @@ public class TrimMediaActivity extends BaseActivity {
                     mRangeSeekBar.setItemDuration(nduration);
                 }
                 mRbLongTime.setBackgroundResource(0);
-                mRbShotTime
-                        .setBackgroundResource(R.drawable.menu_item_checked);
+                mRbShotTime.setBackgroundResource(R.drawable.menu_item_checked);
             } else { // 长
                 if (null != mOb) {
                     int viewDuration = (int) (Utils.s2ms(mOb.TEnd - mOb.TStart) / mMediaObject.getSpeed());
@@ -501,77 +817,92 @@ public class TrimMediaActivity extends BaseActivity {
                     mRangeSeekBar.setItemDuration(nduration);
                 }
                 mRbShotTime.setBackgroundResource(0);
-                mRbLongTime
-                        .setBackgroundResource(R.drawable.menu_item_checked);
+                mRbLongTime.setBackgroundResource(R.drawable.menu_item_checked);
             }
             doPrepareTrim();
         }
     };
 
     private void doPrepareTrim() {
-        long nstart = mRangeSeekBar.getSelectedMinValue(), nend = mRangeSeekBar
-                .getSelectedMaxValue();
+        long nstart = mRangeSeekBar.getSelectedMinValue(), nend = mRangeSeekBar.getSelectedMaxValue();
         mOnVideoTrimListener.onItemVideoChanged(nstart, nend);
     }
 
-    private final int PREPARED = 6;
-    private final int CANCEL_EXPORT = 7;
+    private final int WHAT_PLAYER_PREPARED = 106;
+    private final int WHAT_CANCEL_EXPORT = 7;
 
     private Dialog mCancelLoading;
+
+    /**
+     * 准备缩略图
+     */
+    private void prepareThumb(MediaObject thumbMedia) {
+        //专用于封面的对象
+        float asp = (mMediaPlayer.getVideoWidth() + 0.0f) / mMediaPlayer.getVideoHeight();
+        VirtualVideo vitualVideo = new VirtualVideo();
+        Scene scene = VirtualVideo.createScene();
+        if (bFromAE) {
+            MediaObject object = mMediaObject.clone();
+            object.setClipRect(null);
+            object.setTimeRange(0, object.getIntrinsicDuration());
+            scene.addMedia(object);
+            vitualVideo.addScene(scene);
+            if (mOb != null) {
+                mVtfvFixed.setVirtualVideo(asp, vitualVideo, Utils.s2ms(mSingleFixText), Utils.s2ms(mOb.TStart));
+            } else {
+                mVtfvFixed.setVirtualVideo(asp, vitualVideo, Utils.s2ms(mSingleFixText));
+            }
+            mVtfvFixed.setStartThumb();
+        } else {
+            scene.addMedia(thumbMedia);
+            vitualVideo.addScene(scene);
+            mThumbNailView.recycle();
+            mThumbNailView.setVirtualVideo(asp, vitualVideo);
+            mThumbNailView.setStartThumb();
+        }
+        if (null != mOb) {
+            int viewDuration = (int) (Utils.s2ms(mOb.TEnd - mOb.TStart) / mMediaObject.getSpeed());
+            int nduration;
+            if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
+                nduration = viewDuration < TRIM_SINGLE ? viewDuration : TRIM_SINGLE;
+                mRangeSeekBar.setItemDuration(nduration);
+            } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
+                nduration = viewDuration < TRIM_SHOT ? viewDuration : TRIM_SHOT;
+                mRangeSeekBar.setItemDuration(nduration);
+            }
+        }
+        if (!isFromAEPreview()) {
+            if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
+                mMenuGroup.setVisibility(View.INVISIBLE);
+                mTvSingleFixedTime.setVisibility(View.VISIBLE);
+            } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
+                mMenuGroup.check(R.id.trim_shot);
+                mMenuGroup.setVisibility(View.VISIBLE);
+                mTvSingleFixedTime.setVisibility(View.INVISIBLE);
+                mRbLongTime.setBackgroundResource(0);
+                mRbShotTime.setBackgroundResource(R.drawable.menu_item_checked);
+            }
+        }
+        if (bFromAE) {
+            mThumbNailView.setVisibility(View.GONE);
+            mRangeSeekBar.setVisibility(View.GONE);
+        } else {
+            mThumbNailView.setVisibility(View.VISIBLE);
+            mRangeSeekBar.setVisibility(View.VISIBLE);
+        }
+        mMediaPlayer.seekTo((mOb.nStart + 0.25f));//防止预览缩略图黑屏
+        doPrepareTrim();
+    }
 
     private Handler mHandler = new Handler() {
         public void handleMessage(android.os.Message msg) {
 
             switch (msg.what) {
-                case PREPARED:
-                    int halfScreenWidth = CoreUtils.getMetrics().widthPixels / 2;
-                    VirtualVideo player = (VirtualVideo) msg.obj;
-                    try {
-                        player.build(TrimMediaActivity.this);
-                    } catch (InvalidStateException e) {
-                        e.printStackTrace();
-                    }
-                    int[] params = mThumbNailView.setVirtualVideo(true, player);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                            params[0], params[1]);
-                    lp.setMargins(0, 0, halfScreenWidth, 0);
-                    mThumbNailView.setLayoutParams(lp);
-
-                    FrameLayout.LayoutParams lframe = new LayoutParams(lp.width
-                            + lp.leftMargin + lp.rightMargin, lp.height);
-                    lframe.setMargins(0, 10, 0, 0);
-
-                    mThumbNailView.setStartThumb();
-
-                    if (null != mOb) {
-                        int viewDuration = (int) (Utils.s2ms(mOb.TEnd - mOb.TStart) / mMediaObject.getSpeed());
-                        int nduration;
-                        if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
-                            nduration = viewDuration < TRIM_SINGLE ? viewDuration
-                                    : TRIM_SINGLE;
-                            mRangeSeekBar.setItemDuration(nduration);
-                        } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
-                            nduration = viewDuration < TRIM_SHOT ? viewDuration
-                                    : TRIM_SHOT;
-                            mRangeSeekBar.setItemDuration(nduration);
-                        }
-
-                    }
-                    if (mTrimType == TrimConfiguration.TRIM_TYPE_SINGLE_FIXED) {
-                        mMenuGroup.setVisibility(View.INVISIBLE);
-                        mTvSingleFixedTime.setVisibility(View.VISIBLE);
-                    } else if (mTrimType == TrimConfiguration.TRIM_TYPE_DOUBLE_FIXED) {
-                        mMenuGroup.check(R.id.trim_shot);
-                        mMenuGroup.setVisibility(View.VISIBLE);
-                        mTvSingleFixedTime.setVisibility(View.INVISIBLE);
-                        mRbLongTime.setBackgroundResource(0);
-                        mRbShotTime.setBackgroundResource(R.drawable.menu_item_checked);
-                    }
-                    mRangeSeekBar.setVisibility(View.VISIBLE);
-                    mMediaPlayer.seekTo((mOb.nStart + 0.25f));//防止预览缩略图黑屏
-                    doPrepareTrim();
-                    break;
-                case CANCEL_EXPORT:
+                case WHAT_PLAYER_PREPARED: {
+                    prepareThumb((MediaObject) msg.obj);
+                }
+                break;
+                case WHAT_CANCEL_EXPORT: {
                     mCancelLoading = SysAlertDialog.showLoadingDialog(
                             TrimMediaActivity.this, R.string.canceling, false,
                             new OnCancelListener() {
@@ -592,7 +923,8 @@ public class TrimMediaActivity extends BaseActivity {
                                 mCancelLoading.setCancelable(true);
                         }
                     }, 5000);
-                    break;
+                }
+                break;
                 default:
                     break;
             }
@@ -602,18 +934,16 @@ public class TrimMediaActivity extends BaseActivity {
         ;
     };
 
-    private static boolean mIsShowLight = true;
+    private boolean mIsShowLight = true;
 
     private VirtualVideo.OnInfoListener mPlayerInfoListener = new VirtualVideo.OnInfoListener() {
 
         @Override
         public boolean onInfo(int what, int extra, Object obj) {
             if (what == VirtualVideo.INFO_WHAT_PLAYBACK_PREPARING) {
-                SysAlertDialog.showLoadingDialog(TrimMediaActivity.this,
-                        R.string.isloading, false, null);
             } else if (what == VirtualVideo.INFO_WHAT_GET_VIDEO_HIGHTLIGHTS && obj != null) {
                 int[] arrHightLights = (int[]) obj;
-                // TODO:hightlight时间数组，单位为ms
+                // hightlight时间数组，单位为ms
                 if (mIsShowLight) {
                     mRangeSeekBar.setHighLights(arrHightLights);
                     mIsShowLight = false;
@@ -623,8 +953,6 @@ public class TrimMediaActivity extends BaseActivity {
         }
 
     };
-    private ExtProgressDialog mPdLoading;
-    private MediaObject mTempObjThumb;
     private RectF mRectVideoClipBound = new RectF();
     /**
      * 播放器
@@ -633,67 +961,35 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public void onPlayerPrepared() {
-
-
             if (mIsFirst) {
                 if (mTrimConfig.default1x1CropMode) {
                     mCbSquare.setChecked(true);
                 } else {
                     mCbSquare.setChecked(false);
                 }
-                ThreadPoolUtils.executeEx(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        VirtualVideo virtualVideo = new VirtualVideo();
-                        Scene scene = VirtualVideo.createScene();
-                        mTempObjThumb = mMediaObject.clone();
-                        mTempObjThumb.setTimeRange(mOb.TStart, mOb.TEnd);
-                        scene.addMedia(mTempObjThumb);
-                        virtualVideo.addScene(scene);
-                        mHandler.sendMessage(mHandler.obtainMessage(PREPARED,
-                                virtualVideo));
-
-                    }
-                });
                 mIsFirst = false;
             }
 
-
-            SysAlertDialog.cancelLoadingDialog();
-            updatePreviewFrameAspect(mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
-
-            if (mOb != null) {
-                mTvFrontTime.setText(gettime(Utils.s2ms(mOb.nStart)));
-                mTvBehindTime.setText(gettime(Utils.s2ms(mOb.nEnd)));
-                if (mOb.nEnd - mOb.nStart <= 1) {//1秒
-                    mTvRemainDuration.setText(gettime(1000));
-                } else {
-                    mTvRemainDuration.setText(gettime(Utils.s2ms(mOb.nEnd - mOb.nStart)));
-                }
+            if (buildMedia != null) {
+                mSbVolume.setProgress(buildMedia.getMixFactor());
             }
-
+            if (!bFromAE) {
+                updatePreviewFrameAspect(mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
+            }
+//            Log.e(TAG, "onPlayerPrepared: " + mOb);
             if (mOb != null) {
-                int viewDuration = (int) (Utils.s2ms(mOb.TEnd - mOb.TStart) / mMediaObject.getSpeed());
+                //原始视频的duration，不受trim 和speed的影响
+                float srcVideoDuration = mMediaObject.getIntrinsicDuration();
+                int viewDuration = (int) (Utils.s2ms(srcVideoDuration / mMediaObject.getSpeed()));
+
                 mRangeSeekBar.setDuration(viewDuration);
                 mRangeSeekBar.setSeekBarRangeValues(Utils.s2ms(mOb.nStart), Utils.s2ms(mOb.nEnd));
                 mRangeSeekBar.setProgress(Utils.s2ms(mOb.nStart));
-            }
-            if (mOb != null) {
-                mProgressView.setDuration(Utils.s2ms(mOb.TEnd - mOb.TStart));
+                mProgressView.setDuration(viewDuration);
                 mProgressView.setProgress(Utils.s2ms(mOb.nStart));
+                onTrimText(Utils.s2ms(mOb.nStart), Utils.s2ms(mOb.nEnd));
             }
-            if (null != mPdLoading) {
-                mPdLoading = SysAlertDialog.showLoadingDialog(getApplicationContext(),
-                        R.string.isloading);
-                mPdLoading.show();
-            }
-//            mPflVideoPreview.post(new Runnable() {
-//                public void run() {
-//                    mMediaPlayer.seekTo(Math.max(mOb.nEnd, 0.3f));
-//                }
-//            });
-
 
             VideoConfig srcConfig = new VideoConfig();
             RectF videoBound = new RectF(0, 0, mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
@@ -706,7 +1002,6 @@ public class TrimMediaActivity extends BaseActivity {
                 Rect temp = new Rect();
                 MediaObject.getClipSrcRect(tmpW, tmpH, cropAspRatio, temp);
                 mRectVideoClipBound = new RectF(temp);
-//                Log.i(TAG, bCanScaleBigger + "." + tmpW + "*" + tmpH + "onPlayerPrepared: " + mRectVideoClipBound.toShortString() + "....temp.>" + temp.toShortString() + "....>" + temp.width() + "*" + temp.height());
 
             }
             if (!bOnlyLine) {
@@ -717,7 +1012,16 @@ public class TrimMediaActivity extends BaseActivity {
                 }
                 cvCropView.setCanMove(true);
             }
-//            Log.e(TAG + cropAspRatio, mMediaPlayer.getVideoWidth() + "*" + mMediaPlayer.getVideoHeight() + "onPlayerPrepared: videoBound" + videoBound.toShortString() + "...clip:" + mRectVideoClipBound.toShortString());
+
+            SysAlertDialog.cancelLoadingDialog();
+            if (bNeedLoadCover) {
+                bNeedLoadCover = false;
+                //封面
+                MediaObject tmp = mMediaObject.clone();
+                tmp.setTimeRange(mOb.TStart, mOb.TEnd);
+                mHandler.sendMessage(mHandler.obtainMessage(WHAT_PLAYER_PREPARED, tmp));
+            }
+
         }
 
         private boolean bCanScaleBigger = true;
@@ -727,8 +1031,8 @@ public class TrimMediaActivity extends BaseActivity {
             Log.e(TAG, "Player error:" + what + "," + extra);
             SysAlertDialog.cancelLoadingDialog();
             SysAlertDialog.showAlertDialog(TrimMediaActivity.this,
-                    getString(R.string.edit_priview),
-                    getString(R.string.error_preview_trim),
+                    "",
+                    getString(R.string.preview_error),
                     getString(R.string.sure), null, null, null);
             return false;
         }
@@ -743,22 +1047,12 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public void onGetCurrentPosition(float position) {
-            if (mIsLongClick && position > 0) {
-                mFrameCount++;
-                if (mFrameCount > 1) {
-                    mMediaPlayer.pause();
-                    mFrameCount = 0;
-                }
-            }
-
             int nPosition = Utils.s2ms(position);
             if (mHasChanged) {
                 mRangeSeekBar.setProgress(nPosition);
                 mProgressView.setProgress(nPosition);
             } else {
-                if (null != mOb) {
-                    mRangeSeekBar.setProgress(nPosition);
-                }
+                mRangeSeekBar.setProgress(nPosition);
                 mProgressView.setProgress(nPosition);
             }
             if (nPosition < Utils.s2ms(mOb.nStart) - 50) {
@@ -769,7 +1063,10 @@ public class TrimMediaActivity extends BaseActivity {
                 mMediaPlayer.seekTo(mOb.nStart);
                 mProgressView.setProgress(Utils.s2ms(mOb.nStart));
                 mRangeSeekBar.setProgress(Utils.s2ms(mOb.nStart));
-                mMediaPlayer.pause();
+                //mMediaPlayer.pause();
+            }
+            if (bFromAE) {
+                mVtfvFixed.setProgress(nPosition);
             }
         }
 
@@ -786,7 +1083,9 @@ public class TrimMediaActivity extends BaseActivity {
     private void seekTo(long currentValue) {
         int np = (int) currentValue;
         if (np < 500 || (Math.abs(mLastProgress - np) > 150)) {// 防止频繁seekto
-            mMediaPlayer.seekTo(Utils.ms2s(np));
+            if (null != mMediaPlayer) {
+                mMediaPlayer.seekTo(Utils.ms2s(np));
+            }
             mProgressView.setProgress(np);
             mLastProgress = np;
         }
@@ -798,10 +1097,14 @@ public class TrimMediaActivity extends BaseActivity {
         return DateTimeUtils.stringForMillisecondTime(progress, true, true);
     }
 
+    private String gettime(long progress) {
+        return gettime((int) progress);
+    }
+
     /**
      * 更新预览视频播放器比例
      */
-    protected void updatePreviewFrameAspect(int nVideoWidth, int nVideoHeight) {
+    private void updatePreviewFrameAspect(int nVideoWidth, int nVideoHeight) {
         mPreviewPlayer.setAspectRatio(nVideoWidth / (nVideoHeight + 0.0f));
     }
 
@@ -813,24 +1116,39 @@ public class TrimMediaActivity extends BaseActivity {
         finish();
     }
 
-    String mStrSaveMp4FileName;
+    private String mStrSaveMp4FileName;
+
 
     @Override
     public void clickView(View v) {
         super.clickView(v);
         int id = v.getId();
 
-        if (id == R.id.public_menu_sure || id == R.id.ebtnSure) {
+        if (id == R.id.public_menu_sure || id == R.id.ebtnSure || id == R.id.btnRight
+                || id == R.id.ivSure) {
             if (mTrimFromEdit) {
+                if (mOb != null) {
+                    mMediaObject.setTimeRange(mOb.nStart, mOb.nEnd);
+                }
                 Intent data = new Intent();
-                mMediaObject.setTimeRange(mOb.TStart + mOb.rStart, mOb.TStart + mOb.rEnd);
+                //修正特效有效时间线
+                EffectManager.fixEffect(mMediaObject, mEffectInfos);
+                if (bFromAE) {
+                    mMediaObject.setClipRectF(new RectF(cvCropView.getCrop()));
+                }
+                mMediaObject.setAngle(rotateAngle);
                 Scene scene = new Scene();
                 scene.addMedia(mMediaObject);
                 data.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
-                data.putExtra(ISFIRST, false);
+                data.putExtra(PARAM_IS_FIRST, false);
                 setResult(RESULT_OK, data);
                 onBackPressed();
             } else {
+                //媒体的截取时间线
+                float speed = mMediaObject.getSpeed();
+                float min = Utils.ms2s(mRangeSeekBar.getSelectedMinValue());
+                float max = Utils.ms2s(mRangeSeekBar.getSelectedMaxValue());
+                mMediaObject.setTimeRange(min * speed, max * speed);
                 if (mTrimReturnType == TrimConfiguration.TRIM_DYNAMIC_RETURN) {
                     SdkEntryHandler.getInstance().onTrimDialog(
                             TrimMediaActivity.this,
@@ -865,7 +1183,8 @@ public class TrimMediaActivity extends BaseActivity {
                     }
                 }
             }
-        } else if (id == R.id.public_menu_cancel || id == R.id.ebtnCancel) {
+        } else if (id == R.id.public_menu_cancel || id == R.id.ebtnCancel || id == R.id.btnLeft
+                || id == R.id.ivCancel) {
             setResult(RESULT_CANCELED);
             onBackPressed();
         }
@@ -879,8 +1198,7 @@ public class TrimMediaActivity extends BaseActivity {
         @Override
         public void onExportStart() {
             if (hpdSave == null) {
-                String str = bFromMix ? getString(R.string.exportining) : getString(R.string.exporting);
-
+                String str = getString(R.string.exporting);
                 hpdSave = SysAlertDialog.showHoriProgressDialog(
                         TrimMediaActivity.this, str,
                         false, true, new DialogInterface.OnCancelListener() {
@@ -889,8 +1207,7 @@ public class TrimMediaActivity extends BaseActivity {
                             public void onCancel(DialogInterface dialog) {
                                 mVideoSave.cancelExport();
                                 hpdSave = null;
-                                mHandler.obtainMessage(CANCEL_EXPORT)
-                                        .sendToTarget();
+                                mHandler.sendEmptyMessage(WHAT_CANCEL_EXPORT);
                             }
                         });
                 hpdSave.setCanceledOnTouchOutside(false);
@@ -901,7 +1218,7 @@ public class TrimMediaActivity extends BaseActivity {
                         SysAlertDialog.showAlertDialog(
                                 TrimMediaActivity.this,
                                 "",
-                                getString(R.string.cancel_export_video),
+                                getString(R.string.cancel_export),
                                 getString(R.string.no),
                                 new DialogInterface.OnClickListener() {
 
@@ -915,8 +1232,10 @@ public class TrimMediaActivity extends BaseActivity {
 
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        hpdSave.cancel();
-                                        hpdSave.dismiss();
+                                        if (null != hpdSave) {
+                                            hpdSave.cancel();
+                                            hpdSave.dismiss();
+                                        }
                                         mVideoSave.cancelExport();
                                     }
                                 });
@@ -972,8 +1291,7 @@ public class TrimMediaActivity extends BaseActivity {
                         return;
                     }
                     String strMessage = getString(R.string.export_failed);
-                    SysAlertDialog.showAutoHideDialog(TrimMediaActivity.this,
-                            null, strMessage, Toast.LENGTH_SHORT);
+                    onToast(strMessage);
                     FileLog.writeLog(strMessage + ",result:" + nResult);
                 } else if (null != mCancelLoading) {
                     mCancelLoading.dismiss();
@@ -991,9 +1309,7 @@ public class TrimMediaActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        // listView.setResume(false);
         super.onPause();
-        mMediaPlayer.pause();
         if (null != mMediaPlayer) {
             pauseVideo();
         }
@@ -1006,9 +1322,13 @@ public class TrimMediaActivity extends BaseActivity {
             mMediaPlayer.cleanUp();
             mMediaPlayer = null;
         }
-
+        if (null != mThumbNailView) {
+            mThumbNailView.recycle();
+            mThumbNailView = null;
+        }
+        mVtfvFixed.recycle();
+        mVtfvFixed = null;
         unregisterReceiver(mReceiver);
-
         super.onDestroy();
     }
 
@@ -1026,6 +1346,7 @@ public class TrimMediaActivity extends BaseActivity {
         mMediaPlayer.start();
         mIvVideoPlayState.setImageResource(R.drawable.btn_pause);
         ViewUtils.fadeOut(this, mIvVideoPlayState);
+
     }
 
     private void pauseVideo() {
@@ -1036,7 +1357,6 @@ public class TrimMediaActivity extends BaseActivity {
         mIvVideoPlayState.setVisibility(View.VISIBLE);
     }
 
-    @SuppressWarnings("unused")
     private void stopVideo() {
         mMediaPlayer.stop();
         mIvVideoPlayState.setImageResource(R.drawable.btn_play);
@@ -1052,27 +1372,18 @@ public class TrimMediaActivity extends BaseActivity {
     private void prepareMedia(long minValue, long maxValue) {
         if (null != mMediaObject) {
             if (null != mOb) {
-                int mtd = (int) (maxValue - minValue);
-                if (mtd <= MIN_THUMB_DURATION
-                        && (Utils.s2ms(mOb.TEnd - mOb.TStart)) >= MIN_THUMB_DURATION) {
-                    minValue = maxValue - MIN_THUMB_DURATION;
-                }
                 mOb.nStart = Utils.ms2s(minValue);
                 mOb.nEnd = Utils.ms2s(maxValue);
 
+                float speed = mMediaObject.getSpeed();
 
-                mOb.rStart = Utils.ms2s((int) (minValue * mMediaObject.getSpeed()));
-                mOb.rEnd = Utils.ms2s((int) (maxValue * mMediaObject.getSpeed()));
+                mOb.rStart = Utils.ms2s((int) (minValue * speed));
+                mOb.rEnd = Utils.ms2s((int) (maxValue * speed));
 
-//                Log.e(TAG, "prepareMedia: R" + mOb.rStart + "<>" + mOb.rEnd + "--------------n->" + mOb.nStart + "<>" + mOb.nEnd);
+                mOb.TStart = Utils.ms2s((int) (minValue * speed));
+                mOb.TEnd = Utils.ms2s((int) (maxValue * speed));
 
-
-                mTvFrontTime.setText(gettime(Utils.s2ms(mOb.nStart)));
-                mTvBehindTime.setText(gettime(Utils.s2ms(mOb.nEnd)));
-                mRangeSeekBar.setSeekBarRangeValues(mRangeSeekBar.getSelectedMinValue(),
-                        mRangeSeekBar.getSelectedMaxValue());
-                mTvRemainDuration.setText(gettime(Math.max(MIN_THUMB_DURATION, mtd)));
-
+                onTrimText(minValue, maxValue);
 
             }
         }
@@ -1088,18 +1399,8 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public void onItemVideoChanging(long start, long end) {
-
+            onTrimText(start, end);
             if (null != mMediaObject) {
-                if (null != mOb) {
-                    mTvFrontTime.setText(gettime((int) start));
-                    mTvBehindTime.setText(gettime((int) end));
-                    if (end - start <= 1000) {
-                        mTvRemainDuration.setText(gettime(1000));
-                    } else {
-                        mTvRemainDuration
-                                .setText(gettime((int) (end - start)));
-                    }
-                }
                 seekTo(start);
             }
         }
@@ -1117,6 +1418,7 @@ public class TrimMediaActivity extends BaseActivity {
 
     };
 
+
     // 自由截取listener
     private RangSeekBarBase.OnRangeSeekBarChangeListener mRangeSeekBarChangeListener = new RangSeekBarBase.OnRangeSeekBarChangeListener() {
 
@@ -1125,8 +1427,6 @@ public class TrimMediaActivity extends BaseActivity {
         @Override
         public void rangeSeekBarValuesChanged(long minValue, long maxValue,
                                               long currentValue) {
-//            Log.e("raSBarValuesChanged-", m_nCurrentThumbPressed + "xxxx" +
-//                    minValue + "--" + maxValue + "--" + currentValue);
             switch (m_nCurrentThumbPressed) {
                 case RangSeekBarBase.CURRENT_THUMB_PRESSED: // 指定当前值
                     mRightHandleChanged = false;
@@ -1151,9 +1451,6 @@ public class TrimMediaActivity extends BaseActivity {
 
         @Override
         public void rangeSeekBarValuesChanging(long setValue) {
-            // Log.e("rangeSeekBarValuesChanging", m_nCurrentThumbPressed +
-            // "---"
-            // + setValue);
             switch (m_nCurrentThumbPressed) {
                 case RangSeekBarBase.CURRENT_THUMB_PRESSED: // 指定当前值
                     seekTo((int) setValue);
@@ -1161,23 +1458,9 @@ public class TrimMediaActivity extends BaseActivity {
                 case RangSeekBarBase.MIN_THUMB_PRESSED: // 指定范围 最小值
                 case RangSeekBarBase.MAX_THUMB_PRESSED: // 指定范围 最大值
                     seekTo((int) setValue);
-                    if (null != mMediaObject) {
-                        if (null != mOb) {
-                            mTvFrontTime.setText(gettime((int) mRangeSeekBar
-                                    .getSelectedMinValue()));
-                            mTvBehindTime.setText(gettime((int) mRangeSeekBar
-                                    .getSelectedMaxValue()));
-                            if (mRangeSeekBar.getSelectedMaxValue()
-                                    - mRangeSeekBar.getSelectedMinValue() <= 1000) {
-                                mTvRemainDuration.setText(gettime(1000));
-                            } else {
-                                mTvRemainDuration
-                                        .setText(gettime((int) (mRangeSeekBar
-                                                .getSelectedMaxValue() - mRangeSeekBar
-                                                .getSelectedMinValue())));
-                            }
-                        }
-                    }
+                    long min = mRangeSeekBar.getSelectedMinValue();
+                    long max = mRangeSeekBar.getSelectedMaxValue();
+                    onTrimText(min, max);
                     break;
                 default:
                     break;
@@ -1188,7 +1471,6 @@ public class TrimMediaActivity extends BaseActivity {
         @Override
         public boolean beginTouch(int thumbPressed) {
             m_nCurrentThumbPressed = thumbPressed;
-            // Log.e("beginTouch", m_nCurrentThumbPressed + "");
             if (m_nCurrentThumbPressed != RangSeekBarBase.NONE_THUMB_PRESSED) {
                 if (mMediaPlayer.isPlaying()) {
                     pauseVideo();
@@ -1206,16 +1488,28 @@ public class TrimMediaActivity extends BaseActivity {
 
     };
 
+    /**
+     * 滑动把手时需设置对应的时间文本
+     *
+     * @param min
+     * @param max
+     */
+    private void onTrimText(long min, long max) {
+        mTvFrontTime.setText(gettime(min));
+        mTvBehindTime.setText(gettime(max));
+        mTvRemainDuration.setText(gettime(Math.max(MIN_THUMB_DURATION, max - min)));
+    }
+
     private boolean mRightHandleChanged;
 
     private ProgressView.onProgressListener mOnProListener = new ProgressView.onProgressListener() {
 
-        boolean isplaying = false;
+        boolean isPlaying = false;
 
         @Override
         public void onStart() {
-            isplaying = mMediaPlayer.isPlaying();
-            if (isplaying) {
+            isPlaying = mMediaPlayer.isPlaying();
+            if (isPlaying) {
                 pauseVideo();
             }
         }
@@ -1252,30 +1546,18 @@ public class TrimMediaActivity extends BaseActivity {
                 if (mRangeSeekBar.mCurHandle == mRangeSeekBar.HANDLE_RIGHT) {
                     mRightHandleChanged = true;
                 }
+                long min = mRangeSeekBar.getSelectedMinValue();
+                long max = mRangeSeekBar.getSelectedMaxValue();
                 if (null != mMediaObject) {
                     if (null != mOb) {
-                        mOb.nStart = Utils.ms2s(mRangeSeekBar.getSelectedMinValue());
-                        mOb.nEnd = Utils.ms2s(mRangeSeekBar.getSelectedMaxValue());
-
-                        float rEnd = mOb.nEnd * mMediaObject.getSpeed();
-
-                        mOb.rEnd = rEnd;
+                        mOb.nStart = Utils.ms2s(min);
+                        mOb.nEnd = Utils.ms2s(max);
+                        mOb.rEnd = mOb.nEnd * mMediaObject.getSpeed();
                         mOb.rStart = mOb.nStart * mMediaObject.getSpeed();
-
-                        float nstart = mOb.rStart + mOb.TStart;
-                        float nend = mOb.rEnd + mOb.TStart;
-
-                        mTvFrontTime.setText(gettime((int) mRangeSeekBar
-                                .getSelectedMinValue()));
-                        mTvBehindTime.setText(gettime((int) mRangeSeekBar
-                                .getSelectedMaxValue()));
-                        if (mOb.nEnd - mOb.nStart <= 1) {
-                            mTvRemainDuration.setText(gettime(1000));
-                        } else {
-                            mTvRemainDuration.setText(gettime(Utils.s2ms(mOb.nEnd - mOb.nStart)));
-                        }
                     }
                 }
+
+                onTrimText(min, max);
             }
         }
 
@@ -1287,11 +1569,13 @@ public class TrimMediaActivity extends BaseActivity {
         @Override
         public void onSeekbarChanging(int nscale) {
             int scale = nscale;
+            long min = mRangeSeekBar.getSelectedMinValue();
+            long max = mRangeSeekBar.getSelectedMaxValue();
             if (mRangeSeekBar.mCurHandle == mRangeSeekBar.HANDLE_LEFT) {
                 if (mOnChange) {
                     mOnChange = false;
                     mProgressView.setShowTime(false);
-                    mOldSeekbarTime = (int) mRangeSeekBar.getSelectedMinValue();
+                    mOldSeekbarTime = (int) min;
                 }
 
                 mRlAddTime.setVisibility(View.VISIBLE);
@@ -1302,10 +1586,9 @@ public class TrimMediaActivity extends BaseActivity {
                     np = 0;
                     scale = 0 - Utils.s2ms(mOb.nStart);
                 }
-                if (np > mRangeSeekBar.getSelectedMaxValue() - MIN_THUMB_DURATION) {
-                    np = (int) (mRangeSeekBar.getSelectedMaxValue() - MIN_THUMB_DURATION);
-                    scale = (int) (mRangeSeekBar.getSelectedMaxValue() - MIN_THUMB_DURATION)
-                            - Utils.s2ms(mOb.nStart);
+                if (np > max - MIN_THUMB_DURATION) {
+                    np = (int) (max - MIN_THUMB_DURATION);
+                    scale = (int) (max - MIN_THUMB_DURATION) - Utils.s2ms(mOb.nStart);
                 }
                 if (Utils.s2ms(mOb.TEnd - mOb.TStart) / mMediaObject.getSpeed() <= MIN_THUMB_DURATION) {
                     scale = 0;
@@ -1323,21 +1606,7 @@ public class TrimMediaActivity extends BaseActivity {
                 mMediaPlayer.seekTo(second);
                 mProgressView.setProgress(np);
 
-                if (null != mOb) {
-                    mTvFrontTime.setText(gettime((int) mRangeSeekBar
-                            .getSelectedMinValue()));
-                    mTvBehindTime.setText(gettime((int) mRangeSeekBar
-                            .getSelectedMaxValue()));
-                    if (mRangeSeekBar.getSelectedMaxValue()
-                            - mRangeSeekBar.getSelectedMinValue() <= 1000) {
-                        mTvRemainDuration.setText(gettime(1000));
-                    } else {
-                        mTvRemainDuration.setText(gettime((int) (mRangeSeekBar
-                                .getSelectedMaxValue() - mRangeSeekBar
-                                .getSelectedMinValue())));
-                    }
-
-                }
+                onTrimText(min, max);
 
             } else if (mRangeSeekBar.mCurHandle == mRangeSeekBar.HANDLE_RIGHT) {
                 mRlAddTime.setVisibility(View.VISIBLE);
@@ -1373,23 +1642,7 @@ public class TrimMediaActivity extends BaseActivity {
                 mMediaPlayer.seekTo(second);
                 mProgressView.setProgress(np);
 
-                if (null != mOb) {
-                    mTvFrontTime.setText(gettime((int) mRangeSeekBar
-                            .getSelectedMinValue()));
-                    mTvBehindTime.setText(gettime((int) mRangeSeekBar
-                            .getSelectedMaxValue()));
-                    // m_tvVideoDuration
-                    // .setText(gettime((int) ((mOb.TEnd - mOb.TStart) / mOb
-                    // .getVideoObjectSpeed())));
-                    if (mRangeSeekBar.getSelectedMaxValue()
-                            - mRangeSeekBar.getSelectedMinValue() <= 1000) {
-                        mTvRemainDuration.setText(gettime(1000));
-                    } else {
-                        mTvRemainDuration.setText(gettime((int) (mRangeSeekBar
-                                .getSelectedMaxValue() - mRangeSeekBar
-                                .getSelectedMinValue())));
-                    }
-                }
+                onTrimText(min, max);
             }
         }
     };
@@ -1442,8 +1695,6 @@ public class TrimMediaActivity extends BaseActivity {
     private boolean mHWCodecEnabled = CoreUtils.hasJELLY_BEAN_MR2();
 
     private void exportVideo() {
-
-//        Log.e(TAG, "exportVideo: " + cvCropView.getCrop().toShortString() + "...." + cvCropView.getPhoto().toShortString());
         VideoConfig vc = new VideoConfig();
         if (bFromMix) {
             if (!bOnlyLine) {
@@ -1470,7 +1721,6 @@ public class TrimMediaActivity extends BaseActivity {
 
                 RectF clip = mMediaObject.getClipRectF();
                 aspClip = clip.width() / clip.height();
-
             } else {
                 aspClip = mMediaObject.getWidth() / (mMediaObject.getHeight() + 0.0f);
             }
@@ -1498,29 +1748,65 @@ public class TrimMediaActivity extends BaseActivity {
             vc.setVideoEncodingBitRate(SdkEntry.getSdkService().getTrimConfig().getVideoBitratebps());
         }
 
-        if (bFromMix) {
-            //新版画中画截取时生成临时文件
-            mStrSaveMp4FileName = PathUtils.getTempFileNameForSdcard(
-                    PathUtils.TEMP_MIX, "mp4");
-        } else {
-            if (mSavePath != null || !TextUtils.isEmpty(mSavePath)) {
-                File path = new File(mSavePath);
-                PathUtils.checkPath(path);
-                mStrSaveMp4FileName = PathUtils.getTempFileNameForSdcard(mSavePath,
-                        "VIDEO", "mp4");
-            } else {
-                mStrSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
-            }
-        }
+        mStrSaveMp4FileName = PathUtils.getDstFilePath(mSavePath);
 
         vc.enableHWEncoder(mHWCodecEnabled);
         vc.enableHWDecoder(mHWCodecEnabled);
-        if (bFromMix) {
-            RectF outSize = ModeUtils.getFixOutSize((int) cvCropView.getCrop().width(), (int) cvCropView.getCrop().height());
-            vc.setVideoSize((int) outSize.width(), (int) outSize.height());
-            vc.setAspectRatio(outSize.width() / outSize.height());
+        mVideoSave.export(this, mStrSaveMp4FileName, vc, mListenerSave);
+    }
+
+    /**
+     * 滤镜点击
+     *
+     * @param nItemId
+     */
+    public void onSelectedImp(int nItemId) {
+        mLastPageIndex = nItemId;
+        if (nItemId >= 1) {
+            if (lastItemId != nItemId) {
+                switchFliter(nItemId);
+                lastItemId = nItemId;
+                mAdapter.onItemChecked(nItemId);
+            }
+        } else {
+            lastItemId = nItemId;
+            switchFliter(nItemId);
+            mAdapter.onItemChecked(lastItemId);
         }
-        mVideoSave.export(TrimMediaActivity.this, mStrSaveMp4FileName, vc, mListenerSave);
+    }
+
+    /**
+     * 切换滤镜效果
+     *
+     * @param index
+     */
+    private void switchFliter(int index) {
+        tmpIndex = index;
+        //lookup滤镜
+        if (index > 0) {
+            WebFilterInfo info = mAdapter.getItem(index);
+            if (info != null) {
+                tmpLookup = new VisualFilterConfig(info.getLocalPath());
+                //滤镜程度
+                tmpLookup.setDefaultValue(mDefaultValue);
+            } else {
+                tmpIndex = 0;
+                tmpLookup = new VisualFilterConfig(VisualFilterConfig.FILTER_ID_NORMAL);
+            }
+        } else {
+            //第0个 无滤镜效果
+            tmpLookup = new VisualFilterConfig(VisualFilterConfig.FILTER_ID_NORMAL);
+        }
+        try {
+            if (buildMedia != null) {
+                buildMedia.changeFilter(tmpLookup);
+            }
+            if (null != mMediaObject) {
+                mMediaObject.changeFilter(tmpLookup);
+            }
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
 }

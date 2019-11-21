@@ -5,7 +5,6 @@
     android:background="@color/rdveuisdk_main_bg_color"
     android:orientation="vertical" >
 
-    <!-- <include layout="@layout/rdveuisdk_public_title_bar" /> -->
 
     <com.rd.veuisdk.ui.RdWebView
         android:id="@+id/mwebmv_view"

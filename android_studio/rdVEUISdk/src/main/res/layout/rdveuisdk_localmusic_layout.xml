@@ -18,7 +18,7 @@
             android:text="@string/scan_media" />
     </LinearLayout>
 
-    <com.rd.veuisdk.hb.views.PinnedSectionListView
+    <ListView
         android:id="@+id/expandable_mymusic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -29,7 +29,7 @@
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="false"
         android:listSelector="@color/transparent"
-        android:scrollbars="@null" />
+     />
 
     <ImageView
         android:layout_width="match_parent"

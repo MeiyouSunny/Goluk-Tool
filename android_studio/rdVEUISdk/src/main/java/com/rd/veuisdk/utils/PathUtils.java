@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Build;
+import android.os.Environment;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 
@@ -30,9 +31,9 @@ import java.util.Date;
 /**
  * 路径工具
  *
- * @author abreal<br/>
- *         <p>
- *         create at Jun 26, 2014
+ * @author abreal
+ * create at Jun 26, 2014
+ * modified at 2018.11.28
  */
 public class PathUtils {
     private static String m_sRdRootPath;
@@ -40,14 +41,18 @@ public class PathUtils {
     private static String m_sRdTempPath;
     private static String m_sRdImagePath;
     private static String m_sRdVideoPath;
-    private static String m_sRdAssetPath, m_sRdDownLoad, m_sRdTransitionPath;
+    private static String m_sRdAssetPath, m_sRdDownLoad;
     private static String m_sRdSpecailPath;
     private static String m_sRdSubPath;
     private static String m_sRdTtfPath;
     private static String m_sRdThemePath;
     private static String m_sRdFaceu;
     private static String m_sRdMV;
+    private static String m_sRdFilter;
+    private static String m_sRdTansition;
     private static String m_sRdMusic;
+    private static String m_sRDAE;
+    private static String m_sRdDraft;
     /**
      * 原始数据库文件路径
      */
@@ -133,7 +138,7 @@ public class PathUtils {
     }
 
     public static String getRdTransitionPath() {
-        return m_sRdTransitionPath;
+        return m_sRdTansition;
     }
 
     public static String getRdSpecialPath() {
@@ -154,6 +159,23 @@ public class PathUtils {
 
     public static String getRdMVPath() {
         return m_sRdMV;
+    }
+
+    public static String getRdAEPath() {
+        return m_sRDAE;
+    }
+
+    /**
+     * 草稿箱根路径
+     *
+     * @return
+     */
+    public static String getRdDraftPath() {
+        return m_sRdDraft;
+    }
+
+    public static String getRdFilterPath() {
+        return m_sRdFilter;
     }
 
     public static String getRdMusic() {
@@ -205,7 +227,7 @@ public class PathUtils {
         path = new File(m_sRdRootPath, "asset/");
         checkPath(path);
         m_sRdAssetPath = path.toString();
-        m_sRdTransitionPath = m_sRdAssetPath + "/transition/";
+
 
         path = new File(m_sRdRootPath, "download/"); // internet file
         checkPath(path);
@@ -240,9 +262,25 @@ public class PathUtils {
         checkPath(path);
         m_sRdMV = path.toString();
 
+        path = new File(m_sRdRootPath, "ae/");
+        checkPath(path);
+        m_sRDAE = path.toString();
+
+        path = new File(m_sRdRootPath, "filter/");
+        checkPath(path);
+        m_sRdFilter = path.toString();
+
+        path = new File(m_sRdRootPath, "transition/");
+        checkPath(path);
+        m_sRdTansition = path.toString();
+
         path = new File(m_sRdRootPath, "music/");
         checkPath(path);
         m_sRdMusic = path.toString();
+
+        path = new File(m_sRdRootPath, "draft/");
+        checkPath(path);
+        m_sRdDraft = path.toString();
     }
 
     /*
@@ -397,67 +435,156 @@ public class PathUtils {
     /**
      * 检查path，如不存在创建之<br>
      * 并检查此路径是否存在文件.nomedia,如没有创建之
-     *
-     * @param path
      */
     public static void checkPath(File path) {
-        File fNoMedia;
+        checkPath(path, false);
+    }
+
+    /**
+     * 检查path，如不存在创建之<br>
+     * 并检查此路径是否存在文件.nomedia,如没有创建之
+     *
+     * @param excludeNoMediaFile 是否需要检查排除.nomedia文件
+     */
+    public static void checkPath(File path, boolean excludeNoMediaFile) {
         if (!path.exists())
             path.mkdirs();
-        fNoMedia = new File(path, ".nomedia");
-        if (!fNoMedia.exists()) {
-            try {
-                fNoMedia.createNewFile();
-            } catch (IOException e) {
+        File fNoMedia = new File(path, ".nomedia");
+        if (excludeNoMediaFile) {
+            if (fNoMedia.exists()) {
+                fNoMedia.delete();
+            }
+        } else {
+            if (!fNoMedia.exists()) {
+                try {
+                    fNoMedia.createNewFile();
+                } catch (IOException ignored) {
+                }
             }
         }
-        fNoMedia = null;
+    }
+
+    /**
+     * 删除指定路径.nomedia文件
+     */
+    private static void deleteNoMedia(File path) {
+        File fNoMedia = new File(path, ".nomedia");
+        if (fNoMedia.exists()) {
+            fNoMedia.delete();
+        }
     }
 
     /**
      * 获取MP4录像文件路径
-     *
-     * @return
      */
     public static String getMp4FileNameForSdcard() {
         return getTempFileNameForSdcard(m_sRdVideoPath, "VIDEO", "mp4");
     }
 
     /**
-     * 获取一个指定格式的临时文件
+     * 获取MP4录像文件路径(存储到系统相册)
+     */
+    private static String getMp4FileNameForDCIM() {
+        String rootPath = getRdDCIM();
+        String path = getTempFileNameForSdcard(rootPath, "VIDEO", "mp4");
+        deleteNoMedia(new File(rootPath));
+        return path;
+    }
+
+    private static String getRdDCIM() {
+        return new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DCIM), "rdve").getAbsolutePath();
+
+    }
+
+    /**
+     * 图片
      *
-     * @param strPrefix
-     * @param strExtension
+     */
+    public static String getIMGFileNameForDCIM() {
+        String rootPath = getRdDCIM();
+        String path = getTempFileNameForSdcard(rootPath, "IMG", "jpg");
+        deleteNoMedia(new File(rootPath));
+        return path;
+    }
+
+    /**
+     * 拍照文件路径
+     *
+     * @param saveToDCIM （是否需要保存到图库）
      * @return
      */
-    public static String getTempFileNameForSdcard(String strPrefix,
-                                                  String strExtension) {
+    public static String getShotPath(boolean saveToDCIM) {
+        if (saveToDCIM) {
+            return getIMGFileNameForDCIM();
+        }
+        return PathUtils.getTempFileNameForSdcard(PathUtils.getRdImagePath(), "IMG", "jpg");
+    }
+
+    /**
+     * 获取文件的输出路径
+     */
+    public static String getDstFilePath(String dir) {
+        String tmp = null;
+        if (!TextUtils.isEmpty(dir)) {
+            File path = new File(dir);
+            PathUtils.checkPath(path);
+            tmp = getTempFileNameForSdcard(dir, "VIDEO", "mp4");
+        } else {
+            tmp = getMp4FileNameForDCIM();
+        }
+        return tmp;
+    }
+
+
+    /**
+     * 获取一个指定格式的临时文件
+     */
+    public static String getTempFileNameForSdcard(String strPrefix, String strExtension) {
         return getTempFileNameForSdcard(m_sRdTempPath, strPrefix, strExtension);
     }
 
     /**
-     * 获取临时文件路径(以sdcard为root目录)
-     *
-     * @param strPrefix
-     * @param strExtension
-     * @return
+     * 获取草稿箱的一个短视频目录
      */
-    public static String getTempFileNameForSdcard(String strRootPath,
-                                                  String strPrefix, String strExtension) {
+    public static String getDraftPath(String type) {
+        if (TextUtils.isEmpty(type)) {
+            return m_sRdDraft;
+        } else {
+            File fileDraft = new File(m_sRdDraft, type);
+            checkPath(fileDraft);
+            return fileDraft.getAbsolutePath();
+        }
+    }
+
+    /**
+     * 获取临时文件路径
+     */
+    public static String getTempFileNameForSdcard(String strRootPath, String strPrefix, String strExtension) {
+        return getTempFileNameForSdcard(strRootPath, strPrefix, strExtension, false);
+    }
+
+    /**
+     * 获取临时文件路径
+     */
+    public static String getTempFileNameForSdcard(String strRootPath, String strPrefix, String strExtension, boolean excludeNoMediaFile) {
         File rootPath = new File(strRootPath);
-        checkPath(rootPath);
+        checkPath(rootPath, excludeNoMediaFile);
         File localPath = new File(rootPath, String.format("%s_%s.%s",
                 strPrefix, DateFormat.format("yyyyMMdd_kkmmss", new Date()),
                 strExtension));
         return localPath.toString();
     }
 
+    public static String getVideoShotsFileNameForSdcard(
+            String strPrefix, String strExtension) {
+        return getVideoShotsFileNameForSdcard(m_sRdTempPath, strPrefix, strExtension);
+    }
+
     /**
-     * 获取临时文件路径(以sdcard为root目录)
+     * 获取临时文件路径
      *
-     * @param strPrefix
-     * @param strExtension
-     * @return
+     * @param strRootPath 根路径
      */
     public static String getVideoShotsFileNameForSdcard(String strRootPath,
                                                         String strPrefix, String strExtension) {
@@ -470,13 +597,8 @@ public class PathUtils {
 
     /**
      * 获取导出的资源临时文件路径
-     *
-     * @param strPrefix
-     * @param strExtension
-     * @return
      */
-    public static String getAssetFileNameForSdcard(String strPrefix,
-                                                   String strExtension) {
+    public static String getAssetFileNameForSdcard(String strPrefix, String strExtension) {
         File rootPath = new File(getRdAssetPath());
         checkPath(rootPath);
         if (TextUtils.isEmpty(strPrefix)) {
@@ -508,8 +630,6 @@ public class PathUtils {
                 }
             }
         }
-        arrCleanTmpFiles = null;
-        fTempPath = null;
     }
 
     /**
@@ -624,7 +744,7 @@ public class PathUtils {
      * @return
      */
     public static String getTTFNameForSdcard(String strPrefix) {
-        return getDownLoadFileNameForSdcard(strPrefix, FileUtils.TTF_EXTENSION);
+        return getDownLoadFileNameForSdcard(strPrefix, "ttf");
     }
 
     /**
@@ -639,10 +759,10 @@ public class PathUtils {
                     public boolean accept(File dir, String filename) {
                         return filename.startsWith(TEMP_THUMBNAIL)
                                 || filename.startsWith(TEMP_WORD)
-                                || filename.startsWith(TEMP_MIX)
-                                || filename.startsWith(TEMP_MIX_EDIT)
                                 || filename.startsWith(TEMP_RECORDVIDEO)
-                                || filename.startsWith(TEMP_RECORDING);
+                                || filename.startsWith(TEMP_RECORDING)
+                                || filename.startsWith("cover".toLowerCase())
+                                || filename.toLowerCase().startsWith(TEMP.toLowerCase());
                     }
                 });
                 if (null != files) {
@@ -655,7 +775,7 @@ public class PathUtils {
     }
 
     public static final String TEMP_THUMBNAIL = "Temp_thumbnail_",
-            TEMP_WORD = "word_", TEMP_RECORDING = "recording_", TEMP_RECORDVIDEO="record_",TEMP_MIX = "mix", TEMP_MIX_EDIT= "mix_edit",TEMP_MIX_RECORD="mix_recorder";
+            TEMP_WORD = "word_", TEMP_RECORDING = "recording_", TEMP_RECORDVIDEO = "record_", TEMP = "temp";
 
     /**
      * 判断指定文件路径是否有效并存在
@@ -670,4 +790,6 @@ public class PathUtils {
             return false;
         }
     }
+
+
 }

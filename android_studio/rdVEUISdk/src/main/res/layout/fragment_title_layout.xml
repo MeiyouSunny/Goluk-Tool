@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tmpBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:background="@color/fragment_titlebar_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/btn_bottom_cancel"
+        android:gravity="center"
+        android:minWidth="@dimen/dimen_40"/>
+
+    <FrameLayout
+        android:id="@+id/tvTitleContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/btnRight"
+        android:layout_alignBottom="@+id/btnLeft"
+        android:layout_toLeftOf="@id/btnRight"
+        android:layout_toRightOf="@id/btnLeft">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="title"
+            android:textColor="@color/white"
+            android:textSize="16.5dp"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/recycleParent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="3dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/added"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_13"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_vertical"
+                />
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@drawable/btn_bottom_sure"
+        android:gravity="center"
+        android:minWidth="@dimen/dimen_40"/>
+
+</RelativeLayout>

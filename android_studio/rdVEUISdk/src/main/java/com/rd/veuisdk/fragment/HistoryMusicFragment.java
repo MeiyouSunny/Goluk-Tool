@@ -12,14 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ListView;
 
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.veuisdk.R;
@@ -28,8 +27,6 @@ import com.rd.veuisdk.adapter.MyMusicAdapter.TreeNode;
 import com.rd.veuisdk.database.HistoryMusicData;
 import com.rd.veuisdk.database.SDMusicData;
 import com.rd.veuisdk.database.WebMusicData;
-import com.rd.veuisdk.hb.views.PinnedSectionListView;
-import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.model.IMusic;
 import com.rd.veuisdk.model.MusicItems;
 import com.rd.veuisdk.model.MyMusicInfo;
@@ -53,11 +50,9 @@ public class HistoryMusicFragment extends BaseV4Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SDMusicData.getInstance().initilize(getActivity());
-        mPageName = getString(R.string.mymusic);
         mAllKXMusicItems = new MusicItems();
         Context context = getActivity();
         mAllKXMusicItems.loadAssetsMusic(context);
-        mAllLocalMusicItems = new MusicItems(context);
         mReceiver = new MySdReceiver();
         getActivity().registerReceiver(mReceiver, new IntentFilter(ACTION_SHOW));
     }
@@ -66,19 +61,14 @@ public class HistoryMusicFragment extends BaseV4Fragment {
     private CheckBox mCbSelectAll;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        if (null == mRoot) {
-            mRoot = inflater.inflate(R.layout.rdveuisdk_historymusic_layout, null);
-        }
-        init(getActivity());
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        mRoot = inflater.inflate(R.layout.rdveuisdk_historymusic_layout, container, false);
+        init();
         return mRoot;
     }
 
-    private void init(Context context) {
-
-        mDeleteItem = findViewById(R.id.delete_history);
+    private void init() {
+        mDeleteItem = $(R.id.delete_history);
         mDeleteItem.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -87,7 +77,7 @@ public class HistoryMusicFragment extends BaseV4Fragment {
             }
         });
 
-        mCbSelectAll = (CheckBox) findViewById(R.id.cbSelectAll);
+        mCbSelectAll = $(R.id.cbSelectAll);
         mCbSelectAll
                 .setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -98,36 +88,15 @@ public class HistoryMusicFragment extends BaseV4Fragment {
                     }
                 });
 
-        mListView = (PinnedSectionListView) findViewById(R.id.expandable_mymusic);
+        mListView = $(R.id.expandable_mymusic);
 
-        context.registerReceiver(mUpdateReceiver, new IntentFilter(
+        getActivity().registerReceiver(mUpdateReceiver, new IntentFilter(
                 ExtScanMediaDialog.INTENT_SIGHTSEEING_UPATE));
         mListView.setOnItemLongClickListener(mOnLongListener);
         mListView.setOnItemClickListener(itemlistener);
 
-        mMusicAdapter = new MyMusicAdapter(context);
+        mMusicAdapter = new MyMusicAdapter(getContext());
         mListView.setAdapter(mMusicAdapter);
-        mListView.setOnScrollListener(new OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                int mlast = view.getFirstVisiblePosition()
-                        + view.getChildCount();
-                if (mlast - 1 == mMusicAdapter.getCheckId()
-                        || mlast - 2 == mMusicAdapter.getCheckId()) {
-
-                } else {
-
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-
         reLoad = true;
 
     }
@@ -135,29 +104,18 @@ public class HistoryMusicFragment extends BaseV4Fragment {
     private ArrayList<TreeNode> list = new ArrayList<MyMusicAdapter.TreeNode>();
     private String mlastMusic = "";
 
-    /**
-     * 之前的mp3路径
-     *
-     * @param lastmp3
-     */
-    public void setLastMp3(String lastmp3) {
-        mlastMusic = lastmp3;
-    }
 
     public void selectAll(boolean isChecked) {
         mMusicAdapter.setSelectAll(isChecked);
     }
 
-    private PinnedSectionListView mListView;
+    private ListView mListView;
     private MyMusicAdapter mMusicAdapter;
     /**
      * 快秀音乐
      */
     private MusicItems mAllKXMusicItems;
-    /**
-     * 本地音乐
-     */
-    private MusicItems mAllLocalMusicItems;
+
 
     private OnItemClickListener itemlistener = new OnItemClickListener() {
 
@@ -200,9 +158,11 @@ public class HistoryMusicFragment extends BaseV4Fragment {
                 t3.tag = 3;
                 t3.sectionPosition = mSectionPosition;
                 t3.listPosition = mListPosition++;
-                mMusicAdapter.onSectionAdded(t3, mSectionPosition);
+                if (null != mMusicAdapter) {
+                    mMusicAdapter.addTreeNode(t3);
+                }
                 list.add(t3);
-                scanLoadMusic(1, null);
+                scanLoadMusic();
                 mHandler.sendEmptyMessage(NOTIFI);
             }
         });
@@ -211,18 +171,18 @@ public class HistoryMusicFragment extends BaseV4Fragment {
     /**
      * 执行删除已下载音乐
      *
-     * @param wmi
+     * @param info
      */
-    private void onDeleteMusic(WebMusicInfo wmi) {
+    private void onDeleteMusic(WebMusicInfo info) {
         mMusicAdapter.onPause();
-        String path = wmi.getLocalPath();
+        String path = info.getLocalPath();
         try {
             new File(path).delete();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        WebMusicData.getInstance().deleteItem(wmi.getId());
+        WebMusicData.getInstance().deleteItem(info.getId());
         ArrayList<TreeNode> temps = mMusicAdapter.getData();
 
         list.clear();
@@ -235,7 +195,6 @@ public class HistoryMusicFragment extends BaseV4Fragment {
         int index = 0;
         int j = (islast ? 2 : 0);
 
-        int nsectionPosition = 0;
         for (int i = j; i < len; i++) {
             TreeNode mNode = temps.get(i);
 
@@ -243,12 +202,9 @@ public class HistoryMusicFragment extends BaseV4Fragment {
                     && mNode.childs.getmInfo().getLocalPath().equals(path)) { // 删除的选项
             } else {
                 mNode.listPosition = index;
-                mMusicAdapter.onSectionAdded(mNode, nsectionPosition);
+                mMusicAdapter.addTreeNode(mNode);
                 list.add(mNode);
                 index++;
-                if (mNode.type == TreeNode.SECTION) {
-                    nsectionPosition++;
-                }
             }
 
         }
@@ -298,7 +254,7 @@ public class HistoryMusicFragment extends BaseV4Fragment {
                         mlastMusic = "";
                     }
                     mMusicAdapter.replace(list, mlastMusic);
-                    mMusicAdapter.getView(mListView);
+                    mMusicAdapter.setListView(mListView);
                     break;
 
                 default:
@@ -356,19 +312,6 @@ public class HistoryMusicFragment extends BaseV4Fragment {
 
     }
 
-    ;
-
-    public void setCanAutoPlay(boolean canAutoPlay) {
-        if (null != mMusicAdapter)
-            mMusicAdapter.setCanAutoPlay(canAutoPlay);
-    }
-
-    public AudioMusicInfo getCheckMusicInfo() {
-        if (null != mMusicAdapter) {
-            return mMusicAdapter.getCheckedMusic();
-        }
-        return null;
-    }
 
     /**
      * 接收浏览刷新音乐文件的广播
@@ -387,8 +330,7 @@ public class HistoryMusicFragment extends BaseV4Fragment {
     /**
      * 异步加载本地音乐
      */
-    private void scanLoadMusic(final int scanType,
-                               final ArrayList<String> scanDirectory) {
+    private void scanLoadMusic( ) {
         ArrayList<IMusic> temp = HistoryMusicData.getInstance().queryAll();
 
         int len = temp.size();
@@ -412,12 +354,10 @@ public class HistoryMusicFragment extends BaseV4Fragment {
             mNode.type = TreeNode.ITEM;
             mNode.sectionPosition = mSectionPosition;
             mNode.listPosition = mListPosition++;
-            mMusicAdapter.onSectionAdded(mNode, mSectionPosition);
+            if (null != mMusicAdapter) {
+                mMusicAdapter.addTreeNode(mNode);
+            }
             list.add(mNode);
-
-            // Log.d(TAG, "scanLoadMusic-" +
-            // minfoInfo.getmInfo().getLocalPath());
-
         }
 
     }

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/tmpBar"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:background="@color/fragment_titlebar_bg"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+    >
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:drawableLeft="@drawable/public_menu_cancel"
+        android:gravity="center"
+        android:minWidth="@dimen/dimen_40"
+        android:paddingLeft="8dp"
+        />
+
+    <FrameLayout
+        android:id="@+id/tvTitleContentLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_toLeftOf="@id/btnRight"
+        android:layout_toRightOf="@id/btnLeft"
+        >
+
+        <TextView
+            android:id="@+id/tvTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="title"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"
+            android:visibility="gone"
+            />
+
+        <LinearLayout
+            android:id="@+id/recycleParent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="2dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvAdded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="3dp"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="@string/added"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_13"
+                />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/mediaTypeLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone">
+
+            <RadioGroup
+                android:id="@+id/rgFormat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbVideo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="20dp"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:text="@string/select_media_title_video"
+                    android:textColor="@drawable/media_selected_rb_textcolor"
+                    android:textSize="@dimen/text_size_16"/>
+
+                <RadioButton
+                    android:id="@+id/rbPhoto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="20dp"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:text="@string/select_media_title_photo"
+                    android:textColor="@drawable/media_selected_rb_textcolor"
+                    android:textSize="@dimen/text_size_16"/>
+            </RadioGroup>
+
+        </RelativeLayout>
+
+    </FrameLayout>
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@null"
+        android:drawableRight="@drawable/menu_osd_sure"
+        android:gravity="center"
+        android:minWidth="@dimen/dimen_40"
+        android:paddingRight="6dp"
+        />
+
+</RelativeLayout>

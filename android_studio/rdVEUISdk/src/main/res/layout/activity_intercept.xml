@@ -1,0 +1,223 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:background="@color/black">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--底部确认-->
+        <FrameLayout
+            android:id="@+id/llmenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+
+            <include layout="@layout/layout_bottom_menu"/>
+
+        </FrameLayout>
+
+        <!--功能区-->
+        <LinearLayout
+            android:id="@+id/llFeatures"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@id/llmenu"
+            android:clipChildren="false"
+            android:orientation="vertical">
+
+            <!--修剪 剪除-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp">
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btnConstruct"
+                    style="@style/public_title_bar_button"
+                    android:background="@drawable/trim_video_construct_p"
+                    android:gravity="center"
+                    android:text="@string/trim_construct"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/text_size_16"
+                    android:visibility="visible"/>
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btnCutoff"
+                    style="@style/public_title_bar_button"
+                    android:background="@drawable/cover_tail_n"
+                    android:gravity="center"
+                    android:text="@string/trim_cut_off"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_16"
+                    android:visibility="visible"/>
+
+            </LinearLayout>
+
+            <!--时间-->
+            <RelativeLayout
+                android:id="@+id/progresslayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/rlSeekbarplus">
+
+                <TextView
+                    android:id="@+id/tvRemainDuration"
+                    style="@style/styleEditorDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:textColor="@color/main_orange"
+                    android:textSize="@dimen/text_size_16"/>
+
+                <TextView
+                    android:id="@+id/tvInterceptFrontTime"
+                    style="@style/styleEditorDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:textSize="@dimen/text_size_14"/>
+
+                <TextView
+                    android:id="@+id/tvInterceptBehindTime"
+                    style="@style/styleEditorDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:textSize="@dimen/text_size_14"/>
+            </RelativeLayout>
+
+            <!--缩略图-->
+            <FrameLayout
+                android:id="@+id/rlSeekbarplus"
+                android:layout_width="match_parent"
+                android:clipChildren="false"
+                android:layout_height="@dimen/preview_rangseekbarplus_height">
+
+                <LinearLayout
+                    android:id="@+id/timeline_media"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <com.rd.veuisdk.ui.VideoThumbNailAlterView
+                        android:id="@+id/split_videoview"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"/>
+
+                </LinearLayout>
+
+                <com.rd.veuisdk.ui.extrangseekbar.TrimRangeSeekbarPlus
+                    android:id="@+id/m_extRangeSeekBar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </FrameLayout>
+
+            <!--放大选择区域-->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginTop="@dimen/dimen_15"
+                android:layout_marginBottom="@dimen/dimen_15"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp">
+
+                <com.rd.lib.ui.ExtButton
+                    android:id="@+id/btnAmplification"
+                    style="@style/public_title_bar_button"
+                    android:background="@drawable/trim_video_amplification"
+                    android:gravity="center"
+                    android:text="@string/preview_trim"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/text_size_12"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/btnCancel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:background="@null"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone"
+                    android:src="@drawable/trim_video_cancel"/>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!--播放器-->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/llFeatures"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center">
+
+                <com.rd.lib.ui.PreviewFrameLayout
+                    android:id="@+id/rlPreview_playerHori"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <com.rd.vecore.VirtualVideoView
+                        android:id="@+id/epvPreviewHori"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"/>
+
+                </com.rd.lib.ui.PreviewFrameLayout>
+
+            </LinearLayout>
+
+            <!--播放、全屏按钮-->
+            <RelativeLayout
+                android:id="@+id/rlPlayLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true">
+
+                <ImageView
+                    android:id="@+id/btnPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="5dp"
+                    android:background="@null"
+                    android:src="@drawable/btn_edit_play"
+                    android:visibility="visible"/>
+
+                <ImageView
+                    android:id="@+id/btnFullScreen"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:background="@null"
+                    android:src="@drawable/edit_intercept_fullscreen"
+                    android:visibility="visible"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</FrameLayout>

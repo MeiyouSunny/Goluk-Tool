@@ -2,10 +2,8 @@ package com.rd.veuisdk.model;
 
 /**
  * MV
- * Created by JIAN on 2017/7/12.
  */
-
-public class MVWebInfo extends WebInfo {
+public class MVWebInfo extends IApiInfo {
     //MV未注册时的标识
     public static final int DEFAULT_MV_NO_REGISTED = -1;
     /**
@@ -46,12 +44,38 @@ public class MVWebInfo extends WebInfo {
     }
 
     public MVWebInfo(String url, String img, String name, String _localPath) {
-        super(url, img, name, _localPath);
+        super(name, url, img, _localPath, 0);
     }
+
+    /**
+     * @param url
+     * @param img
+     * @param name
+     * @param updatetime
+     */
+    public MVWebInfo(String url, String img, String name, long updatetime) {
+        super(name, url, img, updatetime);
+    }
+
 
     public MVWebInfo(int mvId, String url, String img, String name,
                      String _localPath) {
-        super(url, img, name, _localPath);
+        super(name, url, img, _localPath, 0);
+        setId(mvId);
+
+    }
+
+    /**
+     * @param mvId
+     * @param url
+     * @param img
+     * @param name
+     * @param _localPath
+     * @param updateTime
+     */
+    public MVWebInfo(int mvId, String url, String img, String name,
+                     String _localPath, long updateTime) {
+        super(name, url, img, _localPath, updateTime);
         setId(mvId);
 
     }

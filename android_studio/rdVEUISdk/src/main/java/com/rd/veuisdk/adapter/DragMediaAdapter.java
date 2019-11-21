@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Handler;
+import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,21 +19,18 @@ import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.MediaType;
 import com.rd.vecore.models.Scene;
+import com.rd.vecore.utils.MiscUtils;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.ui.DraggableGridView.RearrangeListAdapater;
 import com.rd.veuisdk.ui.ExtListItemView;
 import com.rd.veuisdk.utils.DateTimeUtils;
 import com.rd.veuisdk.utils.ThumbNailUtils;
+import com.rd.veuisdk.utils.Utils;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeListAdapater {
-    private final String TAG = "dragAdapter";
-
     private final int SCALE_TEXTSIZE = 8;
     private Context mContext;
     private DragItemListener mDragItemListener = null;
@@ -41,6 +39,12 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
     public DragMediaAdapter(Context context, LayoutInflater inflater) {
         super(inflater);
         mContext = context;
+    }
+
+    public void updateThumb() {
+        onDestroy();
+        mCacheArray = new SparseArray<>();
+        notifyDataSetChanged();
     }
 
     /*
@@ -97,25 +101,26 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
         } else {
             itemView = convertView;
         }
-        if (mArrItems == null || getCount() == 0) {
+        if (mArrItems == null || getCount() == 0 || position >= mArrItems.size()) {
             return itemView;
         }
 
-        final Scene item = mArrItems.get(position);
-        final ExtListItemView itemview = (ExtListItemView) itemView.findViewById(R.id.ivItemExt);
-        TextView tvItemNum = (TextView) itemView.findViewById(R.id.tvItemNum1);
-        ImageView ivType = (ImageView) itemView.findViewById(R.id.ivItemType);
-        TextView tvDuration = (TextView) itemView.findViewById(R.id.tvDuration);
 
-        RelativeLayout rb = (RelativeLayout) itemView.findViewById(R.id.rlRemove);
+        ExtListItemView extListItemView = Utils.$(itemView, R.id.ivItemExt);
+        TextView tvItemNum = Utils.$(itemView, R.id.tvItemNum1);
+        ImageView ivType = Utils.$(itemView, R.id.ivItemType);
+        TextView tvDuration = Utils.$(itemView, R.id.tvDuration);
+        RelativeLayout rb = Utils.$(itemView, R.id.rlRemove);
+        final Scene item = mArrItems.get(position);
         if (item != null) {
-            if (!setResource(itemview, getKey(item))) {
+            if (!setResource(extListItemView, getKey(item))) {
                 getThreadPool().execute(new Runnable() {
 
                     @Override
                     public void run() {
                         try {
-                            getThumb(item, position, itemview);
+                            getThumb(item, position);
+                            //防止频繁取图，造成锁死
                             Thread.sleep(200);
                         } catch (Exception e) {
                         }
@@ -123,7 +128,7 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
                     }
                 });
             }
-            itemview.setSelected(selectedIndex == position);
+            extListItemView.setSelected(selectedIndex == position);
 
             rb.setOnClickListener(new OnClickListener() {
 
@@ -133,9 +138,8 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
                 }
             });
 
-            tvItemNum.setText("" + (position + 1));
-            tvDuration.setText(DateTimeUtils.stringForMillisecondTime(
-                    (long) (item.getDuration() * 1000), true, true));
+            tvItemNum.setText(Integer.toString(position + 1));
+            tvDuration.setText(DateTimeUtils.stringForMillisecondTime(MiscUtils.s2ms(item.getDuration()), true, true));
 
             if (selectedIndex == position) {
                 tvDuration.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -160,53 +164,46 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
                     }
                 }
             }
-
-
             if (position >= 99) {
                 tvItemNum.setTextSize(SCALE_TEXTSIZE);
             }
         } else {
-            itemview.setBackgroundResource(R.drawable.edit_add_video_button);
+            extListItemView.setBackgroundResource(R.drawable.edit_add_video_button);
             tvItemNum.setVisibility(View.INVISIBLE);
-
             rb.setVisibility(View.INVISIBLE);
         }
         return itemView;
     }
 
-    private HashMap<String, Bitmap> maps = new HashMap<String, Bitmap>();
+    private SparseArray<Bitmap> mCacheArray = new SparseArray<>();
 
-    private boolean setResource(ExtListItemView itemview, String key) {
+    private boolean setResource(ExtListItemView itemView, int key) {
         Bitmap bmp = getBmp(key);
         if (null != bmp) {
-            itemview.setbitmap(bmp);
+            itemView.setbitmap(bmp);
             return true;
         }
         return false;
     }
 
-    private Bitmap getBmp(String key) {
-        Bitmap bmp = maps.get(key);
+    private Bitmap getBmp(int key) {
+        Bitmap bmp = mCacheArray.get(key);
         if (null != bmp && !bmp.isRecycled()) {
             return bmp;
         }
         return null;
     }
 
-    public Bitmap getThumbItem(int index) {
-        return maps.get(getKey(mArrItems.get(index)));
+
+    private float getKind(Scene scene) {
+        return Math.min(0.2f, scene.getDuration());
     }
 
-    private float getKind(Scene tempScene) {
-        com.rd.vecore.models.MediaObject mediaObject = tempScene.getAllMedia().get(0);
-        return Math.min(1, mediaObject.getDuration());
-    }
-
-    private String getKey(Scene tempScene) {
-        MediaObject mediaObject = tempScene.getAllMedia().get(0);
-        return MD5.getMD5(mediaObject.getMediaPath() + mediaObject.getTrimStart() + "..."
-                + mediaObject.getTrimEnd())
-                + getKind(tempScene) + "id:" + mediaObject.getId()+"scene:"+tempScene.hashCode();
+    private int getKey(Scene scene) {
+        MediaObject mediaObject = scene.getAllMedia().get(0);
+        return MD5.getMD5(mediaObject.hashCode() + "flip:" + mediaObject.getFlipType() + "angle: " + mediaObject.getAngle()
+                + " trim:" + mediaObject.getTrimStart() + "<>" + mediaObject.getTrimEnd()
+                + getKind(scene) + "scene:" + scene.getAllMedia().size() + " _" + scene.hashCode()).hashCode();
     }
 
     private int selectedIndex = -1;
@@ -217,31 +214,30 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
     }
 
 
-    private void getThumb(Scene tempScene, final int nId, ExtListItemView itemview) {
-
-        float kind = getKind(tempScene);
-        String key = getKey(tempScene);
-
-        if (maps.containsKey(key) && !mHasSort) {
-            mhandler.sendMessage(mhandler.obtainMessage(ITEM_THUMB_OK, nId, 0));
+    private void getThumb(Scene scene, int nId) {
+        int key = getKey(scene);
+        if (null != mCacheArray.get(key) && !mHasSort) {
+            mhandler.sendEmptyMessage(ITEM_THUMB_OK);
         } else {
             Bitmap bmp = Bitmap.createBitmap(
                     ThumbNailUtils.THUMB_HEIGHT,
                     ThumbNailUtils.THUMB_HEIGHT, Config.ARGB_8888);
             VirtualVideo virtualVideo = new VirtualVideo();
-            virtualVideo.addScene(tempScene);
-            if (virtualVideo.getSnapshot(mContext, kind, bmp)) {
-                if (null != maps) {
-                    maps.put(key, bmp);
-                    mhandler.sendMessage(mhandler.obtainMessage(
-                            ITEM_THUMB_OK, nId, 0, itemview));
+            virtualVideo.addScene(scene);
+            if (virtualVideo.getSnapshot(mContext, getKind(scene), bmp, scene.getAllMedia().size() > 1)) {
+                virtualVideo.release();
+                if (null != mCacheArray) {
+                    mCacheArray.put(key, bmp);
+                    //防止频繁更新
+                    mhandler.sendEmptyMessage(ITEM_THUMB_OK);
                 } else {
                     bmp.recycle();
                 }
             } else {
+                virtualVideo.release();
                 bmp.recycle();
             }
-            virtualVideo.release();
+
         }
     }
 
@@ -269,25 +265,14 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
 
     }
 
-    private final int ITEM_THUMB_OK = 6, ALL_OVER = 8;
+    private final int ITEM_THUMB_OK = 6;
     private Handler mhandler = new Handler() {
 
         public void handleMessage(android.os.Message msg) {
 
             switch (msg.what) {
                 case ITEM_THUMB_OK:
-                    ExtListItemView itemview = ((ExtListItemView) msg.obj);
-                    if (null != itemview) {
-                        Scene scene = getItem(msg.arg1);
-                        if (scene != null) {
-                            if (maps != null) {
-                                itemview.setbitmap(maps.get(getKey(scene)));
-                                itemview.setSelected(selectedIndex == msg.arg1);
-                            }
-                        }
-                    }
-                    break;
-                case ALL_OVER:
+                    notifyDataSetChanged();
                     break;
                 default:
                     break;
@@ -306,21 +291,16 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
      * recycle data
      */
     public void onDestroy() {
-
-        if (maps != null && maps.size() > 0) {
-            Set<Entry<String, Bitmap>> all = maps.entrySet();
-            Bitmap bmp;
-            for (Entry<String, Bitmap> item : all) {
-                bmp = item.getValue();
+        if (mCacheArray != null && mCacheArray.size() > 0) {
+            for (int i = 0; i < mCacheArray.size(); i++) {
+                Bitmap bmp = mCacheArray.valueAt(i);
                 if (null != bmp && !bmp.isRecycled()) {
                     bmp.recycle();
                 }
-                bmp = null;
             }
-            maps.clear();
-            maps = null;
-            all.clear();
+            mCacheArray.clear();
         }
+        mhandler.removeMessages(ITEM_THUMB_OK);
     }
 
     /**
@@ -329,13 +309,15 @@ public class DragMediaAdapter extends VideoSelectorAdapter implements RearrangeL
      * @param scene
      */
     public void onClear(Scene scene) {
-        if (maps != null && maps.size() > 0 && null != scene) {
-            String key = getKey(scene);
-            Bitmap bmp = maps.remove(key);
-            if (null != bmp && !bmp.isRecycled()) {
-                bmp.recycle();
+        if (mCacheArray != null && mCacheArray.size() > 0 && null != scene) {
+            int key = getKey(scene);
+            Bitmap bmp = mCacheArray.get(key);
+            if (null != bmp) {
+                mCacheArray.remove(key);
+                if (!bmp.isRecycled()) {
+                    bmp.recycle();
+                }
             }
-            bmp = null;
         }
     }
 

@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/black"
+              android:orientation="vertical">
+
+    <include layout="@layout/rdveuisdk_public_title_bar"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        >
+
+        <com.rd.lib.ui.PreviewFrameLayout
+            android:id="@+id/previewFrame"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+
+                <FrameLayout
+                    android:id="@+id/playerParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+                    <!--预览播放器-->
+                    <com.rd.vecore.VirtualVideoView
+                        android:id="@+id/palyer"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:id="@+id/ivPlayerState"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerInParent="true"
+                            android:contentDescription="@string/empty"
+                            android:scaleType="center"
+                            android:src="@drawable/btn_play"/>
+                    </RelativeLayout>
+
+
+                </FrameLayout>
+                <!--编辑父容器-->
+                <FrameLayout
+                    android:id="@+id/editPlayerParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    >
+                </FrameLayout>
+
+            </FrameLayout>
+        </com.rd.lib.ui.PreviewFrameLayout>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/transparent_black">
+
+        <com.rd.lib.ui.RotateRelativeLayout
+            android:id="@+id/rlPlayerBottomMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible">
+
+            <TextView
+                android:id="@+id/tvCurTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:text="@string/record_default_time"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+
+
+            <TextView
+                android:id="@+id/tvTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:text="@string/record_default_time"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+
+            <com.rd.veuisdk.ui.RdSeekBar
+                android:id="@+id/sbEditor"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/tvTotalTime"
+                android:layout_toRightOf="@id/tvCurTime"
+                android:maxHeight="8px"
+                android:minHeight="8px"
+                android:paddingLeft="10dp"
+                android:paddingRight="15dp"
+                android:progressDrawable="@drawable/video_editor_progress"
+                android:thumb="@drawable/seekbar_thumb"
+                android:thumbOffset="23dp"/>
+        </com.rd.lib.ui.RotateRelativeLayout>
+
+        <com.rd.veuisdk.ui.ExtProgressBar
+            android:id="@+id/record_bar"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"
+            android:background="@color/black"
+            android:visibility="gone">
+        </com.rd.veuisdk.ui.ExtProgressBar>
+    </FrameLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llVoice1"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
+
+        <!--音量 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10px"
+                android:text="@string/media_volume1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+
+            <SeekBar
+                android:id="@+id/sb_volume1"
+                style="@style/voiceFactorSeekbarStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:minHeight="10dp"
+                android:paddingLeft="@dimen/dimen_10"
+                android:paddingRight="@dimen/dimen_10"
+                android:progress="50"/>
+
+
+        </LinearLayout>
+
+        <!--音量 -->
+        <LinearLayout
+            android:id="@+id/llVoice2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="5dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10px"
+                android:text="@string/media_volume2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_12"/>
+
+            <SeekBar
+                android:id="@+id/sb_volume2"
+                style="@style/voiceFactorSeekbarStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:minHeight="10dp"
+                android:paddingLeft="@dimen/dimen_10"
+                android:paddingRight="@dimen/dimen_10"
+                android:progress="50"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llSingleSoundEffect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/dimen_10"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:id="@+id/llMusicFilter1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_10"
+                android:text="@string/sound_effect1"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"/>
+
+            <TextView
+                android:id="@+id/tvMusicFilter1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMusicFilter2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/dimen_20"
+                android:text="@string/sound_effect2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"/>
+
+            <TextView
+                android:id="@+id/tvMusicFilter2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_15"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/llMusicFilterAll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/dimen_10"
+        android:layout_marginTop="@dimen/dimen_15"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/dimen_20"
+            android:text="@string/all_sound_effect"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"/>
+
+        <TextView
+            android:id="@+id/tvMusicFilterAll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textSize="@dimen/text_size_15"/>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+

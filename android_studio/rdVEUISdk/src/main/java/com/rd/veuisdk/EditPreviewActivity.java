@@ -1,5 +1,6 @@
 package com.rd.veuisdk;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,17 +12,19 @@ import android.graphics.Bitmap;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
@@ -30,7 +33,6 @@ import android.widget.Toast;
 
 import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
-import com.rd.lib.utils.CoreUtils;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
 import com.rd.vecore.exception.InvalidArgumentException;
@@ -46,10 +48,16 @@ import com.rd.vecore.models.VideoConfig;
 import com.rd.vecore.utils.ExportUtils;
 import com.rd.veuisdk.adapter.DragMediaAdapter;
 import com.rd.veuisdk.adapter.DragMediaAdapter.DragItemListener;
+import com.rd.veuisdk.database.DraftData;
+import com.rd.veuisdk.fragment.BaseFragment;
+import com.rd.veuisdk.fragment.TransitionFragment;
 import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.model.ExtPicInfo;
+import com.rd.veuisdk.model.RCInfo;
+import com.rd.veuisdk.model.ShortVideoInfoImp;
 import com.rd.veuisdk.model.VideoOb;
 import com.rd.veuisdk.model.VideoObjectPack;
+import com.rd.veuisdk.mvp.model.EditPreviewModel;
 import com.rd.veuisdk.ui.DraggableAddGridView;
 import com.rd.veuisdk.ui.DraggableGridView;
 import com.rd.veuisdk.ui.DraggedTrashLayout;
@@ -62,12 +70,12 @@ import com.rd.veuisdk.ui.ProportionDialog;
 import com.rd.veuisdk.ui.RdSeekBar;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.BitmapUtils;
-import com.rd.veuisdk.utils.DateTimeUtils;
+import com.rd.veuisdk.utils.EffectManager;
+import com.rd.veuisdk.utils.IMediaParamImp;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
-import com.rd.veuisdk.utils.ViewUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -76,19 +84,34 @@ import java.util.List;
 /**
  * 片段编辑页
  */
-public class EditPreviewActivity extends BaseActivity {
+public class EditPreviewActivity extends BaseActivity implements IEditPreviewHandler {
+
+
+    /**
+     * 片段编辑
+     */
+    static void gotoEditPreview(Context context, ArrayList<Scene> list, float curProportion, int proportionStatus, boolean enableBg, boolean mediaMute, int requestCode) {
+        Intent i = new Intent(context,
+                EditPreviewActivity.class);
+        i.putExtra(IntentConstants.INTENT_EXTRA_SCENE, list);
+        i.putExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, curProportion);
+        i.putExtra(IntentConstants.EDIT_PROPORTION_STATUS, proportionStatus);
+        i.putExtra(IntentConstants.ALL_MEDIA_MUTE, mediaMute);
+        i.putExtra(IntentConstants.EXTRA_EXT_BACKGROUND_MODE, enableBg);
+        ((Activity) context).startActivityForResult(i, requestCode);
+        ((Activity) context).overridePendingTransition(0, 0);
+    }
+
     private final String TAG = "EditPreviewActivity";
 
-    public static final String ACTION_APPEND = "action_append";
-    static final String APPEND_IMAGE = "edit.addmenu.addimage";
+
     public static final String TEMP_FILE = "temp_file";
     public static float mCurAspect;
 
     private SplitHandler mSplitHandler;
-    private DragMediaAdapter mAdapterScene;
+    private DragMediaAdapter mMediaAdapter;
     private String mTempRecfile = null;
     private ProportionDialog mProportionDialog;
-    private float mCurProportion = 0;
     private float mLastPlayPostion;
     private boolean mLastPlaying;
     private boolean mIsLongClick;
@@ -98,64 +121,104 @@ public class EditPreviewActivity extends BaseActivity {
 
     private ArrayList<Scene> mSceneList = new ArrayList<>();
     private int mProportionStatus;
+    private float mCurProportion;
     private VirtualVideo mVirtualVideo;
     private Scene mCurrentScene;
 
     private VirtualVideoView mMediaPlayer;
     private PreviewFrameLayout mVideoPreview;
     private ImageView mIvVideoPlayState;
-    private TextView mTvVideoDuration;
+    private TextView mTvCurTime;
+    private TextView mTvTotalTime;
     private RdSeekBar mSbPreview;
     private RelativeLayout mRlSplitView;
     private DraggableAddGridView mGridVideosArray;
     private View mMainView;
     private View mSplitLayout;
-    private PreviewFrameLayout mPreviewPlayer;
     private int mPlaybackDurationMs = 0; //实际播放时间
     private UIConfiguration mUIConfig;
+    private ShortVideoInfoImp shortVideoInfoImp;
+    private ViewGroup mHorizontalScrollView;
+    private FrameLayout mFlZoom;
+    private LinearLayout llDurationSeekBar;
+    private boolean mIsEnableBackground = false;
+
+    private TransitionFragment mTransitionFragment;
+
+    private int lastProportionStatus = ProportionDialog.ORIENTATION_AUTO;
+
+    /**
+     * 根据4种比例模式， 返回比例
+     *
+     * @param status
+     * @return
+     */
+    private float getAsp(int status) {
+        if (status == ProportionDialog.ORIENTATION_LANDSCAPE) {
+            return (float) 16 / 9;
+        } else if (status == ProportionDialog.ORIENTATION_SQUARE) {
+            return 1f;
+        } else if (status == ProportionDialog.ORIENTATION_PORTRAIT) {
+            return 9 / 16.0f;
+        } else {
+            //自动
+            return 0;
+        }
+    }
+
+    private EditPreviewModel mModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStrActivityPageName = getString(R.string.editvideopriview);
         setContentView(R.layout.activity_edit_preview);
-        mUIConfig = SdkEntry.getSdkService().getUIConfig();
-        if (!Utils.checkDeviceHasNavigationBar(this)) {
-            AppConfiguration.setAspectRatio(1);
-        }
+        int draftId = getIntent().getIntExtra(IntentConstants.INTENT_EXTRA_DRAFT, -1);
         Intent in = getIntent();
-        mSceneList = in.getParcelableArrayListExtra(IntentConstants.INTENT_EXTRA_SCENE);
-        mCurProportion = in.getFloatExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, 0);
-        mProportionStatus = in.getIntExtra(IntentConstants.EDIT_PROPORTION_STATUS, 0);
+        mIsEnableBackground = in.getBooleanExtra(IntentConstants.EXTRA_EXT_BACKGROUND_MODE, false);
+        mUIConfig = SdkEntry.getSdkService().getUIConfig();
+        if (draftId != -1) {
+            //草稿箱视频有效
+            DraftData.getInstance().initilize(this);
+            shortVideoInfoImp = DraftData.getInstance().queryOne(draftId);
+            if (null == shortVideoInfoImp) {
+                finish(); //强制退出
+                return;
+            }
+            mSceneList = shortVideoInfoImp.getSceneList();
+            mProportionStatus = shortVideoInfoImp.getProportionStatus();
 
-        UIConfiguration uiConfig = SdkEntry.getSdkService().getUIConfig();
-
-        mIsUseCustomUI = uiConfig.useCustomAlbum;
-
-        if (mUIConfig.isEnableWizard()) {
-            if (uiConfig.videoProportion == 0) {
-                mCurProportion = 0;
-                mProportionStatus = 0;
-            } else if (uiConfig.videoProportion == 1) {
-                mCurProportion = 1;
-                mProportionStatus = 1;
-            } else {
-                mCurProportion = (float) 16 / 9;
-                mProportionStatus = 2;
+        } else {
+            mSceneList = in.getParcelableArrayListExtra(IntentConstants.INTENT_EXTRA_SCENE);
+            mProportionStatus = in.getIntExtra(IntentConstants.EDIT_PROPORTION_STATUS, 0);
+            mCurProportion = in.getFloatExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, 0);
+            if (mUIConfig.isEnableWizard()) {
+                if (mUIConfig.videoProportion == 0) {
+                    mProportionStatus = ProportionDialog.ORIENTATION_AUTO;
+                } else if (mUIConfig.videoProportion == 1) {
+                    mProportionStatus = ProportionDialog.ORIENTATION_SQUARE;
+                } else {
+                    mProportionStatus = ProportionDialog.ORIENTATION_LANDSCAPE;
+                }
             }
         }
 
+        mModel = new EditPreviewModel();
+        lastProportionStatus = mProportionStatus;
+        //修正播放器容器显示比例
+        AppConfiguration.fixAspectRatio(this);
+
+        mIsUseCustomUI = mUIConfig.useCustomAlbum;
+
         mLastPlayPostion = 0;
-        mAdapterScene = new DragMediaAdapter(this, getLayoutInflater());
-        mAdapterScene.setDragItemListener(mDragItemListener);
+        mMediaAdapter = new DragMediaAdapter(this, getLayoutInflater());
+        mMediaAdapter.setDragItemListener(mDragItemListener);
 
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(SdkEntry.ALBUM_CUSTOMIZE);
         registerReceiver(mReceiver, intentFilter);
-
         for (Scene scene : mSceneList) {
             addVideoObToMedia(scene.getAllMedia().get(0), 0, null);
-            mAdapterScene.addItem(scene);
+            mMediaAdapter.addItem(scene);
         }
 
         mTempRecfile = in.getStringExtra(TEMP_FILE);
@@ -173,14 +236,17 @@ public class EditPreviewActivity extends BaseActivity {
 
         mGridVideosArray.setAddItemInfo(mSceneList);
 
-        if (mUIConfig.isHideSort()) {
-            mGridVideosArray.hideSort(true);
-        }
+//        if (mUIConfig.isHideSort()) {
+//            mGridVideosArray.hideSort(true);
+//        }
+        mGridVideosArray.hideSort(true);
 
         initListView(mIndex);
         reload();
         playVideo();
+
     }
+
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -190,7 +256,6 @@ public class EditPreviewActivity extends BaseActivity {
         broadcast.putExtra(SdkEntry.INTENT_KEY_VIDEO_PATH,
                 intent.getStringExtra(SdkEntry.INTENT_KEY_VIDEO_PATH));
         sendBroadcast(broadcast);
-        SelectMediaActivity.mIsAppend = false;
         finish();
     }
 
@@ -272,7 +337,8 @@ public class EditPreviewActivity extends BaseActivity {
         if (null != mMediaPlayer) {
             mMediaPlayer.seekTo(progress);
             mSbPreview.setProgress(Utils.s2ms(progress));
-            mTvVideoDuration.setText(gettime(Utils.s2ms(mMediaPlayer.getCurrentPosition())) + "/" + gettime(mPlaybackDurationMs));
+            mTvCurTime.setText(getTime(Utils.s2ms(mMediaPlayer.getCurrentPosition())));
+            mTvTotalTime.setText(getTime(mPlaybackDurationMs));
         }
     }
 
@@ -281,11 +347,10 @@ public class EditPreviewActivity extends BaseActivity {
      * @param position
      */
     private void onDragItemClick(int position) {
-
         mIndex = position;
         mAddItemIndex = -1;
         mGridVideosArray.resetAddItem();
-        mAdapterScene.setCheckId(mIndex);
+        mMediaAdapter.setCheckId(mIndex);
         onListViewItemSelected();
         updateView();
     }
@@ -298,7 +363,7 @@ public class EditPreviewActivity extends BaseActivity {
     private DraggableGridView.onLonglistener onDragLongListener = new DraggableGridView.onLonglistener() {
 
         @Override
-        public void onLong(int index, final View chid) {
+        public void onLong(int index, final View child) {
             mDraggedView.setTrashListener(null);
             mDraggedView.setScollListener(null);
             mIsLongClick = true;
@@ -308,10 +373,7 @@ public class EditPreviewActivity extends BaseActivity {
             if (null != mMediaPlayer && mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
             }
-
-            ExtListItemView item = (ExtListItemView) chid
-                    .findViewById(R.id.ivItemExt);
-
+            ExtListItemView item = Utils.$(child, R.id.ivItemExt);
             if (null != item) {
                 mLongIndex = index;
                 final Bitmap bmp = BitmapUtils.copyBmp(item.getBmpCache(),
@@ -324,14 +386,14 @@ public class EditPreviewActivity extends BaseActivity {
                     mDraggedView.setTrashListener(mTashListener);
                     mDraggedLayout.setVisibility(View.VISIBLE);
                     final int[] location = new int[2];
-                    chid.getLocationOnScreen(location);
+                    child.getLocationOnScreen(location);
                     int[] top = new int[2];
 
-                    View playview_rel = mParentFrame.findViewById(R.id.rlPreview);
-                    playview_rel.getLocationOnScreen(top);
+                    View view = Utils.$(mParentFrame, R.id.rlPreview);
+                    view.getLocationOnScreen(top);
                     final int mtop = location[1] - top[1];
 
-                    final int imageCenterY = playview_rel.getHeight() / 2;
+                    final int imageCenterY = view.getHeight() / 2;
 
                     mDraggedView.postDelayed(new Runnable() {
 
@@ -339,7 +401,6 @@ public class EditPreviewActivity extends BaseActivity {
                         public void run() { // 计算中心点
 
                             mDraggedView.initTrashRect(imageCenterY);
-                            // mleftt=x
                             mDraggedView.setData(bmp, location[0], mtop,
                                     location[0] + bmp.getWidth(),
                                     mtop + bmp.getHeight());
@@ -352,12 +413,11 @@ public class EditPreviewActivity extends BaseActivity {
                         @Override
                         public void onTouchMove(int x, int y) {
                             if (y - imageCenterY > 0
-                                    && y < mtop + chid.getHeight()) {
+                                    && y < mtop + child.getHeight()) {
                                 mGridVideosArray.doActionMove(x, y - mtop);
                             }
                         }
                     });
-
                 }
             }
 
@@ -421,30 +481,28 @@ public class EditPreviewActivity extends BaseActivity {
 
     private void updateView() {
         mTvTitle.setText(R.string.partedit);
-        if (mUIConfig.isHideProportion()) {
-            mIvProportion.setVisibility(View.GONE);
-        } else {
-            mIvProportion.setVisibility(View.VISIBLE);
-        }
+        setIVProportionState();
     }
 
     /***
      * 响应被选中项的UI
      */
     private void onListViewItemSelected() {
-        mCurrentScene = mAdapterScene.getItem(mIndex);
+        mCurrentScene = mMediaAdapter.getItem(mIndex);
         if (null == mCurrentScene) {
             Log.e(TAG, "onListViewItemSelected:  mCurrentScene is null");
             return;
         }
         MediaObject mediaObject = mCurrentScene.getAllMedia().get(0);
-        mMenuLayout.setVisibility(View.VISIBLE);
-        onUI(false);
+
+        mHorizontalScrollView.setVisibility(View.VISIBLE);
+        mTransitionMenu.setVisibility((!mUIConfig.isHideTransition() && mIndex < mMediaAdapter.getItemCount() - 1) ? View.VISIBLE : View.GONE);
+
         if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
             onVideoUI();
         } else {
             VideoOb vob = (VideoOb) mediaObject.getTag();
-            onPhotoUI(vob.isExtPic == 1);
+            onPhotoUI(vob.isExtPic == 1, mediaObject.isMotionImage());
         }
     }
 
@@ -452,58 +510,18 @@ public class EditPreviewActivity extends BaseActivity {
      * 选中视频 UI
      */
     private void onVideoUI() {
-        int buttonCount = 6;
-        mSplit.setVisibility(View.VISIBLE);
-        mSpeed.setVisibility(View.VISIBLE);
-        mTrim.setVisibility(View.VISIBLE);
-        mEdit.setVisibility(View.VISIBLE);
-        mReverse.setVisibility(View.VISIBLE);
-        mText.setVisibility(View.GONE);
         mDuration.setVisibility(View.GONE);
-        if (mUIConfig.isHideSpeed()) {
-            buttonCount -= 1;
-            mSpeed.setVisibility(View.GONE);
-        }
-        if (mUIConfig.isHideEdit()) {
-            buttonCount -= 1;
-            mEdit.setVisibility(View.GONE);
-        }
-        if (mUIConfig.isHideTrim()) {
-            buttonCount -= 1;
-            mTrim.setVisibility(View.GONE);
-        }
-        if (mUIConfig.isHideSplit()) {
-            buttonCount -= 1;
-            mSplit.setVisibility(View.GONE);
-        }
-        if (mUIConfig.isHideReverse()) {
-            buttonCount -= 1;
-            mReverse.setVisibility(View.GONE);
-        }
-        if (mUIConfig.isHideCopy()) {
-            buttonCount -= 1;
-            if (buttonCount == 0) {
-                findViewById(R.id.preview_copy).setVisibility(
-                        View.INVISIBLE);
-            } else {
-                findViewById(R.id.preview_copy).setVisibility(View.GONE);
-            }
-        } else {
-            findViewById(R.id.preview_copy).setVisibility(View.VISIBLE);
-        }
-        LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        if (buttonCount <= 3) {
-            int dwidth = CoreUtils.getMetrics().widthPixels;
-            int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
-            int margin = (dwidth - width) / 2;
-            lp.setMargins(margin, 0, margin, 0);
+        mFilter.setVisibility(mUIConfig.isHideFilter() ? View.GONE : View.VISIBLE);
+        mEffect.setVisibility(mUIConfig.isHideEffects() ? View.GONE : View.VISIBLE);
+        mToning.setVisibility(mUIConfig.isHideFilter() ? View.GONE : View.VISIBLE);
+        mSpeed.setVisibility(mUIConfig.isHideSpeed() ? View.GONE : View.VISIBLE);
+        mEdit.setVisibility(mUIConfig.isHideEdit() ? View.GONE : View.VISIBLE);
+        mTrim.setVisibility(mUIConfig.isHideTrim() ? View.GONE : View.VISIBLE);
+        mSplit.setVisibility(mUIConfig.isHideSplit() ? View.GONE : View.VISIBLE);
+        mReverse.setVisibility(mUIConfig.isHideReverse() ? View.GONE : View.VISIBLE);
+        mCopy.setVisibility(mUIConfig.isHideCopy() ? View.GONE : View.VISIBLE);
+        mSort.setVisibility(mUIConfig.isHideSort() ? View.GONE : View.VISIBLE);
 
-        } else {
-            lp.gravity = Gravity.LEFT;
-        }
-        mMenuLayout.setLayoutParams(lp);
     }
 
     /**
@@ -512,58 +530,34 @@ public class EditPreviewActivity extends BaseActivity {
      * @param isExtPic 是否是文字版图片
      */
 
-    private void onPhotoUI(boolean isExtPic) {
-        mSplit.setVisibility(View.GONE);
-        mSpeed.setVisibility(View.GONE);
+    private void onPhotoUI(boolean isExtPic, boolean isMotionImage) {
+
+        //动图支持分割、裁剪 、截取 （属性与视频一样）
+        mSplit.setVisibility(isMotionImage ? View.VISIBLE : View.GONE);
+        mSpeed.setVisibility(isMotionImage ? View.VISIBLE : View.GONE);
+
+        mEffect.setVisibility(mUIConfig.isHideEffects() ? View.GONE : View.VISIBLE);
         mReverse.setVisibility(View.GONE);
-        int count = 3;
-
-        int width = (int) (4 * 60 * CoreUtils.getPixelDensity());
-        int dwidth = CoreUtils.getMetrics().widthPixels;
-        int margin = (dwidth - width) / 2;
-
-        LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-        lp.setMargins(margin, 0, margin, 0);
+        mText.setVisibility(isExtPic ? View.VISIBLE : View.GONE);
+        mTrim.setVisibility(isMotionImage ? View.VISIBLE : View.GONE);
         if (isExtPic) {
-            mText.setVisibility(View.VISIBLE);
-            mTrim.setVisibility(View.GONE);
             mEdit.setVisibility(View.GONE);
             mDuration.setVisibility(View.GONE);
+            mFilter.setVisibility(View.GONE);
+            mToning.setVisibility(View.GONE);
         } else {
-            mText.setVisibility(View.GONE);
-            mTrim.setVisibility(View.GONE);
-            if (!mUIConfig.isHideDuration()) {
-                mDuration.setVisibility(View.VISIBLE);
-            }
-            if (!mUIConfig.isHideEdit()) {
-                mEdit.setVisibility(View.VISIBLE);
-            }
+            mEdit.setVisibility(mUIConfig.isHideEdit() ? View.GONE : View.VISIBLE);
+            //动图不支持动态调整duration
+            mDuration.setVisibility(mUIConfig.isHideDuration() ? View.GONE : isMotionImage ? View.GONE : View.VISIBLE);
+            mFilter.setVisibility(mUIConfig.isHideFilter() ? View.GONE : View.VISIBLE);
+            mToning.setVisibility(mUIConfig.isHideFilter() ? View.GONE : View.VISIBLE);
         }
-        mMenuLayout.setLayoutParams(lp);
-
-        if (mUIConfig.isHideDuration()) {
-            mDuration.setVisibility(View.GONE);
-            count -= 1;
-        }
-        if (mUIConfig.isHideEdit()) {
-            mEdit.setVisibility(View.GONE);
-            count -= 1;
-        }
-        if (mUIConfig.isHideCopy()) {
-            if (count == 1 && !isExtPic) {
-                findViewById(R.id.preview_copy).setVisibility(
-                        View.INVISIBLE);
-            } else {
-                findViewById(R.id.preview_copy).setVisibility(View.GONE);
-            }
-        } else {
-            findViewById(R.id.preview_copy).setVisibility(View.VISIBLE);
-        }
+        mCopy.setVisibility(mUIConfig.isHideCopy() ? View.GONE : View.VISIBLE);
+        mSort.setVisibility(mUIConfig.isHideSort() ? View.GONE : View.VISIBLE);
     }
 
-    private ExtButton mTrim, mSplit, mSpeed, mDuration, mText, mEdit, mReverse;
+    private ExtButton mTrim, mSplit, mSpeed, mDuration, mText, mEdit, mReverse,
+            mTransitionMenu, mFilter, mCopy, mToning, mEffect, mSort;
     private TextView mTvTitle;
     private ExtButton mBtnTitleBarLeft;
     private ExtButton mBtnTitleBarRight;
@@ -574,47 +568,78 @@ public class EditPreviewActivity extends BaseActivity {
     private DraggedView mDraggedView;
     private PriviewLinearLayout mPriviewLinearLayout;
 
-    private LinearLayout mMenuLayout;
-    private LinearLayout mAddMenuLayout;
 
     private void initView() {
-        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
-        mVideoPreview = (PreviewFrameLayout) findViewById(R.id.rlPreview);
-        mIvVideoPlayState = (ImageView) findViewById(R.id.ivPlayerState);
-        mTvVideoDuration = (TextView) findViewById(R.id.tvEditorDuration);
-        mSbPreview = (RdSeekBar) findViewById(R.id.sbPreview);
-        mRlSplitView = (RelativeLayout) findViewById(R.id.rlSplitView);
-        mGridVideosArray = (DraggableAddGridView) findViewById(R.id.gridVideosDstArray);
-        mMainView = findViewById(R.id.preview_edit_layout);
-        mSplitLayout = findViewById(R.id.split_layout);
-        mPreviewPlayer = (PreviewFrameLayout) findViewById(R.id.rlPreview_player);
+        mMediaPlayer = $(R.id.vvMediaPlayer);
+        mVideoPreview = $(R.id.rlPreview);
+        mIvVideoPlayState = $(R.id.ivPlayerState);
+        mTvTotalTime = $(R.id.tvTotalTime);
+        mTvCurTime = $(R.id.tvCurTime);
+        mSbPreview = $(R.id.sbPreview);
+        mRlSplitView = $(R.id.rlSplitView);
+        mGridVideosArray = $(R.id.gridVideosDstArray);
+        mMainView = $(R.id.preview_edit_layout);
+        mSplitLayout = $(R.id.split_layout);
 
-        mTrim = (ExtButton) findViewById(R.id.preview_trim);
-        mSplit = (ExtButton) findViewById(R.id.preview_spilt);
-        mSpeed = (ExtButton) findViewById(R.id.preview_speed);
-        mDuration = (ExtButton) findViewById(R.id.preview_duration);
-        mText = (ExtButton) findViewById(R.id.preview_text);
-        mEdit = (ExtButton) findViewById(R.id.preview_edit);
-        mReverse = (ExtButton) findViewById(R.id.preview_reverse);
-        mTvTitle = (TextView) findViewById(R.id.tvTitle);
-        mBtnTitleBarLeft = (ExtButton) findViewById(R.id.btnLeft);
-        mBtnTitleBarRight = (ExtButton) findViewById(R.id.btnRight);
+        mTrim = $(R.id.preview_trim);
+        mFilter = $(R.id.preview_filter);
+        mEffect = $(R.id.preview_effect);
+        mSplit = $(R.id.preview_spilt);
+        mSpeed = $(R.id.preview_speed);
+        mDuration = $(R.id.preview_duration);
+        mText = $(R.id.preview_text);
+        mEdit = $(R.id.preview_edit);
+        mReverse = $(R.id.preview_reverse);
+        mTransitionMenu = $(R.id.preview_transition_menu);
+        mCopy = $(R.id.preview_copy);
+        mSort = $(R.id.preview_sort);
+        mToning = $(R.id.preview_toning);
+        mTvTitle = $(R.id.tvTitle);
+        mBtnTitleBarLeft = $(R.id.btnLeft);
+        mBtnTitleBarRight = $(R.id.btnRight);
 
-        mIvProportion = (ImageView) findViewById(R.id.ivProportion);
-        mParentFrame = (PriviewLayout) findViewById(R.id.mroot_priview_layout);
-        mDraggedLayout = (DraggedTrashLayout) findViewById(R.id.thelinearDraggedLayout);
-        mDraggedView = (DraggedView) findViewById(R.id.dragged_info_trash_View);
-        mPriviewLinearLayout = (PriviewLinearLayout) findViewById(R.id.the_priview_layout_content);
+        mIvProportion = $(R.id.ivProportion);
+        mParentFrame = $(R.id.mroot_priview_layout);
+        mDraggedLayout = $(R.id.thelinearDraggedLayout);
+        mDraggedView = $(R.id.dragged_info_trash_View);
+        mPriviewLinearLayout = $(R.id.the_priview_layout_content);
+        mHorizontalScrollView = $(R.id.clip_part_menu_layout);
 
-        mMenuLayout = (LinearLayout) findViewById(R.id.menus);
-        mAddMenuLayout = (LinearLayout) findViewById(R.id.addmenus);
+        View addPart = $(R.id.ivParteditAdd);
+        if (mUIConfig.mediaCountLimit == 1) {
+            //15秒录制短视频
+            addPart.setVisibility(View.GONE);
+        } else {
+            addPart.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mMainView.setVisibility(View.INVISIBLE);
+                    setViewVisibility(R.id.llParteditAdd, true);
+                }
+            });
+            initAddSceneListener();
+        }
+
+
+        llDurationSeekBar = $(R.id.llDurationSeekbar);
+        mFlZoom = $(R.id.flUpperZone);
+        mFlZoom.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            boolean isFirst = true;
+
+            @Override
+            public void onGlobalLayout() {
+                if (isFirst) {
+                    isFirst = false;
+                    mVideoPreview.setAspectRatio((float) mFlZoom.getWidth() / mFlZoom.getHeight());
+                    $(R.id.llFragmentContainer).getLayoutParams().height = mMainView.getHeight();
+                    mSplitLayout.getLayoutParams().height = mMainView.getHeight();
+                }
+            }
+        });
 
         mVirtualVideo = new VirtualVideo();
-
         mVideoPreview.setClickable(true);
-        mVideoPreview.setAspectRatio(AppConfiguration.ASPECTRATIO);
-
-        mBtnTitleBarLeft.setOnClickListener(new View.OnClickListener() {
+        mBtnTitleBarLeft.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mUIConfig.isEnableWizard()) {
@@ -664,24 +689,21 @@ public class EditPreviewActivity extends BaseActivity {
 
         mSbPreview.setOnSeekBarChangeListener(onSeekBarListener);
         mSbPreview.setMax(100);
-
-        mIvProportion.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mProportionDialog.show();
-                mProportionDialog.mIndex = mProportionStatus;
-                mProportionDialog.resetStatus();
-            }
-        });
-
+        setIVProportionState();
+        if (!mUIConfig.enableMV) {
+            mIvProportion.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mProportionDialog.show();
+                    mProportionDialog.mIndex = mProportionStatus;
+                    mProportionDialog.resetStatus();
+                }
+            });
+        }
         mSplitHandler = new SplitHandler(this, mParentFrame, iSplitHandler);
-
-        mTvVideoDuration.setVisibility(View.VISIBLE);
         mLastPlayPostion = -1;
-
         mMediaPlayer.setOnPlaybackListener(mPlayViewListener);
         mMediaPlayer.setOnInfoListener(mInfoListener);
-        mMediaPlayer.setPreviewAspectRatio(mCurProportion);
         mMediaPlayer.setOnClickListener(mPlayerUIListener);
         mIvVideoPlayState.setOnClickListener(mPlayerUIListener);
         mGridVideosArray.setLongLisenter(onDragLongListener);
@@ -692,6 +714,37 @@ public class EditPreviewActivity extends BaseActivity {
         mGridVideosArray.setHideAddItemWithoutSort(mUIConfig.isHideTransition());
     }
 
+    /**
+     * 添加镜头
+     */
+    private void initAddSceneListener() {
+
+        $(R.id.ivPardeditAddCancel).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMainView.setVisibility(View.VISIBLE);
+                setViewVisibility(R.id.llParteditAdd, false);
+            }
+        });
+        $(R.id.tvAddImage).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMedia(false);
+            }
+        });
+        $(R.id.tvAddVideo).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addMedia(true);
+            }
+        });
+        $(R.id.tvAddText).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onText();
+            }
+        });
+    }
 
     /**
      * 播放、暂停
@@ -736,35 +789,40 @@ public class EditPreviewActivity extends BaseActivity {
             mIvVideoPlayState.setVisibility(View.VISIBLE);
             mMainView.setVisibility(View.VISIBLE);
             mSplitLayout.setVisibility(View.GONE);
+            returnToMenu();
 
-            mBtnTitleBarLeft.setVisibility(View.VISIBLE);
-            mBtnTitleBarRight.setVisibility(View.VISIBLE);
 
             Scene scene = mSceneList.remove(mIndex);
-            mAdapterScene.removeItem(scene);
+            mMediaAdapter.removeItem(scene);
             MediaObject mediaObject = scene.getAllMedia().get(0);
-            if (mediaObject != null && mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
+            VideoOb videoOb = (VideoOb) mediaObject.getTag();
+            float speed = mediaObject.getSpeed();
+            if (mediaObject != null) {
                 VideoOb vob = (VideoOb) mediaObject.getTag();
                 if (vob != null) {
-                    int isextpic = vob.isExtPic;
-                    for (int i = 0; i < list.size(); i++) {
+                    int len = list.size();
+                    for (int i = 0; i < len; i++) {
                         MediaObject mo = list.get(i);
+                        VideoOb item = new VideoOb(videoOb);
+                        item.TStart = mo.getTrimStart();
+                        item.TEnd = mo.getTrimEnd();
+                        item.nStart = item.TStart / speed;
+                        item.nEnd = item.TEnd / speed;
+                        item.rStart = item.TStart;
+                        item.rEnd = item.TEnd;
+                        mo.setTag(item);
                         Scene newScene = VirtualVideo.createScene();
                         newScene.addMedia(mo);
-                        mAdapterScene.addItem(i + mIndex, newScene);
+                        mMediaAdapter.addItem(i + mIndex, newScene);
                         mSceneList.add(i + mIndex, newScene);
-                        mo.setTag(new VideoOb(mo.getTrimStart(), mo.getTrimEnd(), 0, mo.getDuration(), 0, mo
-                                .getDuration(), isextpic, vob.getExtpic(), vob.getCropMode()));
                     }
                 }
             }
             if (null != scene) {
                 scene.getAllMedia().clear();
-                scene = null;
             }
             if (null != list) {
                 list.clear();
-                list = null;
             }
 
             mHasChanged = false;
@@ -779,17 +837,18 @@ public class EditPreviewActivity extends BaseActivity {
         @Override
         public void onCancel() {
             onBackPressed();
-            cancelSplit();
         }
 
         @Override
         public void onTemp(ArrayList<MediaObject> list, int progress) {
+
             mHasChanged = true;
             boolean isPlaying = mMediaPlayer.isPlaying();
             mSplitHandler.setPrepared(false);
             mMediaPlayer.reset();
             mVirtualVideo.reset();
-            for (int i = 0; i < list.size(); i++) {
+            int len = list.size();
+            for (int i = 0; i < len; i++) {
                 Scene scene = VirtualVideo.createScene();
                 scene.addMedia(list.get(i));
                 mVirtualVideo.addScene(scene);
@@ -809,14 +868,12 @@ public class EditPreviewActivity extends BaseActivity {
             mOnTemp = true;
             if (null != list) {
                 list.clear();
-                list = null;
             }
 
         }
 
         @Override
         public void onSeekTo(int progress) {
-
             if (mMediaPlayer.isPlaying()) {
                 mMediaPlayer.pause();
             }
@@ -830,14 +887,6 @@ public class EditPreviewActivity extends BaseActivity {
             pauseVideo();
         }
 
-        @Override
-        public void onPlayOrPause() {
-            if (mMediaPlayer.isPlaying()) {
-                pauseVideo();
-            } else {
-                playVideo();
-            }
-        }
     };
 
     private boolean mOnTemp = false;
@@ -846,9 +895,10 @@ public class EditPreviewActivity extends BaseActivity {
         mDraggedView.setTrash(false);
         mSbPreview.setVisibility(View.VISIBLE);
         mRlSplitView.setVisibility(View.GONE);
+        mMainView.setVisibility(View.VISIBLE);
         mHasChanged = false;
+        returnToMenu();
         reload();
-
         setSeekTo(true);
         seekToPosition(mIndex, false);
     }
@@ -868,6 +918,22 @@ public class EditPreviewActivity extends BaseActivity {
         }
     };
 
+    private BaseFragment mFragCurrent;
+
+    /**
+     * 切换fragment
+     */
+    private void changeToFragment(final BaseFragment fragment, boolean isMenuVisiable) {
+        if (mFragCurrent == fragment) {
+            // 未实际切换fragment时，直接返回
+            return;
+        }
+        mFragCurrent = fragment;
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.llFragmentContainer, fragment);
+        ft.commit();
+        setViewVisibility(R.id.rlEditMenu, isMenuVisiable);
+    }
 
     /**
      * 播放器
@@ -879,12 +945,11 @@ public class EditPreviewActivity extends BaseActivity {
         public void onPlayerPrepared() {
             SysAlertDialog.cancelLoadingDialog();
             updatePreviewFrameAspect(mMediaPlayer.getWidth(), mMediaPlayer.getHeight());
-            mAdapterScene.notifyDataSetChanged();
-//            mMediaPlayer.setFilterType(VideoEditActivity.mCurrentFilterType);
-
+            mMediaAdapter.notifyDataSetChanged();
+            mMediaPlayer.setFilterType(0);
             mPlaybackDurationMs = Utils.s2ms(mMediaPlayer.getDuration());
-            mTvVideoDuration.setText(gettime(Utils.s2ms(mMediaPlayer.getCurrentPosition())) + "/" + gettime(mPlaybackDurationMs));
-
+            mTvCurTime.setText(getTime(Utils.s2ms(mMediaPlayer.getCurrentPosition())));
+            mTvTotalTime.setText(getTime(mPlaybackDurationMs));
             if (mSplitHandler.isSpliting()) {
                 mSplitHandler.setPrepared(true);
             } else {
@@ -899,7 +964,7 @@ public class EditPreviewActivity extends BaseActivity {
         public boolean onPlayerError(int what, int extra) {
             SysAlertDialog.cancelLoadingDialog();
             SysAlertDialog.showAlertDialog(EditPreviewActivity.this,
-                    getString(R.string.edit_priview),
+                    "",
                     getString(R.string.error_preview_crop),
                     getString(R.string.sure), null, null, null);
             return false;
@@ -907,7 +972,7 @@ public class EditPreviewActivity extends BaseActivity {
 
         @Override
         public void onPlayerCompletion() {
-            mIvVideoPlayState.setImageResource(R.drawable.btn_play);
+            mIvVideoPlayState.setBackgroundResource(R.drawable.btn_edit_play);
             if (mSplitHandler.isSpliting()) {
 
             } else {
@@ -915,8 +980,8 @@ public class EditPreviewActivity extends BaseActivity {
             }
             mMediaPlayer.seekTo(0);
             mSbPreview.setProgress(0);
-            mTvVideoDuration.setText(gettime(0) + "/"
-                    + gettime(mPlaybackDurationMs));
+            mTvCurTime.setText(getTime(0));
+            mTvTotalTime.setText(getTime(mPlaybackDurationMs));
             if (mSplitHandler.isSpliting()) {
                 mSplitHandler.onScrollCompleted();
             }
@@ -927,40 +992,40 @@ public class EditPreviewActivity extends BaseActivity {
             if (nPosition == 0) {
                 return;
             }
-            int pms = Utils.s2ms(nPosition);
-            mTvVideoDuration.setText(gettime(pms) + "/"
-                    + gettime(mPlaybackDurationMs));
-            mSbPreview.setProgress(pms);
-            if (mHasChanged) {
-                if (mSplitHandler.isSpliting()) {
-                    mSplitHandler.onScrollProgress(pms);
-                } else {
-                }
-            } else {
-                if (mSplitHandler.isSpliting()) {
-                    mSplitHandler.onScrollProgress(pms);
-                } else {
-                }
+            int ms = Utils.s2ms(nPosition);
+            mTvCurTime.setText(getTime(ms));
+            mSbPreview.setProgress(ms);
+            if (mSplitHandler.isSpliting()) {
+                mSplitHandler.onScrollProgress(ms);
             }
         }
     };
 
+    private boolean mIsContinue = false;
+
     private void onContinue() {
+        mIsContinue = true;
         int importDurationLimit = (int) SdkEntry.getSdkService().getExportConfig().importVideoDuration;
         if (importDurationLimit != 0 && mMediaPlayer.getDuration() >= importDurationLimit) {
             SysAlertDialog.showAutoHideDialog(this, "", getString(R.string.import_duration_limit, importDurationLimit), 2500);
             return;
         }
-        Intent i = new Intent();
-        i.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mSceneList);
-        i.putExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, mCurProportion);
-        i.putExtra(IntentConstants.EDIT_PROPORTION_STATUS, mProportionStatus);
-
+        Intent intent = new Intent();
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mSceneList);
+        if (null != shortVideoInfoImp) {
+            intent.putExtra(IntentConstants.INTENT_EXTRA_DRAFT, shortVideoInfoImp.getId());
+        }
+        intent.putExtra(IntentConstants.EXTRA_MEDIA_PROPORTION, getAsp(mProportionStatus));
+        intent.putExtra(IntentConstants.EDIT_PROPORTION_STATUS, mProportionStatus);
+        intent.putExtra(IntentConstants.EXTRA_PLAYER_WIDTH, mMediaPlayer.getWordLayout().getWidth());
+        intent.putExtra(IntentConstants.EXTRA_PLAYER_HEIGHT, mMediaPlayer.getWordLayout().getHeight());
+        intent.putExtra(IntentConstants.EXTRA_LAST_DURATION, mPlaybackDurationMs);
+        intent.putExtra(IntentConstants.EXTRA_IS_EDIT_PART, mBackDiaglog);
         if (mUIConfig.isEnableWizard()) {
-            i.setClass(this, VideoEditActivity.class);
-            startActivityForResult(i, REQUESTCODE_FOR_ADVANCED_EDIT);
+            intent.setClass(this, VideoEditActivity.class);
+            startActivityForResult(intent, REQUESTCODE_FOR_ADVANCED_EDIT);
         } else {
-            setResult(RESULT_OK, i);
+            setResult(RESULT_OK, intent);
             finish();
         }
         overridePendingTransition(0, 0);
@@ -974,38 +1039,50 @@ public class EditPreviewActivity extends BaseActivity {
     private final int REQUESTCODE_FOR_DURATION = 11;
     private final int REQUESTCODE_FOR_EDIT_PIC = 12;
     private final int REQUESTCODE_FOR_SORT = 13;
-    private final int REQUESTCODE_FOR_TRIM = 14;
+    public static final int REQUESTCODE_FOR_TRIM = 14;
     private final int REQUESTCODE_FOR_TRANSITION = 15;
     private final int REQUESTCODE_FOR_EDIT = 16;
     private final int REQUESTCODE_FOR_CAMERA = 17;
     private final int REQUESTCODE_FOR_ADVANCED_EDIT = 18;
-    private final int REQUESTCODE_FOR_POSTER_PROCESS = 19;
+    private final int REQUESTCODE_FOR_MEDIA_FILTER = 19;
+    private final int REQUESTCODE_FOR_MEDIA_FILTER_CONFIG = 20;
+    private final int REQUESTCODE_FOR_MEDIA_EFFECT = 21;
+
+    /**
+     * 是否支持视频属性 （视频 |动图）
+     */
+    private boolean isSupportVideoAttributes(MediaObject mediaObject) {
+        return mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE || (mediaObject.getMediaType() == MediaType.MEDIA_IMAGE_TYPE && mediaObject.isMotionImage());
+    }
+
 
     /**
      * 响应剪辑功能按钮点击
-     *
-     * @param v
      */
-
-    public void onPreviewOptionClick(View v) throws Exception {
+    public void onPreviewOptionClick(View v) {
         int id = v.getId();
         if (mIndex < 0) {
             return;
         }
         stopVideo();
-        Scene scene = mAdapterScene.getItem(mIndex);
-        MediaObject mediaObject = scene.getAllMedia().get(0);
-        if (id == R.id.preview_spilt) {
-
-            if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
-                mCurrentScene = mAdapterScene.getItem(mIndex);
-                if (mCurrentScene.getDuration() <= 0.5f) {
-                    Utils.autoToastNomal(
-                            this, getString(R.string.video_duration_too_short_to_split));
+        Scene scene = mMediaAdapter.getItem(mIndex);
+        if (id == R.id.preview_toning) {
+            MediaFilterConfigActivity.onFilterConfig(this, scene, REQUESTCODE_FOR_MEDIA_FILTER_CONFIG);
+        } else if (id == R.id.preview_filter) {
+            MediaFilterActivity.onMediaFilter(this, scene, REQUESTCODE_FOR_MEDIA_FILTER);
+        } else if (id == R.id.preview_effect) {
+            MediaObject mediaObject = scene.getAllMedia().get(0);
+            //特效
+            MediaEffectActivity.onMediaEffect(this, mediaObject, REQUESTCODE_FOR_MEDIA_EFFECT);
+        } else if (id == R.id.preview_spilt) {
+            MediaObject mediaObject = scene.getAllMedia().get(0);
+            if (isSupportVideoAttributes(mediaObject)) {
+                final float MIN_SPLIT_LIMIT = 0.5f;
+                mCurrentScene = mMediaAdapter.getItem(mIndex);
+                if (mCurrentScene.getDuration() <= MIN_SPLIT_LIMIT) {
+                    onToast(getString(R.string.video_duration_too_short_to_split, MIN_SPLIT_LIMIT));
                 } else {
                     mDraggedView.setTrash(true);
-
-                    mSbPreview.setVisibility(View.INVISIBLE);
 
                     mMediaPlayer.stop();
                     mMediaPlayer.reset();
@@ -1017,38 +1094,28 @@ public class EditPreviewActivity extends BaseActivity {
                         e.printStackTrace();
                     }
                     mSplitHandler.init(mCurrentScene);
-                    mIvVideoPlayState.setVisibility(View.INVISIBLE);
                     mRlSplitView.setVisibility(View.VISIBLE);
                     mMainView.setVisibility(View.INVISIBLE);
                     mSplitLayout.setVisibility(View.VISIBLE);
-
-                    mTvTitle.setText(R.string.preview_spilt);
-                    mTvTitle.setVisibility(View.VISIBLE);
-                    mBtnTitleBarLeft.setVisibility(View.INVISIBLE);
-                    mBtnTitleBarRight.setVisibility(View.INVISIBLE);
-
+                    llDurationSeekBar.setVisibility(View.INVISIBLE);
+                    hideTitlebar();
                     mIvProportion.setVisibility(View.GONE);
-
                     mMediaPlayer.start();
                 }
             }
         } else if (id == R.id.preview_edit) {  //编辑
-            Intent intent = new Intent();
-            intent.setClass(EditPreviewActivity.this, CropRotateMirrorActivity.class);
-            intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
-            startActivityForResult(intent, REQUESTCODE_FOR_EDIT);
-            overridePendingTransition(0, 0);
+            CropRotateMirrorActivity.onCropRotate(this, scene, mMediaPlayer.getVideoWidth() / (float) mMediaPlayer.getVideoHeight(), REQUESTCODE_FOR_EDIT);
         } else if (id == R.id.preview_speed) {
-            if (null != mediaObject && mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
-                Intent intent = new Intent(EditPreviewActivity.this, SpeedPreviewActivity.class);
+            //调速
+            MediaObject mediaObject = scene.getAllMedia().get(0);
+            if (isSupportVideoAttributes(mediaObject)) {
+                Intent intent = new Intent(this, SpeedPreviewActivity.class);
                 intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
                 intent.putExtra(IntentConstants.ALL_MEDIA_MUTE, getIntent()
                         .getBooleanExtra(IntentConstants.ALL_MEDIA_MUTE, false));
-
                 startActivityForResult(intent, REQUESTCODE_FOR_SPEED);
             } else {
-                SysAlertDialog.showAutoHideDialog(this, "",
-                        getString(R.string.fix_video), Toast.LENGTH_SHORT);
+                onToast(R.string.fix_video);
             }
 
         } else if (id == R.id.preview_copy) {
@@ -1058,7 +1125,7 @@ public class EditPreviewActivity extends BaseActivity {
                 newScene.addMedia(mo);
             }
 
-            ArrayList<Scene> list = mAdapterScene.getMediaList();
+            ArrayList<Scene> list = mMediaAdapter.getMediaList();
             ArrayList<Scene> newList = new ArrayList<Scene>();
 
             for (int i = 0; i < mIndex; i++) {
@@ -1080,7 +1147,7 @@ public class EditPreviewActivity extends BaseActivity {
             newList.clear();
 
 
-            mAdapterScene.updateDisplay();
+            mMediaAdapter.updateDisplay();
 
             initListView(mIndex);
             reload();
@@ -1091,12 +1158,13 @@ public class EditPreviewActivity extends BaseActivity {
             playVideo();
             updateView();
         } else if (id == R.id.preview_reverse) {
+            MediaObject mediaObject = scene.getAllMedia().get(0);
             if (mediaObject.getMediaType() == MediaType.MEDIA_VIDEO_TYPE) {
                 VideoOb ob = (VideoOb) mediaObject.getTag();
                 if (ob.getVideoObjectPack() == null) {  //第一次倒序
                     reverseVideo(mediaObject);
                 } else {   // 不为空就不是第一次倒序了
-                    VideoObjectPack vop = (VideoObjectPack) ob.getVideoObjectPack();
+                    VideoObjectPack vop = ob.getVideoObjectPack();
                     VideoOb reverseOb = (VideoOb) vop.mediaObject.getTag();
                     if (vop.isReverse) { // 从倒序还原
                         reverseOb.rStart = vop.originReverseEndTime - ob.rEnd;
@@ -1127,8 +1195,9 @@ public class EditPreviewActivity extends BaseActivity {
                     computeShowRect(vop.mediaObject, moClone);
                     Scene reverseScene = new Scene();
                     reverseScene.addMedia(vop.mediaObject);
-                    mAdapterScene.getMediaList().set(mIndex, reverseScene);
-                    mAdapterScene.notifyDataSetChanged();// m_adaDstVideos.getItem(mIndex).setMediaFilePath(strTempOutPath);
+                    reverseScene.setTransition(scene.getTransition());
+                    mMediaAdapter.getMediaList().set(mIndex, reverseScene);
+                    mMediaAdapter.notifyDataSetChanged();// m_adaDstVideos.getItem(mIndex).setMediaFilePath(strTempOutPath);
                     mSceneList.set(mIndex, reverseScene);
                     reload();
 
@@ -1137,24 +1206,20 @@ public class EditPreviewActivity extends BaseActivity {
                 }
 
             } else {
-                SysAlertDialog.showAutoHideDialog(this, "",
-                        getString(R.string.fix_video), Toast.LENGTH_SHORT);
+                onToast(R.string.fix_video);
             }
         } else if (id == R.id.preview_duration) {
-            Intent intent = new Intent(EditPreviewActivity.this, ImageDurationActivity.class);
-            intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
-            startActivityForResult(intent, REQUESTCODE_FOR_DURATION);
+            ImageDurationActivity.onImageDuration(this, scene, false, REQUESTCODE_FOR_DURATION);
         } else if (id == R.id.preview_text) {
+            MediaObject mediaObject = scene.getAllMedia().get(0);
             VideoOb vob = (VideoOb) mediaObject.getTag();
-            Intent intent = new Intent(EditPreviewActivity.this, ExtPhotoActivity.class);
-            intent.putExtra(IntentConstants.EXTRA_EXT_PIC_INFO, vob.getExtpic());
-            intent.putExtra(IntentConstants.EXTRA_EXT_ISEDIT, true);
-
-            startActivityForResult(intent, REQUESTCODE_FOR_EDIT_PIC);
+            ExtPhotoActivity.editTextPic(this, vob.getExtpic(), REQUESTCODE_FOR_EDIT_PIC);
             updateView();
         } else if (id == R.id.preview_trim) {
-            if (mediaObject.getDuration() < 1) {
-                Utils.autoToastNomal(this, getString(R.string.video_duration_too_short_to_trim));
+            final float MIN_TRIM_LIMIT = 1f;
+            MediaObject mediaObject = scene.getAllMedia().get(0);
+            if (mediaObject.getDuration() < MIN_TRIM_LIMIT) {
+                Utils.autoToastNomal(this, getString(R.string.video_duration_too_short_to_trim, MIN_TRIM_LIMIT));
             } else {
                 Intent intent = new Intent(EditPreviewActivity.this, TrimMediaActivity.class);
                 intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
@@ -1162,61 +1227,104 @@ public class EditPreviewActivity extends BaseActivity {
                 startActivityForResult(intent, REQUESTCODE_FOR_TRIM);
                 overridePendingTransition(0, 0);
             }
-        } else if (id == R.id.preview_addimage) {
-
-            if (mIsUseCustomUI) {
-                SdkEntryHandler.getInstance().onSelectImage(
-                        EditPreviewActivity.this);
-            } else {
-                Intent intent = new Intent(EditPreviewActivity.this,
-                        com.rd.veuisdk.SelectMediaActivity.class);
-                intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-                intent.putExtra(APPEND_IMAGE, true);
-                startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
-            }
-
-        } else if (id == R.id.preview_addvideo) {
-            if (mIsUseCustomUI) {
-                SdkEntryHandler.getInstance().onSelectVideo(
-                        EditPreviewActivity.this);
-            } else {
-                Intent intent = new Intent(EditPreviewActivity.this,
-                        com.rd.veuisdk.SelectMediaActivity.class);
-                intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-                startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
-            }
-        } else if (id == R.id.preview_addtext) {
-            Intent intent = new Intent(EditPreviewActivity.this,
-                    ExtPhotoActivity.class);
-            startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
-        } else if (id == R.id.preview_transition) {
+        } else if (id == R.id.preview_sort) {
+            onSortMedia();
+        } else if (id == R.id.preview_transition_menu) {
+            mAddItemIndex = mIndex + 1;
             if (checkMediaDuration(mAddItemIndex)) {
-                Intent intent = new Intent(EditPreviewActivity.this,
-                        com.rd.veuisdk.TransitionActivity.class);
-
-                intent.putExtra(IntentConstants.INTENT_EXTRA_TRANSITION, scene.getTransition());
-                intent.putExtra(IntentConstants.INTENT_TRANSITION_COUNT, mSceneList.size());
-                startActivityForResult(intent, REQUESTCODE_FOR_TRANSITION);
+                onTransition(mIndex);
             } else {
-                Utils.autoToastNomal(this, getString(R.string.video_duration_too_short_to_transition));
+                Utils.autoToastNomal(this, getString(R.string.video_duration_too_short_to_transition, MIN_TRANSITION_LIMIT));
             }
         }
+    }
+
+    /**
+     * 添加媒体
+     *
+     * @param isVideo
+     */
+    private void addMedia(boolean isVideo) {
+        Log.e(TAG, "addMedia: " + isVideo);
+        if (mIsUseCustomUI) {
+            SdkEntryHandler.getInstance().onSelectVideo(
+                    EditPreviewActivity.this);
+        } else {
+            int maxCount = getMaxAppend();
+            if (maxCount == 0) {
+                onToast(getString(R.string.media_un_exceed_num, mUIConfig.mediaCountLimit));
+            } else {
+                if (isVideo) {
+                    SelectMediaActivity.appendMedia(this, false, maxCount, REQUESTCODE_FOR_APPEND);
+                } else {
+                    SelectMediaActivity.appendMedia(this, true, getIntent().getBooleanExtra(SelectMediaActivity.LOTTIE_IMAGE, false),
+                            maxCount, REQUESTCODE_FOR_APPEND);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 进入文字界面
+     */
+    private void onText() {
+        Intent intent = new Intent(EditPreviewActivity.this, ExtPhotoActivity.class);
+        startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+    }
+
+    private ArrayList<Transition> mDefaultTransitionList;
+
+    /**
+     * 切换转场界面
+     */
+    private void onTransition(int index) {
+        if (mTransitionFragment == null) {
+            mTransitionFragment = new TransitionFragment();
+            mTransitionFragment.setUrl(mUIConfig.mResTypeUrl,mUIConfig.transitionUrl);
+        }
+        if (mDefaultTransitionList == null) {
+            mDefaultTransitionList = new ArrayList<>();
+        }
+        mDefaultTransitionList.clear();
+        for (Scene scene : mSceneList) {
+            mDefaultTransitionList.add(scene.getTransition());
+        }
+        mTransitionFragment.setSceneCount(mSceneList.size());
+        mTransitionFragment.setCurTransition(mSceneList.get(index).getTransition());
+        hideTitlebar();
+        changeToFragment(mTransitionFragment, false);
+    }
+
+    private void hideTitlebar() {
+        setViewVisibility(R.id.titlebar_layout, false);
+    }
+
+
+    private void returnToMenu() {
+        if (null != mFragCurrent) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.remove(mFragCurrent);
+            ft.commit();
+            mFragCurrent = null;
+        }
+        setViewVisibility(R.id.rlEditMenu, true);
+
+        llDurationSeekBar.setVisibility(View.VISIBLE);
+        setViewVisibility(R.id.titlebar_layout, true);
     }
 
     private boolean mIsReversing = false;
 
     private void reverseVideo(final MediaObject mediaObject) {
         mIsReversing = true;
-        VideoConfig videoConfig = new VideoConfig();
-        videoConfig.setVideoFrameRate(24);
-        // videoConfig.setVideoSize(848,480);可指定的输出分辨率,一般不用设置，
+        VideoConfig videoConfig = ExportHandler.getExportConfig(0);
+        // videoConfig.setSize(848,480);可指定的输出分辨率,一般不用设置，
         // 需根据系统版本动态变化,好的机型可以设置更高分辨率(最高1280*720)
         final String strTempOutPath = PathUtils.getTempFileNameForSdcard(
                 "reverse", "mp4"); // 生成临时文件路径，这个路径，用于替换倒放前媒体信息
-
         ExportUtils.reverseSave(this, mediaObject, strTempOutPath, videoConfig, new ExportListener() {
             private HorizontalProgressDialog horiProgressSave = null;
-            private Dialog dialog = null;
             private boolean cancelSave = false;
 
             @Override
@@ -1237,7 +1345,7 @@ public class EditPreviewActivity extends BaseActivity {
 
                         @Override
                         public void onCancel() {
-                            dialog = SysAlertDialog.showAlertDialog(
+                            SysAlertDialog.showAlertDialog(
                                     EditPreviewActivity.this, "",
                                     getString(R.string.reverse_cancel),
                                     getString(R.string.no),
@@ -1294,8 +1402,10 @@ public class EditPreviewActivity extends BaseActivity {
                                 oldvo.rStart, oldvo.rStart + outputmo.getTrimEnd()));
                         outputmo.setTag(newvo);
 
-                        mAdapterScene.getMediaList().set(mIndex, scene);
-                        mAdapterScene.notifyDataSetChanged();
+                        scene.setTransition(mMediaAdapter.getItem(mIndex).getTransition());
+
+                        mMediaAdapter.getMediaList().set(mIndex, scene);
+                        mMediaAdapter.notifyDataSetChanged();
                         mSceneList.set(mIndex, scene);
                     } catch (InvalidArgumentException e) {
                         e.printStackTrace();
@@ -1351,13 +1461,15 @@ public class EditPreviewActivity extends BaseActivity {
         outputmo.setClipRectF(rectNewClip);
     }
 
+    private final float MIN_TRANSITION_LIMIT = 0.5f;
+
     private boolean checkMediaDuration(int addIndex) {
         if (addIndex < 1 || addIndex > (mSceneList.size() - 1)) {
             return false;
         }
         Scene sceneFront = mSceneList.get(addIndex - 1);
         Scene sceneBelow = mSceneList.get(addIndex);
-        if (sceneFront.getDuration() < 0.5f || sceneBelow.getDuration() < 0.5f) {
+        if (sceneFront.getDuration() < MIN_TRANSITION_LIMIT || sceneBelow.getDuration() < MIN_TRANSITION_LIMIT) {
             return false;
         } else {
             return true;
@@ -1369,11 +1481,16 @@ public class EditPreviewActivity extends BaseActivity {
      */
     private void deleteVideo() {
         mBackDiaglog = true;
-        Scene scene = mAdapterScene.getItem(mIndex);
         stopVideo();
-        mAdapterScene.removeItem(scene);
-        mSceneList.remove(mIndex);
-
+        Scene scene = mMediaAdapter.getItem(mIndex);
+        if (null != scene) {
+            try {
+                mMediaAdapter.removeItem(scene);
+                mSceneList.remove(mIndex);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         int len = mSceneList.size();
         if (mIndex >= len) {
             mIndex = len - 1;
@@ -1470,6 +1587,26 @@ public class EditPreviewActivity extends BaseActivity {
     private boolean mIsSeekTo = false;
     private boolean mAddNewTran = false;
 
+
+    /***
+     * 检测显示比例按钮是否可用（ mv 时不可用）
+     */
+    private void setIVProportionState() {
+        if (mUIConfig.isHideProportion()) {
+            mIvProportion.setVisibility(View.GONE);
+        } else {
+            if (!mUIConfig.enableMV) {
+                //还原到最初指定显示状态
+                mIvProportion.setVisibility(View.VISIBLE);
+                mProportionStatus = lastProportionStatus;
+            } else {
+                mIvProportion.setVisibility(View.GONE);
+            }
+
+        }
+        mIvProportion.setVisibility(View.GONE);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -1477,49 +1614,102 @@ public class EditPreviewActivity extends BaseActivity {
         if (resultCode == RESULT_OK) {
             mBackDiaglog = true;
             setSeekTo(true);
-
-            if (requestCode == REQUESTCODE_FOR_SPEED) {
+            if (requestCode == REQUESTCODE_FOR_MEDIA_EFFECT) {   //特效
+                MediaObject mediaObject = data.getParcelableExtra(IntentConstants.INTENT_MEDIA_OBJECT);
+                if (null != mediaObject) {
+                    Scene old = mSceneList.get(mIndex);
+                    Transition transition = old.getTransition();
+                    Scene scene = VirtualVideo.createScene();
+                    scene.addMedia(mediaObject);
+                    if (null != transition) {     //还原转场
+                        scene.setTransition(transition);
+                    }
+                    mMediaAdapter.getMediaList().set(mIndex, scene);
+                    mMediaAdapter.notifyDataSetChanged();
+                    mSceneList.set(mIndex, scene);
+                    onListViewItemSelected();
+                    reload();
+                }
+            } else if (requestCode == REQUESTCODE_FOR_MEDIA_FILTER_CONFIG || requestCode == REQUESTCODE_FOR_MEDIA_FILTER) {
+                //result_ok 真实的
+                //调色、滤镜
                 Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
-                mAdapterScene.getMediaList().set(mIndex, scene);
-                mAdapterScene.notifyDataSetChanged();
+                boolean isAllPartApply = data.getBooleanExtra(IntentConstants.INTENT_ALL_APPLY, false);
+                if (null != scene) {
+                    if (isAllPartApply) {
+                        //应用调色到全部片段
+                        MediaObject mediaObject = scene.getAllMedia().get(0);
+                        Object obj = mediaObject.getTag();
+                        if (obj instanceof VideoOb) {
+                            VideoOb videoOb = (VideoOb) obj;
+                            IMediaParamImp mediaParamImp = videoOb.getMediaParamImp();
+                            if (null != mediaParamImp) {
+                                boolean isFilterResult = requestCode == REQUESTCODE_FOR_MEDIA_FILTER;
+                                //找出其他的片段中的
+                                int len = mMediaAdapter.getMediaList().size();
+                                for (int i = 0; i < len; i++) {
+                                    if (i != mIndex) {
+                                        Scene item = mMediaAdapter.getMediaList().get(i);
+                                        MediaObject src = item.getAllMedia().get(0);
+                                        mModel.applyMediaParamToAll(src, mediaParamImp, isFilterResult);
+                                        mSceneList.set(i, item);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    mMediaAdapter.getMediaList().set(mIndex, scene);
+                    mMediaAdapter.notifyDataSetChanged();
+                    mSceneList.set(mIndex, scene);
+                    onListViewItemSelected();
+                    reload();
+                }
+            } else if (requestCode == REQUESTCODE_FOR_SPEED) {
+                Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+                float speed = scene.getAllMedia().get(0).getSpeed();
+                if (data.getBooleanExtra(IntentConstants.INTENT_ALL_APPLY, false)) {
+                    for (Scene sen : mSceneList) {
+                        for (MediaObject mediaObject : sen.getAllMedia()) {
+                            if (mediaObject.getMediaType().equals(MediaType.MEDIA_VIDEO_TYPE)) {
+                                float oldSpeed = mediaObject.getSpeed();
+                                mediaObject.setSpeed(speed);
+                                VideoOb temp = (VideoOb) mediaObject.getTag();
+                                if (null != temp) {
+                                    float ft = mediaObject.getSpeed() / oldSpeed;
+                                    temp.nStart = temp.nStart / ft;
+                                    temp.nEnd = temp.nEnd / ft;
+                                    mediaObject.setTag(temp);
+                                }
+                                //修正特效有效时间线
+                                EffectManager.fixEffect(mediaObject, mediaObject.getEffectInfos());
+                            }
+                        }
+                    }
+                }
+                scene.setTransition(mMediaAdapter.getItem(mIndex).getTransition());
+                mMediaAdapter.getMediaList().set(mIndex, scene);
+                mMediaAdapter.notifyDataSetChanged();
                 mSceneList.set(mIndex, scene);
+
                 onListViewItemSelected();
                 reload();
             } else if (requestCode == REQUESTCODE_FOR_EDIT) {
-                Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
-
-
-                Scene old = mAdapterScene.getItem(mIndex);
-                mAdapterScene.onClear(old);
-                mSceneList.set(mIndex, scene);
-                mAdapterScene.getMediaList().set(mIndex, scene);
-
-                mGridVideosArray.post(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        initListView(mIndex);
-                    }
-                });
-
-                reload();
+                onEditResult(data);
             } else if (requestCode == REQUESTCODE_FOR_APPEND) {
                 ArrayList<MediaObject> tempMedias = data
                         .getParcelableArrayListExtra(IntentConstants.EXTRA_MEDIA_LIST);
                 int isextPic = data.getIntExtra(
                         IntentConstants.EXTRA_EXT_ISEXTPIC, 0);
                 int len = tempMedias.size();
+                mMainView.setVisibility(View.VISIBLE);
+                setViewVisibility(R.id.llParteditAdd, false);
                 for (int i = 0; i < len; i++) {
                     MediaObject mo = tempMedias.get(i);
                     int addPosition;
-                    if (mAddItemIndex != -1) {
-                        addPosition = mAddItemIndex + i;
-                    } else {
-                        addPosition = mSceneList.size();
-                    }
+                    addPosition = mIndex + i + 1;
                     Scene scene = VirtualVideo.createScene();
                     scene.addMedia(mo);
-                    mAdapterScene.addItem(addPosition, scene);
+                    mMediaAdapter.addItem(addPosition, scene);
                     mSceneList.add(addPosition, scene);
 
                     if (isextPic == 1) {
@@ -1538,34 +1728,36 @@ public class EditPreviewActivity extends BaseActivity {
                     }
                 });
             } else if (requestCode == REQUESTCODE_FOR_DURATION) {
-                int duration = data.getIntExtra(IntentConstants.EXTRA_EXT_APPLYTOALL_DURATION, 0);
+                float duration = data.getFloatExtra(IntentConstants.EXTRA_EXT_APPLYTOALL_DURATION, 0);
 
                 if (duration != 0) {
                     for (int n = 0; n < mSceneList.size(); n++) {
-                        MediaObject media = mSceneList.get(n).getAllMedia().get(0);
-                        if (media.getMediaType() == MediaType.MEDIA_IMAGE_TYPE) {
-                            VideoOb temp = (VideoOb) media.getTag();
-                            if (temp.isExtPic == 0) {
-                                media.setTimeRange(0, duration);
-                                media.setIntrinsicDuration(duration);
-                                temp.nStart = media.getTrimStart();
-                                temp.nEnd = media.getTrimEnd();
-                                temp.rStart = temp.nStart;
-                                temp.rEnd = temp.nEnd;
-                                temp.TStart = temp.nStart;
-                                temp.TEnd = temp.nEnd;
-                                mAdapterScene.getMediaList().set(n, mSceneList.get(n));
-                                mSceneList.set(n, mSceneList.get(n));
+                        for (MediaObject media : mSceneList.get(n).getAllMedia()) {
+                            if (media.getMediaType() == MediaType.MEDIA_IMAGE_TYPE) {
+                                VideoOb temp = (VideoOb) media.getTag();
+                                if (temp.isExtPic == 0 && !media.isMotionImage()) { //普通静态图片有效
+                                    media.setIntrinsicDuration(duration);
+                                    media.setTimeRange(0, duration);
+                                    temp.nStart = media.getTrimStart();
+                                    temp.nEnd = media.getIntrinsicDuration();
+                                    temp.rStart = temp.nStart;
+                                    temp.rEnd = temp.nEnd;
+                                    temp.TStart = temp.nStart;
+                                    temp.TEnd = temp.nEnd;
+                                    EffectManager.fixEffect(media, media.getEffectInfos());
+                                    mMediaAdapter.getMediaList().set(n, mSceneList.get(n));
+                                    mSceneList.set(n, mSceneList.get(n));
+                                }
                             }
                         }
                     }
                 } else {
                     Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
-                    mAdapterScene.getMediaList().set(mIndex, scene);
+                    mMediaAdapter.getMediaList().set(mIndex, scene);
                     mSceneList.set(mIndex, scene);
                 }
                 reload();
-                mAdapterScene.notifyDataSetChanged();
+                mMediaAdapter.notifyDataSetChanged();
                 onListViewItemSelected();
                 playVideo();
             } else if (requestCode == REQUESTCODE_FOR_EDIT_PIC) {
@@ -1574,13 +1766,13 @@ public class EditPreviewActivity extends BaseActivity {
                 VideoOb nvb = new VideoOb(media.getTrimStart(), media.getTrimEnd(),
                         media.getTrimStart(), media.getTrimEnd(),
                         media.getTrimStart(), media.getTrimEnd(),
-                        1, (ExtPicInfo) data.getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO), 0);
+                        1, (ExtPicInfo) data.getParcelableExtra(IntentConstants.EXTRA_EXT_PIC_INFO), VideoOb.DEFAULT_CROP);
                 Scene scene = VirtualVideo.createScene();
                 media.setTag(nvb);
                 scene.addMedia(media);
-                mAdapterScene.getMediaList().set(mIndex, scene);
+                mMediaAdapter.getMediaList().set(mIndex, scene);
                 mSceneList.set(mIndex, scene);
-                mCurrentScene = mAdapterScene.getItem(mIndex);
+                mCurrentScene = mMediaAdapter.getItem(mIndex);
                 mGridVideosArray.post(new Runnable() {
 
                     @Override
@@ -1590,10 +1782,10 @@ public class EditPreviewActivity extends BaseActivity {
                 });
                 reload();
             } else if (requestCode == REQUESTCODE_FOR_SORT) {
-                mAdapterScene.clear();
+                mMediaAdapter.clear();
                 mSceneList = data.getParcelableArrayListExtra(IntentConstants.INTENT_EXTRA_SCENE);
                 for (Scene scene : mSceneList) {
-                    mAdapterScene.addItem(scene);
+                    mMediaAdapter.addItem(scene);
                 }
                 mGridVideosArray.setAddItemInfo(mSceneList);
                 mIndex = 0;
@@ -1610,9 +1802,9 @@ public class EditPreviewActivity extends BaseActivity {
             } else if (requestCode == REQUESTCODE_FOR_TRIM) {
                 Scene newScene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
                 mSceneList.set(mIndex, newScene);
-                mAdapterScene.getMediaList().set(mIndex, newScene);
+                mMediaAdapter.getMediaList().set(mIndex, newScene);
                 reload();
-                mAdapterScene.notifyDataSetChanged();
+                mMediaAdapter.notifyDataSetChanged();
                 onListViewItemSelected();
 
             } else if (requestCode == REQUESTCODE_FOR_TRANSITION) {
@@ -1652,23 +1844,69 @@ public class EditPreviewActivity extends BaseActivity {
                 }
             }
         } else {
+            //result_cancel
             if (requestCode == REQUESTCODE_FOR_ADVANCED_EDIT) {
-                setResult(RESULT_OK, data);
+                if (null != shortVideoInfoImp) {
+                    setResult(RESULT_CANCELED);
+                } else {
+                    setResult(RESULT_OK, data);
+                }
                 finish();
                 return;
+            } else {
+                playVideo();
             }
             setSeekTo(false);
         }
         updateView();
     }
 
+
+    /**
+     * 裁剪-旋转编辑完成
+     */
+    private void onEditResult(Intent data) {
+        if (null != data) {
+            boolean isApplyToAll = data.getBooleanExtra(IntentConstants.INTENT_ALL_APPLY, false);
+            Scene old = mMediaAdapter.getItem(mIndex);
+            if (isApplyToAll) {
+                RCInfo param = data.getParcelableExtra(IntentConstants.INTENT_ALL_APPLY_PARAM);
+                if (null != param) { //裁剪应用到全部
+                    mModel.fixAllMediaRC(param, mSceneList);
+                } else {
+                    isApplyToAll = false;
+                }
+            }
+
+            Scene scene = data.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+            mSceneList.set(mIndex, scene);
+            if (isApplyToAll) { //全部更新
+                mMediaAdapter.updateThumb();
+            } else { //单个更新
+                mMediaAdapter.onClear(old);
+                mMediaAdapter.getMediaList().set(mIndex, scene);
+                mMediaAdapter.notifyDataSetChanged();
+            }
+        }
+        mGridVideosArray.post(new Runnable() {
+            @Override
+            public void run() {
+                initListView(mIndex);
+            }
+        });
+        reload();
+    }
+
+
     /**
      * 添加到扩展类
      */
     private void addVideoObToMedia(MediaObject media, int isextpic, ExtPicInfo info) {
-        media.setTag(new VideoOb(media.getTrimStart(), media.getTrimEnd(), media
-                .getTrimStart(), media.getTrimEnd(), media.getTrimStart(),
-                media.getTrimEnd(), isextpic, info, 0));
+        if (media.getTag() == null) {
+            media.setTag(new VideoOb(media.getTrimStart(), media.getTrimEnd(), media
+                    .getTrimStart(), media.getTrimEnd(), media.getTrimStart(),
+                    media.getTrimEnd(), isextpic, info, VideoOb.DEFAULT_CROP));
+        }
     }
 
     /**
@@ -1677,46 +1915,34 @@ public class EditPreviewActivity extends BaseActivity {
      * @param index 默认选中项
      */
     private void initListView(int index) {
-        mGridVideosArray.setAdapter(mAdapterScene);
-        mCurrentScene = mAdapterScene.getItem(mIndex);
+        mGridVideosArray.setAdapter(mMediaAdapter);
+        mCurrentScene = mMediaAdapter.getItem(mIndex);
         int len = mSceneList.size();
         if (mAddItemIndex >= len) {
             mAddItemIndex = len - 1;
         }
-        if (mAddItemIndex == -1 || mAddItemIndex == 0) {
-            onDragItemClick(index);
-        } else {
-            mGridVideosArray.setAddItemSelect(mAddItemIndex - 1);
-            mMenuLayout.setVisibility(View.GONE);
-            onUI(true);
-            mAdapterScene.setCheckId(-1);
-        }
+        onDragItemClick(index);
     }
 
-    /**
-     * 单位毫秒
-     *
-     * @param progress
-     * @return
-     */
-    private String gettime(int progress) {
-        return DateTimeUtils.stringForMillisecondTime(progress, true, true);
-    }
 
     /**
      * 更新预览视频播放器比例
      */
-    protected void updatePreviewFrameAspect(int nVideoWidth, int nVideoHeight) {
+    private void updatePreviewFrameAspect(int nVideoWidth, int nVideoHeight) {
         if (mVideoPreview != null) {
             mCurAspect = (float) (nVideoWidth / (nVideoHeight + 0.0));
-            mPreviewPlayer.setAspectRatio(mCurAspect);
         }
     }
 
 
     @Override
     public void onBackPressed() {
-        SelectMediaActivity.mIsAppend = false;
+        if (mFragCurrent != null) {
+            if (mFragCurrent == mTransitionFragment) {
+                onBack();
+                return;
+            }
+        }
         stopVideo();
         if (mSplitHandler.isSpliting()) {
             if (mSplitHandler.onBackPressed()) {
@@ -1724,10 +1950,8 @@ public class EditPreviewActivity extends BaseActivity {
                 mIvVideoPlayState.setVisibility(View.VISIBLE);
                 mMainView.setVisibility(View.VISIBLE);
                 updateView();
-
                 mBtnTitleBarLeft.setVisibility(View.VISIBLE);
                 mBtnTitleBarRight.setVisibility(View.VISIBLE);
-
                 mHasChanged = false;
                 onListViewItemSelected();
             }
@@ -1760,14 +1984,21 @@ public class EditPreviewActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        SysAlertDialog.cancelLoadingDialog();
+        if (!mIsContinue) {
+            SysAlertDialog.cancelLoadingDialog();
+        }
         if (null != mMediaPlayer) {
+            mMediaPlayer.stop();
             mMediaPlayer.cleanUp();
             mMediaPlayer = null;
         }
-        if (mAdapterScene != null) {
-            mAdapterScene.onDestroy();
-            mAdapterScene = null;
+        if (null != mVirtualVideo) {
+            mVirtualVideo.release();
+            mVirtualVideo = null;
+        }
+        if (mMediaAdapter != null) {
+            mMediaAdapter.onDestroy();
+            mMediaAdapter = null;
         }
 
         unregisterReceiver(mReceiver);
@@ -1785,7 +2016,10 @@ public class EditPreviewActivity extends BaseActivity {
             }
             mTempRecfile = null;
         }
-        mVirtualVideo.release();
+        if (null != mSceneList) {
+            mSceneList.clear();
+            mSceneList = null;
+        }
         super.onDestroy();
     }
 
@@ -1797,7 +2031,6 @@ public class EditPreviewActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        // listView.setResume(false);
         super.onPause();
         if (null != mMediaPlayer) {
             mLastPlayPostion = mMediaPlayer.getCurrentPosition();
@@ -1834,11 +2067,10 @@ public class EditPreviewActivity extends BaseActivity {
             return;
         }
         mMediaPlayer.start();
-        mIvVideoPlayState.setImageResource(R.drawable.btn_pause);
+        mIvVideoPlayState.setBackgroundResource(R.drawable.btn_edit_pause);
         if (mSplitHandler.isSpliting()) {
-            mIvVideoPlayState.setImageResource(R.drawable.btn_pause);
+            mIvVideoPlayState.setBackgroundResource(R.drawable.btn_edit_pause);
         }
-        ViewUtils.fadeOut(this, mIvVideoPlayState);
     }
 
     private void pauseVideo() {
@@ -1850,7 +2082,7 @@ public class EditPreviewActivity extends BaseActivity {
             return;
         }
         mMediaPlayer.pause();
-        mIvVideoPlayState.setImageResource(R.drawable.btn_play);
+        mIvVideoPlayState.setBackgroundResource(R.drawable.btn_edit_play);
         if (mSplitHandler.isSpliting()) {
             mIvVideoPlayState.setVisibility(View.VISIBLE);
         } else {
@@ -1865,7 +2097,7 @@ public class EditPreviewActivity extends BaseActivity {
         if (mMediaPlayer.isPlaying()) {
             mMediaPlayer.stop();
         }
-        mIvVideoPlayState.setImageResource(R.drawable.btn_play);
+        mIvVideoPlayState.setBackgroundResource(R.drawable.btn_edit_play);
 
         if (mSplitHandler.isSpliting()) {
             mIvVideoPlayState.setVisibility(View.VISIBLE);
@@ -1899,21 +2131,20 @@ public class EditPreviewActivity extends BaseActivity {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
-                mTvVideoDuration.setText(gettime(progress) + "/"
-                        + gettime(Utils.s2ms(mMediaPlayer.getDuration())));
+                mTvCurTime.setText(getTime(progress));
+                mTvTotalTime.setText(getTime(mPlaybackDurationMs));
                 mMediaPlayer.seekTo(Utils.ms2s(progress));
             }
         }
     };
 
     private DragItemListener mDragItemListener = new DragItemListener() {
-
         @Override
         public void onRemove(int position) {
-            if (mAdapterScene.getCount() == 1) {
+            if (mMediaAdapter.getCount() == 1) {
                 int msgResId = R.string.just_only_one_scene;
                 try {
-                    Scene scene = mAdapterScene.getItem(0);
+                    Scene scene = mMediaAdapter.getItem(0);
                     if (null != scene) {
                         List<MediaObject> list = scene.getAllMedia();
                         if (null != list && list.size() >= 1) {
@@ -1928,10 +2159,9 @@ public class EditPreviewActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-
-                SysAlertDialog.showAutoHideDialog(EditPreviewActivity.this,
-                        null, getString(msgResId), Toast.LENGTH_SHORT);
+                onToast(getString(msgResId));
             } else {
+                mIndex = position;
                 onCreateDialog(DIALOG_REMOVE_ID).show();
             }
 
@@ -1939,11 +2169,19 @@ public class EditPreviewActivity extends BaseActivity {
 
         @Override
         public boolean isExt(int position) {
-            if (position >= mSceneList.size()) {
+            if (null == mSceneList || position >= mSceneList.size()) {
                 return false;
             }
-            MediaObject mo = mSceneList.get(position).getAllMedia().get(0);
-            VideoOb vo = (VideoOb) mo.getTag();
+            Scene scene = mSceneList.get(position);
+            if (null == scene || scene.getAllMedia().isEmpty()) {
+                return false;
+            }
+            MediaObject mo = scene.getAllMedia().get(0);
+            Object object = mo.getTag();
+            if (!(object instanceof VideoOb)) {
+                return false;
+            }
+            VideoOb vo = (VideoOb) object;
             if (vo == null) {
                 return false;
             }
@@ -1952,13 +2190,12 @@ public class EditPreviewActivity extends BaseActivity {
             } else {
                 return false;
             }
-
         }
     };
 
     private void reload() {
         if (getIntent().getBooleanExtra(IntentConstants.ALL_MEDIA_MUTE, false)) {
-            for (Scene scene : mAdapterScene.getMediaList()) {
+            for (Scene scene : mMediaAdapter.getMediaList()) {
                 for (MediaObject mediaObject : scene.getAllMedia()) {
                     mediaObject.setAudioMute(true);
                 }
@@ -1967,10 +2204,18 @@ public class EditPreviewActivity extends BaseActivity {
         mMediaPlayer.reset();
         mVirtualVideo.reset();
         mSbPreview.setHighLights(null);
-        setAllMediaAspectRatio(AspectRatioFitMode.KEEP_ASPECTRATIO);
-        for (Scene scene : mAdapterScene.getMediaList()) {
+//        setAllMediaAspectRatio(AspectRatioFitMode.KEEP_ASPECTRATIO);
+        for (Scene scene : mMediaAdapter.getMediaList()) {
+            for (MediaObject mediaObject : scene.getAllMedia()) {
+                if (mIsEnableBackground) {
+                    mediaObject.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO);
+                } else {
+                    mediaObject.setAspectRatioFitMode(AspectRatioFitMode.KEEP_ASPECTRATIO_EXPANDING);
+                }
+            }
             mVirtualVideo.addScene(scene);
         }
+        mMediaPlayer.setPreviewAspectRatio(mCurProportion);
         try {
             mVirtualVideo.build(mMediaPlayer);
         } catch (InvalidStateException e) {
@@ -1986,20 +2231,14 @@ public class EditPreviewActivity extends BaseActivity {
         if (mProportionDialog.mIndex == -1) {
             return;
         }
-        if (mProportionDialog.mIndex == ProportionDialog.ORIENTATION_AUTO) {
-            mCurProportion = 0;
-            mMediaPlayer.setPreviewAspectRatio(mCurProportion);
-        } else if (mProportionDialog.mIndex == ProportionDialog.ORIENTATION_SQUARE) {
-            mCurProportion = 1;
-            mMediaPlayer.setPreviewAspectRatio(mCurProportion);
+        if (mProportionDialog.mIndex == ProportionDialog.ORIENTATION_SQUARE) {
+            mProportionStatus = ProportionDialog.ORIENTATION_SQUARE;
         } else if (mProportionDialog.mIndex == ProportionDialog.ORIENTATION_LANDSCAPE) {
+            mProportionStatus = ProportionDialog.ORIENTATION_LANDSCAPE;
             // 横屏
-            mCurProportion = (float) 16 / 9;
-            mMediaPlayer.setPreviewAspectRatio(mCurProportion);
         } else if (mProportionDialog.mIndex == ProportionDialog.ORIENTATION_PORTRAIT) {
+            mProportionStatus = ProportionDialog.ORIENTATION_PORTRAIT;
             // 竖屏
-            mCurProportion = 0;
-            mMediaPlayer.setPreviewAspectRatio(mCurProportion);
             for (Scene mo : mSceneList) {
                 List<MediaObject> list = mo.getAllMedia();
                 if (null != list && list.size() > 0) {
@@ -2016,7 +2255,9 @@ public class EditPreviewActivity extends BaseActivity {
                         SysAlertDialog.showAutoHideDialog(this, null,
                                 getString(R.string.proportion_change_to_auto),
                                 Toast.LENGTH_LONG);
+                        //恢复为自动模式
                         mProportionDialog.mIndex = ProportionDialog.ORIENTATION_AUTO;
+                        mProportionStatus = ProportionDialog.ORIENTATION_AUTO;
                         break;
                     }
                 }
@@ -2024,30 +2265,23 @@ public class EditPreviewActivity extends BaseActivity {
             }
 
         } else {
+            mProportionStatus = ProportionDialog.ORIENTATION_AUTO;
         }
+        lastProportionStatus = mProportionStatus;
         reload();
         playVideo();
-        mProportionStatus = mProportionDialog.mIndex;
         mProportionDialog.resetStatus();
     }
 
-    /**
-     * 是否显示UI
-     *
-     * @param show
-     */
-    private void onUI(boolean show) {
-        if (null != mAddMenuLayout) {
-            if (show) {
-                mAddMenuLayout.setVisibility(View.VISIBLE);
-                if (mUIConfig.isHideText()) {
-                    findViewById(R.id.preview_addtext).setVisibility(View.GONE);
-                }
-            } else {
-                mAddMenuLayout.setVisibility(View.GONE);
-            }
-        }
 
+    /**
+     * 排序
+     */
+    private void onSortMedia() {
+        Intent intent = new Intent(this, SortMediaActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mMediaAdapter.getMediaList());
+        startActivityForResult(intent, REQUESTCODE_FOR_SORT);
+        overridePendingTransition(0, 0);
     }
 
     private DraggableAddGridView.AddItemOnClickListener mAddItemListener = new DraggableAddGridView.AddItemOnClickListener() {
@@ -2055,11 +2289,7 @@ public class EditPreviewActivity extends BaseActivity {
         @Override
         public void onClick(int index) {
             mAddItemIndex = index + 1;
-            mMenuLayout.setVisibility(View.GONE);
-            onUI(true);
-            mAdapterScene.setCheckId(-1);
-            seekToPosition(index, true);
-            pauseVideo();
+            onTransition(index);
         }
 
         @Override
@@ -2070,19 +2300,18 @@ public class EditPreviewActivity extends BaseActivity {
                     SdkEntryHandler.getInstance().onSelectVideo(
                             EditPreviewActivity.this);
                 } else {
-                    Intent intent = new Intent(EditPreviewActivity.this,
-                            com.rd.veuisdk.SelectMediaActivity.class);
-                    intent.putExtra(EditPreviewActivity.ACTION_APPEND, true);
-                    startActivityForResult(intent, REQUESTCODE_FOR_APPEND);
+                    int maxCount = getMaxAppend();
+                    if (maxCount == 0) {
+                        onToast(getString(R.string.media_un_exceed_num, mUIConfig.mediaCountLimit));
+                    } else {
+                        SelectMediaActivity.appendMedia(EditPreviewActivity.this, true,
+                                getIntent().getBooleanExtra(SelectMediaActivity.LOTTIE_IMAGE, false), maxCount, REQUESTCODE_FOR_APPEND);
+                    }
                 }
             } else if (type == 2) {
                 //排序界面时，禁用当前activity中的广播追加的回调
                 mParsedata = false;
-                Intent intent = new Intent();
-                intent.setClass(EditPreviewActivity.this, com.rd.veuisdk.SortMediaActivity.class);
-                intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mSceneList);
-                startActivityForResult(intent, REQUESTCODE_FOR_SORT);
-                overridePendingTransition(0, 0);
+                onSortMedia();
             }
         }
 
@@ -2092,6 +2321,11 @@ public class EditPreviewActivity extends BaseActivity {
             onDragItemClick(drag);
         }
     };
+
+    private int getMaxAppend() {
+        return mUIConfig.mediaCountLimit > 0 ? (mUIConfig.mediaCountLimit - mSceneList.size()) : -1;
+    }
+
     /**
      * 是否解析自定义相册发送的广播
      */
@@ -2107,7 +2341,6 @@ public class EditPreviewActivity extends BaseActivity {
                 }
             }
         }
-
     };
 
     private void boardcastResult(Intent intent) {
@@ -2133,15 +2366,12 @@ public class EditPreviewActivity extends BaseActivity {
                             e.printStackTrace();
                             onToast(getString(R.string.media_exception));
                         }
-
-
                     }
                 }
                 if (alMedias.size() == 0) {
                     Log.e(TAG, getString(R.string.select_medias));
                     return;
                 }
-
                 int len = alMedias.size();
                 for (int i = 0; i < len; i++) {
                     Scene scene = alMedias.get(i);
@@ -2151,15 +2381,78 @@ public class EditPreviewActivity extends BaseActivity {
                     } else {
                         addPosition = mSceneList.size();
                     }
-                    mAdapterScene.addItem(addPosition, scene);
+                    mMediaAdapter.addItem(addPosition, scene);
                     mSceneList.add(addPosition, scene);
                 }
                 reload();
                 playVideo();
-
                 initListView(mIndex);
             }
         });
 
+    }
+
+
+    @Override
+    public void onTransitionDurationChanged(float duration, boolean isApplyToAll) {
+        if (isApplyToAll) {
+            for (Scene scene : mSceneList) {
+                if (scene.getTransition() != null) {
+                    scene.getTransition().setDuration(duration);
+                }
+            }
+        } else {
+            Transition transition = mSceneList.get(mAddItemIndex - 1).getTransition();
+            if (transition != null) {
+                transition.setDuration(duration);
+            }
+        }
+        reload();
+        if (isApplyToAll) {
+            seekToPosition(0, true);
+        } else {
+            seekToPosition(mIndex, true);
+        }
+    }
+
+    @Override
+    public void onTransitionChanged(ArrayList<Transition> listTransition, boolean isApplyToAll) {
+        if (isApplyToAll) {
+            int len = Math.min(listTransition.size(), mSceneList.size());
+            for (int nTemp = 0; nTemp < len; nTemp++) {
+                mSceneList.get(nTemp).setTransition(listTransition.get(nTemp));
+            }
+        } else {
+            int index = mAddItemIndex - 1;
+            if (index >= 0 && !listTransition.isEmpty()) {
+                mSceneList.get(index).setTransition(listTransition.get(0));
+            }
+        }
+        mAddNewTran = true;
+        reload();
+        if (isApplyToAll) {
+            seekToPosition(0, true);
+        } else {
+            seekToPosition(mAddItemIndex - 1, true);
+        }
+    }
+
+    @Override
+    public void onBack() {
+        if (mFragCurrent == mTransitionFragment && null != mTransitionFragment) {
+            for (int n = 0; n < mSceneList.size(); n++) {
+                Scene scene = mSceneList.get(n);
+                scene.setTransition(mDefaultTransitionList.get(n));
+            }
+            reload();
+            seekToPosition(0, true);
+        }
+        returnToMenu();
+    }
+
+    @Override
+    public void onSure() {
+        mBackDiaglog = true;
+        returnToMenu();
     }
 }

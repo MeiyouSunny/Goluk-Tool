@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/splice_edit_sure"
+        android:layout_gravity="center_horizontal"/>
+
+    <include layout="@layout/factor_layout"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal">
+
+
+        <LinearLayout
+            android:id="@+id/edit_rotate"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/splice_mix_edit_menu_style"
+                android:text="@string/preview_rotate"
+                android:drawableTop="@drawable/splice_rotate"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_trim"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/splice_mix_edit_menu_style"
+                android:text="@string/preview_trim"
+                android:drawableTop="@drawable/splice_trim_n"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_replace"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/splice_mix_edit_menu_style"
+                android:text="@string/replace"
+                android:drawableTop="@drawable/splice_replace"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>

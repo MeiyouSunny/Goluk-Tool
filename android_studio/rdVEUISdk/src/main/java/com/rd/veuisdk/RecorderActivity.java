@@ -1,28 +1,22 @@
 package com.rd.veuisdk;
 
-import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Video;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
@@ -31,7 +25,6 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -45,19 +38,19 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.rd.gallery.ImageManager;
 import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.lib.ui.Rotatable;
 import com.rd.lib.ui.RotateImageView;
 import com.rd.lib.ui.RotateRelativeLayout;
 import com.rd.lib.utils.CoreUtils;
+import com.rd.lib.utils.LogUtil;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.recorder.AudioPlayer;
-import com.rd.recorder.ResultConstants;
 import com.rd.recorder.api.IRecorderCallBackShot;
 import com.rd.recorder.api.RecorderConfig;
 import com.rd.recorder.api.RecorderCore;
+import com.rd.recorder.api.ResultConstants;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.listener.ExportListener;
@@ -65,19 +58,20 @@ import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.VideoConfig;
 import com.rd.vecore.utils.ExportUtils;
 import com.rd.vecore.utils.Log;
+import com.rd.vecore.utils.MiscUtils;
 import com.rd.veuisdk.database.HistoryMusicCloud;
 import com.rd.veuisdk.faceu.FaceuHandler;
 import com.rd.veuisdk.faceu.IReloadListener;
 import com.rd.veuisdk.manager.CameraConfiguration;
+import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.manager.VEOSDBuilder;
 import com.rd.veuisdk.manager.VEOSDBuilder.OSDState;
 import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.ui.GlTouchView;
 import com.rd.veuisdk.ui.GlTouchView.CameraCoderViewListener;
-import com.rd.veuisdk.ui.HorizontalListViewCamera;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.CheckSDSize;
-import com.rd.veuisdk.utils.FileLog;
+import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.StorageUtils;
@@ -98,14 +92,11 @@ import static com.rd.veuisdk.R.id.rlSelectRecOrPhoto2;
  * @author abreal
  */
 @TargetApi(23)
-public class RecorderActivity extends BaseActivity {
+public class RecorderActivity extends AbstractRecordActivity {
 
     private final int BUTTON_STATE_START = 0;
     private final int BUTTON_STATE_LIVING = 1;
     private final int BUTTON_STATE_PAUSE = 2;
-    private final int REQUEST_CODE_PERMISSIONS = 1;
-    private final String LOG_TAG = "RecorderActivity";
-    private final String TAG = RecorderActivity.class.toString();
     static final String ACTION_TO_EDIT = "action_to_edit";
     private MyOrientationEventListener mOrientationListener;
     /**
@@ -122,7 +113,7 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 闪光灯
      */
-    private RotateImageView mBtnFlashModeCtrl, mBtnFlashModeCtrl1;
+    private RotateImageView mBtnConfig, mBtnConfig1, mBtnFlashModeCtrl, mBtnFlashModeCtrl1;
     private RotateRelativeLayout mRlFilterList, mSelectRec1, mSelectMV1,
             mSelectMV2, mRecordRRL, mSelectRec2, mSelectPhoto1,
             mSelectPhoto2, mBtnBottomRightForLandscape,
@@ -130,10 +121,6 @@ public class RecorderActivity extends BaseActivity {
 
     private RotateImageView mBtnShootingRatio, mBtnShootingRatio1;
 
-    /**
-     * 摄象头滤镜Listview
-     */
-    protected HorizontalListViewCamera mLvCameraFilter;
     /**
      * 控制特效是否显示滤镜列表
      */
@@ -178,14 +165,13 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 摄像头初始化成功
      */
-    private boolean bCameraPrepared = false, bSelectPhoto;
+    private boolean bSelectPhoto;
     private GlTouchView mGlTouchView;
     /**
      * 变焦handler
      */
     private CameraZoomHandler m_hlrCameraZoom;
-    private Dialog mDlgCameraFailed;
-    private com.rd.lib.ui.PreviewFrameLayout mRlframeSquarePreview, mFocusFrameLayout;
+    private PreviewFrameLayout mRlframeSquarePreview;
     private RelativeLayout
             mRecordingCameraMoreBar, mVideoNewRelative,
             mVideoNewRelative1, mRllivingBar0;
@@ -205,12 +191,10 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 录制进度控件
      */
-    private LinearLayout mLinearSeekbar, mLinearSeekbar1, mllAddMusic,
-            mllAddMusic1;
+    private LinearLayout mLinearSeekbar, mLinearSeekbar1, mllAddMusic, mllAddMusic1;
 
-    private ExtButton m_btnBottomRight, m_btnBottomRightForSquare,
-            m_btnBottomRightForLandscape;
-    private ArrayList<MediaObject> mRecordVideoList = new ArrayList<MediaObject>();
+    private ExtButton m_btnBottomRight, m_btnBottomRightForSquare, m_btnBottomRightForLandscape;
+    private ArrayList<MediaObject> mRecordVideoList = new ArrayList<>();
     private IRecoder iListener;
     /**
      * 视频录制时间限制 单位为ms 0代表没有时间限制
@@ -256,8 +240,6 @@ public class RecorderActivity extends BaseActivity {
 
     // mv 视频 拍照状态保存
     private int curPosition = POSITION_REC;
-
-
     private CameraConfiguration cameraConfig;
     private boolean enableFrontMirror = false;
     //混音播放器
@@ -273,31 +255,28 @@ public class RecorderActivity extends BaseActivity {
 
     private FaceuHandler faceUnityHandler;
 
-    //录制模式（长方形、正方形）
-    private boolean isScreen = true;
-
+    //录制模式（长方形(true)、正方形(false)）
+    private boolean isFullScreen = true;
     private PreviewFrameLayout cameraPreview;
     private RelativeLayout cameraParent;
-
-    //onprepared 已经回调成功
-    private boolean bOnPrepred = false;
     private int mSquareTitlebarHeight = 0;
-    private FrameLayout.LayoutParams mCameraParams = null;
+
     //录制方向
     private int mRecordOrientation = CameraConfiguration.ORIENTATION_AUTO;
+    private RecyclerView mRecyclerViewFilter;
+    private LinearLayout mStrengthLayout;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        TAG = "RecorderActivity";
+        CoreUtils.hideVirtualBar(this);
         super.onCreate(savedInstanceState);
         mCurrentEffectIndex = 0;
         hasJben_MR2 = CoreUtils.hasJELLY_BEAN_MR2();//4.3以下不支持切换录制模式
-        requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置无标题
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);// 去掉信息栏
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         lastEnableBeauty = AppConfiguration.enableBeauty();
-        iListener = new IRecoder();
+
         gotoEdit = getIntent().getBooleanExtra(ACTION_TO_EDIT, false);
         editResult = getIntent().getBooleanExtra(
                 IntentConstants.EDIT_CAMERA_WAY, false);
@@ -315,6 +294,7 @@ public class RecorderActivity extends BaseActivity {
             mMVMaxTime = 15 * 1000;
         }
         mMVMinTime = cameraConfig.cameraMVMinTime * 1000;
+
         mUIType = cameraConfig.cameraUIType;
         mUseMultiShoot = cameraConfig.useMultiShoot;
         mIsSaveToAlbum = cameraConfig.isSaveToAlbum;
@@ -325,8 +305,6 @@ public class RecorderActivity extends BaseActivity {
         } else {
             isFrontCamera = true;
         }
-        // trailerTime = Math.max(0,
-        // Math.min(1000, (int) (cameraConfig.cameraTrailerTime * 1000)));
         osdHeader = Math.max(0,
                 Math.min(2000, (int) (cameraConfig.cameraOsdHeader * 1000)));
         osdEnd = Math.max(0,
@@ -341,7 +319,6 @@ public class RecorderActivity extends BaseActivity {
         hideMV = cameraConfig.hideMV;
         hideRec = cameraConfig.hideRec;
         hidePhoto = cameraConfig.hidePhoto;
-        // m_bTakePhotoReturnPath = !mUseMultiShoot;
 
         if (hideRec) {
             curPosition = POSITION_MV;
@@ -353,8 +330,9 @@ public class RecorderActivity extends BaseActivity {
             mUseMultiShoot = false;
             hideAlbum = true;
         }
-        mStrActivityPageName = getString(R.string.activity_page_name_livecamera);
         setContentView(R.layout.main_camera);
+        mRecyclerViewFilter = $(R.id.recyclerViewFilter);
+        mStrengthLayout = $(R.id.strengthLayout);
         mOrientationListener = new MyOrientationEventListener(this);
         if (CoreUtils.hasIceCreamSandwich()) {
             // 响应退出虚拟键
@@ -376,20 +354,15 @@ public class RecorderActivity extends BaseActivity {
         if (editResult) {
             mSquareCameraLayout.setVisibility(View.INVISIBLE);
             mScreenCameraLayout.setVisibility(View.VISIBLE);
-            isScreen = true;
+            isFullScreen = true;
 
             if (mUIType == CameraConfiguration.WIDE_SCREEN_CAN_CHANGE) {
-
-                /**
-                 * 默认16：9
-                 */
+                //默认16：9
                 mRecordOrientation = cameraConfig.orientation;
             } else if (mUIType == CameraConfiguration.SQUARE_SCREEN_CAN_CHANGE) {
-
                 // 可自动切换时，16:9锁屏有效
                 mRecordOrientation = cameraConfig.orientation;
             } else if (mUIType == CameraConfiguration.ONLY_WIDE_SCREEN) {
-
                 // 仅全屏录制时，锁屏有效
                 mRecordOrientation = cameraConfig.orientation;
             }
@@ -398,40 +371,40 @@ public class RecorderActivity extends BaseActivity {
             if (mUIType == CameraConfiguration.WIDE_SCREEN_CAN_CHANGE) {
                 mSquareCameraLayout.setVisibility(View.INVISIBLE);
                 mScreenCameraLayout.setVisibility(View.VISIBLE);
-                isScreen = true;
-                /**
-                 * 默认16：9
-                 */
+                isFullScreen = true;
+                //默认16：9
                 mRecordOrientation = cameraConfig.orientation;
             } else if (mUIType == CameraConfiguration.SQUARE_SCREEN_CAN_CHANGE) {
                 mScreenCameraLayout.setVisibility(View.INVISIBLE);
                 mSquareCameraLayout.setVisibility(View.VISIBLE);
-                isScreen = false;
+                isFullScreen = false;
                 // 可自动切换时，16:9锁屏有效
                 mRecordOrientation = cameraConfig.orientation;
             } else if (mUIType == CameraConfiguration.ONLY_SQUARE_SCREEN) {
                 mScreenCameraLayout.setVisibility(View.INVISIBLE);
                 mSquareCameraLayout.setVisibility(View.VISIBLE);
                 mBtnShootingRatio1.setVisibility(View.GONE);
-                isScreen = false;
+                isFullScreen = false;
             } else if (mUIType == CameraConfiguration.ONLY_WIDE_SCREEN) {
                 mScreenCameraLayout.setVisibility(View.VISIBLE);
                 mSquareCameraLayout.setVisibility(View.INVISIBLE);
                 mBtnShootingRatio.setVisibility(View.GONE);
-                isScreen = true;
+                mBtnShootingRatio90.setVisibility(View.GONE);
+                mBtnShootingRatio270.setVisibility(View.GONE);
+                isFullScreen = true;
                 // 仅全屏录制时，锁屏有效
                 mRecordOrientation = cameraConfig.orientation;
             }
         }
-
         if (!hasJben_MR2) {//4.3以下只支持竖屏全屏(16:9)
             mScreenCameraLayout.setVisibility(View.VISIBLE);
             mSquareCameraLayout.setVisibility(View.INVISIBLE);
             mUIType = CameraConfiguration.ONLY_WIDE_SCREEN;
-            isScreen = true;
+            isFullScreen = true;
             mRecordOrientation = cameraConfig.orientation;
         }
-
+        //检查 相机权限
+        checkPermission();
         goPreviewByCameraSizeMode();
         changeLayoutWithOrientation(0);
         if (editResult) {
@@ -449,28 +422,26 @@ public class RecorderActivity extends BaseActivity {
             mBtnShootingRatio90.setVisibility(View.GONE);
             mBtnShootingRatio270.setVisibility(View.GONE);
         }
-
         faceUnityHandler = new FaceuHandler(this,
-                ((RadioGroup) findViewById(R.id.camare_filter_s)),
-                mLvCameraFilter, findViewById(R.id.camare_filter_layout),
+                ((RadioGroup) $(R.id.camare_filter_s)),
+                $(R.id.filterLayout), $(R.id.rg_menu_parent),
                 (enableFace ? pack : null), SdkEntry.getSdkService()
-                .getFaceUnityConfig(), null,
-                (LinearLayout) findViewById(R.id.fuLayout),
-                (LinearLayout) findViewById(R.id.fuLayout_parent), ((LinearLayout) findViewById(R.id.filter_parent_layout)), new IReloadListener() {
+                .getFaceUnityConfig(), (LinearLayout) $(R.id.fuLayout),
+                (LinearLayout) $(R.id.fuLayout_parent), ((LinearLayout) $(R.id.filter_parent_layout)), new IReloadListener() {
             @Override
-            public void onReloadFilters() {
+            public void onReloadFilters(boolean isVer) {
                 if (bCameraPrepared) {
-                    List<String> effects = RecorderCore.getSupportedColorEffects();
                     if (null != mCameraEffectHandler) {
-                        mCameraEffectHandler.initAllEffects(mLvCameraFilter, effects);
-                        mLvCameraFilter.selectListItem(mCurrentEffectIndex);
+                        if (mCameraEffectHandler.isLookup()) {
+                            mCameraEffectHandler.notifyDataSetChanged(isVer);
+                        } else {
+                            List<String> effects = RecorderCore.getSupportedColorEffects();
+                            mCameraEffectHandler.initAllEffects(isVer, mRecyclerViewFilter, mStrengthLayout, effects, mCurrentEffectIndex);
+                        }
                     }
                 }
             }
         });
-        if (hasJben_MR2 && enableFace) {
-            faceUnityHandler.registerCallBack();
-        }
         // 仅全屏录制时， 确定是否锁屏
         if (mUIType == CameraConfiguration.ONLY_WIDE_SCREEN
                 || mUIType == CameraConfiguration.SQUARE_SCREEN_CAN_CHANGE
@@ -511,63 +482,67 @@ public class RecorderActivity extends BaseActivity {
      * 初始化录制视频的父容器大小和编码视频的参数
      */
     private void initCameraLayout() {
-        if (null == cameraParent) {
-            cameraParent = (RelativeLayout) findViewById(R.id.cameraParentLayout);
-            cameraPreview = (PreviewFrameLayout) findViewById(R.id.cameraPreviewLayout);
-            mFocusFrameLayout = (PreviewFrameLayout) findViewById(R.id.focus_frame_layout);
-            //设置滤镜左右切换，限制可组件的区域部分支持，注意保留选音乐、切前后置可点击
-            mFocusFrameLayout.setAspectRatio(1.2f);
-            mSquareTitlebarHeight = getResources().getDimensionPixelSize(R.dimen.record_titlebar_height);
-            mCameraParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        if (hasJben_MR2 && enableFace) {
+            faceUnityHandler.registerCallBack();
         }
-        VirtualVideo.Size size = new VirtualVideo.Size(0, 0);
-        if (isScreen) {//初始化全屏模式
-            SdkEntry.getSdkService().getCameraConfig().getRecordVideoSize(9.0f / 16, size, true, false);
-            //在设置录制父容器大小之前设置录制视频的参数
-            RecorderConfig config = new RecorderConfig().setVideoSize(size.getWidth(), size.getHeight())
-                    .setVideoFrameRate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoFrameRate())
-                    .setVideoBitrate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoBitRate())
-                    .setEnableFront(isFrontCamera).setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
-                    .setKeyFrameTime(SdkEntry.getSdkService().getCameraConfig().recordVideoKeyFrameTime)
-                    .setEnableFrontMirror(enableFrontMirror);
-            RecorderCore.setEncoderConfig(config);
-            RecorderCore.enableFaceU(enableFace);
+        if (null != faceUnityHandler) {
+            faceUnityHandler.setFuNotifyPause(true);
+        }
 
+        if (null == cameraParent) {
+            cameraParent = $(R.id.cameraParentLayout);
+            cameraPreview = $(R.id.cameraPreviewLayout);
+            mSquareTitlebarHeight = getResources().getDimensionPixelSize(R.dimen.record_titlebar_height);
+        }
+        FrameLayout.LayoutParams mCameraParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+
+
+        if (isFullScreen) {
+            //初始化全屏模式
             //设置录制父容器的大小
-            DisplayMetrics display = CoreUtils.getMetrics();
             mCameraParams.setMargins(0, 0, 0, 0);
             cameraPreview.setLayoutParams(mCameraParams);
-            cameraPreview.setAspectRatio(display.widthPixels / (display.heightPixels + 0.0));
-        } else {//初始化正方形模式
-            SdkEntry.getSdkService().getCameraConfig().getRecordVideoSize(1, size, true, true);
-            //在设置录制父容器大小之前设置录制视频的参数
-            RecorderConfig config = new RecorderConfig().setVideoSize(size.getWidth(), size.getHeight())
-                    .setVideoFrameRate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoFrameRate())
-                    .setVideoBitrate(SdkEntry.getSdkService().getCameraConfig().getRecordVideoBitRate())
-                    .setEnableFront(isFrontCamera)
-                    .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
-                    .setEnableFrontMirror(enableFrontMirror)
-                    .setKeyFrameTime(SdkEntry.getSdkService().getCameraConfig().recordVideoKeyFrameTime)
-                    .setEnableAutoFocus(true).setEnableAutoFocusRecording(false);
-            RecorderCore.setEncoderConfig(config);
-            RecorderCore.enableFaceU(enableFace);
-
+            //全面屏
+            cameraPreview.setAspectRatio(0f);
+        } else {
+            //初始化正方形模式
             //设置录制父容器的大小
             mCameraParams.setMargins(0, mSquareTitlebarHeight, 0, 0);
             cameraPreview.setLayoutParams(mCameraParams);
             cameraPreview.setAspectRatio(1.0f);
         }
-        if (!bOnPrepred) {
-            bOnPrepred = true;
+        //录制参数
+        VirtualVideo.Size size = AppConfiguration.getRecorderSize(!isFullScreen);
+        RecorderConfig config = new RecorderConfig().setVideoSize(size.getWidth(), size.getHeight()).
+                setVideoFrameRate(cameraConfig.getRecordVideoFrameRate())
+                .setVideoBitrate(AppConfiguration.getRecorderBitrate() * 1000)
+                .setEnableFront(isFrontCamera)
+                .setEnableBeautify(canBeautiy).setBeauitifyLevel(5)
+                .setEnableFrontMirror(enableFrontMirror)
+                .setKeyFrameTime(cameraConfig.recordVideoKeyFrameTime)
+                .setEnableAutoFocus(true).setEnableAutoFocusRecording(false);
+        RecorderCore.setEncoderConfig(config);
+        RecorderCore.enableFaceU(enableFace);
+        if (!bRecordPrepared) {
+            iListener = new IRecoder();
+            bRecordPrepared = true;
             //清理，防止之前已经初始过
             RecorderCore.recycleCameraView();
             //准备录制界面
             RecorderCore.onPrepare(cameraParent, iListener);
+
             //设置放大缩小Handler
             RecorderCore.setCameraZoomHandler(m_hlrCameraZoom);
             //是否静音
             RecorderCore.setMute(cameraConfig.audioMute);
         }
+        //防止离开绘制道具，造成道具画面闪硕
+
+        if (null != faceUnityHandler) {
+            faceUnityHandler.setFuNotifyPause(false);
+        }
+
+
     }
 
     /**
@@ -580,7 +555,7 @@ public class RecorderActivity extends BaseActivity {
         if (RecorderCore.isRegistedOsd()) {
             RecorderCore.registerOSD(null);
         }
-        isScreen = true;
+        isFullScreen = true;
         initCameraLayout();
 
 
@@ -591,7 +566,7 @@ public class RecorderActivity extends BaseActivity {
             RecorderCore.registerOSD(null);
         }
         if (enableWatermark) {// 必须在主线程创建
-            osd = SdkEntry.createOSDBuilder(RecorderActivity.this, (!isScreen));
+            osd = SdkEntry.createOSDBuilder(RecorderActivity.this, (!isFullScreen));
             if (null != osd) {
                 osd.setOSDState(OSDState.header);
                 RecorderCore.registerOSD(osd);
@@ -606,7 +581,6 @@ public class RecorderActivity extends BaseActivity {
      * @param progress
      */
     private void setRecordOSDProgress(int progress) {
-
         if (null != osd) {
             if (progress >= osdHeader) {
                 if (osd.mState != OSDState.end) {
@@ -616,7 +590,6 @@ public class RecorderActivity extends BaseActivity {
                     osd.recorderTime = progress;
                 }
             }
-
         }
     }
 
@@ -624,116 +597,83 @@ public class RecorderActivity extends BaseActivity {
      * 正方形录制
      */
     private void onInitializeSquareRecorder() {
-
         switchRecOrPhotoItemLayout();
         switchRecOrPhoto();
         //清除水印
         RecorderCore.registerOSD(null);
-        isScreen = false;
+        isFullScreen = false;
         initCameraLayout();
 
     }
 
+    /**
+     * 摄像头授权成功，初始化摄像头
+     */
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_CODE_PERMISSIONS: {
-                for (int i = 0; i < permissions.length; i++) {
-                    if (grantResults[i] != PackageManager.PERMISSION_GRANTED) {
-                        if (permissions[i] == Manifest.permission.CAMERA) {
-                            onAutoToast(null, getString(R.string.permission_camera_error));
-                        } else {
-                            onAutoToast(null, getString(R.string.permission_audio_error));
-                        }
-                        finish();
-                        return;
-                    }
-                    if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
-                        onInitializeSquareRecorder();
-                    } else {
-                        onInitializeScreenRecorder();
-                    }
-                }
-            }
-            break;
-            default:
-                break;
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!ImageManager.hasStorage()) {
-            Dialog dlg = SysAlertDialog.showAlertDialog(this,
-                    R.string.app_name, R.string.record_no_external_storage,
-                    android.R.string.cancel,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            finish();
-                        }
-                    }, -1, null);
-            dlg.setCancelable(false);
-            dlg.setCanceledOnTouchOutside(false);
+    public void onCameraPermissionGranted() {
+        exportDefaultMusic();
+        initDefaultMusic();
+        if ((!isFullScreen)) {
+            onInitializeSquareRecorder();
+        } else {
+            onInitializeScreenRecorder();
         }
     }
 
     @Override
     protected void onResume() {
+        super.onResume();
+        needPostRecycleCameraView = false;
+        if (null != faceUnityHandler) {
+            faceUnityHandler.setFuNotifyPause(false);
+        }
         try {
             mLayoutBlackScreen.setVisibility(View.INVISIBLE);// 取消黑屏
-
             // 显示切换摄像头按钮，即是否为多个摄像头，
             mBtnSwitchCamera.setVisibility(View.VISIBLE);
-            mBtnSwitchCamera.postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    checkFlashMode();
-                }
-            }, 300);
-
-            // Log.d(LOG_TAG, "onResume");
             if (!enableLockScreen) {
                 mOrientationListener.enable();
             }
-            mLvCameraFilter.post(new Runnable() {
-
-                @Override
-                public void run() {
-                    mLvCameraFilter.selectListItem(mLvCameraFilter
-                            .getCurrentItemId() != -1 ? mLvCameraFilter
-                            .getCurrentItemId() : 0);
-                }
-            });
-
             if (AppConfiguration.isTrainingCaptureVideo()) {
                 AppConfiguration.setTrainingCaptureVideo(true);
             }
         } catch (Exception ex) {
         }
-        super.onResume();
+
     }
 
     @Override
     public void onPause() {
         mOrientationListener.disable();
-        synchronized (this) {
-            if (mIsRecording) {
-                stopLiveOrRecordStream(false);
-            }
+        if (mIsRecording) {
+            stopLiveOrRecordStream(false);
         }
         super.onPause();
         if (null != faceUnityHandler) {
             faceUnityHandler.onPasue();
         }
+        if (null != mHandler && null != m_runnableWaiting) {
+            mHandler.removeCallbacks(m_runnableWaiting);
+        }
+        mBtnConfig.setEnabled(true);
+        mBtnConfig1.setEnabled(true);
+
     }
+
+    private boolean needPostRecycleCameraView = false;
 
     @Override
     protected void onStop() {
         super.onStop();
+        if (!isFinish && permissionGranted) {
+            if (mIsRecording) {
+                needPostRecycleCameraView = true;
+            } else {
+                needPostRecycleCameraView = false;
+                RecorderCore.recycleCameraView();
+            }
+        }
+        mIsRecording = false;
         if (null != mHandler) {
             mHandler.removeCallbacks(mRunnableEffect);
             if (null != m_runnableWaiting) {
@@ -754,11 +694,10 @@ public class RecorderActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if (null != mAudioPlayer) {
-            mAudioPlayer.stop();
-            mAudioPlayer.release();
+        if (null != mHandler && null != m_runnableWaiting) {
+            mHandler.removeCallbacks(m_runnableWaiting);
         }
-
+        releaseAudioPlayer();
         if (null != mGlTouchView) {
             mGlTouchView.setViewHandler(null);
             mGlTouchView.setZoomHandler(null);
@@ -769,10 +708,6 @@ public class RecorderActivity extends BaseActivity {
         glListener = null;
 
         mOrientationListener = null;
-        if (null != mLvCameraFilter) {
-            mLvCameraFilter.removeAllListItem();
-            mLvCameraFilter = null;
-        }
         if (null != mCameraEffectHandler) {
             mCameraEffectHandler.recycle();
             mCameraEffectHandler = null;
@@ -807,10 +742,13 @@ public class RecorderActivity extends BaseActivity {
             cancelWaitingRecord();
             return;
         }
+        if (RecorderCore.isRecording()) {
+            return;
+        }
+        gotoEdit = false;
+        stopLiveOrRecordStream(false);
         ThreadPoolUtils.execute(new Runnable() {
             public void run() {
-                gotoEdit = false;
-                stopLiveOrRecordStream(false);
                 // 先删除临时文件
                 for (MediaObject mo : mRecordVideoList) {
                     Utils.cleanTempFile(mo.getMediaPath());
@@ -839,8 +777,6 @@ public class RecorderActivity extends BaseActivity {
                     mSelectRec1,
                     mSelectPhoto1,
                     mRecordRRL,
-                    // mBtnAddMusic,
-                    // mBtnRecord,
                     mBtnBeauty,
                     m_btnWaiting,
                     mBtnSwitchCamera,
@@ -878,7 +814,6 @@ public class RecorderActivity extends BaseActivity {
     private void changeLayoutWithOrientation(int nOrientation) {
         int dp2px30 = CoreUtils.dip2px(this, 30);
         if (nOrientation == 90) {
-            //
             mRecordingCameraMoreBar.setVisibility(View.INVISIBLE);
             // 滤镜按钮
             RelativeLayout.LayoutParams lp1 = new RelativeLayout.LayoutParams(
@@ -929,9 +864,9 @@ public class RecorderActivity extends BaseActivity {
             lp5.rightMargin = CoreUtils.dip2px(this, 0);
             mTimerTv.setLayoutParams(lp5);
 
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2))
                     .setText(getString(R.string.m_short_mv, mMVMaxTime / 1000));
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1))
                     .setText(getString(R.string.m_short_mv, mMVMaxTime / 1000));
         } else if (nOrientation == 270) {
             //
@@ -985,9 +920,9 @@ public class RecorderActivity extends BaseActivity {
             lp5.rightMargin = CoreUtils.dip2px(this, 0);
             mTimerTv.setLayoutParams(lp5);
 
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2))
                     .setText(getString(R.string.m_short_mv, mMVMaxTime / 1000));
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1))
                     .setText(getString(R.string.m_short_mv, mMVMaxTime / 1000));
         } else if (nOrientation == 0) {
             // 滤镜按钮
@@ -1012,12 +947,6 @@ public class RecorderActivity extends BaseActivity {
             lp2.leftMargin = 0;
             lp2.rightMargin = dp2px30;
             mBtnBottomRight.setLayoutParams(lp2);// m_rrlbtnDeleteVideo
-            // m_btnDeleteVideo
-            if (mLayoutSelectRecOrPhoto1.getVisibility() == View.VISIBLE) {
-
-            } else {
-
-            }
             mBtnBottomRight.setVisibility(View.VISIBLE);
             // 横屏删除按钮
             RelativeLayout.LayoutParams lp4 = new RelativeLayout.LayoutParams(
@@ -1055,10 +984,10 @@ public class RecorderActivity extends BaseActivity {
             lp5.topMargin = CoreUtils.dip2px(this, 12);
             mTimerTv.setLayoutParams(lp5);
 
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2))
                     .setText(getString(R.string.m_short_mv_no_line,
                             mMVMaxTime / 1000));
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1))
                     .setText(getString(R.string.m_short_mv_no_line,
                             mMVMaxTime / 1000));
         }
@@ -1074,10 +1003,7 @@ public class RecorderActivity extends BaseActivity {
         if (bCameraPrepared) {
             return;
         }
-        if (null != mDlgCameraFailed) {
-            mDlgCameraFailed.dismiss();
-            mDlgCameraFailed = null;
-        }
+        closeCameraFailedDialog();
 
         Animation animForTop = AnimationUtils.loadAnimation(
                 RecorderActivity.this, R.anim.slide_out_to_top);
@@ -1091,16 +1017,18 @@ public class RecorderActivity extends BaseActivity {
 
     }
 
+    private boolean isFinish = false;
+
     /**
      * 调用finish
      */
-    @SuppressWarnings("deprecation")
     private void finishCamGate() {
         int height = this.getWindowManager().getDefaultDisplay().getHeight();
-        LayoutParams lParams = mIvOpenCamAnimBottom.getLayoutParams();
-        lParams.height = height / 2 + 100;
-        mIvOpenCamAnimBottom.setLayoutParams(lParams);
-
+        ViewGroup.LayoutParams lParams = mIvOpenCamAnimBottom.getLayoutParams();
+        if (null != lParams) {
+            lParams.height = height / 2 + 100;
+            mIvOpenCamAnimBottom.setLayoutParams(lParams);
+        }
         Animation animForTopDown = new TranslateAnimation(0.0f, 0.0f,
                 -height / 2, 0.0f);
         animForTopDown.setDuration(400);
@@ -1120,70 +1048,83 @@ public class RecorderActivity extends BaseActivity {
 
             @Override
             public void run() {
+                isFinish = true;
+                RecorderCore.recycleCameraView();
+                releaseAudioPlayer();
+                RecorderCore.onDestory();
                 RecorderActivity.super.finish();
                 RecorderActivity.this.overridePendingTransition(0, 0);
             }
         }, 300);
     }
 
+    private void releaseAudioPlayer() {
+        if (null != mAudioPlayer) {
+            synchronized (mAudioPlayer) {
+                if (null != mAudioPlayer) {
+                    try {
+                        mAudioPlayer.stop();
+                        mAudioPlayer.release();
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    } finally {
+                        mAudioPlayer = null;
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * 开始直播或录制
      */
-    synchronized void startLiveOrRecordStream() {
+    private synchronized void startLiveOrRecordStream() {
         // 是否为竖屏
         runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
                 onRegisterOsd();
-                if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
-                    mLocalSaveFileNameStr = PathUtils
-                            .getMp4FileNameForSdcard();
+                mLocalSaveFileNameStr = PathUtils.getMp4FileNameForSdcard();
 
-                    RecorderCore.setOrientation(tempVideoOrientaion);
-                    try {
-                        RecorderCore.startRecord(mLocalSaveFileNameStr);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    mLocalSaveFileNameStr = PathUtils
-                            .getMp4FileNameForSdcard();
-                    RecorderCore.setOrientation(tempVideoOrientaion);
-                    try {
-                        RecorderCore.startRecord(mLocalSaveFileNameStr);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                RecorderCore.setOrientation(tempVideoOrientaion);
+                try {
+                    RecorderCore.startRecord(mLocalSaveFileNameStr);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
             }
         });
 
     }
 
-    synchronized int pauseLiveRecordStream() {
-        mIsRecording = false;
-        return RecorderCore.onPauseRecord();
-    }
-
-    synchronized int continueRecordStream() {
-        return RecorderCore.onContinueRecord();
-    }
 
     private void gotoEdit() {
         if (curPosition == POSITION_REC) {
             //最大最小时长很接近
             if (!bSelectPhoto && isInMin()) {
-                onAutoToast("",
-                        getString(R.string.camera_min_limit_text));
+                String msg = getString(R.string.camera_min_limit_text, String.valueOf(mVideoMinTime / 1000));
+                onAutoToast("", msg);
                 return;
             }
         } else if (curPosition == POSITION_MV) {
             if (isInMin()) {
-                onAutoToast("", getString(R.string.camera_min_limit_text));
+                String msg = getString(R.string.camera_min_limit_text, String.valueOf(mMVMinTime / 1000));
+                onAutoToast("", msg);
+                return;
+            }
+
+        }
+        if (curPosition == POSITION_REC || curPosition == POSITION_MV) {
+            //防止录制的video太短，无法预览
+            if (curTotal < 800) {
+                String msg = getString(R.string.camera_min_limit_text, String.valueOf(0.8));
+                onAutoToast("", msg);
                 return;
             }
         }
+
         if (enableWatermark) {
             if (startTrailer) {
                 saveMedia();
@@ -1287,7 +1228,7 @@ public class RecorderActivity extends BaseActivity {
                 } catch (Exception ex) {
                 }
             } else {
-                onAutoToast("", getString(R.string.video_save_fail));
+                onAutoToast("", getString(R.string.video_save_failed));
             }
             resetVideo();
         } else if (mRecordVideoList.size() > 1) {
@@ -1334,7 +1275,7 @@ public class RecorderActivity extends BaseActivity {
                         doSaveAlbum(mLocalSaveFileNameStr);
                         onAutoToast("", getString(R.string.video_save_success));
                     } else {
-                        onAutoToast("", getString(R.string.video_save_fail));
+                        onAutoToast("", getString(R.string.video_save_failed));
                     }
                 } else {
                     // 先删除临时文件
@@ -1354,14 +1295,11 @@ public class RecorderActivity extends BaseActivity {
      * 仅有一个视频对象
      */
     private void onSingleVideoSavedEndGoResultSize1() {
-
-        RecorderActivity.this.finishCamGate();
-        mLocalSaveFileNameStr = mRecordVideoList.get(0)
-                .getMediaPath();
+        mLocalSaveFileNameStr = mRecordVideoList.get(0).getMediaPath();
         if (!TextUtils.isEmpty(mLocalSaveFileNameStr)) {
             onSaveSuccessed();
         }
-
+        finishCamGate();
     }
 
 
@@ -1371,27 +1309,20 @@ public class RecorderActivity extends BaseActivity {
      */
     private void onSingleVideoSavedEndGoResultMore() {
         mLocalSaveFileNameStr = PathUtils.getMp4FileNameForSdcard();
-
-
         fastSave(new ExportEndListener() {
             @Override
             public void onExportEnd(int nResult) {
                 SysAlertDialog.cancelLoadingDialog();
                 onCheckRDEncypt(mLocalSaveFileNameStr);
                 if (nResult >= VirtualVideo.RESULT_SUCCESS) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            RecorderActivity.this.finishCamGate();
-                            // 合并成功删除临时文件
-                            for (MediaObject mo : mRecordVideoList) {
-                                Utils.cleanTempFile(mo.getMediaPath());
-                            }
-                            if (!TextUtils.isEmpty(mLocalSaveFileNameStr)) {
-                                onSaveSuccessed();
-                            }
-                        }
-                    });
+                    // 合并成功删除临时文件
+                    for (MediaObject mo : mRecordVideoList) {
+                        Utils.cleanTempFile(mo.getMediaPath());
+                    }
+                    if (!TextUtils.isEmpty(mLocalSaveFileNameStr)) {
+                        onSaveSuccessed();
+                    }
+                    RecorderActivity.this.finishCamGate();
                 } else {
                     // 先删除临时文件
                     for (MediaObject mo : mRecordVideoList) {
@@ -1413,7 +1344,7 @@ public class RecorderActivity extends BaseActivity {
      */
     private void onSaveSuccessed() {
         if (editResult) {
-            goToEditResult();
+            goToEditResult(false);
         } else if (!mUseMultiShoot) {
             Intent intent = new Intent();
             intent.putExtra(SdkEntry.INTENT_KEY_PICTURE_PATH, mLocalSavePicNameStr);
@@ -1424,7 +1355,6 @@ public class RecorderActivity extends BaseActivity {
                 doSaveAlbum(mLocalSaveFileNameStr);
             }
             setResult(RESULT_OK, intent);
-            finish();
         } else {
             SdkEntryHandler.getInstance().onExportRecorder(RecorderActivity.this, mLocalSaveFileNameStr);
         }
@@ -1434,7 +1364,7 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 返回编辑
      */
-    private void goToEditResult() {
+    private void goToEditResult(boolean finish) {
         Intent intent = new Intent();
         if (bSelectPhoto) {
             intent.putExtra(SdkEntry.INTENT_KEY_PICTURE_PATH, mLocalSavePicNameStr);
@@ -1444,7 +1374,9 @@ public class RecorderActivity extends BaseActivity {
         backBeauty(intent);
         backUseMvEdit(intent);
         setResult(RESULT_OK, intent);
-        finish();
+        if (finish) {
+            finish();
+        }
     }
 
     /***
@@ -1452,7 +1384,7 @@ public class RecorderActivity extends BaseActivity {
      */
     private void onSingleVideoSavedEndGoResultSizeBiggerFailed() {
         if (editResult) {
-            goToEditResult();
+            goToEditResult(true);
         } else if (!mUseMultiShoot) {
             Intent intent = new Intent();
             intent.putExtra(SdkEntry.INTENT_KEY_PICTURE_PATH, mLocalSavePicNameStr);
@@ -1472,7 +1404,7 @@ public class RecorderActivity extends BaseActivity {
      */
     private void onSingleVideoSavedEndGoResultSize0() {
         if (editResult) {
-            goToEditResult();
+            goToEditResult(true);
         } else if (!mUseMultiShoot) {
             Intent intent = new Intent();
             intent.putExtra(SdkEntry.INTENT_KEY_PICTURE_PATH, mLocalSavePicNameStr);
@@ -1488,7 +1420,6 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 添加红色进度条
      */
-    @SuppressWarnings("deprecation")
     private void addView_Red() {
         ImageView img = new ImageView(this);
         img.setBackgroundColor(getResources().getColor(
@@ -1521,56 +1452,6 @@ public class RecorderActivity extends BaseActivity {
         }
     }
 
-    private Runnable runnablePause = new Runnable() {
-
-        @Override
-        public void run() {
-            if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
-                mBtnRecord1.setEnabled(true);
-                pauseLiveRecordStream();
-                mBtnRecord1
-                        .setBackgroundResource(R.drawable.btn_shutter_stop_record);
-            } else {
-                mBtnRecord.setEnabled(true);
-                pauseLiveRecordStream();
-                mBtnRecord
-                        .setBackgroundResource(R.drawable.btn_shutter_stop_record);
-            }
-        }
-    };
-    private Runnable runnableContinue = new Runnable() {
-
-        @Override
-        public void run() {
-            if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
-                mBtnRecord1.setEnabled(true);
-                continueRecordStream();
-                mBtnRecord1.setBackgroundResource(R.drawable.btn_record_n);
-            } else {
-                mBtnRecord.setEnabled(true);
-                continueRecordStream();
-                mBtnRecord.setBackgroundResource(R.drawable.btn_record_n);
-            }
-        }
-    };
-
-
-    private class StopImp implements Runnable {
-
-        private boolean save = false;
-
-        public StopImp(boolean msave) {
-            save = msave;
-        }
-
-        @Override
-        public void run() {
-            (iListener).setSave(save);
-            RecorderCore.stopRecord();
-        }
-    }
-
-    ;
 
     /**
      * 执行录制完成后加密视频
@@ -1586,24 +1467,22 @@ public class RecorderActivity extends BaseActivity {
         }
     }
 
-    private StopImp istopImp;
 
     /**
      * 停止直播或录制
      */
-    synchronized void stopLiveOrRecordStream(boolean save) {
-
-        if (null != istopImp) {
-            mHandler.removeCallbacks(istopImp);
+    private void stopLiveOrRecordStream(boolean save) {
+        if (mIsRecording) {
+            (iListener).setSave(save);
+            try {
+                RecorderCore.stopRecord();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        istopImp = new StopImp(save);
-
-        mHandler.post(istopImp);
-
-
     }
 
-    private synchronized void setLiveStreamStatus(final Boolean bRecord) {
+    private void setLiveStreamStatus(final Boolean bRecord) {
         this.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -1612,9 +1491,8 @@ public class RecorderActivity extends BaseActivity {
                 if (startTrailer) {
                     return;
                 }
-
                 if (mIsRecording) {
-                    if (SdkEntry.getSdkService().getCameraConfig().enablePlayMusic
+                    if (cameraConfig.enablePlayMusic
                             && !mAudioPlayer.isPlaying() && mAudioMusic != null) {
                         RecorderCore.enableMixAudio(true);
                         if (isPause) {
@@ -1626,37 +1504,32 @@ public class RecorderActivity extends BaseActivity {
                         }
                     }
                 } else {
-                    if (SdkEntry.getSdkService().getCameraConfig().enablePlayMusic
+                    if (cameraConfig.enablePlayMusic
                             && mAudioPlayer.isPlaying()) {
                         mAudioPlayer.pause();
                         isPause = true;
                     }
                 }
-                if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {// 方形录制界面
+                if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
+                    // 方形录制界面
                     if (mIsRecording) {
                         buttonState = BUTTON_STATE_LIVING;
                         m_btnBottomRightForSquare
                                 .setBackgroundResource(R.drawable.camera_sure_button);
                         mBtnBottomLeftForSquare
                                 .setBackgroundResource(R.drawable.camera_face_button);
+                        mBtnRecord1
+                                .setBackgroundResource(R.drawable.btn_record_n);
                     } else {
                         buttonState = BUTTON_STATE_PAUSE;
                         m_btnBottomRightForSquare
                                 .setBackgroundResource(R.drawable.camera_sure_button);
                         mBtnBottomLeftForSquare
                                 .setBackgroundResource(R.drawable.camera_delete_button);
-                    }
-                    m_btnBottomRightForSquare.setVisibility(View.VISIBLE);
-                    // m_btnBottomRightForSquare.setEnabled(!mIsRecording);
-
-                    if (mIsRecording) {
-                        mBtnRecord1
-                                .setBackgroundResource(R.drawable.btn_record_n);
-                    } else {
                         mBtnRecord1
                                 .setBackgroundResource(R.drawable.btn_shutter_stop_record);
                     }
-
+                    m_btnBottomRightForSquare.setVisibility(View.VISIBLE);
                     mBtnRecord1.setEnabled(true);
 
                     if (mIsRecording) {
@@ -1694,27 +1567,12 @@ public class RecorderActivity extends BaseActivity {
                     }
                     m_btnBottomRight.setVisibility(View.VISIBLE);
                     m_btnBottomRightForLandscape.setVisibility(View.VISIBLE);
-                    // m_btnBottomRight.setEnabled(!mIsRecording);
-
+                    mBtnRecord.setEnabled(true);
                     if (mIsRecording) {
-                        mBtnRecord
-                                .setBackgroundResource(R.drawable.btn_record_n);
-                        // 黑屏情况
-                        // m_btnBlackScreen
-                        // .setCompoundDrawablesWithIntrinsicBounds(
-                        // 0,
-                        // R.drawable.main_camera_blackscreen_btn_back,
-                        // 0, 0);
-                        // m_btnBlackScreen.setBackgroundResource(0);
+                        mBtnRecord.setBackgroundResource(R.drawable.btn_record_n);
                         m_btnBlackScreen.setVisibility(View.VISIBLE);
 
-                    } else {
-                        mBtnRecord
-                                .setBackgroundResource(R.drawable.btn_shutter_stop_record);
-                    }
-                    mBtnRecord.setEnabled(true);
 
-                    if (mIsRecording) {
                         List<String> lstColorEffects = RecorderCore
                                 .getSupportedColorEffects();
                         mBtnBottomLeft.setEnabled(mUseMediaRecorder
@@ -1723,8 +1581,9 @@ public class RecorderActivity extends BaseActivity {
                         if (!mBtnBottomLeft.isEnabled()) {
                             onFilterListCtrlClick();
                         }
-
                     } else {
+                        mBtnRecord
+                                .setBackgroundResource(R.drawable.btn_shutter_stop_record);
                         mBtnBottomLeft.setEnabled(true);
                     }
 
@@ -1737,36 +1596,38 @@ public class RecorderActivity extends BaseActivity {
         });
     }
 
-    private void checkFlashMode() {
-        //正方形录制
-        if (!RecorderCore.isFaceFront()) {
-            isFrontCamera = false;
-            mBtnFlashModeCtrl1.setSelected(RecorderCore.getFlashMode());
-            mBtnFlashModeCtrl1.setEnabled(true);
-            mBtnFlashModeCtrl1
-                    .setImageResource(R.drawable.camera_flash_status);
+    /**
+     * 检测闪光灯和摄像头方向
+     */
+    @Override
+    public void checkFlashMode() {
+        if (isFullScreen) {
+            //长方形录制
+            if (!isFrontCamera) {
+                mBtnFlashModeCtrl.setSelected(RecorderCore.getFlashMode());
+                mBtnFlashModeCtrl.setEnabled(true);
+                mBtnFlashModeCtrl
+                        .setImageResource(R.drawable.camera_flash_status);
 
+            } else {
+                mBtnFlashModeCtrl.setEnabled(false);
+                mBtnFlashModeCtrl.setImageResource(R.drawable.camare_flare_un);
+
+            }
         } else {
-            isFrontCamera = true;
-            mBtnFlashModeCtrl1.setEnabled(false);
-            mBtnFlashModeCtrl1
-                    .setImageResource(R.drawable.camare_flare_un);
+            //正方形录制
+            if (!isFrontCamera) {
+                mBtnFlashModeCtrl1.setSelected(RecorderCore.getFlashMode());
+                mBtnFlashModeCtrl1.setEnabled(true);
+                mBtnFlashModeCtrl1
+                        .setImageResource(R.drawable.camera_flash_status);
+
+            } else {
+                mBtnFlashModeCtrl1.setEnabled(false);
+                mBtnFlashModeCtrl1
+                        .setImageResource(R.drawable.camare_flare_un);
+            }
         }
-        //长方形录制
-        if (!RecorderCore.isFaceFront()) {
-            isFrontCamera = false;
-            mBtnFlashModeCtrl.setSelected(RecorderCore.getFlashMode());
-            mBtnFlashModeCtrl.setEnabled(true);
-            mBtnFlashModeCtrl
-                    .setImageResource(R.drawable.camera_flash_status);
-
-        } else {
-            isFrontCamera = true;
-            mBtnFlashModeCtrl.setEnabled(false);
-            mBtnFlashModeCtrl.setImageResource(R.drawable.camare_flare_un);
-
-        }
-
     }
 
     /**
@@ -1774,35 +1635,20 @@ public class RecorderActivity extends BaseActivity {
      */
     private void initCameraFilterListItems() {
         if (null == mCameraEffectHandler) {
-            mCameraEffectHandler = new CameraEffectHandler(this);
+            mCameraEffectHandler = new CameraEffectHandler(this, cameraConfig.fitlerUrl, new CameraEffectHandler.IFilterCheck() {
+                @Override
+                public void onSelected(int nItemId, boolean user) {
+                    mCurrentEffectIndex = nItemId;
+                    onCheckEffect();
+                }
+            });
         }
-
-        mLvCameraFilter
-                .setListItemSelectListener(new HorizontalListViewCamera.OnListViewItemSelectListener() {
-
-                    @Override
-                    public void onSelected(View view, int nItemId, boolean user) {
-
-                        if (com.rd.veuisdk.utils.Utils
-                                .getSupportExpandEffects()) {
-                            Log.d(LOG_TAG,
-                                    getString(R.string.livecamera_record_switch_filter_failed));
-                        } else {
-                            mCurrentEffectIndex = nItemId;
-                            onCheckEffect();
-
-                        }
-                    }
-
-                    @Override
-                    public boolean onBeforeSelect(View view, int nItemId) {
-                        return false;
-                    }
-                });
-
-        List<String> effects = RecorderCore.getSupportedColorEffects();
-        mCameraEffectHandler.initAllEffects(mLvCameraFilter, effects);
-        mLvCameraFilter.selectListItem(0);
+        if (mCameraEffectHandler.isLookup()) {
+            mCameraEffectHandler.initAllEffects(faceUnityHandler.isCurrentIsVer(), mRecyclerViewFilter, mStrengthLayout, null, mCurrentEffectIndex);
+        } else {
+            List<String> effects = RecorderCore.getSupportedColorEffects();
+            mCameraEffectHandler.initAllEffects(faceUnityHandler.isCurrentIsVer(), mRecyclerViewFilter, mStrengthLayout, effects, mCurrentEffectIndex);
+        }
     }
 
     /**
@@ -1812,7 +1658,12 @@ public class RecorderActivity extends BaseActivity {
         if (null != mCameraEffectHandler) {
             String strEffectName = mCameraEffectHandler
                     .getInternalColorEffectByItemId(mCurrentEffectIndex);
-            RecorderCore.setColorEffect(strEffectName);
+            if (strEffectName.startsWith("/")) {
+                //lookup滤镜
+                RecorderCore.setLookFilter(strEffectName);
+            } else {
+                RecorderCore.setColorEffect(strEffectName);
+            }
         }
     }
 
@@ -1830,8 +1681,6 @@ public class RecorderActivity extends BaseActivity {
         }
         TranslateAnimation taCameraFilter;
         final LayoutParams lp = mRlFilterList.getLayoutParams();// mRlFilterList
-        // mLvCameraFilter
-        // m_llFilterList
         if (lp.height == 0) {
             if (mBtnBottomLeft.getVisibility() != View.VISIBLE
                     || !mBtnBottomLeft.isEnabled()) {
@@ -1887,6 +1736,12 @@ public class RecorderActivity extends BaseActivity {
         taCameraFilter.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
+                if (bShowFitlerListLayout) {
+                    if (null != mCameraEffectHandler) {
+                        //防止有时没有刷新成功  (在可见的情况下刷新UI)
+                        mCameraEffectHandler.notifyDataSetChanged(faceUnityHandler.isCurrentIsVer());
+                    }
+                }
             }
 
             @Override
@@ -1898,16 +1753,15 @@ public class RecorderActivity extends BaseActivity {
                 if (!bShowFitlerListLayout) {
                     lp.height = 0;
                     mRlFilterList.setLayoutParams(lp);
+                } else {
                 }
             }
         });
-
         taCameraFilter.setDuration(800);
         mRlFilterList.clearAnimation();
         taCameraFilter.setFillEnabled(true);
         taCameraFilter.setFillAfter(true);
         mRlFilterList.startAnimation(taCameraFilter);
-        taCameraFilter = null;
         onOrientationFilter();
     }
 
@@ -1917,78 +1771,48 @@ public class RecorderActivity extends BaseActivity {
     protected void onRecordButtonClick() {
         if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
             mBtnRecord1.setEnabled(false);
-            if (!CheckSDSize.getSDIsThanCurrentSize(StorageUtils
-                    .getStorageDirectory())) {
-                onAutoToast("",
-                        getString(R.string.sd_not_enough_record));
-            } else {
-                ThreadPoolUtils
-                        .execute(new ThreadPoolUtils.ThreadPoolRunnable() {
-
-                            @Override
-                            public void onBackground() {
-                                synchronized (this) {
-                                    if (!mIsRecording) {
-                                        startLiveOrRecordStream();
-                                    } else {
-                                        stopLiveOrRecordStream(false);
-                                    }
-                                }
-                            }
-                        });
-            }
         } else {
             mBtnRecord.setEnabled(false);
-            if (!CheckSDSize.getSDIsThanCurrentSize(StorageUtils
-                    .getStorageDirectory())) {
-                onAutoToast("",
-                        getString(R.string.sd_not_enough_record));
-            } else {
-                ThreadPoolUtils
-                        .execute(new ThreadPoolUtils.ThreadPoolRunnable() {
+        }
+        if (!CheckSDSize.getSDIsThanCurrentSize(StorageUtils
+                .getStorageDirectory())) {
+            onAutoToast("",
+                    getString(R.string.sd_not_enough_record));
+        } else {
+            ThreadPoolUtils
+                    .execute(new ThreadPoolUtils.ThreadPoolRunnable() {
 
-                            @Override
-                            public void onBackground() {
-                                synchronized (this) {
-                                    if (!mIsRecording) {
-                                        startLiveOrRecordStream();
-                                    } else {
-                                        stopLiveOrRecordStream(false);
-                                    }
+                        @Override
+                        public void onBackground() {
+                            synchronized (this) {
+                                if (!mIsRecording) {
+                                    startLiveOrRecordStream();
+                                } else {
+                                    stopLiveOrRecordStream(false);
                                 }
                             }
-                        });
-            }
+                        }
+                    });
         }
 
     }
 
-    protected void onSwitchCameraButtonClick() {
+    @Override
+    public void onSwitchCameraButtonClick() {
         if (null != faceUnityHandler) {
-            faceUnityHandler.onSwitchCamare(true);
+            faceUnityHandler.onSwitchCamareBefore();
         }
-        try {
-            RecorderCore.switchCamera();
-            checkFlashMode();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        RecorderCore.switchCamera();
         if (null != faceUnityHandler) {
-            faceUnityHandler.onSwitchCamare(false);
+            faceUnityHandler.onSwitchCamareAfter();
         }
+        isFrontCamera = RecorderCore.isFaceFront();
+        checkFlashMode();
     }
 
-    protected void onCameraMoreClick() {
-        if (mRecordingCameraMoreBar.getVisibility() == View.INVISIBLE) {
-            mRecordingCameraMoreBar.setVisibility(View.VISIBLE);
-        } else {
-            mRecordingCameraMoreBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    protected void onFlashModeClick() {
+    @Override
+    public void onFlashModeClick() {
         boolean re = RecorderCore.getFlashMode();
-
         if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
             if (RecorderCore.setFlashMode(!re)) {
                 mBtnFlashModeCtrl1.setSelected(!re);
@@ -1996,17 +1820,24 @@ public class RecorderActivity extends BaseActivity {
         } else {
             if (RecorderCore.setFlashMode(!re)) {
                 mBtnFlashModeCtrl.setSelected(!re);
-                // m_btnFlashModeCtrl90.setSelected(!re);
-                // m_btnFlashModeCtrl270.setSelected(!re);
             }
         }
+    }
+
+    private final int REQUEST_CONFIG = 265;
+
+    /**
+     * 编辑录制配置
+     */
+    private void onConfigClick() {
+        startActivityForResult(new Intent(this, RecorderConfigActivity.class), REQUEST_CONFIG);
 
     }
 
     private boolean isFrontCamera = true;
     private boolean canBeautiy = false;
 
-    protected void goPreviewByCameraSizeMode() {
+    private void goPreviewByCameraSizeMode() {
         mTotalWidth = 0;
         totalTime = 0;
         even = 0;
@@ -2022,56 +1853,27 @@ public class RecorderActivity extends BaseActivity {
                 canBeautiy = false;
             }
         }
-
-        //先确保相机录音权限,再初始化摄像头
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            int hasReadPermission = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
-
-            List<String> permissions = new ArrayList<String>();
-            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.RECORD_AUDIO);
-            }
-
-            hasReadPermission = checkSelfPermission(Manifest.permission.CAMERA);
-
-            if (hasReadPermission != PackageManager.PERMISSION_GRANTED) {
-                permissions.add(Manifest.permission.CAMERA);
-            }
-            if (!permissions.isEmpty()) {
-                requestPermissions(
-                        permissions.toArray(new String[permissions.size()]),
-                        REQUEST_CODE_PERMISSIONS);
-            } else {
-                if ((!isScreen)) {
-                    onInitializeSquareRecorder();
-                } else {
-                    onInitializeScreenRecorder();
-                }
-            }
-        } else {
-            if ((!isScreen)) {
-                onInitializeSquareRecorder();
-            } else {
-                onInitializeScreenRecorder();
-            }
-        }
     }
 
-    protected void onChangeCameraSizeModeClick() {
+    /***
+     * 正方形/长方形切换
+     */
+    private void onChangeCameraSizeModeClick() {
         if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
             mSquareCameraLayout.setVisibility(View.INVISIBLE);
             mScreenCameraLayout.setVisibility(View.VISIBLE);
-            isScreen = true;
+            isFullScreen = true;
             onCheckLock(false);
         } else if (mScreenCameraLayout.getVisibility() == View.VISIBLE) {
             mScreenCameraLayout.setVisibility(View.INVISIBLE);
             mSquareCameraLayout.setVisibility(View.VISIBLE);
-            isScreen = false;
+            isFullScreen = false;
             mOrientationCompensation = 0;
             onCheckLock(true);
-
         }
         goPreviewByCameraSizeMode();
+        //准备打开摄像头
+        onCameraPermissionGranted();
     }
 
     private int tempOrientation = 0;// 防止频繁通知改变方向
@@ -2146,7 +1948,6 @@ public class RecorderActivity extends BaseActivity {
                     if (!start) {
                         tvTimer.setVisibility(View.INVISIBLE);
                     } else {
-                        // tvTimer.setText("00:00:00");
                         tvTimer.setVisibility(View.VISIBLE);
                     }
                 }
@@ -2158,7 +1959,6 @@ public class RecorderActivity extends BaseActivity {
      * 响应关闭与黑屏
      */
     protected void onQualityOrBlackScreen() {
-        // InitQualityOrBlack();
         if (mIsRecording) {
             mLayoutBlackScreen.setVisibility(View.VISIBLE);
             if (CoreUtils.hasIceCreamSandwich()) {
@@ -2173,19 +1973,19 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 响应图库与暂停录制
      */
-    protected void onCloseOrPauseRecordClick() {
+    private void onCloseOrPauseRecordClick() {
 
         if (mIsRecording) {
             if (curPosition == POSITION_REC) {
                 if (!bSelectPhoto && isInMin()) {
-                    onAutoToast(
-                            "", getString(R.string.camera_min_limit_text));
+                    String msg = getString(R.string.camera_min_limit_text, String.valueOf(mVideoMinTime / 1000));
+                    onAutoToast("", msg);
                     return;
                 }
             } else if (curPosition == POSITION_MV) {
                 if (isInMin()) {
-                    onAutoToast(
-                            "", getString(R.string.camera_min_limit_text));
+                    String msg = getString(R.string.camera_min_limit_text, String.valueOf(mMVMinTime / 1000));
+                    onAutoToast("", msg);
                     return;
                 }
             }
@@ -2201,16 +2001,33 @@ public class RecorderActivity extends BaseActivity {
      * @return
      */
     private boolean isInMin() {
-        if (mVideoMinTime == 0) {
+
+        if (curPosition == POSITION_REC) {
+            //普通视频
+            if (mVideoMinTime == 0) {
+                return false;
+            }
+
+            //最小、最大两个值相等
+            if (mVideoMaxTime > 0 && Math.abs(mVideoMinTime - mVideoMaxTime) < 800) {
+                return curTotal < (mVideoMinTime - 500);
+            } else {
+                return curTotal < mVideoMinTime;
+            }
+        } else if (curPosition == POSITION_MV) {
+            //mv
+            if (mMVMinTime == 0) {
+                return false;
+            }
+            //最小、最大两个值相等
+            if (mMVMaxTime > 0 && Math.abs(mMVMinTime - mMVMaxTime) < 800) {
+                return curTotal < (mMVMinTime - 500);
+            } else {
+                return curTotal < mMVMinTime;
+            }
+        } else {
             return false;
         }
-        //最小、最大两个值相等
-        if (Math.abs(mVideoMinTime - mVideoMaxTime) < 800) {
-            return curTotal < (mVideoMinTime - 500);
-        } else {
-            return curTotal < mVideoMinTime;
-        }
-
 
     }
 
@@ -2268,6 +2085,21 @@ public class RecorderActivity extends BaseActivity {
 
     private int even = 0;
 
+    /**
+     * 全屏录制进度
+     *
+     * @param durationStr
+     */
+    private void initScreenDuration(String durationStr) {
+        int len = mRecordVideoList.size();
+        if (len > 0) {
+            tvTimer.setText(durationStr + "  " + len);
+        } else {
+            tvTimer.setText(durationStr);
+        }
+
+    }
+
     @SuppressWarnings("deprecation")
     private void deleteVideo() {
         int maxTime = 0;
@@ -2276,7 +2108,7 @@ public class RecorderActivity extends BaseActivity {
         } else if (curPosition == POSITION_REC) {
             maxTime = mVideoMaxTime;
         }
-        if (!isScreen) {
+        if (!isFullScreen) {
             if (maxTime == 0 || even % 2 == 0) {
                 if (mLinearSeekbar1.getChildCount() > 1) {
                     mLinearSeekbar1.removeViewAt(mLinearSeekbar1
@@ -2348,15 +2180,12 @@ public class RecorderActivity extends BaseActivity {
                             .removeViewAt(mLinearSeekbar.getChildCount() - 1);
                 }
                 if (mRecordVideoList.size() > 0) {
-                    MediaObject mo = mRecordVideoList.remove(mRecordVideoList
-                            .size() - 1);
+                    MediaObject mo = mRecordVideoList.remove(mRecordVideoList.size() - 1);
                     totalTime -= Utils.s2ms(mo.getDuration());
                     if (maxTime != 0) {
-                        tvTimer.setText(Utils.stringForTime(totalTime, false,
-                                true));
+                        initScreenDuration(Utils.stringForTime(totalTime, false, true));
                     } else {
-                        tvTimer.setText(Utils.stringForTime(totalTime, true,
-                                false));
+                        initScreenDuration(Utils.stringForTime(totalTime, true, false));
                     }
                     PathUtils.deleteFile(mo.getMediaPath());
                 }
@@ -2529,12 +2358,10 @@ public class RecorderActivity extends BaseActivity {
             MediaPlayer shootMP = null;
             AudioManager meng = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             int volume = meng.getStreamVolume(AudioManager.STREAM_NOTIFICATION);
-
             if (volume != 0) {
                 if (shootMP == null)
-                    shootMP = MediaPlayer
-                            .create(this,
-                                    Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
+                    shootMP = MediaPlayer.create(this,
+                            Uri.parse("file:///system/media/audio/ui/camera_click.ogg"));
                 if (shootMP != null)
                     shootMP.start();
             }
@@ -2545,20 +2372,16 @@ public class RecorderActivity extends BaseActivity {
     /**
      * 初始各布局
      */
-    @SuppressWarnings("deprecation")
     private void initLayouts() {
         String str = getString(R.string.m_short_mv_no_line, mMVMaxTime / 1000);
-        ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2)).setText(str);
-        ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1)).setText(str);
+        ((TextView) $(R.id.tvItembtnSelectMVCaption2)).setText(str);
+        ((TextView) $(R.id.tvItembtnSelectMVCaption1)).setText(str);
 
-        mIvOpenCamAnimTop = (ImageView) this
-                .findViewById(R.id.ivOpenCamAnimTop);
-        mIvOpenCamAnimBottom = (ImageView) this
-                .findViewById(R.id.ivOpenCamAnimBottom);
+        mIvOpenCamAnimTop = $(R.id.ivOpenCamAnimTop);
+        mIvOpenCamAnimBottom = $(R.id.ivOpenCamAnimBottom);
 
-        mRecordRRL = (RotateRelativeLayout) findViewById(R.id.rrlbtnRecord);
-        mBtnRecord = (Button) findViewById(R.id.btnRecord);
-        // mBtnRecord.setRepeatClickIntervalTime(2500);
+        mRecordRRL = $(R.id.rrlbtnRecord);
+        mBtnRecord = $(R.id.btnRecord);
         mBtnRecord.setOnTouchListener(new OnTouchListener() {
             private long m_lLastClickTime;
 
@@ -2585,10 +2408,10 @@ public class RecorderActivity extends BaseActivity {
                     case MotionEvent.ACTION_UP:
                         if (bSelectPhoto) {
                             //截图
-                            RecorderCore.screenshot(true, PathUtils
-                                    .getTempFileNameForSdcard(
-                                            PathUtils.getRdImagePath(), "PIC",
-                                            "jpg"), 360, 640, 50);
+                            VirtualVideo.Size size = AppConfiguration.getRecorderSize(false);
+                            if (null != size) {
+                                RecorderCore.screenshot(true, PathUtils.getShotPath(mIsSaveToAlbum), size.width, size.height, 100);
+                            }
                         } else {
                             if (mIsRecording) {
                                 stopLiveOrRecordStream(false);
@@ -2601,12 +2424,12 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mRllivingBar0 = (RelativeLayout) findViewById(R.id.lrliving_bar0);
+        mRllivingBar0 = $(R.id.lrliving_bar0);
 
-        mRecordingBar90 = (LinearLayout) findViewById(R.id.llliving_bar90);
-        mRecordingBar270 = (LinearLayout) findViewById(R.id.llliving_bar270);
+        mRecordingBar90 = $(R.id.llliving_bar90);
+        mRecordingBar270 = $(R.id.llliving_bar270);
 
-        mBtnFlashModeCtrl = (RotateImageView) findViewById(R.id.btnFlashModeCtrl);
+        mBtnFlashModeCtrl = $(R.id.btnFlashModeCtrl);
         mBtnFlashModeCtrl.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2614,10 +2437,26 @@ public class RecorderActivity extends BaseActivity {
                 onFlashModeClick();
             }
         });
+        mBtnConfig = $(R.id.btnConfig);
+        mBtnConfig.setOnClickListener(new View.OnClickListener() {
 
-        mRlFilterList = (RotateRelativeLayout) findViewById(R.id.rlFilterList);
-        mBtnBottomRightForLandscape = (RotateRelativeLayout) findViewById(R.id.rrlbtnBottomRightForLandscape);
-        m_btnBottomRightForLandscape = (ExtButton) findViewById(R.id.btnBottomRightForLandscape);
+            @Override
+            public void onClick(View v) {
+                onConfigClick();
+            }
+        });
+        mBtnConfig1 = $(R.id.btnConfig1);
+        mBtnConfig1.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                onConfigClick();
+            }
+        });
+
+        mRlFilterList = $(R.id.rlFilterList);
+        mBtnBottomRightForLandscape = $(R.id.rrlbtnBottomRightForLandscape);
+        m_btnBottomRightForLandscape = $(R.id.btnBottomRightForLandscape);
         if (hideAlbum) {
             m_btnBottomRightForLandscape.setVisibility(View.GONE);
         }
@@ -2635,19 +2474,17 @@ public class RecorderActivity extends BaseActivity {
                     }
                 });
         // 正方形添加云音乐
-        mllAddMusic1 = (LinearLayout) this.findViewById(R.id.llAddMusic1);
+        mllAddMusic1 = $(R.id.llAddMusic1);
 
-        mTvMusicNameSquare = (TextView) this
-                .findViewById(R.id.edit_text_music_name1);
-        mBtnDelMusic1 = (ImageView) this
-                .findViewById(R.id.btn_edit_text_music_del1);
+        mTvMusicNameSquare = $(R.id.edit_text_music_name1);
+        mBtnDelMusic1 = $(R.id.btn_edit_text_music_del1);
         mBtnDelMusic1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 deleteSelectMusic();
             }
         });
-        mBtnAddMusic1 = (RotateImageView) this.findViewById(R.id.btnAddMusic1);
+        mBtnAddMusic1 = $(R.id.btnAddMusic1);
         mBtnAddMusic1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2656,11 +2493,10 @@ public class RecorderActivity extends BaseActivity {
         });
 
         //长方形添加音乐部分
-        mllAddMusic = (LinearLayout) this.findViewById(R.id.llAddMusic);
+        mllAddMusic = $(R.id.llAddMusic);
 
-        mTvMusicNameScreen = (TextView) this.findViewById(R.id.edit_text_music_name);
-        mBtnDelMusic = (ImageView) this
-                .findViewById(R.id.btn_edit_text_music_del);
+        mTvMusicNameScreen = $(R.id.edit_text_music_name);
+        mBtnDelMusic = $(R.id.btn_edit_text_music_del);
         mBtnDelMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2668,7 +2504,7 @@ public class RecorderActivity extends BaseActivity {
 
             }
         });
-        mBtnAddMusic = (RotateImageView) this.findViewById(R.id.btnAddMusic);
+        mBtnAddMusic = $(R.id.btnAddMusic);
         mBtnAddMusic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2683,16 +2519,14 @@ public class RecorderActivity extends BaseActivity {
         mBtnAddMusic1.setVisibility(View.VISIBLE);
 
 
-        mTimerTv = (RotateRelativeLayout) findViewById(R.id.rrltvTimer);
-        mBtnBottomRight = (RotateRelativeLayout) findViewById(R.id.rrlbtnBottomRight);
+        mTimerTv = $(R.id.rrltvTimer);
+        mBtnBottomRight = $(R.id.rrlbtnBottomRight);
 
-        mLvCameraFilter = (HorizontalListViewCamera) findViewById(R.id.lvFilterList);
-        mRecordingCameraMoreBar = (RelativeLayout) findViewById(R.id.living_cameramore_bar);
+        mRecordingCameraMoreBar = $(R.id.living_cameramore_bar);
 
-        mBtnSelectPhoto1 = (ExtButton) findViewById(R.id.btnSelectPhoto1);
+        mBtnSelectPhoto1 = $(R.id.btnSelectPhoto1);
 
-        mBtnSwitchCamera = (RotateImageView) this
-                .findViewById(R.id.btnSwitchCamera5);
+        mBtnSwitchCamera = $(R.id.btnSwitchCamera5);
         mBtnSwitchCamera.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2701,8 +2535,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        m_btnBlackScreen = (RotateImageView) this
-                .findViewById(R.id.btnMenuBlackScreen);
+        m_btnBlackScreen = $(R.id.btnMenuBlackScreen);
 
         m_btnBlackScreen.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -2711,16 +2544,15 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnBlackScreen1 = (RotateImageView) findViewById(R.id.btnMenuBlackScreen1);
+        mBtnBlackScreen1 = $(R.id.btnMenuBlackScreen1);
         mBtnBlackScreen1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onQualityOrBlackScreen();
             }
         });
-        mBtnBottomLeftLayout = (RotateRelativeLayout) this
-                .findViewById(R.id.rrlbtnBottomLeft);
-        mBtnBottomLeft = (ExtButton) this.findViewById(R.id.btnBottomLeft);
+        mBtnBottomLeftLayout = $(R.id.rrlbtnBottomLeft);
+        mBtnBottomLeft = $(R.id.btnBottomLeft);
         mBtnBottomLeft.setRepeatClickIntervalTime(30);
         mBtnBottomLeft.setOnClickListener(new View.OnClickListener() {
 
@@ -2735,8 +2567,7 @@ public class RecorderActivity extends BaseActivity {
                 }
             }
         });
-        mBtncloseFilterList = (RotateImageView) this
-                .findViewById(R.id.btncloseFilterList);
+        mBtncloseFilterList = $(R.id.btncloseFilterList);
         mBtncloseFilterList.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2745,7 +2576,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mLayoutBlackScreen = (FrameLayout) this.findViewById(R.id.flBlackScreen);
+        mLayoutBlackScreen = $(R.id.flBlackScreen);
         mGdBlackScreen = new GestureDetector(this,
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
@@ -2761,14 +2592,14 @@ public class RecorderActivity extends BaseActivity {
                 return mGdBlackScreen.onTouchEvent(event);
             }
         });
-        tvTimer = (TextView) findViewById(R.id.tvTimer);
+        tvTimer = $(R.id.tvTimer);
         if (!Utils.isUseInternalRecorder()) {
             mUseMediaRecorder = true;
             Utils.setCanWriteMP4Metadata(false);
         } else {
             Utils.setCanWriteMP4Metadata(true);
         }
-        mBtnBeauty = (RotateImageView) findViewById(R.id.btnbeauty);
+        mBtnBeauty = $(R.id.btnbeauty);
         mBtnBeauty.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2776,13 +2607,13 @@ public class RecorderActivity extends BaseActivity {
                 onBeautifyClick();
             }
         });
-        mGlTouchView = (GlTouchView) findViewById(R.id.glTouch);
+        mGlTouchView = $(R.id.glTouch);
         mGlTouchView.setViewHandler(glListener);
         // 处理相机变焦
         m_hlrCameraZoom = new CameraZoomHandler(this, null);
         mGlTouchView.setZoomHandler(m_hlrCameraZoom);
 
-        m_btnWaiting = (RotateImageView) findViewById(R.id.btnWating);
+        m_btnWaiting = $(R.id.btnWating);
         m_btnWaiting.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -2790,7 +2621,7 @@ public class RecorderActivity extends BaseActivity {
                 startWaitingRecord(5);
             }
         });
-        mBtnCancelRecord = (RotateImageView) findViewById(R.id.btnCancelRecord);
+        mBtnCancelRecord = $(R.id.btnCancelRecord);
         mBtnCancelRecord.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2798,17 +2629,17 @@ public class RecorderActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-        mLayoutSelectRecOrPhoto1 = (RelativeLayout) findViewById(rlSelectRecOrPhoto1);
-        mLayoutSelectRecOrPhoto2 = (RelativeLayout) findViewById(rlSelectRecOrPhoto2);
+        mLayoutSelectRecOrPhoto1 = $(rlSelectRecOrPhoto1);
+        mLayoutSelectRecOrPhoto2 = $(rlSelectRecOrPhoto2);
         mLayoutSelectRecOrPhoto1.setVisibility(View.VISIBLE);
         mLayoutSelectRecOrPhoto2.setVisibility(View.VISIBLE);
 
-        mSelectRec1 = (RotateRelativeLayout) findViewById(R.id.lvSelectRec1);
-        mSelectRec2 = (RotateRelativeLayout) findViewById(R.id.lvSelectRec2);
-        mSelectMV1 = (RotateRelativeLayout) findViewById(R.id.lvSelectMV1);
-        mSelectMV2 = (RotateRelativeLayout) findViewById(R.id.lvSelectMV2);
-        mSelectPhoto1 = (RotateRelativeLayout) findViewById(R.id.lvSelectPhoto1);
-        mSelectPhoto2 = (RotateRelativeLayout) findViewById(R.id.lvSelectPhoto2);
+        mSelectRec1 = $(R.id.lvSelectRec1);
+        mSelectRec2 = $(R.id.lvSelectRec2);
+        mSelectMV1 = $(R.id.lvSelectMV1);
+        mSelectMV2 = $(R.id.lvSelectMV2);
+        mSelectPhoto1 = $(R.id.lvSelectPhoto1);
+        mSelectPhoto2 = $(R.id.lvSelectPhoto2);
 
         mSelectRec1.setOnClickListener(onSwitchButtonClickListener);
         mSelectRec2.setOnClickListener(onSwitchButtonClickListener);
@@ -2819,12 +2650,12 @@ public class RecorderActivity extends BaseActivity {
 
         // /////////////////////////////////////////////新加入的方形界面处理
         // 两个界面（全屏和方形）
-        mSquareCameraLayout = (RelativeLayout) findViewById(R.id.rl_square_camera);
-        mScreenCameraLayout = (RelativeLayout) findViewById(R.id.rl_fullscreen_camera);
+        mSquareCameraLayout = $(R.id.rl_square_camera);
+        mScreenCameraLayout = $(R.id.rl_fullscreen_camera);
 
         // /////////////////
-        mVideoNewRelative = (RelativeLayout) findViewById(R.id.video_new_relative);
-        mVideoNewRelative1 = (RelativeLayout) findViewById(R.id.video_new_relative1);
+        mVideoNewRelative = $(R.id.video_new_relative);
+        mVideoNewRelative1 = $(R.id.video_new_relative1);
         if (curPosition == POSITION_REC) {
             if (mVideoMaxTime != 0) {
                 mVideoNewRelative.setVisibility(View.VISIBLE);
@@ -2845,7 +2676,7 @@ public class RecorderActivity extends BaseActivity {
         }
 
         // 方形界面的切换按钮
-        mBtnShootingRatio1 = (RotateImageView) findViewById(R.id.btnShootingRatio1);
+        mBtnShootingRatio1 = $(R.id.btnShootingRatio1);
         mBtnShootingRatio1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2853,7 +2684,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
         // 全屏界面的切换按钮
-        mBtnShootingRatio = (RotateImageView) findViewById(R.id.btnShootingRatio);
+        mBtnShootingRatio = $(R.id.btnShootingRatio);
         mBtnShootingRatio.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2865,12 +2696,12 @@ public class RecorderActivity extends BaseActivity {
         m_DisplayWidth = CoreUtils.getMetrics().widthPixels;
 
         handler.postDelayed(runnable, 0);
-        mImgFlashMVScreen = (ImageView) findViewById(R.id.record_progress_flash_screen);
-        mImgFlashMVSquare = (ImageView) findViewById(R.id.record_progress_flash_square);
-        mLinearSeekbar = (LinearLayout) findViewById(R.id.video_new_seekbar);
-        mLinearSeekbar1 = (LinearLayout) findViewById(R.id.video_new_seekbar1);
+        mImgFlashMVScreen = $(R.id.record_progress_flash_screen);
+        mImgFlashMVSquare = $(R.id.record_progress_flash_square);
+        mLinearSeekbar = $(R.id.video_new_seekbar);
+        mLinearSeekbar1 = $(R.id.video_new_seekbar1);
 
-        m_btnBottomRight = (ExtButton) findViewById(R.id.btnBottomRight);
+        m_btnBottomRight = $(R.id.btnBottomRight);
         if (hideAlbum) {
             m_btnBottomRight.setVisibility(View.GONE);
         }
@@ -2889,7 +2720,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        m_btnBottomRightForSquare = (ExtButton) findViewById(R.id.btnBottomRightForSquare);
+        m_btnBottomRightForSquare = $(R.id.btnBottomRightForSquare);
         if (hideAlbum) {
             m_btnBottomRightForSquare.setVisibility(View.INVISIBLE);
         }
@@ -2908,8 +2739,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnRecord1 = (Button) findViewById(R.id.btnRecord1);
-        // mBtnRecord1.setRepeatClickIntervalTime(2500);
+        mBtnRecord1 = $(R.id.btnRecord1);
         mBtnRecord1.setOnTouchListener(new OnTouchListener() {
             private long m_lLastClickTime;
 
@@ -2936,10 +2766,7 @@ public class RecorderActivity extends BaseActivity {
                         break;
                     case MotionEvent.ACTION_UP:
                         if (bSelectPhoto) {
-                            RecorderCore.screenshot(true, PathUtils
-                                    .getTempFileNameForSdcard(
-                                            PathUtils.getRdImagePath(), "PIC",
-                                            "jpg"), 480, 480, 50);
+                            RecorderCore.screenshot(true, PathUtils.getShotPath(mIsSaveToAlbum), 480, 480, 90);
                         } else {
                             if (mIsRecording)
                                 stopLiveOrRecordStream(false);
@@ -2951,7 +2778,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnFlashModeCtrl1 = (RotateImageView) findViewById(R.id.btnFlashModeCtrl1);
+        mBtnFlashModeCtrl1 = $(R.id.btnFlashModeCtrl1);
         mBtnFlashModeCtrl1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2959,8 +2786,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnSwitchCamera1 = (RotateImageView) this
-                .findViewById(R.id.btnSwitchCamera1);
+        mBtnSwitchCamera1 = $(R.id.btnSwitchCamera1);
         mBtnSwitchCamera1.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2970,8 +2796,7 @@ public class RecorderActivity extends BaseActivity {
         });
 
 
-        mBtnBottomLeftForSquare = (Button) this
-                .findViewById(R.id.btnBottomLeftForSquare);
+        mBtnBottomLeftForSquare = $(R.id.btnBottomLeftForSquare);
         mBtnBottomLeftForSquare.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -2986,10 +2811,10 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        tvTimer1 = (TextView) findViewById(R.id.tvTimer1);
-        mRlframeSquarePreview = (PreviewFrameLayout) findViewById(R.id.frameSquarePreview);
+        tvTimer1 = $(R.id.tvTimer1);
+        mRlframeSquarePreview = $(R.id.frameSquarePreview);
         mRlframeSquarePreview.setAspectRatio(1.0);
-        mBtnBeauty1 = (RotateImageView) findViewById(R.id.btnbeauty1);
+        mBtnBeauty1 = $(R.id.btnbeauty1);
         mBtnBeauty1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -2997,7 +2822,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        m_btnWaiting1 = (RotateImageView) findViewById(R.id.btnWating1);
+        m_btnWaiting1 = $(R.id.btnWating1);
         m_btnWaiting1.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3005,7 +2830,7 @@ public class RecorderActivity extends BaseActivity {
                 startWaitingRecord(5);
             }
         });
-        mBtnCancelRecord1 = (RotateImageView) findViewById(R.id.btnCancelRecord1);
+        mBtnCancelRecord1 = $(R.id.btnCancelRecord1);
         mBtnCancelRecord1.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -3015,7 +2840,7 @@ public class RecorderActivity extends BaseActivity {
         });
 
         // 90度横屏和270度横屏是相关按钮初始化
-        mBtnCancelRecord90 = (RotateImageView) findViewById(R.id.btnCancelRecord90);
+        mBtnCancelRecord90 = $(R.id.btnCancelRecord90);
         mBtnCancelRecord90.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3024,7 +2849,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnBlackScreen90 = (RotateImageView) findViewById(R.id.btnMenuBlackScreen90);
+        mBtnBlackScreen90 = $(R.id.btnMenuBlackScreen90);
         mBtnBlackScreen90.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3032,7 +2857,7 @@ public class RecorderActivity extends BaseActivity {
                 onQualityOrBlackScreen();
             }
         });
-        mBtnBlackScreen270 = (RotateImageView) findViewById(R.id.btnMenuBlackScreen270);
+        mBtnBlackScreen270 = $(R.id.btnMenuBlackScreen270);
         mBtnBlackScreen270.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3041,7 +2866,7 @@ public class RecorderActivity extends BaseActivity {
             }
         });
 
-        mBtnShootingRatio90 = (RotateImageView) findViewById(R.id.btnShootingRatio90);
+        mBtnShootingRatio90 = $(R.id.btnShootingRatio90);
         mBtnShootingRatio90.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3049,15 +2874,9 @@ public class RecorderActivity extends BaseActivity {
                 onChangeCameraSizeModeClick();
             }
         });
-        // m_btnbeauty90 = (RotateImageView) findViewById(R.id.btnbeauty90);
-        // m_btnbeauty90.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onBeautifyClick();
-        // }
-        // });
-        mBtnWating90 = (RotateImageView) findViewById(R.id.btnWating90);
+
+        mBtnWating90 = $(R.id.btnWating90);
+
         mBtnWating90.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3065,26 +2884,9 @@ public class RecorderActivity extends BaseActivity {
                 startWaitingRecord(5);
             }
         });
-        // m_btnSwitchCamera90 = (RotateImageView)
-        // findViewById(R.id.btnSwitchCamera90);
-        // m_btnSwitchCamera90.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onSwitchCameraButtonClick();
-        // }
-        // });
-        // m_btnFlashModeCtrl90 = (RotateImageView)
-        // findViewById(R.id.btnFlashModeCtrl90);
-        // m_btnFlashModeCtrl90.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onFlashModeClick();
-        // }
-        // });
+
         // /////270度
-        mBtnCancelRecord270 = (RotateImageView) findViewById(R.id.btnCancelRecord270);
+        mBtnCancelRecord270 = $(R.id.btnCancelRecord270);
         mBtnCancelRecord270.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3092,7 +2894,7 @@ public class RecorderActivity extends BaseActivity {
                 onBackPressed();
             }
         });
-        mBtnShootingRatio270 = (RotateImageView) findViewById(R.id.btnShootingRatio270);
+        mBtnShootingRatio270 = $(R.id.btnShootingRatio270);
         mBtnShootingRatio270.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3100,15 +2902,8 @@ public class RecorderActivity extends BaseActivity {
                 onChangeCameraSizeModeClick();
             }
         });
-        // m_btnbeauty270 = (RotateImageView) findViewById(R.id.btnbeauty270);
-        // m_btnbeauty270.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onBeautifyClick();
-        // }
-        // });
-        mBtnWating270 = (RotateImageView) findViewById(R.id.btnWating270);
+
+        mBtnWating270 = $(R.id.btnWating270);
         mBtnWating270.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -3116,24 +2911,7 @@ public class RecorderActivity extends BaseActivity {
                 startWaitingRecord(5);
             }
         });
-        // m_btnSwitchCamera270 = (RotateImageView)
-        // findViewById(R.id.btnSwitchCamera270);
-        // m_btnSwitchCamera270.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onSwitchCameraButtonClick();
-        // }
-        // });
-        // m_btnFlashModeCtrl270 = (RotateImageView)
-        // findViewById(R.id.btnFlashModeCtrl270);
-        // m_btnFlashModeCtrl270.setOnClickListener(new OnClickListener() {
-        //
-        // @Override
-        // public void onClick(View v) {
-        // onFlashModeClick();
-        // }
-        // });
+
         InitBtnBlack();
         switchRecOrPhotoItemLayout();
         switchRecOrPhoto();
@@ -3152,16 +2930,20 @@ public class RecorderActivity extends BaseActivity {
         }
     }
 
+    /**
+     * 云音乐
+     */
     private void onMusicYUN() {
         HistoryMusicCloud.getInstance().initilize(this);
-        Intent music = new Intent(this, MoreMusicActivity.class);
-        music.putExtra(MoreMusicActivity.PARAM_TYPE,
-                MoreMusicActivity.TYPE_MUSIC_YUN);
-        music.putExtra(MoreMusicActivity.PARAM_CLOUDMUSIC, SdkEntry
-                .getSdkService().getUIConfig().cloudMusicUrl);
-        this.startActivityForResult(music, VideoEditActivity.REQUSET_MUSICEX);
-        this.overridePendingTransition(R.anim.push_bottom_in,
-                R.anim.push_top_out);
+        if (!TextUtils.isEmpty(cameraConfig.cloudMusicUrl)) {
+            //云音乐(是否支持分页  musicTypeUrl ==“”? )
+            String musicTypeUrl = cameraConfig.cloudMusicTypeUrl;
+            String cloudUrl = cameraConfig.cloudMusicUrl;
+            MoreMusicActivity.onYunMusic(this, true, musicTypeUrl, cloudUrl, cameraConfig.mCloudAuthorizationInfo);
+        } else {
+            UIConfiguration uiConfiguration = SdkEntry.getSdkService().getUIConfig();
+            MoreMusicActivity.onYunMusic(this, false, "", uiConfiguration.cloudMusicUrl, null);
+        }
     }
 
     private OnClickListener onSwitchButtonClickListener = new OnClickListener() {
@@ -3190,6 +2972,8 @@ public class RecorderActivity extends BaseActivity {
         if (m_bIsWaiting || mIsRecording) {
             return;
         }
+        mBtnConfig.setEnabled(false);
+        mBtnConfig1.setEnabled(false);
         m_bIsWaiting = true;
         if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
             m_btnWaiting1.setEnabled(false);
@@ -3200,8 +2984,6 @@ public class RecorderActivity extends BaseActivity {
         } else {
             m_btnWaiting.setEnabled(false);
             mBtnRecord.setEnabled(false);
-            // mBtnRecord.setImageResource(R.drawable.btn_record_n);//btn_record_n
-            // btn_shutter_stop_record
             setViewVisibility(R.id.waiting_text, true);
             step = initiStep;
             mHandler.post(m_runnableWaiting);
@@ -3231,28 +3013,25 @@ public class RecorderActivity extends BaseActivity {
     private RotateImageView m_btnWaiting, m_btnWaiting1;
     private boolean m_bIsWaiting = false;
     private int step = 5;
-    private Handler mHandler = new Handler();
 
     private Runnable m_runnableWaiting = new Runnable() {
 
         @Override
         public void run() {
             if (m_bIsWaiting) {
-                onToast(step);
+                setText(R.id.waiting_text, Integer.toString(step));
                 if (step-- < 1) {
                     finishWaitingRecord();
                     synchronized (RecorderActivity.this) {
                         if (bSelectPhoto) {
+                            VirtualVideo.Size size;
                             if (mSquareCameraLayout.getVisibility() == View.VISIBLE) {
-                                RecorderCore.screenshot(true, PathUtils
-                                        .getTempFileNameForSdcard(
-                                                PathUtils.getRdImagePath(),
-                                                "PIC", "jpg"), 480, 480, 50);
+                                size = AppConfiguration.getRecorderSize(true);
                             } else {
-                                RecorderCore.screenshot(true, PathUtils
-                                        .getTempFileNameForSdcard(
-                                                PathUtils.getRdImagePath(),
-                                                "PIC", "jpg"), 360, 640, 50);
+                                size = AppConfiguration.getRecorderSize(false);
+                            }
+                            if (null != size) {
+                                RecorderCore.screenshot(true, PathUtils.getShotPath(mIsSaveToAlbum), size.width, size.height, 100);
                             }
                         } else {
                             onRecordButtonClick();
@@ -3265,9 +3044,6 @@ public class RecorderActivity extends BaseActivity {
         }
     };
 
-    private void onToast(int ts) {
-        setText(R.id.waiting_text, ts + "");
-    }
 
     private GlTouchView.CameraCoderViewListener glListener = new CameraCoderViewListener() {
 
@@ -3329,7 +3105,9 @@ public class RecorderActivity extends BaseActivity {
             if (null != mRlFilterList && mRlFilterList.getHeight() > 100) {
                 onFilterListCtrlClick();// 触摸空白区域关闭滤镜Layout
             }
-            RecorderCore.cameraAutoFocus();
+            if (!RecorderCore.isFaceFront()) {
+                RecorderCore.cameraFocus((int) e.getX(), (int) e.getY(), null);
+            }
         }
 
         @Override
@@ -3338,60 +3116,81 @@ public class RecorderActivity extends BaseActivity {
         }
 
         @Override
-        public void onFilterChangeStart(boolean leftORight, double nfilterProportion) {
-            bLeftOright = leftORight;
+        public void onFilterChangeStart(boolean leftToRight, double filterProportion) {
+            bLeftToRight = leftToRight;
             onSureBg();
         }
 
         @Override
-        public void onFilterChanging(boolean leftORight, double filterProportion) {
-            bLeftOright = leftORight;
-            if (leftORight) {
-                RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
-                        mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex), filterProportion);
-            } else {
-                RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex),
-                        mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex), filterProportion);
+        public void onFilterChanging(boolean leftToRight, double filterProportion) {
+            bLeftToRight = leftToRight;
+            if (null != mCameraEffectHandler) {
+                if (mCameraEffectHandler.isLookup()) {
+                    if (leftToRight) {
+                        RecorderCore.setLookupFilter(mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex), filterProportion);
+                    } else {
+                        RecorderCore.setLookupFilter(mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex), filterProportion);
+                    }
+                } else {
+                    if (leftToRight) {
+                        RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex), filterProportion);
+                    } else {
+                        RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex), filterProportion);
+                    }
+                }
             }
-
 
         }
 
         @Override
         public void onFilterChangeEnd() {
-            if (bLeftOright) {
-                mLvCameraFilter.selectListItem(mEffectRightIndex, true);
-            } else {
-                mLvCameraFilter.selectListItem(mEffectLeftIndex, true);
+            if (null != mCameraEffectHandler) {
+                if (bLeftToRight) {
+                    mCameraEffectHandler.selectListItem(mEffectLeftIndex);
+                } else {
+                    mCameraEffectHandler.selectListItem(mEffectRightIndex);
+                }
             }
             onSureBg();
         }
 
         @Override
-        public void onFilterCanceling(boolean leftORight, double filterProportion) {
-            bLeftOright = leftORight;
-            if (leftORight) {
-                RecorderCore.setColorEffect(
-                        mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex)
-                        , mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
-                        filterProportion);
-            } else {
-                RecorderCore.setColorEffect(
-                        mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
-                        mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex),
-                        filterProportion);
+        public void onFilterCanceling(boolean leftToRight, double filterProportion) {
+            bLeftToRight = leftToRight;
+            if (null != mCameraEffectHandler) {
+                if (mCameraEffectHandler.isLookup()) {
+                    if (!leftToRight) {
+                        RecorderCore.setLookupFilter(mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex), filterProportion);
+                    } else {
+                        RecorderCore.setLookupFilter(mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex), filterProportion);
+                    }
+                } else {
+                    if (!leftToRight) {
+                        RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mEffectLeftIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex), filterProportion);
+                    } else {
+                        RecorderCore.setColorEffect(mCameraEffectHandler.getInternalColorEffectByItemId(mTempCurrentIndex),
+                                mCameraEffectHandler.getInternalColorEffectByItemId(mEffectRightIndex), filterProportion);
+                    }
+                }
             }
-
         }
 
         @Override
         public void onFilterChangeCanceled() {
             onSureBg();
-            mLvCameraFilter.selectListItem(mTempCurrentIndex, true);
-
+            if (null != mCameraEffectHandler) {
+                mCameraEffectHandler.selectListItem(mTempCurrentIndex);
+            }
         }
     };
-    private boolean bLeftOright = false;
+    private boolean bLeftToRight = false; //为true 从左往右，否则从右往左;
     private int mTempCurrentIndex = 0;
     private int mEffectRightIndex, mEffectLeftIndex;
 
@@ -3399,20 +3198,20 @@ public class RecorderActivity extends BaseActivity {
      * 找到相邻的3个滤镜的所需图标的背景Index
      */
     private void onSureBg() {
-        mTempCurrentIndex = mLvCameraFilter.getCurrentItemId();
-        int count = mCameraEffectHandler.getEffectCount();
-        mEffectLeftIndex = 0;
-        if ((mEffectLeftIndex = (mTempCurrentIndex - 1)) < 0) {
-            mEffectLeftIndex = count - 1;
-        } else {
+        if (null != mCameraEffectHandler) {
+            mTempCurrentIndex = mCameraEffectHandler.getCurrentItemId();
+            int count = mCameraEffectHandler.getEffectCount();
+            mEffectLeftIndex = 0;
+            if ((mEffectLeftIndex = (mTempCurrentIndex - 1)) < 0) {
+                mEffectLeftIndex = count - 1;
+            }
+            mEffectRightIndex = mTempCurrentIndex;
+            if (mEffectRightIndex < (count - 1)) {
+                ++mEffectRightIndex;
+            } else {
+                mEffectRightIndex = 0;
+            }
         }
-        mEffectRightIndex = mTempCurrentIndex;
-        if (mEffectRightIndex < (count - 1)) {
-            ++mEffectRightIndex;
-        } else {
-            mEffectRightIndex = 0;
-        }
-
     }
 
     private RelativeLayout.LayoutParams photolp;
@@ -3455,11 +3254,11 @@ public class RecorderActivity extends BaseActivity {
         int mTxColorN = getResources().getColor(R.color.white);
         int mTxColorP = getResources().getColor(R.color.record_type_textcolor_p);
         mvlp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        if ((!isScreen)) {
+        if ((!isFullScreen)) {
             mSelectMV2.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV2).setVisibility(View.VISIBLE);
-            findViewById(R.id.lvSelectMV2).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
+            $(R.id.btnSelectMV2).setVisibility(View.VISIBLE);
+            $(R.id.lvSelectMV2).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2))
                     .setTextColor(mTxColorP);
 
             if (hideRec) {
@@ -3467,9 +3266,8 @@ public class RecorderActivity extends BaseActivity {
             }
             reclp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectMV2);
             mSelectRec2.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec2).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption2))
-                    .setTextColor(mTxColorN);
+            $(R.id.btnSelectRec2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption2)).setTextColor(mTxColorN);
             if (hideRec) {
                 photolp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectMV2);
             } else {
@@ -3479,24 +3277,20 @@ public class RecorderActivity extends BaseActivity {
                 mSelectPhoto2.setVisibility(View.GONE);
             }
             mSelectPhoto2.setLayoutParams(photolp);
-            findViewById(R.id.btnSelectPhoto2)
-                    .setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption2))
-                    .setTextColor(mTxColorN);
+            $(R.id.btnSelectPhoto2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption2)).setTextColor(mTxColorN);
         } else {
             mSelectMV1.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV1).setVisibility(View.VISIBLE);
-            findViewById(R.id.lvSelectMV1).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
-                    .setTextColor(mTxColorP);
+            $(R.id.btnSelectMV1).setVisibility(View.VISIBLE);
+            $(R.id.lvSelectMV1).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1)).setTextColor(mTxColorP);
             if (hideRec) {
                 mSelectRec1.setVisibility(View.GONE);
             }
             reclp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectMV1);
             mSelectRec1.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec1).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption1))
-                    .setTextColor(mTxColorN);
+            $(R.id.btnSelectRec1).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption1)).setTextColor(mTxColorN);
 
             if (hideRec) {
                 photolp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectMV1);
@@ -3508,10 +3302,8 @@ public class RecorderActivity extends BaseActivity {
             }
             photolp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectRec1);
             mSelectPhoto1.setLayoutParams(photolp);
-            findViewById(R.id.btnSelectPhoto1)
-                    .setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption1))
-                    .setTextColor(mTxColorN);
+            $(R.id.btnSelectPhoto1).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption1)).setTextColor(mTxColorN);
         }
     }
 
@@ -3522,21 +3314,19 @@ public class RecorderActivity extends BaseActivity {
         reclp.addRule(RelativeLayout.CENTER_HORIZONTAL);
         int mTxColorN = getResources().getColor(R.color.white);
         int mTxColorP = getResources().getColor(R.color.record_type_textcolor_p);
-        if ((!isScreen)) {
+        if ((!isFullScreen)) {
             mSelectRec2.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec2).setVisibility(View.VISIBLE);
-            findViewById(R.id.lvSelectRec2).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption2))
-                    .setTextColor(mTxColorP);
+            $(R.id.btnSelectRec2).setVisibility(View.VISIBLE);
+            $(R.id.lvSelectRec2).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption2)).setTextColor(mTxColorP);
 
             if (hidePhoto) {
                 mSelectPhoto2.setVisibility(View.GONE);
             }
             photolp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectRec2);
             mSelectPhoto2.setLayoutParams(photolp);
-            findViewById(R.id.btnSelectPhoto2)
-                    .setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption2))
+            $(R.id.btnSelectPhoto2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption2))
                     .setTextColor(mTxColorN);
 
             if (hideMV) {
@@ -3544,14 +3334,13 @@ public class RecorderActivity extends BaseActivity {
             }
             mvlp.addRule(RelativeLayout.LEFT_OF, R.id.lvSelectRec2);
             mSelectMV2.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV2).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
-                    .setTextColor(mTxColorN);
+            $(R.id.btnSelectMV2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2)).setTextColor(mTxColorN);
         } else {
             mSelectRec1.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec1).setVisibility(View.VISIBLE);
-            findViewById(R.id.lvSelectRec1).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption1))
+            $(R.id.btnSelectRec1).setVisibility(View.VISIBLE);
+            $(R.id.lvSelectRec1).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption1))
                     .setTextColor(mTxColorP);
 
             if (hidePhoto) {
@@ -3559,9 +3348,9 @@ public class RecorderActivity extends BaseActivity {
             }
             photolp.addRule(RelativeLayout.RIGHT_OF, R.id.lvSelectRec1);
             mSelectPhoto1.setLayoutParams(photolp);
-            findViewById(R.id.btnSelectPhoto1)
+            $(R.id.btnSelectPhoto1)
                     .setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption1))
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption1))
                     .setTextColor(mTxColorN);
 
             if (hideMV) {
@@ -3569,8 +3358,8 @@ public class RecorderActivity extends BaseActivity {
             }
             mvlp.addRule(RelativeLayout.LEFT_OF, R.id.lvSelectRec1);
             mSelectMV1.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV1).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
+            $(R.id.btnSelectMV1).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1))
                     .setTextColor(mTxColorN);
         }
     }
@@ -3584,19 +3373,19 @@ public class RecorderActivity extends BaseActivity {
         int mTxColorN = getResources().getColor(R.color.white);
         int mTxColorP = getResources().getColor(R.color.record_type_textcolor_p);
         photolp.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        if ((!isScreen)) {
+        if ((!isFullScreen)) {
             mSelectPhoto2.setLayoutParams(photolp);
-            findViewById(R.id.btnSelectPhoto2).setVisibility(View.VISIBLE);
-            findViewById(R.id.lvSelectPhoto2).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption2))
+            $(R.id.btnSelectPhoto2).setVisibility(View.VISIBLE);
+            $(R.id.lvSelectPhoto2).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption2))
                     .setTextColor(mTxColorP);
             if (hideRec) {
                 mSelectRec2.setVisibility(View.GONE);
             }
             reclp.addRule(RelativeLayout.LEFT_OF, R.id.lvSelectPhoto2);
             mSelectRec2.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec2).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption2))
+            $(R.id.btnSelectRec2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption2))
                     .setTextColor(mTxColorN);
 
             if (hideRec) {
@@ -3608,22 +3397,22 @@ public class RecorderActivity extends BaseActivity {
                 mSelectMV2.setVisibility(View.GONE);
             }
             mSelectMV2.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV2).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption2))
+            $(R.id.btnSelectMV2).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption2))
                     .setTextColor(mTxColorN);
         } else {
             mSelectPhoto1.setLayoutParams(photolp);
-            findViewById(R.id.lvSelectPhoto1).setVisibility(View.VISIBLE);
-            findViewById(R.id.btnSelectPhoto1).setVisibility(currentVisisble);
-            ((TextView) findViewById(R.id.tvItembtnSelectPhotoCaption1))
+            $(R.id.lvSelectPhoto1).setVisibility(View.VISIBLE);
+            $(R.id.btnSelectPhoto1).setVisibility(currentVisisble);
+            ((TextView) $(R.id.tvItembtnSelectPhotoCaption1))
                     .setTextColor(mTxColorP);
             if (hideRec) {
                 mSelectRec1.setVisibility(View.GONE);
             }
             reclp.addRule(RelativeLayout.LEFT_OF, R.id.lvSelectPhoto1);
             mSelectRec1.setLayoutParams(reclp);
-            findViewById(R.id.btnSelectRec1).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectRecCaption1))
+            $(R.id.btnSelectRec1).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectRecCaption1))
                     .setTextColor(mTxColorN);
 
             if (hideRec) {
@@ -3636,8 +3425,8 @@ public class RecorderActivity extends BaseActivity {
             }
             mvlp.addRule(RelativeLayout.LEFT_OF, R.id.lvSelectRec1);
             mSelectMV1.setLayoutParams(mvlp);
-            findViewById(R.id.btnSelectMV1).setVisibility(View.INVISIBLE);
-            ((TextView) findViewById(R.id.tvItembtnSelectMVCaption1))
+            $(R.id.btnSelectMV1).setVisibility(View.INVISIBLE);
+            ((TextView) $(R.id.tvItembtnSelectMVCaption1))
                     .setTextColor(mTxColorN);
         }
     }
@@ -3658,16 +3447,16 @@ public class RecorderActivity extends BaseActivity {
      * 隐藏音乐菜单
      */
     private void goneMusicLayout() {
-        findViewById(R.id.rrlAddMusic).setVisibility(View.GONE);
-        findViewById(R.id.rrlAddMusic1).setVisibility(View.GONE);
+        $(R.id.rrlAddMusic).setVisibility(View.GONE);
+        $(R.id.rrlAddMusic1).setVisibility(View.GONE);
     }
 
     /**
      * 显示音乐菜单
      */
     private void showMusicLayout() {
-        findViewById(R.id.rrlAddMusic).setVisibility(View.VISIBLE);
-        findViewById(R.id.rrlAddMusic1).setVisibility(View.VISIBLE);
+        $(R.id.rrlAddMusic).setVisibility(View.VISIBLE);
+        $(R.id.rrlAddMusic1).setVisibility(View.VISIBLE);
     }
 
     /**
@@ -3692,7 +3481,7 @@ public class RecorderActivity extends BaseActivity {
                     .setBackgroundResource(R.drawable.btn_shutter_stop_record);
             mVideoNewRelative.setVisibility(View.VISIBLE);
             mVideoNewRelative1.setVisibility(View.VISIBLE);
-            if (SdkEntry.getSdkService().getCameraConfig().enablePlayMusic) {
+            if (cameraConfig.enablePlayMusic) {
                 showMusicLayout();
             } else {
                 goneMusicLayout();
@@ -3711,7 +3500,7 @@ public class RecorderActivity extends BaseActivity {
                 mVideoNewRelative.setVisibility(View.VISIBLE);
                 mVideoNewRelative1.setVisibility(View.VISIBLE);
             }
-            if (SdkEntry.getSdkService().getCameraConfig().enablePlayMusic) {
+            if (cameraConfig.enablePlayMusic) {
                 showMusicLayout();
             } else {
                 goneMusicLayout();
@@ -3761,24 +3550,22 @@ public class RecorderActivity extends BaseActivity {
 
 
     /**
-     * isScreen  是否是全屏模式
+     * isFullScreen  是否是全屏模式
      * 录制回调
      */
     class IRecoder implements IRecorderCallBackShot {
 
         @Override
         public void onPermissionFailed(int nResult, String strResultInfo) {
-            if (isScreen) {
-                mIsRecording = false;
+            mIsRecording = false;
+            if (isFullScreen) {
                 setLiveStreamStatus(false);
                 tvTimer.setVisibility(View.GONE);
-                mLocalSaveFileNameStr = null;
             } else {
-                mIsRecording = false;
                 tvTimer1.setVisibility(View.GONE);
                 setLiveStreamStatus(false);
-                mLocalSaveFileNameStr = null;
             }
+            mLocalSaveFileNameStr = null;
         }
 
         /**
@@ -3789,71 +3576,45 @@ public class RecorderActivity extends BaseActivity {
          */
         @Override
         public void onScreenShot(int nResult, String strResultInfo) {
-            if (isScreen) {
-                shootSound();
-                if (editResult) {
-                    insertPicToGallery(strResultInfo);
-                    mLocalSavePicNameStr = strResultInfo;
-                    gotoEdit();
-                } else if (mUseMultiShoot) {
-                    insertPicToGallery(strResultInfo);
-                } else {
-                    if (mIsSaveToAlbum) {
-                        insertPicToGallery(strResultInfo);
-                    }
-                    mLocalSavePicNameStr = strResultInfo;
-                    gotoEdit();
-                }
+            LogUtil.i(TAG, "onScreenShot: " + nResult + " > " + strResultInfo);
+            shootSound();
+            if (editResult) {
+                insertPicToGallery(strResultInfo);
+                mLocalSavePicNameStr = strResultInfo;
+                gotoEdit();
+            } else if (mUseMultiShoot) {
+                insertPicToGallery(strResultInfo);
             } else {
-                shootSound();
-                if (editResult) {
+                if (mIsSaveToAlbum) {
                     insertPicToGallery(strResultInfo);
-                    mLocalSavePicNameStr = strResultInfo;
-                    gotoEdit();
-                } else if (mUseMultiShoot) {
-                    insertPicToGallery(strResultInfo);
-                } else {
-                    if (mIsSaveToAlbum) {
-                        insertPicToGallery(strResultInfo);
-                    }
-                    mLocalSavePicNameStr = strResultInfo;
-                    gotoEdit();
                 }
-
+                mLocalSavePicNameStr = strResultInfo;
+                gotoEdit();
             }
         }
 
         @Override
         public void onRecordFailed(int nResult, String strResultInfo) {
-            Log.e("IRecorderListener", "onRecordFailed->" + nResult + "..."
-                    + strResultInfo);
-            if (isScreen) {
-                isFailed = true;
-                if (nResult == -3) {
-                    onAutoToast(
-                            getString(R.string.dialog_tips),
-                            getString(R.string.permission_audio_error_p_allow));
-                } else if (nResult == -16) {
-                    onAutoToast(
-                            getString(R.string.dialog_tips),
-                            getString(R.string.error_code, nResult));
-                }
-                mIsRecording = false;
-                tvTimer.setVisibility(View.GONE);
-                setLiveStreamStatus(false);
-                mLocalSaveFileNameStr = null;
-            } else {
-                isFailed = true;
-                if (nResult == -3) {
-                    SysAlertDialog.showAutoHideDialog(RecorderActivity.this,
-                            R.string.dialog_tips, R.string.permission_camera_error,
-                            nResult);
-                }
-                mIsRecording = false;
-                tvTimer1.setVisibility(View.GONE);
-                setLiveStreamStatus(false);
-                mLocalSaveFileNameStr = null;
+            Log.e(TAG, "onRecordFailed:" + nResult + " >" + strResultInfo);
+            mIsRecording = false;
+            isFailed = true;
+            if (nResult == ResultConstants.ERROR_AUDIO_RECORD_START) {
+                onAutoToast(
+                        getString(R.string.dialog_tips),
+                        getString(R.string.permission_audio_error_p_allow));
+            } else if (nResult == ResultConstants.ERROR_ENCODE_AUDIO) {
+                onAutoToast(
+                        getString(R.string.dialog_tips),
+                        getString(R.string.error_code, nResult));
             }
+            if (isFullScreen) {
+                tvTimer.setVisibility(View.GONE);
+            } else {
+                tvTimer1.setVisibility(View.GONE);
+
+            }
+            setLiveStreamStatus(false);
+            mLocalSaveFileNameStr = null;
         }
 
         private boolean isFailed = false;
@@ -3865,90 +3626,78 @@ public class RecorderActivity extends BaseActivity {
 
         @Override
         public void onRecordEnd(int nResult, String strResultInfo) {
-
-            if (isScreen) {
-                boolean bResult;
-
-                bResult = true;
-                VideoConfig vcRecord = new VideoConfig();
-                if (bResult) {
+            mIsRecording = false;
+            if (needPostRecycleCameraView) {
+                needPostRecycleCameraView = false;
+                RecorderCore.recycleCameraView();
+            }
+            recordEndUI();
+            if (isFullScreen) {
+                if (nResult >= ResultConstants.SUCCESS) {
+                    VideoConfig vcRecord = new VideoConfig();
                     onCheckRDEncypt(mLocalSaveFileNameStr);
-                    float ftemp = VirtualVideo.getMediaInfo(
-                            mLocalSaveFileNameStr, vcRecord);
-                    int lDuration = Utils.s2ms(ftemp);
-                    bResult = lDuration > 0;
-                    if (bResult) {
+                    int lDuration = Utils.s2ms(VirtualVideo.getMediaInfo(mLocalSaveFileNameStr, vcRecord));
+                    if (lDuration > 0) {
                         if (!startTrailer) {
-                            ImageView img = (ImageView) mLinearSeekbar
-                                    .getChildAt(mLinearSeekbar.getChildCount() - 1);
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img
-                                    .getLayoutParams();
+                            ImageView img = (ImageView) mLinearSeekbar.getChildAt(mLinearSeekbar.getChildCount() - 1);
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img.getLayoutParams();
                             int maxTime = 0;
                             if (curPosition == POSITION_REC) {
                                 maxTime = mVideoMaxTime;
                             } else if (curPosition == POSITION_MV) {
                                 maxTime = mMVMaxTime;
                             }
-                            int childWidth = (int) (m_DisplayWidth * ((float) lDuration / maxTime)) + 1;
-                            layoutParams.width = childWidth;
+                            layoutParams.width = (int) (m_DisplayWidth * ((float) lDuration / maxTime)) + 1;
                             img.setLayoutParams(layoutParams);
                             totalTime += lDuration;
                         }
                     }
-                }
-                if (!startTrailer) {
-                    if (curPosition == POSITION_MV) {
-                        tvTimer.setText(Utils.stringForTime(totalTime, false, true));
-                    } else if (curPosition == POSITION_REC) {
-                        if (mVideoMaxTime != 0) {
-                            tvTimer.setText(Utils.stringForTime(totalTime, false,
-                                    true));
+                    curTotal = totalTime;
+                    try {
+                        MediaObject vo = VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr);
+                        mRecordVideoList.add(vo);
+                    } catch (InvalidArgumentException e) {
+                        e.printStackTrace();
+                    }
+                    if (!startTrailer) {
+                        if (curPosition == POSITION_MV) {
+                            initScreenDuration(Utils.stringForTime(totalTime, false, true));
+                        } else if (curPosition == POSITION_REC) {
+                            if (mVideoMaxTime != 0) {
+                                initScreenDuration(Utils.stringForTime(totalTime, false, true));
+                            } else {
+                                initScreenDuration(Utils.stringForTime(totalTime, true, false));
+                            }
                         } else {
-                            tvTimer.setText(Utils.stringForTime(totalTime, true,
-                                    false));
+                            initScreenDuration(Utils.stringForTime(totalTime, true, false));
                         }
-                    } else {
-                        tvTimer.setText(Utils.stringForTime(totalTime, true, false));
                     }
-                }
-                curTotal = totalTime;
-
-                MediaObject vo = null;
-                try {
-                    vo = VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr);
-                } catch (InvalidArgumentException e) {
-                    e.printStackTrace();
-                }
-                mRecordVideoList.add(vo);
-
-                setLiveStreamStatus(false);
-                if (!startTrailer) {
-                    InitBtnBlack();
-                    addView_black();
-                    int total = 0;
-                    for (int n = 0; n < mLinearSeekbar.getChildCount(); n++) {
-                        int width = mLinearSeekbar.getChildAt(n).getWidth();
-                        if (width == 0) {
-                            width = CoreUtils.dpToPixel(1);
+                    setLiveStreamStatus(false);
+                    if (!startTrailer) {
+                        InitBtnBlack();
+                        addView_black();
+                        int total = 0;
+                        for (int n = 0; n < mLinearSeekbar.getChildCount(); n++) {
+                            int width = mLinearSeekbar.getChildAt(n).getWidth();
+                            if (width == 0) {
+                                width = CoreUtils.dpToPixel(1);
+                            }
+                            total += width;
                         }
-                        total += width;
+                        mTotalWidth = total;
                     }
-                    mTotalWidth = total;
+                    if (save) {
+                        gotoEdit();
+                    }
+
                 }
-                if (save) {
-                    gotoEdit();
-                }
+
             } else {
-
-
-                boolean bResult = nResult >= ResultConstants.SUCCESS;
-
-                if (bResult) {
+                if (nResult >= ResultConstants.SUCCESS) {
                     VideoConfig vcRecord = new VideoConfig();
                     onCheckRDEncypt(mLocalSaveFileNameStr);
                     long lDuration = Utils.s2ms(VirtualVideo.getMediaInfo(mLocalSaveFileNameStr, vcRecord));
-                    bResult = lDuration > 0;
-                    if (bResult) {
+                    if (lDuration > 0) {
                         if (!startTrailer) {
                             ImageView img = (ImageView) mLinearSeekbar1
                                     .getChildAt(mLinearSeekbar1.getChildCount() - 1);
@@ -3974,29 +3723,24 @@ public class RecorderActivity extends BaseActivity {
                     setLiveStreamStatus(false);
                     return;
                 }
-                if (!startTrailer) {
-                    if (curPosition == POSITION_MV) {
-                        tvTimer1.setText(Utils
-                                .stringForTime(totalTime, false, true));
-                    } else if (curPosition == POSITION_REC) {
-                        if (mVideoMaxTime != 0) {
-                            tvTimer1.setText(Utils.stringForTime(totalTime, false,
-                                    true));
-                        } else {
-                            tvTimer1.setText(Utils.stringForTime(totalTime, true,
-                                    false));
-                        }
-                    } else {
-                        tvTimer1.setText(Utils
-                                .stringForTime(totalTime, true, false));
-                    }
-
-                }
 
                 try {
                     mRecordVideoList.add(VirtualVideo.createScene().addMedia(mLocalSaveFileNameStr));
                 } catch (InvalidArgumentException e) {
                     e.printStackTrace();
+                }
+                if (!startTrailer) {
+                    if (curPosition == POSITION_MV) {
+                        tvTimer1.setText(Utils.stringForTime(totalTime, false, true));
+                    } else if (curPosition == POSITION_REC) {
+                        if (mVideoMaxTime != 0) {
+                            tvTimer1.setText(Utils.stringForTime(totalTime, false, true));
+                        } else {
+                            tvTimer1.setText(Utils.stringForTime(totalTime, true, false));
+                        }
+                    } else {
+                        tvTimer1.setText(Utils.stringForTime(totalTime, true, false));
+                    }
                 }
                 if (!startTrailer) {
                     setLiveStreamStatus(false);
@@ -4011,22 +3755,20 @@ public class RecorderActivity extends BaseActivity {
                     }
                     mTotalWidth = total;
                 }
-
                 if (save) {
                     gotoEdit();
                 }
             }
         }
 
-        @SuppressWarnings("deprecation")
         @Override
         public void onRecordBegin(int nResult, String strResultInfo) {
-            if (isScreen) {
-                if (isFailed) {
-                    isFailed = false;
-                    return;
-                }
-
+            recordBeginUI();
+            if (isFailed) {
+                isFailed = false;
+                return;
+            }
+            if (isFullScreen) {
                 if (!startTrailer) {
                     if (mLinearSeekbar.getChildCount() >= 2) {
                         ((ImageView) mLinearSeekbar.getChildAt(mLinearSeekbar
@@ -4034,28 +3776,10 @@ public class RecorderActivity extends BaseActivity {
                                 .setBackgroundColor(getResources().getColor(
                                         R.color.linear_seekbar_color));
                     }
-
                     addView_Red();
                     mBtnRecord.setBackgroundResource(R.drawable.btn_record_n);
                 }
-                if (RecorderCore.isRecording()) {
-                    setLiveStreamStatus(true);
-                    if (!startTrailer) {
-                        ctlTimerCounter(true);
-                    }
-                } else {
-                    FileLog.writeLog(String.format(
-                            getString(R.string.livecamera_record_cannot_start)
-                                    + ":%d", 0));
-                    setLiveStreamStatus(false);
-                    ctlTimerCounter(false);
-                    onError();
-                }
             } else {
-                if (isFailed) {
-                    isFailed = false;
-                    return;
-                }
                 if (!startTrailer) {
                     if (mLinearSeekbar1.getChildCount() >= 2) {
                         ((ImageView) mLinearSeekbar1.getChildAt(mLinearSeekbar1
@@ -4063,101 +3787,33 @@ public class RecorderActivity extends BaseActivity {
                                 .setBackgroundColor(getResources().getColor(
                                         R.color.linear_seekbar_color));
                     }
-
                     addView_Red();
                     mBtnRecord1.setBackgroundResource(R.drawable.btn_record_n);
                 }
-                if (RecorderCore.isRecording()) {
-                    setLiveStreamStatus(true);
-                    if (!startTrailer) {
-                        ctlTimerCounter(true);
-                    }
-                } else {
-                    FileLog.writeLog(String.format(
-                            getString(R.string.livecamera_record_cannot_start)
-                                    + ":%d", 0));
-                    setLiveStreamStatus(false);
-                    ctlTimerCounter(false);
-                    onError();
+            }
+            if (RecorderCore.isRecording()) {
+                setLiveStreamStatus(true);
+                if (!startTrailer) {
+                    ctlTimerCounter(true);
                 }
+            } else {
+                setLiveStreamStatus(false);
+                ctlTimerCounter(false);
             }
         }
 
         @Override
         public void onCamera(int nResult, String strResultInfo) {
-            if (isScreen) {
-                if (nResult == ResultConstants.ERROR_CAMERA_OPEN_FAILED) {
-                    bCameraPrepared = false;
-                    if (null != mDlgCameraFailed) {
-                        mDlgCameraFailed.dismiss();
-                        mDlgCameraFailed = null;
-                    }
-                    mDlgCameraFailed = SysAlertDialog.showAlertDialog(
-                            RecorderActivity.this,
-                            getString(R.string.dialog_tips),
-                            getString(R.string.permission_camera_error_p_allow),
-                            getString(R.string.exit),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    RecorderActivity.this.finish();
-                                }
-                            }, getString(R.string.setting),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    Utils.gotoAppInfo(RecorderActivity.this,
-                                            RecorderActivity.this
-                                                    .getPackageName());
-                                }
-                            });
-                    mDlgCameraFailed.setCancelable(false);
-                    mDlgCameraFailed.setCanceledOnTouchOutside(false);
-                }
-            } else {
-                if (nResult == ResultConstants.ERROR_CAMERA_OPEN_FAILED) {
-                    bCameraPrepared = false;
-                    if (null != mDlgCameraFailed) {
-                        mDlgCameraFailed.dismiss();
-                        mDlgCameraFailed = null;
-                    }
-                    mDlgCameraFailed = SysAlertDialog.showAlertDialog(
-                            RecorderActivity.this,
-                            getString(R.string.dialog_tips),
-                            getString(R.string.permission_camera_error_p_allow),
-                            getString(R.string.exit),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    RecorderActivity.this.finish();
-
-                                }
-                            }, getString(R.string.setting),
-                            new DialogInterface.OnClickListener() {
-
-                                @Override
-                                public void onClick(DialogInterface dialog,
-                                                    int which) {
-                                    Utils.gotoAppInfo(RecorderActivity.this,
-                                            RecorderActivity.this
-                                                    .getPackageName());
-                                }
-                            });
-                    mDlgCameraFailed.setCancelable(false);
-                    mDlgCameraFailed.setCanceledOnTouchOutside(false);
-                }
+            if (nResult == ResultConstants.ERROR_CAMERA_OPEN_FAILED) {
+                bCameraPrepared = false;
+                onCameraPermissionFailed();
             }
         }
 
         @Override
         public void onPrepared(int nResult, String strResultInfo) {
             if (nResult == ResultConstants.SUCCESS) {
+                isFrontCamera = RecorderCore.isFaceFront();
                 if (enableFace && null != faceUnityHandler) {
                     faceUnityHandler.onInitFaceunity();
                 }
@@ -4168,27 +3824,27 @@ public class RecorderActivity extends BaseActivity {
                 mHandler.postDelayed(mRunnableEffect, 300);
                 startOpenCamGate();
                 onSureBg();
+                if (null != faceUnityHandler) {
+                    faceUnityHandler.setFuNotifyPause(false);
+                }
             }
         }
 
         @Override
         public void onGetRecordStatus(int nPosition, int arg1, int arg2) {
-            if (isScreen) {
-                if (startTrailer) {
-                    if (nPosition > trailerTime || nPosition > osdEnd) {
-                        onCloseOrPauseRecordClick();
-                    }
-                    return;
+            if (startTrailer) {
+                if (nPosition > trailerTime || nPosition > osdEnd) {
+                    onCloseOrPauseRecordClick();
                 }
+                return;
+            }
+            if (isFullScreen) {
                 if (curPosition == POSITION_MV) {
                     int position = nPosition;
                     if (mLinearSeekbar.getChildCount() > 0 && mIsRecording) {
-                        ImageView img = (ImageView) mLinearSeekbar
-                                .getChildAt(mLinearSeekbar.getChildCount() - 1);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img
-                                .getLayoutParams();
+                        ImageView img = (ImageView) mLinearSeekbar.getChildAt(mLinearSeekbar.getChildCount() - 1);
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img.getLayoutParams();
                         int childWidth = (int) (m_DisplayWidth * ((float) position / mMVMaxTime)) + 1;
-
                         if ((totalTime + nPosition) > mMVMaxTime) {
                             onCloseOrPauseRecordClick();
                             return;
@@ -4197,49 +3853,35 @@ public class RecorderActivity extends BaseActivity {
                             img.setLayoutParams(layoutParams);
                         }
                     }
-                    tvTimer.setText(Utils.stringForTime(totalTime + nPosition,
-                            false, true));
+                    initScreenDuration(Utils.stringForTime(totalTime + nPosition, false, true));
                 } else if (curPosition == POSITION_REC) {
                     if (mVideoMaxTime != 0) {
                         int position = nPosition;
                         if (mLinearSeekbar.getChildCount() > 0 && mIsRecording) {
-                            ImageView img = (ImageView) mLinearSeekbar
-                                    .getChildAt(mLinearSeekbar.getChildCount() - 1);
-                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img
-                                    .getLayoutParams();
-                            int childWidth = (int) (m_DisplayWidth * ((float) position / mVideoMaxTime)) + 1;
-
+                            ImageView img = (ImageView) mLinearSeekbar.getChildAt(mLinearSeekbar.getChildCount() - 1);
+                            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img.getLayoutParams();
                             if ((totalTime + nPosition) > mVideoMaxTime) {
                                 onCloseOrPauseRecordClick();
                                 return;
                             } else {
-                                layoutParams.width = childWidth;
+                                layoutParams.width = (int) (m_DisplayWidth * ((float) position / mVideoMaxTime)) + 1;
                                 img.setLayoutParams(layoutParams);
                             }
                         }
-                        tvTimer.setText(Utils.stringForTime(totalTime + nPosition,
-                                false, true));
+                        initScreenDuration(Utils.stringForTime(totalTime + nPosition, false, true));
                     } else {
-                        tvTimer.setText(Utils.stringForTime(totalTime + nPosition,
-                                true, false));
+                        initScreenDuration(Utils.stringForTime(totalTime + nPosition, true, false));
                     }
                 }
                 curTotal = totalTime + nPosition;
                 setRecordOSDProgress(curTotal);
             } else {
-                if (startTrailer) {
-                    if (nPosition > trailerTime || nPosition > osdEnd) {
-                        onCloseOrPauseRecordClick();
-                    }
-                    return;
-                }
                 if (curPosition == POSITION_MV) {
                     int position = nPosition;
                     if (mLinearSeekbar1.getChildCount() > 0 && mIsRecording) {
                         ImageView img = (ImageView) mLinearSeekbar1
                                 .getChildAt(mLinearSeekbar1.getChildCount() - 1);
-                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img
-                                .getLayoutParams();
+                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) img.getLayoutParams();
                         int childWidth = (int) (m_DisplayWidth * ((float) position / mMVMaxTime)) + 1;
 
                         if ((totalTime + nPosition) > mMVMaxTime) {
@@ -4270,20 +3912,33 @@ public class RecorderActivity extends BaseActivity {
                                 img.setLayoutParams(layoutParams);
                             }
                         }
-                        tvTimer1.setText(Utils.stringForTime(totalTime + nPosition,
-                                false, true));
+                        tvTimer1.setText(Utils.stringForTime(totalTime + nPosition, false, true));
                     } else {
-                        tvTimer1.setText(Utils.stringForTime(totalTime + nPosition,
-                                true, false));
+                        tvTimer1.setText(Utils.stringForTime(totalTime + nPosition, true, false));
                     }
 
                 }
                 curTotal = totalTime + nPosition;
                 setRecordOSDProgress(curTotal);
-                // tvTimer1.setText(DateTimeUtils.stringForMillisecondTime(totalTime+nPosition));
             }
         }
 
+    }
+
+    private void recordBeginUI() {
+        setConfigEnabled(false);
+        m_btnWaiting.setEnabled(false);
+        m_btnWaiting1.setEnabled(false);
+    }
+
+    private void recordEndUI() {
+        m_btnWaiting.setEnabled(true);
+        m_btnWaiting1.setEnabled(true);
+    }
+
+    private void setConfigEnabled(boolean enable) {
+        mBtnConfig.setEnabled(enable);
+        mBtnConfig1.setEnabled(enable);
     }
 
     /**
@@ -4297,6 +3952,7 @@ public class RecorderActivity extends BaseActivity {
             mBtnShootingRatio270.setEnabled(false);
             mLayoutSelectRecOrPhoto1.setVisibility(View.INVISIBLE);
             mLayoutSelectRecOrPhoto2.setVisibility(View.INVISIBLE);
+            setConfigEnabled(false);
         } else {
             mLayoutSelectRecOrPhoto1.setVisibility(View.VISIBLE);
             mLayoutSelectRecOrPhoto2.setVisibility(View.VISIBLE);
@@ -4310,29 +3966,11 @@ public class RecorderActivity extends BaseActivity {
             mBtnShootingRatio90
                     .setImageResource(R.drawable.btn_shooting_ratio_n);
             mBtnShootingRatio270.setEnabled(true);
-            mBtnShootingRatio270
-                    .setImageResource(R.drawable.btn_shooting_ratio_n);
+            mBtnShootingRatio270.setImageResource(R.drawable.btn_shooting_ratio_n);
+            setConfigEnabled(true);
         }
     }
 
-    // 保存视频信息
-    private void insertToGallery(String path, int duration, int width,
-                                 int height) {
-        ContentValues videoValues = new ContentValues();
-        videoValues.put(Video.Media.TITLE, getString(R.string.undefine));
-        videoValues.put(Video.Media.MIME_TYPE, "video/mp4");
-        videoValues.put(Video.Media.DATA, path);
-        videoValues.put(Video.Media.ARTIST, getString(R.string.app_name));
-        videoValues.put(Video.Media.DATE_TAKEN,
-                String.valueOf(System.currentTimeMillis()));
-        videoValues.put(Video.Media.DESCRIPTION, getString(R.string.app_name));
-        videoValues.put(Video.Media.DURATION, duration);
-        videoValues.put(Video.Media.WIDTH, width);
-        videoValues.put(Video.Media.HEIGHT, height);
-        getContentResolver().insert(
-                MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoValues);
-
-    }
 
     /**
      * 黑屏按钮设置
@@ -4381,7 +4019,7 @@ public class RecorderActivity extends BaseActivity {
      * 创建音频播放器
      */
     private void initPlayer() {
-        if (SdkEntry.getSdkService().getCameraConfig().enablePlayMusic) {
+        if (cameraConfig.enablePlayMusic) {
             if (null != mAudioPlayer) {
                 mAudioPlayer.stop();
             } else {
@@ -4390,7 +4028,7 @@ public class RecorderActivity extends BaseActivity {
 
                     @Override
                     public boolean onError(AudioPlayer mp, int what, int extra) {
-                        Log.e("RecorderActivity", "AudioPlayer_onerror.." + what
+                        Log.e(TAG, "AudioPlayer_onerror.." + what
                                 + "..." + extra);
                         onAutoToast("", "不支持该音乐");
                         return false;
@@ -4400,40 +4038,79 @@ public class RecorderActivity extends BaseActivity {
         }
     }
 
+    private String mDefaultMusicPath;
+
+    /**
+     * 初始化默认的音乐
+     */
+    private void exportDefaultMusic() {
+        if (cameraConfig.enablePlayMusic) {
+            String name = "huiyi.mp3";
+            mDefaultMusicPath = PathUtils.getAssetFileNameForSdcard("huiyi", ".mp3");
+            if (!FileUtils.isExist(mDefaultMusicPath)) {
+                CoreUtils.assetRes2File(getAssets(), name, mDefaultMusicPath);
+            }
+        }
+
+    }
+
+    /**
+     * 初始化默认混音
+     */
+    private void initDefaultMusic() {
+
+        if (cameraConfig.enablePlayMusic && FileUtils.isExist(mDefaultMusicPath)) {
+            int duration = MiscUtils.s2ms(VirtualVideo.getMediaInfo(mDefaultMusicPath, null));
+            mAudioMusic = new AudioMusicInfo(mDefaultMusicPath, "回忆", 0, duration, duration);
+            initMP3Player();
+        }
+    }
+
+
+    //是否需要重新初始化播放器资源
+    private boolean bNeedInitMp3Player = true;
+
+    /**
+     * 初始化混音播放器
+     */
+    private void initMP3Player() {
+        if (mAudioPlayer != null && mAudioMusic != null && bNeedInitMp3Player) {
+            bNeedInitMp3Player = false;
+            mAudioPlayer.stop();
+            try {
+                mAudioPlayer.setDataSource(mAudioMusic.getPath());
+                mAudioPlayer.setAutoRepeat(true);
+                mAudioPlayer.setTimeRange(mAudioMusic.getStart(), mAudioMusic.getEnd());
+                mAudioPlayer.prepareAsync();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            mllAddMusic.setVisibility(View.VISIBLE);
+            mBtnAddMusic.setVisibility(View.GONE);
+            mTvMusicNameScreen.setText(mAudioMusic.getName());
+            mllAddMusic1.setVisibility(View.VISIBLE);
+            mBtnAddMusic1.setVisibility(View.GONE);
+            mTvMusicNameSquare.setText(mAudioMusic.getName());
+        }
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == ALBUM_REQUEST_CODE) {
+            if (requestCode == REQUEST_CONFIG) {
+                //onstart()重新初始化摄像头
+            } else if (requestCode == ALBUM_REQUEST_CODE) {
                 setResult(RESULT_OK, data);
                 finishWithoutGate = true;
                 finish();
             } else if (requestCode == VideoEditActivity.REQUSET_MUSICEX) {
                 if (null != data) {
-
+                    //混音
                     mAudioMusic = (AudioMusicInfo) data
                             .getParcelableExtra(MoreMusicActivity.MUSIC_INFO);
-
-                    if (mAudioPlayer != null && mAudioMusic != null) {
-                        mAudioPlayer.stop();
-                        try {
-                            mAudioPlayer.setDataSource(mAudioMusic.getPath());
-                            mAudioPlayer.setAutoRepeat(true);
-                            mAudioPlayer.setTimeRange(mAudioMusic.getStart(),
-                                    mAudioMusic.getEnd());
-                            mAudioPlayer.prepareAsync();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        mllAddMusic.setVisibility(View.VISIBLE);
-                        mBtnAddMusic.setVisibility(View.GONE);
-                        mTvMusicNameScreen.setText(mAudioMusic.getName());
-                        mllAddMusic1.setVisibility(View.VISIBLE);
-                        mBtnAddMusic1.setVisibility(View.GONE);
-                        mTvMusicNameSquare.setText(mAudioMusic.getName());
-                    }
-
-
+                    bNeedInitMp3Player = true;
+                    initMP3Player();
                 }
             }
         } else if (resultCode == RESULT_FIRST_USER) {
@@ -4442,20 +4119,6 @@ public class RecorderActivity extends BaseActivity {
         }
     }
 
-    /**
-     * 返回主界面 提示调用系统相机
-     */
-    private void onError() {
-        Intent intent = new Intent();
-        intent.setAction(LOG_TAG);
-        sendBroadcast(intent);
-        Log.e(LOG_TAG, "onError called!");
-        this.runOnUiThread(new Runnable() {
-            public void run() {
-                onBackPressed();
-            }
-        });
-    }
 
     /**
      * 改变设备方向，防止m_btnRecord响应onTouch();
@@ -4524,7 +4187,7 @@ public class RecorderActivity extends BaseActivity {
             try {
                 VideoConfig vcMediaInfo = new VideoConfig();
                 int duration = Utils.s2ms(VirtualVideo.getMediaInfo(videoPath, vcMediaInfo));
-                insertToGallery(videoPath, duration, vcMediaInfo.getVideoWidth(), vcMediaInfo.getVideoHeight());
+                Utils.insertToGallery(this, videoPath, duration, vcMediaInfo.getVideoWidth(), vcMediaInfo.getVideoHeight());
             } catch (Exception ex) {
             }
         }
@@ -4560,7 +4223,6 @@ public class RecorderActivity extends BaseActivity {
             @Override
             public void onExportEnd(int nResult) {
 
-
                 if (null != listener) {
                     listener.onExportEnd(nResult);
                 }
@@ -4569,7 +4231,7 @@ public class RecorderActivity extends BaseActivity {
     }
 
     interface ExportEndListener {
-        public void onExportEnd(int nResult);
+        void onExportEnd(int nResult);
     }
 
 

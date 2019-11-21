@@ -13,7 +13,7 @@ android {
         minSdkVersion 18
         targetSdkVersion 26
         multiDexEnabled true
-        ndk{
+        ndk {
             abiFilters 'armeabi'
         }
 

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/menuBar"
+              android:layout_width="match_parent"
+              android:layout_height="45dp"
+              android:layout_alignParentBottom="true"
+              android:background="@color/fragment_titlebar_bg"
+              android:gravity="center_vertical"
+              android:orientation="horizontal"
+    >
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:drawableLeft="@drawable/btn_bottom_cancel"
+        android:gravity="center"
+        android:minWidth="65dp"
+        android:paddingLeft="8dp"
+        />
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content">
+
+        <HorizontalScrollView
+            android:id="@+id/hsvMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbarSize="0dp"
+            android:scrollbarStyle="@null"
+            android:scrollbarThumbHorizontal="@color/transparent"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/rgEffect"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View
+            android:id="@+id/menuFrameLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/fragment_titlebar_bg"/>
+    </FrameLayout>
+
+    <com.rd.lib.ui.ExtButton
+        android:id="@+id/btnRight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@null"
+        android:drawableRight="@drawable/btn_bottom_sure"
+        android:gravity="center"
+        android:minWidth="65dp"
+        android:paddingRight="8dp"
+        />
+
+</LinearLayout>

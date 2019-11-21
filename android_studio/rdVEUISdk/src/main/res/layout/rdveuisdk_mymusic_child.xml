@@ -2,40 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@color/edit_menu_bg"
+              android:background="@color/transparent"
               android:descendantFocusability="blocksDescendants"
               android:gravity="center_vertical"
               android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/edit_menu_bg"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/node_title"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_gravity="left"
-            android:layout_marginLeft="8dp"
-            android:gravity="center_vertical"
-            android:padding="2dp"
-            android:singleLine="true"
-            android:textColor="@color/item_duration_txcolor"
-            android:textSize="@dimen/text_size_14">
-        </TextView>
-
-        <View
-            android:id="@+id/viewTopDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/node_title"
-            android:background="@color/edit_music_divider"
-            android:visibility="gone"/>
-    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/mymusic_item_content"

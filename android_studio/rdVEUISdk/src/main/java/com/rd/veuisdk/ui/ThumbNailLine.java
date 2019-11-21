@@ -1,5 +1,6 @@
 package com.rd.veuisdk.ui;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -11,18 +12,23 @@ import android.graphics.Paint.FontMetrics;
 import android.graphics.Paint.Style;
 import android.graphics.PaintFlagsDrawFilter;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.util.LruCache;
+import android.util.SparseArray;
 import android.view.MotionEvent;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.HorizontalScrollView;
 
 import com.rd.vecore.VirtualVideo;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.TempVideoParams;
 import com.rd.veuisdk.ui.extrangseekbar.RangSeekBarBase;
+import com.rd.veuisdk.utils.DateTimeUtils;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.ThumbNailUtils;
 import com.rd.veuisdk.utils.Utils;
@@ -39,18 +45,16 @@ import java.util.concurrent.Executors;
 /**
  * 字幕、特效、配音缩略图组件
  * 时间轴 (包含缩略图和字幕时间段信息)
- *
- * @author JIAN
  */
 public class ThumbNailLine extends RangSeekBarBase {
-    public final String TAG = "ThumbNailLine";
+    private final String TAG = "ThumbNailLine";
     private int mHeight;// 组件高度
     private boolean isReleased = false;
     private boolean isAudio = false;
     private Rect lastSrc = new Rect();
     private Rect leftRect = new Rect(), rightRect = new Rect();
     private boolean showCurrent = false;
-    private Rect tempbg = new Rect();
+    private Rect tempbg = new Rect(), timeBg = new Rect();
     private int pressedThumb = RangSeekBarBase.NONE_THUMB_PRESSED;
 
     private boolean cantouch = false;
@@ -71,13 +75,21 @@ public class ThumbNailLine extends RangSeekBarBase {
      */
     private final int BORDER_LINE_WIDTH;
     private Paint mPaint = new Paint(), pCurrent = new Paint(), pText = new Paint(),
-            mPbg = new Paint();
+            mPbg = new Paint(), mTime = new Paint(), mTimeBg = new Paint(),
+            mTextPaint = new Paint();
     private Bitmap mLeftBmp, mRightBmp;// 当前item的控制把手
     private Bitmap mLeftSelectedBmp, mRightSelectedBmp;
     private int mHeader = 0;
     private int mLast = 0;
 
     private int lastPx = -1, headerPx = -1;
+    //进度条的高度、文字高度
+    private int mProgressLineH = 10;
+    private int mTimeH = 50;
+    //拖动时间
+    private Drawable mDrawablePosition;
+    private Rect mPositionRect = new Rect();
+    private int mHandleWidht, mHandleHeight;
 
     /**
      * @param context
@@ -94,10 +106,14 @@ public class ThumbNailLine extends RangSeekBarBase {
      */
     public ThumbNailLine(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        mRightSelectedBmp = BitmapFactory.decodeResource(getResources(),
+                R.drawable.special_hand_right_p);
+        mPadding = Math.min(mRightSelectedBmp.getWidth() + 10, 50);
+
         initThread(context);
         mPaint.setColor(getResources().getColor(R.color.main_orange_transparent_66));
         mPaint.setAntiAlias(true);
-        pCurrent.setColor(getResources().getColor(R.color.white));
+        pCurrent.setColor(getResources().getColor(R.color.main_orange));
         pCurrent.setStyle(Style.STROKE);
         BORDER_LINE_WIDTH = getResources().getDimensionPixelSize(
                 R.dimen.borderline_width2);
@@ -108,6 +124,11 @@ public class ThumbNailLine extends RangSeekBarBase {
         pText.setTextSize(getResources().getDimensionPixelSize(
                 R.dimen.text_size_14));
 
+        mTime.setColor(Color.parseColor("#CCF5F1F1"));
+        mTime.setAntiAlias(true);
+        mTime.setTextSize(getResources().getDimensionPixelSize(
+                R.dimen.text_size_12));
+
         mLeftBmp = BitmapFactory.decodeResource(getResources(),
                 R.drawable.special_hand_left);
         mRightBmp = BitmapFactory.decodeResource(getResources(),
@@ -115,19 +136,29 @@ public class ThumbNailLine extends RangSeekBarBase {
 
         mLeftSelectedBmp = BitmapFactory.decodeResource(getResources(),
                 R.drawable.special_hand_left_p);
-        mRightSelectedBmp = BitmapFactory.decodeResource(getResources(),
-                R.drawable.special_hand_right_p);
         mPbg.setColor(Color.BLACK);
         mPbg.setAntiAlias(true);
+        mTimeBg.setColor(getResources().getColor(R.color.transparent_black));
+        mTimeBg.setAntiAlias(true);
+        mTimeH = (int) measureTextHeight(mTime);
         setCantouch(true);
 
-    }
+        mDrawablePosition = getResources().getDrawable(R.drawable.edit_duration_bg_white);
+        int top = getResources().getDimensionPixelSize(R.dimen.preview_intercept_margintop);
+        // 84*52
+        double scaleSize = top / 52.0; // 滑动把手进度背景图宽高84px*52px
+        mHandleWidht = (int) (scaleSize * 84);
+        mHandleHeight = (int) (scaleSize * 52);
 
+        mTextPaint.setColor(Color.BLACK);
+        mTextPaint.setAntiAlias(true);
+        int textSize = (int) (scaleSize * 18);
+        mTextPaint.setTextSize(textSize);
+    }
 
     public void setIsAudio(boolean isAudio) {
         this.isAudio = isAudio;
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -135,28 +166,20 @@ public class ThumbNailLine extends RangSeekBarBase {
         mHeight = ThumbNailUtils.THUMB_HEIGHT;
         canvas.setDrawFilter(new PaintFlagsDrawFilter(0, Paint.ANTI_ALIAS_FLAG
                 | Paint.FILTER_BITMAP_FLAG));
-        // canvas.drawColor(Color.BLACK);
-
         canvas.drawRect(tempbg, mPbg);
 
         Map<Integer, ThumbInfo> maps = mMemoryCache.snapshot();
         Set<Entry<Integer, ThumbInfo>> entrySet = maps.entrySet();
-
         for (Entry<Integer, ThumbInfo> item : entrySet) {
             ThumbInfo temp = item.getValue();
-
             if (mlefttime <= temp.nTime && temp.nTime <= mrighttime
                     && item.getKey() != lastTime && temp != null
                     && temp.bmp != null && !temp.bmp.isRecycled()) {
                 canvas.drawBitmap(temp.bmp, null, temp.rect, null);
-
             }
-
         }
-
         entrySet.clear();
         maps.clear();
-
         if (lastTime > 0) {
             ThumbInfo temp = mMemoryCache.get(lastTime);
             if (temp != null && temp.bmp != null && !temp.bmp.isRecycled()) {
@@ -164,69 +187,156 @@ public class ThumbNailLine extends RangSeekBarBase {
             }
         }
 
+        //绘制进度条
         int len = listSubInfos.size();
-//        Log.e(TAG, "ondraw-----------------------------------》" + len);
+        mId.clear();
         for (int i = 0; i < len; i++) {
             SubInfo info = listSubInfos.get(i);
 //            Log.e(TAG, "ondraw" + i + "...>" + info.getRect().toShortString() + "...." + info.getStart() + "<>" + info.getEnd());
             if (!showCurrent || null == currentSub
                     || currentSub.getId() != info.getId()) {
-                canvas.drawRect(info.getRect(), mPaint);
-                drawText(info, canvas);
+                //把以前画的整个橘黄改为现在的红色进度条 如果当前时间处于添加的贴纸内 颜色变淡
+                // canvas.drawRect(info.getRect(), mPaint);
+                Rect rect = new Rect(info.getRect().left, info.getRect().top,
+                        info.getRect().right, mProgressLineH);
+                if (info.getTimelinefrom() <= mCurrentDuration
+                        && info.getTimelineTo() >= mCurrentDuration) {
+                    mPaint.setColor(Color.parseColor("#96ffd500"));
+                    mId.put(i, i);
+                } else {
+                    mPaint.setColor(Color.parseColor("#B2ffd500"));
+                }
+                canvas.drawRect(rect, mPaint);
+                //drawText(info, canvas); //文字只有在当前选中才显示出来
             }
-
         }
+
+        //绘制边框、文字、时间
         if (showCurrent && null != currentSub) {
-
             Rect thecurrent = currentSub.getRect();
-
             if (null != thecurrent) {
+                //动画 mAnimValue 由0 - 1变化 根据选中和取消选中计算移动的距离 控制宽的显示和位置
+                if (mIsIn) {
+                    mAnimMove = (int) ((mAnimValue - 1) * getHeight());
+                } else {
+                    if (mAnimValue >= 1) {
+                        showCurrent = false;
+                        currentSub = null;
+                        invalidate();
+                        return;
+                    }
+                    mAnimMove = (int) (-mAnimValue * getHeight());
+                }
 
                 int half = (int) (BORDER_LINE_WIDTH * 0.5);
-
-                thecurrent = new Rect(thecurrent.left - half, thecurrent.top
-                        + half, thecurrent.right + half, thecurrent.bottom
-                        - half);
-                canvas.drawRect(thecurrent, mPaint);
-                if (thecurrent.width() < 30 && !misAdding) {
-                    thecurrent.left = thecurrent.left - 15;
-                    thecurrent.right = thecurrent.right + 15;
-                }
+                thecurrent = new Rect(thecurrent.left - half,
+                        thecurrent.top + half,
+                        thecurrent.right + half,
+                        thecurrent.bottom - half + mAnimMove);
+                //canvas.drawRect(thecurrent, mPaint);
+//                if (thecurrent.width() < 30 && !misAdding) {
+//                    thecurrent.left = thecurrent.left - 15;
+//                    thecurrent.right = thecurrent.right + 15;
+//                }
                 canvas.drawRect(thecurrent, pCurrent);
+                //绘制时间
+                if (TextUtils.isEmpty(currentSub.getStr()) && mIsIn) {
+                    int t = getProgress(currentSub.getEnd()) -
+                            getProgress(currentSub.getStart());
+                    if (t > 0) {
+                        String time = DateTimeUtils.stringForMillisecondTime(t);
+                        int strWidth = (int) mTime.measureText(time) + 25;
+                        if (strWidth < thecurrent.right - thecurrent.left) {
+                            //判断是绘制左把手还是右把手 默认右边
+                            if (canMoveItem && result
+                                    &&  pressedThumb == RangSeekBarBase.MIN_THUMB_PRESSED) {
+                                timeBg.set(thecurrent.left + half + 5,
+                                        thecurrent.top + mProgressLineH, thecurrent.left + strWidth + half + 5,
+                                        thecurrent.top+ mProgressLineH + mTimeH +10);
+                            } else {
+                                timeBg.set(thecurrent.right - strWidth - 5 - half,
+                                        thecurrent.top + mProgressLineH, thecurrent.right - 5 - half,
+                                        thecurrent.top+ mProgressLineH + mTimeH +10);
+                            }
+                            canvas.drawRect(timeBg, mTimeBg);
+                            canvas.drawText(time, timeBg.left + 10,
+                                    timeBg.top + 5 - mTime.getFontMetrics()
+                                            .ascent, mTime);
+                        }
+                    }
+                }
                 if (canMoveItem) {
                     // 画把手
                     int bw = mLeftBmp.getWidth();
-                    int bh = mLeftBmp.getHeight();
-                    int bleft = thecurrent.left - bw;
-                    int btop = thecurrent.top + (thecurrent.height() - bh) / 2;
-                    leftRect.set(bleft - 5, btop - 5, bleft + bw + 5, btop + bh
-                            + 5);
+                    int bleft = thecurrent.left - bw + half;
+                    int btop = thecurrent.top - half;
+                    leftRect.set(bleft, btop, bleft + bw + half, thecurrent.bottom + half);
+                    int x = 0;
                     if (pressedThumb == RangSeekBarBase.MIN_THUMB_PRESSED
                             && result) {
-                        canvas.drawBitmap(mLeftSelectedBmp, null, leftRect, null);
-                    } else {
                         canvas.drawBitmap(mLeftBmp, null, leftRect, null);
+                        x = leftRect.left + leftRect.width() / 2 - mHandleWidht / 2;
+                        mPositionRect.set(x, -mHandleHeight, x + mHandleWidht, 0);
+                        mDrawablePosition.setBounds(mPositionRect);
+                        mDrawablePosition.draw(canvas);
+                        setPositionText(canvas, leftRect.left + bw);
+                    } else {
+                        canvas.drawBitmap(mLeftSelectedBmp, null, leftRect, null);
                     }
 
-                    int mw = thecurrent.width();
+                    int mw = thecurrent.width() - 2 * half;
 
-                    rightRect.set(leftRect.left + mw + bw, leftRect.top,
+                    rightRect.set(leftRect.left + bw + mw - half, leftRect.top,
                             leftRect.right + mw + bw, leftRect.bottom);
-
+//                    Log.e(TAG, "onDraw: right >" + rightRect);
                     if (pressedThumb == RangSeekBarBase.MAX_THUMB_PRESSED
                             && result) {
-                        canvas.drawBitmap(mRightSelectedBmp, null, rightRect, null);
-                    } else {
                         canvas.drawBitmap(mRightBmp, null, rightRect, null);
+                        //时间
+                        x = rightRect.left + half + rightRect.width() / 2 - mHandleWidht / 2;
+                        mPositionRect.set(x, -mHandleHeight, x + mHandleWidht, 0);
+                        mDrawablePosition.setBounds(mPositionRect);
+                        mDrawablePosition.draw(canvas);
+                        setPositionText(canvas, rightRect.left + half);
+                    } else {
+                        canvas.drawBitmap(mRightSelectedBmp, null, rightRect, null);
                     }
-
                 }
             }
-
             drawText(currentSub, canvas);
-
         }
 
+    }
+
+    /**
+     * 显示时间
+     * @param canvas
+     * @param position
+     */
+    private void setPositionText(Canvas canvas, int position) {
+
+        String str = gettime(Math.max(0, getProgress(position)));
+        int mwidth = (int) mTextPaint.measureText(str);
+        canvas.drawText(str, (mPositionRect.left
+                        + (mPositionRect.width() / 2) - (mwidth / 2)),
+                (mPositionRect.top + (mPositionRect.height() / 2)), mTextPaint);
+    }
+
+    private String gettime(int progress) {
+        return DateTimeUtils.stringForMillisecondTime(progress, true, true);
+    }
+
+    /**
+     * 文字高度
+     */
+    public float measureTextHeight(Paint paint){
+        float height = 0f;
+        if(null == paint){
+            return height;
+        }
+        Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+        height = fontMetrics.descent - fontMetrics.ascent;
+        return height;
     }
 
     private void drawText(SubInfo info, Canvas canvas) {
@@ -280,7 +390,8 @@ public class ThumbNailLine extends RangSeekBarBase {
                             + ((info.getEnd() - info.getStart()) - (int) pText
                             .measureText(str)) / 2;
                     int mtop = (int) (0 + (i + 1) * (mHeight) / 3 + Math
-                            .abs(fm.ascent) / 2) - (int) Math.abs(fm.descent);
+                            .abs(fm.ascent) / 2) - (int) Math.abs(fm.descent)
+                            + mAnimMove;
 
                     canvas.drawText(str, mleft, mtop, pText);
                 }
@@ -289,7 +400,7 @@ public class ThumbNailLine extends RangSeekBarBase {
 
                 int mleft = info.getStart() + (widthPx - strWidth) / 2;
                 int mtop = (int) (0 + (mHeight) / 2 + Math.abs(fm.ascent) / 2)
-                        - (int) Math.abs(fm.descent);
+                        - (int) Math.abs(fm.descent) + mAnimMove;
                 canvas.drawText(info.getStr(), mleft, mtop, pText);
             }
         }
@@ -304,7 +415,7 @@ public class ThumbNailLine extends RangSeekBarBase {
     /**
      * 新增单个SubInfo
      *
-     * @param start
+     * @param start 单位：毫秒
      * @param end
      * @param str
      * @param id
@@ -315,17 +426,24 @@ public class ThumbNailLine extends RangSeekBarBase {
         int startpx = getScrollXByPadding(start);
         int endpx = getScrollXByPadding(end);
 
+
         int maxRight = getMaxRightbyself(startpx);
+
+//        Log.e(TAG, "addRect: " + startpx + "<>" + endpx + ">>" + maxRight + ">>>>:" + start + "<>" + end + ">>params：" + params[0]);
         if (endpx >= maxRight) {
             endpx = maxRight;
         }
 
+
         SubInfo info = new SubInfo(startpx, endpx, ThumbNailUtils.THUMB_HEIGHT,
                 str, id);
+        if (end > mDuration) {
+            end = mDuration;
+        }
         info.setTimeLine(start, end);
         listSubInfos.add(info);
         currentSub = new SubInfo(info, ThumbNailUtils.THUMB_HEIGHT);
-        showCurrent = true;
+        showCurrent = false;
         invalidate();
 
     }
@@ -342,15 +460,107 @@ public class ThumbNailLine extends RangSeekBarBase {
         if (null != info) {
             currentSub = new SubInfo(info, ThumbNailUtils.THUMB_HEIGHT);
             showCurrent = true;
+            startAnim(true);
         }
         invalidate();
     }
 
-    public void setShowCurrentFalse() {
-
+    //隐藏调整框 没有动画
+    public void setHideCurrent(){
         showCurrent = false;
-        currentSub = null;
+        stopAnim();
+    }
 
+    //隐藏当前框 有移出动画
+    public void setShowCurrentFalse() {
+//        startAnim(false);
+//        invalidate();
+        //取消移出动画
+        setHideCurrent();
+        invalidate();
+    }
+
+    //动画、移动的距离
+    private ValueAnimator mValueAnimator;
+    private int mAnimMove = 0;
+    private float mAnimValue= 0;
+    private boolean mIsIn = false;//进入还是出去(显示和隐藏)
+    //当前时间处于哪些添加的样式内 确定进度条的颜色深浅
+    private int mCurrentDuration = 0;
+    private SparseArray<Integer> mId = new SparseArray<>();
+
+    /**
+     * 开始动画
+     * @param in 进入(显示)
+     */
+    private void startAnim(boolean in){
+        stopAnim();
+        if (!showCurrent) {
+            return;
+        }
+        mIsIn = in;
+        if (mValueAnimator == null) {
+            mValueAnimator = ValueAnimator.ofFloat(0, 1);
+            mValueAnimator.setDuration(500);
+            mValueAnimator.setInterpolator(new DecelerateInterpolator());//设置一个减速插值器
+        }
+        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                mAnimValue = animation.getAnimatedFraction();
+                invalidate();
+            }
+        });
+        mValueAnimator.start();
+    }
+
+    /**
+     * 停止动画
+     */
+    private void stopAnim() {
+        if (mValueAnimator != null) {
+            mValueAnimator.cancel();
+            clearAnimation();
+        }
+    }
+
+    /**
+     * 设置当前时间 如果当前时间所在的subinfo改变才重新刷新
+     */
+    public void setDuration(int duration) {
+        mCurrentDuration = duration;
+        int  tmp = 0;
+        int i = 0;
+        for (; i < listSubInfos.size(); i++) {
+            SubInfo info = listSubInfos.get(i);
+            if (info.getTimelinefrom() < mCurrentDuration && info.getTimelineTo() > mCurrentDuration) {
+                if (mId.get(i) == null) {
+                    invalidate();
+                    break;
+                } else {
+                    tmp++;
+                }
+            }
+        }
+        if (i >= listSubInfos.size() && mId.size() > 0 && tmp != mId.size()) {
+            invalidate();
+        }
+    }
+
+    /**
+     * 设置当前时间的D
+     */
+    public void setBelongId(int id) {
+        if (id == -1) {
+            showCurrent = false;
+            currentSub = null;
+        } else {
+            SubInfo src = getItem(getIndex(id));
+            if(src != null) {
+                mCurrentDuration = (src.getTimelinefrom() + src.getTimelineTo()) / 2;
+            }
+            editSub(id);
+        }
         invalidate();
     }
 
@@ -362,7 +572,6 @@ public class ThumbNailLine extends RangSeekBarBase {
      * @param mpx              当前触摸点的px
      * @return
      */
-
     public int getMinLeftByself(boolean bgotoleftOrRight, int mright, float mpx) {
 
         SubInfo temp = null, target = null;
@@ -444,10 +653,10 @@ public class ThumbNailLine extends RangSeekBarBase {
                 temp = listSubInfos.get(i);
                 int nStart = temp.getTimelinefrom();
                 // int nEnd = temp.getTimelineTo();getScrollXByPadding(nCheak);
-                if (nCheak <= nStart && nCheak >= (nStart - nTimeByOneSec)) {
-                    canAdd = false;
-                    break;
-                }
+//                if (nCheak <= nStart && nCheak >= (nStart - nTimeByOneSec)) {
+//                    canAdd = false;
+//                    break;
+//                }
             }
         }
 
@@ -484,12 +693,22 @@ public class ThumbNailLine extends RangSeekBarBase {
 
             }
         }
+//        Log.e(TAG, "getMaxRightbyself: " + params[0] + ">>>getLastPx:" + getLastPx());
         if (null != target) {
-            return target.getStart() - 10;// getpadding() * 2;
+            return target.getStart();
         } else {
-            return params[0] - getLastPx() + 10;// getpadding();
+            return getMaxRight();
         }
 
+    }
+
+    /**
+     * 把手的最大允许值
+     *
+     * @return
+     */
+    private int getMaxRight() {
+        return params[0] - getLastPx() + getpadding();
     }
 
     /**
@@ -517,11 +736,10 @@ public class ThumbNailLine extends RangSeekBarBase {
     /**
      * 是否支持触摸移动
      *
-     * @param mCantouch
+     * @param touch
      */
-    public void setCantouch(boolean mCantouch) {
-
-        cantouch = mCantouch;
+    public void setCantouch(boolean touch) {
+        cantouch = touch;
     }
 
     /**
@@ -545,8 +763,6 @@ public class ThumbNailLine extends RangSeekBarBase {
      */
     private void onActionDown(float touchX) {
         pressedThumb = RangSeekBarBase.NONE_THUMB_PRESSED;
-
-
         if (canMoveItem) {
             pressedThumb = evalPressedThumb(touchX);
             if (pressedThumb != RangSeekBarBase.NONE_THUMB_PRESSED) {// 处理后面的move,up
@@ -560,7 +776,6 @@ public class ThumbNailLine extends RangSeekBarBase {
 
             result = false;
         }
-
         invalidate();
 
 
@@ -576,83 +791,95 @@ public class ThumbNailLine extends RangSeekBarBase {
             } else {
                 isLongClick = false;
             }
-            // Log.d(TAG, "onlong....." + isLongClick + "...." + pressedThumb);
+            Log.d(TAG, "onLongListener....." + isLongClick + "...." + pressedThumb);
         }
     };
 
+    //记录点击和开始、结束的差值 避免刚开始移动有一点的跳跃
+    private boolean mIsFirst = true;
+    private int mDifference = 0;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!cantouch) {
+        if (!cantouch || !showCurrent) {
             return false;
         }
         switch (event.getAction()) {
-            case MotionEvent.ACTION_DOWN:
+            case MotionEvent.ACTION_DOWN: {
                 isLongClick = false;
                 isReleased = false;
                 mActivePointerId = event.getPointerId(event.getPointerCount() - 1);
                 mPointerIndex = event.findPointerIndex(mActivePointerId);
                 mDownMotionX = event.getX(mPointerIndex);
+                mIsFirst = true;
+                mDifference = 0;
                 onActionDown(mDownMotionX);
                 postDelayed(onLongListener, 300);
-
-                break;
-            case MotionEvent.ACTION_MOVE:
+            }
+            break;
+            case MotionEvent.ACTION_MOVE: {
                 mPointerIndex = event.findPointerIndex(mActivePointerId);
-                int x = (int) event.getX(mPointerIndex);
-                int mp = -(int) (x - mDownMotionX);
-                if (result) {
-                    if (!isLongClick) {
-                        if (!isReleased) {
-                            if (Math.abs(mp) < 50) {
-                                isReleased = false;
-                            } else {
-                                isReleased = true;
-                                removeCallbacks(onLongListener);
-                                isLongClick = false;
-                                return false;
+                if (mPointerIndex >= 0) {
+                    int x = (int) event.getX(mPointerIndex);
+                    int mp = -(int) (x - mDownMotionX);
+                    if (result) {
+                        if (!isLongClick) {
+                            if (!isReleased) {
+                                if (Math.abs(mp) < 50) {
+                                    isReleased = false;
+                                } else {
+                                    isReleased = true;
+                                    removeCallbacks(onLongListener);
+                                    isLongClick = false;
+                                    return false;
+                                }
                             }
                         }
-                    }
 
-                    if (isLongClick) {
-                        result = onTouching(x);
-                        if (result) {
-                            udpate();
-                            invalidate();
+                        if (isLongClick) {
+                            if (Math.abs(mp) > 0) {
+                                result = onTouching(x);
+                            }
+                            if (result) {
+                                update();
+                                invalidate();
+                            }
+                        } else {
+                            if (isReleased) {
+                                HorizontalScrollView hor = (HorizontalScrollView) getParent()
+                                        .getParent();
+                                hor.smoothScrollBy(mp, 0);
+                                return false;
+                            }
+
                         }
                     } else {
-                        if (isReleased) {
-                            HorizontalScrollView hor = (HorizontalScrollView) getParent()
-                                    .getParent();
-                            hor.smoothScrollBy(mp, 0);
-                            return false;
-                        }
-
+                        HorizontalScrollView hor = (HorizontalScrollView) getParent()
+                                .getParent();
+                        hor.smoothScrollBy(mp, 0);
+                        return false;
                     }
                 } else {
-                    HorizontalScrollView hor = (HorizontalScrollView) getParent()
-                            .getParent();
-                    hor.smoothScrollBy(mp, 0);
                     return false;
                 }
 
-                break;
+            }
+            break;
             case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
+            case MotionEvent.ACTION_CANCEL: {
                 if (result) {
                     if (isLongClick) {
                         if (pressedThumb != RangSeekBarBase.NONE_THUMB_PRESSED) {
-                            udpate();
-                            invalidate();
+                            update();
+                            listener.onTouchUp();
                         }
+                        pressedThumb = RangSeekBarBase.NONE_THUMB_PRESSED;
+                        invalidate();
                     }
-
                 }
-                listener.onTouchUp();
-                pressedThumb = RangSeekBarBase.NONE_THUMB_PRESSED;
-                result = true;
-                break;
+                result = false;
+            }
+            break;
             default:
                 result = false;
                 break;
@@ -671,18 +898,37 @@ public class ThumbNailLine extends RangSeekBarBase {
         return (int) (mDuration * ((scrollX - getpadding()) / (params[0] + .0)));
     }
 
+    /**
+     * 是否允许时间线重叠
+     *
+     * @param enableRepeat 默认false
+     */
+    public void setEnableRepeat(boolean enableRepeat) {
+        this.enableRepeat = enableRepeat;
+    }
+
+    //是否允许重复  （字幕特效不允许重复 190228）
+    private boolean enableRepeat = false;
+
     private boolean onTouching(int eventX) {
         if (currentSub == null) {
             return true;
         }
         if (RangSeekBarBase.MIN_THUMB_PRESSED == pressedThumb) {
-
-
+            if (mIsFirst) {
+                mDifference = currentSub.getStart() - eventX;
+                mIsFirst = false;
+            }
+            eventX += mDifference;
             if (eventX < currentSub.getStart())// 左边把手向左
             {
+                mIsFirst = false;
                 // 判断区间是否满足最小值
-                int offpx = getMinLeftByself(false, currentSub.getEnd(), eventX); // 左边把手的最小值
-
+                int offpx = 50;
+                if (!enableRepeat) {
+                    //不允许重复
+                    offpx = getMinLeftByself(false, currentSub.getEnd(), eventX); // 左边把手的最小值
+                }
                 if (eventX < offpx) {
                     if (currentSub.getEnd() - currentSub.getStart() < MIN_THUMB) {// 时间满足最小要求
                         eventX = currentSub.getStart();
@@ -725,11 +971,20 @@ public class ThumbNailLine extends RangSeekBarBase {
 
             return true;
         } else if (RangSeekBarBase.MAX_THUMB_PRESSED == pressedThumb) {
-
+            if (mIsFirst) {
+                mDifference = eventX - currentSub.getEnd();
+                mIsFirst = false;
+            }
+            eventX -= mDifference;
             if (eventX > currentSub.getEnd()) {// 右边把手往右滑
                 // 往右移动的最大值
                 int mRightMin = currentSub.getStart();
-                int offpx = getMaxRightbyself(mRightMin + 0);
+                int offpx = 0;
+                if (enableRepeat) {
+                    offpx = getMaxRight();
+                } else {
+                    offpx = getMaxRightbyself(mRightMin + 0);
+                }
                 if (offpx > currentSub.getStart()) {
                     eventX = Math.min(offpx, eventX);
                 }
@@ -818,8 +1073,7 @@ public class ThumbNailLine extends RangSeekBarBase {
      */
     public void clearCurrent() {
 //        Log.e(TAG, "clearCurrent: " + ((null != currentSub) ? currentSub.getId() : "null"));
-        currentSub = null;
-        showCurrent = false;
+        startAnim(false);
         invalidate();
     }
 
@@ -918,7 +1172,6 @@ public class ThumbNailLine extends RangSeekBarBase {
      * @param str
      */
     public void replace(int id, String str) {
-//        Log.e(TAG, "replace: " + id + ".....>" + str);
         int index = getIndex(id);
         if (index > -1 && index <= listSubInfos.size() - 1) {
             SubInfo info = listSubInfos.get(index);
@@ -931,21 +1184,25 @@ public class ThumbNailLine extends RangSeekBarBase {
         invalidate();
     }
 
-    public void replace(int id, int startms, int endms) {
-//        Log.e(TAG, "replace: " + id + ".....>" + startms + "<>" + endms);
+    /**
+     * @param id
+     * @param start 单位：ms
+     * @param end
+     */
+    public void replace(int id, int start, int end) {
         int index = getIndex(id);
-        int pstart = getScrollXByPadding(startms), pend = getScrollXByPadding(endms);
+        int pstart = getScrollXByPadding(start), pend = getScrollXByPadding(end);
         if (index > -1 && index <= listSubInfos.size() - 1) {
             SubInfo info = listSubInfos.get(index);
             info.setStart(pstart);
             info.setEnd(pend);
-            info.setTimeLine(startms, endms);
+            info.setTimeLine(start, end);
             listSubInfos.set(index, info);
         }
         if (null != currentSub) {
             currentSub.setStart(pstart);
             currentSub.setEnd(pend);
-            currentSub.setTimeLine(startms, endms);
+            currentSub.setTimeLine(start, end);
         }
         invalidate();
     }
@@ -954,16 +1211,27 @@ public class ThumbNailLine extends RangSeekBarBase {
      * 实时更新区域
      *
      * @param id
-     * @param start 单位ms
+     * @param start 单位:ms
      * @param end
      */
-    public void update(int id, int start, int end) {
-//        Log.e(TAG, "update: " + id + "  start" + start + "<>" + end + "------------>" + listSubInfos.size());
+    public SubInfo update(int id, long start, long end) {
+        return update(id, (int) start, (int) end);
+    }
+
+    /**
+     * @param id
+     * @param start 单位：ms
+     * @param end
+     * @return
+     */
+    public SubInfo update(int id, int start, int end) {
         int index = getIndex(id);
         int startp = getScrollXByPadding(start);
         int endp = getScrollXByPadding(end);
+        //showCurrent = true;
+        SubInfo info = null;
         if (index > -1 && index <= listSubInfos.size() - 1) {
-            SubInfo info = listSubInfos.get(index);
+            info = listSubInfos.get(index);
             info.setStart(startp);
             info.setEnd(endp);
             info.setTimeLine(start, end);
@@ -975,7 +1243,7 @@ public class ThumbNailLine extends RangSeekBarBase {
             currentSub.setTimeLine(start, end);
         }
         invalidate();
-
+        return info;
     }
 
 
@@ -1062,11 +1330,18 @@ public class ThumbNailLine extends RangSeekBarBase {
      * @param id
      */
     public void editSub(int id) {
+        editSub(id, false);
+    }
+
+    public void editSub(int id, boolean anim) {
         SubInfo src = getItem(getIndex(id));
         if (null != src) {
             currentSub = new SubInfo(src, ThumbNailUtils.THUMB_HEIGHT);
             if (null != currentSub) {
                 showCurrent = true;
+                if (anim) {
+                    startAnim(true);
+                }
                 invalidate();
             }
         } else {
@@ -1108,13 +1383,12 @@ public class ThumbNailLine extends RangSeekBarBase {
 
     }
 
-    private int mDuration;//单位：毫秒
+    private int mDuration = 1000;//单位：毫秒
 
     /**
      * 回调区域范围
      */
-    private void udpate() {
-
+    private void update() {
         if (null != currentSub) {
             listener.updateThumb(currentSub.getId(),
                     getProgress(currentSub.getStart()),
@@ -1136,27 +1410,37 @@ public class ThumbNailLine extends RangSeekBarBase {
 
     private int[] params = new int[2];
     private int lastTime = -1;
+    private boolean bExMode = false;
 
     /**
      * 设置虚拟视频
      *
      * @param virtualVideo
+     * @param exMode       true 增强模式取缩略图;false 普通
+     */
+    public void setVirtualVideo(VirtualVideo virtualVideo, boolean exMode) {
+        bExMode = exMode;
+        mVirtualVideo = virtualVideo;
+    }
+
+    /**
+     * @param virtualVideo
      */
     public void setVirtualVideo(VirtualVideo virtualVideo) {
-        mVirtualVideo = virtualVideo;
+        setVirtualVideo(virtualVideo, false);
     }
 
     /**
      * 准备UI
      *
-     * @param duration
+     * @param duration   单位：ms
      * @param halfpWidth
      * @return
      */
     public int[] setDuration(int duration, int halfpWidth) {
         halfParentWidth = halfpWidth;
-        mDuration = duration;
-        maxCount = Math.max(1, Math.min(30, (int) (mDuration / 2000.0)));
+        mDuration = Math.max(100, duration);
+        maxCount = Math.max(1, Math.min(30, (int) (mDuration / 1000.0)));
         itemTime = mDuration / maxCount;
         params[0] = ThumbNailUtils.THUMB_WIDTH * maxCount;
         params[1] = ThumbNailUtils.THUMB_HEIGHT;
@@ -1168,7 +1452,7 @@ public class ThumbNailLine extends RangSeekBarBase {
 
         }
 
-        tempbg.set(getpadding(), 0, params[0] + getpadding(),
+        tempbg.set(getpadding(), mProgressLineH + 2, params[0] + getpadding(),
                 ThumbNailUtils.THUMB_HEIGHT);
         initThemePx();
         isEditorPrepared = true;
@@ -1350,16 +1634,17 @@ public class ThumbNailLine extends RangSeekBarBase {
 
         mlefttime = (leftCount) * itemTime;
         mrighttime = (leftCount + visibleCount) * itemTime;
-        if (mLastRefleshTime == 0 || tempflesh - mLastRefleshTime > 150) { // 减少刷新频率
+        if (mLastRefleshTime == 0 || tempflesh - mLastRefleshTime > 800) {
+            // 减少刷新频率
             Rect temp;
             if (lastTime > 0) {
                 ThumbInfo info = mMemoryCache.get(lastTime);
                 if (null == info || info.isloading == false) {
                     int half = ThumbNailUtils.THUMB_WIDTH / 2;
                     int left = params[0] - half + getpadding();
-                    temp = new Rect(left, 0, left + half,
+                    temp = new Rect(left,  mProgressLineH + 2, left + half,
                             ThumbNailUtils.THUMB_HEIGHT);
-                    lastSrc.set(0, 0, half, ThumbNailUtils.THUMB_HEIGHT);
+                    lastSrc.set(0,  mProgressLineH + 2, half, ThumbNailUtils.THUMB_HEIGHT);
                     downloadImage(lastTime, temp);
                 }
 
@@ -1374,7 +1659,7 @@ public class ThumbNailLine extends RangSeekBarBase {
                             || info.isloading == false) {
                         int mleft = nLeft + i * ThumbNailUtils.THUMB_WIDTH;
                         if (mleft <= params[0]) { // 防止超过视频边界
-                            temp = new Rect(mleft, 0, mleft
+                            temp = new Rect(mleft,  mProgressLineH + 2, mleft
                                     + ThumbNailUtils.THUMB_WIDTH,
                                     ThumbNailUtils.THUMB_HEIGHT);
                             downloadImage(key, temp);
@@ -1399,12 +1684,9 @@ public class ThumbNailLine extends RangSeekBarBase {
         Bitmap bitmap = getBitmapFromMemCache(nTime);
 
         boolean hasBmp = (bitmap != null && !bitmap.isRecycled());
-        // Log.e("downloadImage", nTime + "--" + isEditorPrepared + "------"
-        // + hasBmp);
         if (hasBmp) {
             mHandler.sendEmptyMessage(THUMB_ITEM);
         } else {
-
             if (isEditorPrepared && (!hasBmp)) {
                 ThumbInfo info = new ThumbInfo(nTime, rect, null);
                 info.isloading = true;
@@ -1420,15 +1702,12 @@ public class ThumbNailLine extends RangSeekBarBase {
                                     ThumbNailUtils.THUMB_HEIGHT,
                                     Config.ARGB_8888);
 
-                            if (mVirtualVideo != null && mVirtualVideo.getSnapshot(getContext(), Utils.ms2s(nTime), bitmap)) {
+                            if (mVirtualVideo != null && mVirtualVideo.getSnapshot(getContext(), Utils.ms2s(nTime), bitmap, bExMode)) {
                                 // 将Bitmap 加入内存缓存
                                 addBitmapToMemoryCache(nTime, rect, bitmap);
                                 mHandler.sendEmptyMessage(THUMB_ITEM);
-
                             } else {
-
-                                ThumbInfo info = new ThumbInfo(nTime, rect,
-                                        null);
+                                ThumbInfo info = new ThumbInfo(nTime, rect, null);
                                 info.isloading = false;
                                 mMemoryCache.put(nTime, info);
                                 bitmap.recycle();
@@ -1498,7 +1777,10 @@ public class ThumbNailLine extends RangSeekBarBase {
                 fs[i].delete();
             }
         }
-
+        stopAnim();
+        mCurrentDuration = 0;
+        mAnimValue = 0;
+        mIsIn = false;
     }
 
     private int getScrollX(long progress) {

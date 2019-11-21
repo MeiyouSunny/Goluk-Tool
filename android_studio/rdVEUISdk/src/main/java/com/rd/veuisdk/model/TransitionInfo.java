@@ -1,58 +1,51 @@
 package com.rd.veuisdk.model;
 
+import com.rd.vecore.models.Transition;
+
 /**
- * 转场INFO
- * Created by JIAN on 2017/7/10.
+ * 转场
  */
+public class TransitionInfo extends IApiInfo {
+    private int coreFilterId = Transition.Unknown;
 
-public class TransitionInfo {
-
-    private String text;
-    private int drawableId;
-    private int nId;
-
-    public String getIconPath() {
-        return iconPath;
+    public int getCoreFilterId() {
+        return coreFilterId;
     }
 
-    public void setIconPath(String iconPath) {
-        this.iconPath = iconPath;
+    public void setCoreFilterId(int coreFilterId) {
+        this.coreFilterId = coreFilterId;
+    }
+    /**
+     * 网络转场
+     *
+     * @param url
+     * @param img
+     * @param name
+     * @param _localPath
+     * @param updatetime
+     */
+    public TransitionInfo(String url, String img, String name, String _localPath, long updatetime) {
+        super(name, url, img, _localPath, updatetime);
+    }
+
+    /**
+     * 本地转场
+     *
+     * @param id
+     * @param text
+     * @param strGrayAlphaPath
+     */
+    public TransitionInfo(int id, String text, String strGrayAlphaPath) {
+        super(text, strGrayAlphaPath, strGrayAlphaPath, strGrayAlphaPath, 0);
+
     }
 
 
-    private String iconPath;
 
-    public String getText() {
-        return text;
+    @Override
+    public String toString() {
+        return "TransitionInfo{" +
+                "coreFilterId=" + coreFilterId + "  >>" + super.toString() +
+                '}';
     }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public int getDrawableId() {
-        return drawableId;
-    }
-
-    public void setDrawableId(int drawableId) {
-        this.drawableId = drawableId;
-    }
-
-    public int getId() {
-        return nId;
-    }
-
-//
-//    public TransitionInfo(int id, String text, int drawableId) {
-//        this.nId = id;
-//        this.text = text;
-//        this.drawableId = drawableId;
-//    }
-
-    public TransitionInfo(int id, String text, String iconPath) {
-        this.nId = id;
-        this.text = text;
-        this.iconPath = iconPath;
-    }
-
 }

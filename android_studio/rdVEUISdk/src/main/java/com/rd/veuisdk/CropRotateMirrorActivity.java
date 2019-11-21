@@ -1,30 +1,48 @@
 package com.rd.veuisdk;
 
-import android.content.DialogInterface;
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Bundle;
-import android.os.Handler;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
+import android.widget.CheckBox;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
-import com.rd.vecore.exception.InvalidStateException;
+import com.rd.vecore.exception.InvalidArgumentException;
 import com.rd.vecore.models.FlipType;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.vecore.models.VideoConfig;
+import com.rd.vecore.models.VisualFilterConfig;
+import com.rd.vecore.utils.MiscUtils;
+import com.rd.veuisdk.adapter.FilterLookupAdapter;
 import com.rd.veuisdk.crop.CropView;
+import com.rd.veuisdk.fragment.helper.FilterLookupLocalHandler;
+import com.rd.veuisdk.listener.OnItemClickListener;
+import com.rd.veuisdk.model.RCInfo;
 import com.rd.veuisdk.model.VideoOb;
+import com.rd.veuisdk.model.WebFilterInfo;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.SysAlertDialog;
+import com.rd.veuisdk.utils.Utils;
+
+import java.util.ArrayList;
 
 
 /**
@@ -33,17 +51,10 @@ import com.rd.veuisdk.utils.SysAlertDialog;
  * @author abreal
  */
 public class CropRotateMirrorActivity extends BaseActivity {
-    private static final String TAG = "CropRotateMirrorActivity";
-    private final int CROP_MODE_NORMAL = 2;
-    private final int CROP_MODE_1x1 = 1;
-    private final int CROP_MODE_FREE = 0;
-
     private VirtualVideoView mMediaPlayer;
     private TextView mTvTitle;
-    private ExtButton mBtnLeft;
-    private ExtButton mBtnRight;
     private CropView mCvCrop;
-    private TextView mTvResetAll;
+    private View mTvResetAll;
     private PreviewFrameLayout mPlayout;
 
     private Scene mScene;
@@ -55,25 +66,227 @@ public class CropRotateMirrorActivity extends BaseActivity {
     private RectF mCurDefaultClipBound;
     private int mCurDefaultAngle;
     private double mCurDefaultAspect;
+    @VideoOb.CropMode
     private int mCurDefaultCropMode;
     private FlipType mCurDefaultFlipType;
 
-    public static final String SHOW_CROP = "bgonecrop";
-    private boolean bCropShow = true;//显示裁剪功能
+    public static final String PARAM_SHOW_PROPORTION = "show_proportion";
+    private static final String PARAM_MEDIA_ASP = "media_asp";
+    private static final String PARAM_HIDE_MIRROR = "hide_mirror";
+    private static final String PARAM_HIDE_CROPVIEW = "hide_cropview";
+    private static final String PARAM_HIDE_MIRROR_MENU = "hide_mirror_menu";
+    private static final String PARAM_SHOW_AE_REPLACE = "param_show_ae_replace";
+    private static final String PARAM_SHOW_APPLY_ALL = "param_show_apply_all_part";
+    private static final String PARAM_CROP_ASP = "param_default_crop_asp";
+    private static final String PARAM_TITLE = "title";
+
+
+    private boolean bShowProportion = true;//显示裁剪比例按钮
+
+    static final int RESULT_AE_REPLACE = -23;
 
     private boolean mIsPrepared;
 
+    //媒体指定的显示比例
+    private float mAsp = -1;
+    private View mllRotateMirror;
+    private boolean bShowAEReplace = false;
+    private CheckBox cbApplyToAll;
+
+    //滤镜
+    private RecyclerView mRvFilter;
+    private FilterLookupAdapter mAdapter;
+    private SeekBar mSbStrength;
+    private TextView mTvFilter;
+    private int tmpIndex = 0;
+    private int lastItemId = 0;
+    private int mLastPageIndex = 0;
+    protected VisualFilterConfig tmpLookup = null;
+    /**
+     * 默认的锐度
+     */
+    protected float mDefaultValue = Float.NaN;
+
+    /**
+     * 片段编辑-编辑
+     *
+     * @param aspCropAsp 片段编辑界面播放器的显示比例
+     */
+    static void onCropRotate(Context context, Scene scene, float aspCropAsp, int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(context, CropRotateMirrorActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(PARAM_SHOW_APPLY_ALL, true);
+        intent.putExtra(PARAM_CROP_ASP, aspCropAsp);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+        ((Activity) context).overridePendingTransition(0, 0);
+
+    }
+
+    /**
+     * @param context
+     * @param scene        媒体
+     * @param asp          固定裁剪比例
+     * @param isHideMirror 是否隐藏镜像布局
+     * @param requestCode
+     */
+    static void onAECropRotateMirror(Context context, Scene scene, float asp, boolean isHideMirror, int requestCode) {
+        onAECropRotateMirror(context, scene, asp, isHideMirror, true, requestCode);
+    }
+
+    /**
+     * @param scene         媒体
+     * @param asp           固定裁剪比例
+     * @param isHideMirror  是否隐藏镜像布局
+     * @param isShowReplace 是否显示替换图片
+     */
+    public static void onAECropRotateMirror(Context context, Scene scene, float asp, boolean isHideMirror, boolean isShowReplace, int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(context, CropRotateMirrorActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_SHOW_PROPORTION, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_SHOW_AE_REPLACE, isShowReplace);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_MEDIA_ASP, asp);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_HIDE_MIRROR, isHideMirror);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 导入图片旋转、锁定比例裁剪
+     *
+     * @param context
+     * @param scene
+     * @param requestCode
+     */
+    static void onImportImage(Context context, Scene scene, int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(context, CropRotateMirrorActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_SHOW_PROPORTION, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_HIDE_MIRROR, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_HIDE_MIRROR_MENU, true);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_HIDE_CROPVIEW, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_TITLE, context.getString(R.string.preview_rotate));
+        ((Activity) context).startActivityForResult(intent, requestCode);
+    }
+
+
+    /**
+     * sdk-视频裁剪功能
+     */
+    static void onCrop(Context context, Scene scene, int requestCode) {
+        Intent intent = new Intent();
+        intent.setClass(context, CropRotateMirrorActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(IntentConstants.INTENT_NEED_EXPORT, true);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_SHOW_PROPORTION, true);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_SHOW_AE_REPLACE, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_HIDE_MIRROR, false);
+        intent.putExtra(CropRotateMirrorActivity.PARAM_TITLE, context.getString(R.string.preview_crop));
+        if (context instanceof Activity && requestCode > 0) {
+            ((Activity) context).startActivityForResult(intent, requestCode);
+        } else {
+            context.startActivity(intent);
+        }
+
+    }
+
+    private boolean hideMirrorMenu = false;
+    private boolean bHideCropView = false;
+    private String mCustomTitlte;
+    private RadioButton mRbOriginal, mRbFree, mRb1x1, mRb169, mRb916;
+    private RadioGroup mRGCrop;
+
+    private void onOriginalClick() {
+        mIsPrepared = false;
+        mRectVideoClipBound.setEmpty();
+        changeCropMode(VideoOb.CROP_ORIGINAL);
+        setResetClickable(true);
+    }
+
+    private void initProportion() {
+        mRGCrop = $(R.id.rgCropProportionLine);
+        mRbOriginal = $(R.id.rbCropOriginal);
+        mRbFree = $(R.id.rbCropFree);
+        mRb1x1 = $(R.id.rbProportion1x1);
+        mRb169 = $(R.id.rbProportion169);
+        mRb916 = $(R.id.rbProportion916);
+
+        mRbOriginal.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOriginalClick();
+            }
+        });
+        mRbFree.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsPrepared = false;
+                mRectVideoClipBound.setEmpty();
+                changeCropMode(VideoOb.CROP_FREE);
+            }
+        });
+        mRb1x1.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsPrepared = false;
+                mRectVideoClipBound.setEmpty();
+                changeCropMode(VideoOb.CROP_1);
+                setResetClickable(true);
+            }
+        });
+        mRb169.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsPrepared = false;
+                mRectVideoClipBound.setEmpty();
+                changeCropMode(VideoOb.CROP_169);
+            }
+        });
+        mRb916.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIsPrepared = false;
+                mRectVideoClipBound.setEmpty();
+                changeCropMode(VideoOb.CROP_916);
+            }
+        });
+
+    }
+
+    private View mProportionLayout;
+
+    private boolean bNeedExport = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mStrActivityPageName = getString(R.string.preview_edit_pic);
         setContentView(R.layout.activity_video_rotate_crop);
+        Intent intent = getIntent();
+        mScene = intent.getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
+        bNeedExport = intent.getBooleanExtra(IntentConstants.INTENT_NEED_EXPORT, false);
 
-        mScene = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
-        bCropShow = getIntent().getBooleanExtra(SHOW_CROP, true);
-        if (!bCropShow) {
-            findViewById(R.id.ivProportion).setVisibility(View.GONE);
+        mAsp = intent.getFloatExtra(PARAM_MEDIA_ASP, -1);
+        //片段编辑的播放器比例
+        float nLastPreviewAsp = intent.getFloatExtra(PARAM_CROP_ASP, -1);
+        bShowAEReplace = intent.getBooleanExtra(PARAM_SHOW_AE_REPLACE, false);
+        bShowProportion = intent.getBooleanExtra(PARAM_SHOW_PROPORTION, true);
+        boolean hideMirror = intent.getBooleanExtra(PARAM_HIDE_MIRROR, false);
+        bHideCropView = intent.getBooleanExtra(PARAM_HIDE_CROPVIEW, false);
+        boolean showApplyAll = intent.getBooleanExtra(PARAM_SHOW_APPLY_ALL, false);
+        mCustomTitlte = intent.getStringExtra(PARAM_TITLE);
+        initProportion();
+        if (!hideMirror) {
+            hideMirrorMenu = intent.getBooleanExtra(PARAM_HIDE_MIRROR_MENU, false);
+            if (hideMirrorMenu) {
+                $(R.id.ivMirrorLeftright).setVisibility(View.GONE);
+                $(R.id.ivMirrorUpdown).setVisibility(View.GONE);
+            }
+        }
+        mProportionLayout = $(R.id.ivProportionLayout);
+        if (!bShowProportion) {
+            mProportionLayout.setVisibility(View.GONE);
         }
         if (null == mScene) {
             finish();
@@ -83,15 +296,182 @@ public class CropRotateMirrorActivity extends BaseActivity {
         mVideoOb = (VideoOb) mMedia.getTag();
         if (null == mVideoOb) {
             mVideoOb = VideoOb.createVideoOb(mMedia.getMediaPath());
-            if (null != mVideoOb) {
-                mMedia.setTag(mVideoOb);
+            mMedia.setTag(mVideoOb);
+        }
+
+        float offPx = 1.0f;
+        if (nLastPreviewAsp > 0 && (mVideoOb.getCropMode() == VideoOb.DEFAULT_CROP || mVideoOb.getCropMode() == VideoOb.CROP_FREE || mVideoOb.getCropMode() == VideoOb.CROP_ORIGINAL)
+                && (mMedia.getClipRectF() == null || mMedia.getClipRectF().isEmpty() ||
+                (Math.abs(mMedia.getClipRectF().width() - mMedia.getWidthInternal()) < offPx && Math.abs(mMedia.getClipRectF().height() - mMedia.getHeightInternal()) < offPx) ||
+                (Math.abs(mMedia.getClipRectF().width() - mMedia.getHeightInternal()) < offPx && Math.abs(mMedia.getClipRectF().height() - mMedia.getWidthInternal()) < offPx)
+        )) {
+            float off = 0.01f; //容错
+            //没有指定裁剪比例
+            if (Math.abs(nLastPreviewAsp - 1) < off) {
+                mVideoOb.setCropMode(VideoOb.CROP_1);
+            } else if (Math.abs(nLastPreviewAsp - (9 / 16.0f)) < off) {
+                mVideoOb.setCropMode(VideoOb.CROP_916);
+            } else if (Math.abs(nLastPreviewAsp - (16 / 9.0f)) < off) {
+                mVideoOb.setCropMode(VideoOb.CROP_169);
+            } else if (Math.abs(nLastPreviewAsp - (mMedia.getWidth() / ((float) mMedia.getHeight()))) < off) {
+                //原始
+                mVideoOb.setCropMode(VideoOb.CROP_ORIGINAL);
             } else {
-                finish();
-                return;
+                //自由
+                mVideoOb.setCropMode(VideoOb.CROP_FREE);
+                if (nLastPreviewAsp > 0) {
+                    { //3:4  | 4:3
+                        mRectVideoClipBound = new RectF();
+                        Rect rect = new Rect();
+                        if (mMedia.getAngle() == 270 || mMedia.getAngle() == 90) {
+                            MiscUtils.fixClipRect(nLastPreviewAsp, mMedia.getHeight(), mMedia.getWidth(), rect);
+                        } else {
+                            MiscUtils.fixClipRect(nLastPreviewAsp, mMedia.getWidth(), mMedia.getHeight(), rect);
+                        }
+                        mMedia.setClipRectF(new RectF(rect));
+                    }
+                }
             }
+        }
+
+
+        if (-1 != mAsp) {
+            //ae图片指定裁剪了比例
+            mRectVideoClipBound = new RectF();
+            Rect rect = new Rect();
+            MiscUtils.fixClipRect(mAsp, mMedia.getWidth(), mMedia.getHeight(), rect);
+            mMedia.setClipRectF(new RectF(rect));
+        }
+        mllRotateMirror = $(R.id.llRotateMirror);
+        if (hideMirror) {
+            mllRotateMirror.setVisibility(View.GONE);
+        }
+        cbApplyToAll = $(R.id.cbApplyToAll);
+        if (bShowAEReplace) {
+            $(R.id.llReplace).setVisibility(View.VISIBLE);
+            //滤镜
+            mRvFilter = $(R.id.recyclerViewFilter);
+            mSbStrength = $(R.id.sbarStrength);
+            mTvFilter = $(R.id.tvFilterValue);
+            $(R.id.strengthLayout).setVisibility(View.VISIBLE);
+            mSbStrength.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                @Override
+                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                    mDefaultValue = progress / 100.0f;
+                    mTvFilter.setText(progress + "%");
+                    if (fromUser) {
+                        if (null != tmpLookup) {
+                            tmpLookup.setDefaultValue(mDefaultValue);
+                            try {
+                                mMedia.changeFilter(tmpLookup);
+                            } catch (InvalidArgumentException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekBar) {
+
+                }
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekBar) {
+
+                }
+            });
+
+            ArrayList<WebFilterInfo> infos = (new FilterLookupLocalHandler(this)).getArrayList();
+            mSbStrength.setMax(100);
+            if (mMedia.getFilterList() != null && mMedia.getFilterList().size() > 0) {
+                tmpLookup = mMedia.getFilterList().get(0);
+                int value = Float.isNaN(tmpLookup.getSharpen()) ? 100 : (int) (tmpLookup.getSharpen() * 100);
+                mSbStrength.setProgress(value);
+                if (!TextUtils.isEmpty(tmpLookup.getFilterFilePath())) {
+                    for (int i = 0; i < infos.size(); i++) {
+                        if (tmpLookup.getFilterFilePath().equals(infos.get(i).getLocalPath())) {
+                            mLastPageIndex = i;
+                            tmpIndex = i;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                mSbStrength.setProgress(100);
+            }
+
+            mRvFilter.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+            //设置添加或删除item时的动画，这里使用默认动画
+            mRvFilter.setItemAnimator(new DefaultItemAnimator());
+            mAdapter = new FilterLookupAdapter(this);
+            mAdapter.addAll(true, infos, mLastPageIndex);
+            mAdapter.setEnableRepeatClick(true);
+            mAdapter.setOnItemClickListener(new OnItemClickListener<Object>() {
+                @Override
+                public void onItemClick(int position, Object item) {
+                    onSelectedImp(position);
+                    mSbStrength.setEnabled(position > 0);
+                }
+            });
+            mSbStrength.setEnabled(tmpIndex > 0);
+            //设置适配器
+            mRvFilter.setAdapter(mAdapter);
+        } else {
+            $(R.id.mRCLayout).setVisibility(View.VISIBLE);
+            cbApplyToAll.setVisibility(showApplyAll ? View.VISIBLE : View.GONE);
         }
         initViews();
         initPlayer();
+    }
+
+    /**
+     * 滤镜点击
+     *
+     * @param nItemId
+     */
+    public void onSelectedImp(int nItemId) {
+        mLastPageIndex = nItemId;
+        if (nItemId >= 1) {
+            if (lastItemId != nItemId) {
+                switchFliter(nItemId);
+                lastItemId = nItemId;
+                mAdapter.onItemChecked(nItemId);
+            }
+        } else {
+            lastItemId = nItemId;
+            switchFliter(nItemId);
+            mAdapter.onItemChecked(lastItemId);
+        }
+    }
+
+    /**
+     * 切换滤镜效果
+     *
+     * @param index
+     */
+    private void switchFliter(int index) {
+        tmpIndex = index;
+        //lookup滤镜
+        if (index > 0) {
+            WebFilterInfo info = mAdapter.getItem(index);
+            if (info != null) {
+                tmpLookup = new VisualFilterConfig(info.getLocalPath());
+                //滤镜程度
+                tmpLookup.setDefaultValue(mDefaultValue);
+            } else {
+                tmpIndex = 0;
+                tmpLookup = new VisualFilterConfig(VisualFilterConfig.FILTER_ID_NORMAL);
+            }
+        } else {
+            //第0个 无滤镜效果
+            tmpLookup = new VisualFilterConfig(VisualFilterConfig.FILTER_ID_NORMAL);
+        }
+        try {
+            mMedia.changeFilter(tmpLookup);
+        } catch (InvalidArgumentException e) {
+            e.printStackTrace();
+        }
     }
 
     private RectF mCropF = null;
@@ -100,9 +480,9 @@ public class CropRotateMirrorActivity extends BaseActivity {
     protected void onPause() {
         if (mCvCrop != null) {
             mCropF = mCvCrop.getCrop();
-        }
-        if (!mBackClick) {
-            mCvCrop.setVisibility(View.INVISIBLE);
+            if (!mBackClick) {
+                mCvCrop.setVisibility(View.INVISIBLE);
+            }
         }
         videoPause();
         super.onPause();
@@ -137,43 +517,24 @@ public class CropRotateMirrorActivity extends BaseActivity {
     @Override
     public void onBackPressed() {
         mMediaPlayer.stop();
-        new Handler().postDelayed(new Runnable() {
-
-            @Override
-            public void run() {
-                CropRotateMirrorActivity.this.finish();
-                CropRotateMirrorActivity.this.overridePendingTransition(0, 0);
-            }
-        }, 200);
-
+        finish();
+        overridePendingTransition(0, 0);
     }
 
     private void initViews() {
-        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
-        mTvTitle = (TextView) findViewById(R.id.tvTitle);
-        mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
-        mBtnRight = (ExtButton) findViewById(R.id.btnRight);
-        mCvCrop = (CropView) findViewById(R.id.cvVideoCrop);
+        mMediaPlayer = $(R.id.vvMediaPlayer);
+        mTvTitle = $(R.id.tvBottomTitle);
+        mCvCrop = $(R.id.cvVideoCrop);
 
-        if (!bCropShow) {
-            mCvCrop.setVisibility(View.GONE);
+        mTvResetAll = $(R.id.tvResetAll);
+        mPlayout = $(R.id.rlVideoCropFramePreview);
+
+        if (!TextUtils.isEmpty(mCustomTitlte)) {
+            mTvTitle.setText(mCustomTitlte);
+        } else {
+            mTvTitle.setText(mStrActivityPageName);
+
         }
-        mTvResetAll = (TextView) findViewById(R.id.tvResetAll);
-        mPlayout = (PreviewFrameLayout) findViewById(R.id.rlVideoCropFramePreview);
-        mBtnLeft.setVisibility(View.INVISIBLE);
-        mBtnRight.setVisibility(View.INVISIBLE);
-
-//        if (SdkEntry.getCustomUI() == 1) {
-//            if (mVideoOb.getCropMode() == CROP_MODE_FREE) {
-//                mTvTitle.setText(R.string.crop_free_title);
-//            } else if (mVideoOb.getCropMode() == CROP_MODE_1x1) {
-//                mTvTitle.setText(R.string.crop_1x1_title);
-//            } else if (mVideoOb.getCropMode() == CROP_MODE_NORMAL) {
-//                mTvTitle.setText(R.string.crop_normal_title);
-//            }
-//        } else {
-        mTvTitle.setText(mStrActivityPageName);
-//        }
 
         //该控件使用硬件加速
         mCvCrop.setLayerType(View.LAYER_TYPE_HARDWARE, null);
@@ -198,12 +559,11 @@ public class CropRotateMirrorActivity extends BaseActivity {
                         }
                     }, 500);
                 }
-
             }
 
             @Override
             public void onMove() {
-                if (mTvResetAll.isClickable() == false) {
+                if (!mTvResetAll.isClickable()) {
                     if (mCvCrop.getCrop().width() != mMedia.getWidth()
                             || mCvCrop.getCrop().height() != mMedia.getHeight()) {
                         setResetClickable(true);
@@ -216,8 +576,8 @@ public class CropRotateMirrorActivity extends BaseActivity {
             mPlayout.setAspectRatio((double) mMedia.getHeight() / mMedia.getWidth());
             mCurDefaultAspect = (double) mMedia.getHeight() / mMedia.getWidth();
         } else {
-            mPlayout.setAspectRatio((double) mMedia.getWidth() / mMedia.getHeight());
             mCurDefaultAspect = (double) mMedia.getWidth() / mMedia.getHeight();
+            mPlayout.setAspectRatio(mCurDefaultAspect);
         }
 
 
@@ -248,26 +608,29 @@ public class CropRotateMirrorActivity extends BaseActivity {
     private boolean mBackClick = false;
 
     private boolean checkIsLandRotate() {
-        if (mMedia.getAngle() % 180 == 0) {
-            return false;
-        } else {
-            return true;
-        }
+        return mMedia.getAngle() % 180 != 0;
     }
 
     @Override
     public void clickView(View v) {
         int id = v.getId();
+        if (id == R.id.ivCancel) {
+            mIsPrepared = false;
+            setResult(RESULT_CANCELED);
+            mBackClick = true;
+            onBackPressed();
+            return;
+        }
         if (!mIsPrepared) {
             return;
         }
+        videoPause();
         if (id == R.id.tvResetAll) {
             mIsPrepared = false;
             mRectVideoClipBound = new RectF(mCurDefaultClipBound);
             mMedia.setAngle(mCurDefaultAngle);
             mMedia.setFlipType(mCurDefaultFlipType);
             changeCropMode(mCurDefaultCropMode);
-
 
             mMedia.setShowRectF(null);
             mMedia.setClipRectF(null);
@@ -276,9 +639,11 @@ public class CropRotateMirrorActivity extends BaseActivity {
             setResetClickable(false);
             reload();
             videoPlay();
-        } else if (id == R.id.ivRotateCounterClock) {
+        } else if (id == R.id.ivRotate) {
             mIsPrepared = false;
-            onSetRotate(false, false);
+            onSetRotate(false);
+            reload();
+            videoPlay();
             setResetClickable(true);
         } else if (id == R.id.ivMirrorUpdown) {
             mIsPrepared = false;
@@ -288,71 +653,74 @@ public class CropRotateMirrorActivity extends BaseActivity {
             mIsPrepared = false;
             setVideoMirror(false);
             setResetClickable(true);
-        } else if (id == R.id.ivProportion) {
-            String[] menu = getResources().getStringArray(R.array.crop_menu);
-
-            SysAlertDialog.showListviewAlertMenu(this, "", menu,
-                    new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            mIsPrepared = false;
-                            if (which == 0) {
-                                if (bCropShow) {
-                                    mRectVideoClipBound.setEmpty();
-                                }
-                                changeCropMode(CROP_MODE_NORMAL);
-                                setResetClickable(true);
-                            } else if (which == 1) {
-                                if (bCropShow) {
-                                    mRectVideoClipBound.setEmpty();
-                                }
-                                changeCropMode(CROP_MODE_1x1);
-                                setResetClickable(true);
-                            } else if (which == 2) {
-                                if (bCropShow) {
-                                    mRectVideoClipBound.setEmpty();
-                                }
-                                changeCropMode(CROP_MODE_FREE);
-                            }
-                        }
-                    });
-        } else if (id == R.id.public_menu_sure) {
-            mIsPrepared = false;
-            Intent intent = new Intent();
+        } else if (id == R.id.ivSure) {
             RectF crop = mCvCrop.getCrop();
             RectF rcCrop;
-            if ((mMedia.getAngle() == 90 || mMedia.getAngle() == 270)
-                    && (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
-                    .getFlipType() == FlipType.FLIP_TYPE_VERTICAL)) {
+            VideoConfig vc = new VideoConfig();
+            Utils.fixVideoSize(vc, mMedia);
+            int tmpW = vc.getVideoWidth();
+            int tmpH = vc.getVideoHeight();
 
-
-                VideoConfig vc = new VideoConfig();
-                fixVideoSize(vc);
-
-                int tmpW = vc.getVideoWidth();
-                int tmpH = vc.getVideoHeight();
-
-                rcCrop = new RectF(tmpW - crop.right,
-                        tmpH - crop.bottom,
-                        tmpW - crop.left,
-                        tmpH - crop.top);
+            if ((mMedia.getAngle() == 90 || mMedia.getAngle() == 270) &&
+                    (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia.getFlipType() == FlipType.FLIP_TYPE_VERTICAL)) {
+                rcCrop = new RectF(tmpW - crop.right, tmpH - crop.bottom, tmpW - crop.left, tmpH - crop.top);
             } else {
                 rcCrop = new RectF(crop.left, crop.top, crop.right, crop.bottom);
             }
 
             mMedia.setClipRectF(rcCrop);
             mMedia.setShowRectF(null);
-            intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mScene);
-            setResult(RESULT_OK, intent);
-            mBackClick = true;
-            onBackPressed();
-        } else if (id == R.id.public_menu_cancel) {
-            mIsPrepared = false;
-            setResult(RESULT_CANCELED);
-            mBackClick = true;
-            onBackPressed();
+
+
+            if (bNeedExport) {
+                //sdk裁切功能
+                onExport(mMedia);
+            } else {
+                Intent intent = new Intent();
+                intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mScene);
+                boolean isApplyToAll = cbApplyToAll.isChecked();
+                if (isApplyToAll) {
+                    intent.putExtra(IntentConstants.INTENT_ALL_APPLY, isApplyToAll);
+                    FlipType flipType = mMedia.getFlipType();
+                    RectF clipRectF = null;
+                    final int MIN_OFF_PX = 3;
+                    if (mRbOriginal.isChecked() && Math.abs(rcCrop.width() - mMedia.getWidth()) < MIN_OFF_PX && Math.abs(rcCrop.height() - mMedia.getHeight()) < MIN_OFF_PX) {
+                        //原比例且没有裁剪，其他视频也遵循原始比例且无裁剪
+                        clipRectF = null;
+                    } else {
+                        clipRectF = new RectF(rcCrop.left / tmpW, rcCrop.top / tmpH,
+                                rcCrop.right / tmpW, rcCrop.bottom / tmpH);
+                    }
+                    RCInfo param = new RCInfo(mMedia.getAngle(), clipRectF, flipType);
+                    intent.putExtra(IntentConstants.INTENT_ALL_APPLY_PARAM, param);
+                }
+                setResult(RESULT_OK, intent);
+                mBackClick = true;
+                onBackPressed();
+            }
         }
     }
+
+    private void onExport(final MediaObject mediaObject) {
+        ExportHandler exportHandler = new ExportHandler(this, new ExportHandler.IExport() {
+            @Override
+            public void addData(VirtualVideo virtualVideo) {
+                Scene scene = VirtualVideo.createScene();
+                scene.addMedia(mediaObject);
+                virtualVideo.addScene(scene);
+            }
+        });
+
+        RectF rectF = mediaObject.getClipRectF();
+        float asp = 0;
+        if (null == rectF || rectF.isEmpty()) {
+            asp = 0;
+        } else {
+            asp = rectF.width() / (rectF.height());
+        }
+        exportHandler.onExport(asp, true);
+    }
+
 
     /**
      * * 旋转90、270 且镜像时，要修正宽高
@@ -363,24 +731,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
         return (mMedia.getAngle() == 90 || mMedia.getAngle() == 270)
                 && (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
                 .getFlipType() == FlipType.FLIP_TYPE_VERTICAL);
-    }
-
-    /**
-     * 旋转90、270 且镜像时，要修正宽高
-     *
-     * @param vc
-     */
-    private void fixVideoSize(VideoConfig vc) {
-        VirtualVideo.getMediaInfo(mMedia.getMediaPath(), vc);
-        int tmpW = vc.getVideoWidth();
-        int tmpH = vc.getVideoHeight();
-        if (mMedia.getAngle() == 90 || mMedia.getAngle() == 270) {
-            int tmp = tmpW;
-            tmpW = tmpH;
-            tmpH = tmp;
-        }
-        //旋转90、270 且镜像时，要修正宽高
-        vc.setVideoSize(tmpW, tmpH);
     }
 
 
@@ -397,14 +747,11 @@ public class CropRotateMirrorActivity extends BaseActivity {
     };
 
 
+    @SuppressLint("ResourceType")
     private void setResetClickable(boolean clickable) {
         if (clickable) {
             mTvResetAll.setClickable(true);
-            mTvResetAll.setTextColor(getResources().getColor(
-                    R.drawable.main_orange_button));
         } else {
-            mTvResetAll.setTextColor(getResources().getColor(
-                    R.color.border_no_checked));
             mTvResetAll.setClickable(false);
         }
     }
@@ -415,17 +762,19 @@ public class CropRotateMirrorActivity extends BaseActivity {
 
             @Override
             public void onPlayerPrepared() {
-                onVideoViewPrepared();
-                mCvCrop.setVisibility(View.VISIBLE);
+                mProportionLayout.setClickable(true);
                 SysAlertDialog.cancelLoadingDialog();
-                mCvCrop.setUnAbleBorder();
+                if (!bHideCropView) {
+                    mCvCrop.setVisibility(View.VISIBLE);
+                    mCvCrop.setUnAbleBorder();
+                }
+                onVideoViewPrepared();
+
             }
 
             @Override
             public boolean onPlayerError(int what, int extra) {
-                SysAlertDialog.showAutoHideDialog(
-                        CropRotateMirrorActivity.this, R.string.string_null,
-                        R.string.error_preview_retry, Toast.LENGTH_SHORT);
+                onToast(R.string.preview_error);
                 return true;
             }
 
@@ -437,11 +786,11 @@ public class CropRotateMirrorActivity extends BaseActivity {
             public void onGetCurrentPosition(float position) {
             }
         });
+        boolean re = needFixVideoSize();
 
-
-        if (needFixVideoSize()) {
+        if (re) {
             VideoConfig vc = new VideoConfig();
-            fixVideoSize(vc);
+            Utils.fixVideoSize(vc, mMedia);
             int tmpW = vc.getVideoWidth();
             int tmpH = vc.getVideoHeight();
 
@@ -455,26 +804,9 @@ public class CropRotateMirrorActivity extends BaseActivity {
         } else {
             mRectVideoClipBound = new RectF(mMedia.getClipRectF());
         }
+
         mCurDefaultClipBound = new RectF(mRectVideoClipBound);
         setResetClickable(false);
-//        if (mRectVideoClipBound.isEmpty()) {
-//            setResetClickable(false);
-//        } else {
-//            if (Math.abs(mRectVideoClipBound.width() - mMedia.getWidth()) >= 0.05
-//                    || Math.abs(mRectVideoClipBound.height() - mMedia.getHeight()) >= 0.05) {
-//                setResetClickable(true);
-//            } else {
-//                setResetClickable(false);
-//            }
-//        }
-
-//        if (mMedia.getAngle() != 0 || mMedia.getFlipType() != FlipType.FLIP_TYPE_NONE) {
-//            setResetClickable(true);
-//        }
-
-//        if (mVideoOb.getCropMode() != CROP_MODE_FREE) {
-//            setResetClickable(true);
-//        }
 
         mCurDefaultAngle = mMedia.getAngle();
         mCurDefaultCropMode = mVideoOb.getCropMode();
@@ -492,63 +824,60 @@ public class CropRotateMirrorActivity extends BaseActivity {
      * 加载媒体资源
      */
     private void reload() {
-        VirtualVideo mVirtualVideo = mMediaPlayer.getVirtualVideo();
-        mVirtualVideo.reset();
+        mMediaPlayer.reset();
         Scene scene = VirtualVideo.createScene();
         scene.addMedia(mMedia);
-        mVirtualVideo.addScene(scene);
-        try {
-            mMediaPlayer.build();
-        } catch (InvalidStateException e) {
-            e.printStackTrace();
-        }
+        mMediaPlayer.getVirtualVideo().addScene(scene);
+        mMediaPlayer.build();
     }
 
-    protected void onVideoViewPrepared() {
-        changeCropMode(mVideoOb.getCropMode());
-        if (bCropShow) {
-//            mRectVideoClipBound.setEmpty();
-        }
-        View frame = findViewById(R.id.ivVideoConver);
-        if (null != frame) {
-            //淡出遮罩
-            frame.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha_out));
-            frame.setVisibility(View.GONE);
-        }
-    }
-
-    private void changeCropMode(int nCropMode) {
-        int width = 0;
-        int height = 0;
-        if (checkIsLandRotate()) {
-            width = mMedia.getHeight();
-            height = mMedia.getWidth();
+    private void restoreUI() {
+        if (mVideoOb.getCropMode() == VideoOb.CROP_FREE) {
+            mRGCrop.check(R.id.rbCropFree);
+        } else if (mVideoOb.getCropMode() == VideoOb.CROP_1) {
+            mRGCrop.check(R.id.rbProportion1x1);
+        } else if (mVideoOb.getCropMode() == VideoOb.CROP_169) {
+            mRGCrop.check(R.id.rbProportion169);
+        } else if (mVideoOb.getCropMode() == VideoOb.CROP_916) {
+            mRGCrop.check(R.id.rbProportion916);
         } else {
-            width = mMedia.getWidth();
-            height = mMedia.getHeight();
-        }
-        RectF videoBound = new RectF(0, 0, width, height);
-
-        if (nCropMode == 0) {
-            mTvTitle.setText(R.string.crop_free_title);
-        } else if (nCropMode == 1) {
-            mTvTitle.setText(R.string.crop_1x1_title);
-        } else if (nCropMode == 2) {
-            mTvTitle.setText(R.string.crop_normal_title);
+            mRGCrop.check(R.id.rbCropOriginal);
         }
 
-        mVideoOb.setCropMode(nCropMode);
+    }
+
+    private void onVideoViewPrepared() {
+        restoreUI();
+        changeCropMode(mVideoOb.getCropMode());
+        View frame = $(R.id.ivVideoCover);
+        //淡出遮罩
+        frame.startAnimation(AnimationUtils.loadAnimation(this, R.anim.alpha_out));
+        frame.setVisibility(View.GONE);
+    }
+
+    private void changeCropMode(@VideoOb.CropMode int mode) {
+        RectF videoBound = null;
+        if (checkIsLandRotate()) {
+            videoBound = new RectF(0, 0, mMedia.getHeight(), mMedia.getWidth());
+        } else {
+            videoBound = new RectF(0, 0, mMedia.getWidth(), mMedia.getHeight());
+        }
+        mVideoOb.setCropMode(mode);
         if (mRectVideoClipBound.isEmpty()) {
-            mRectVideoClipBound = videoBound;
+            mRectVideoClipBound = new RectF(videoBound);
         }
         mCvCrop.initialize(mRectVideoClipBound, videoBound, 0);
         mIsPrepared = true;
-        if (bCropShow) {
+        if (bShowProportion) {
             mCvCrop.applyAspectText(getText(R.string.preview_crop).toString());
-            if (nCropMode == CROP_MODE_1x1) {
+            if (mode == VideoOb.CROP_1) {
                 mCvCrop.applySquareAspect(); // 方格，1:1
-            } else if (nCropMode == CROP_MODE_NORMAL) {
-                mCvCrop.applyAspect(mMedia.getWidth(), mMedia.getHeight());
+            } else if (mode == VideoOb.CROP_ORIGINAL) {
+                mCvCrop.applyAspect(1, 1 / (videoBound.width() / (videoBound.height())));
+            } else if (mode == VideoOb.CROP_169) {
+                mCvCrop.applyAspect(1, 9f / 16);
+            } else if (mode == VideoOb.CROP_916) {
+                mCvCrop.applyAspect(1, 16 / 9.0f);
             } else {
                 mCvCrop.applyFreeAspect();
             }
@@ -560,8 +889,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
 
     private void videoPlay() {
         mMediaPlayer.start();
-        mCvCrop.setStatebmp(BitmapFactory.decodeResource(getResources(),
-                R.drawable.btn_pause));
+        mCvCrop.setStatebmp(BitmapFactory.decodeResource(getResources(), R.drawable.btn_pause));
         mCvCrop.postDelayed(new Runnable() {
 
             @Override
@@ -574,67 +902,42 @@ public class CropRotateMirrorActivity extends BaseActivity {
     /**
      * 响应设置媒体旋转
      */
-    private void onSetRotate(boolean clockwise, boolean updown) {
+    private void onSetRotate(boolean updown) {
         /** 媒体对象的子类，图片对象，拥有一系列对图片的操作 */
         /** 旋转角度 */
-
-        int nRotateAngle = 0;
         if (mMedia == null) {
             return;
         }
-
-        nRotateAngle = mMedia.getAngle();
+        int rotateAngle = mMedia.getAngle();
         // 如果是横屏对象，要将显示区域和裁剪区域清空
         mMedia.setShowRectF(null);
         mMedia.setClipRectF(null);
 
-        if (clockwise) {
-            mMedia.setAngle(nRotateAngle += 90);
-        } else if (updown) {
-            mMedia.setAngle(nRotateAngle += 180);
+        $(R.id.ivVideoCover).setVisibility(View.VISIBLE);
+        if (updown) {
+            mMedia.setAngle(rotateAngle += 180);
         } else {
             mCvCrop.setVisibility(View.INVISIBLE);
-            mMedia.setAngle(nRotateAngle += 270);
+            rotateAngle -= 90;
+            mMedia.setAngle(rotateAngle);
+            //旋转之后，clip区域全部清掉，重新设置 （ 不然界面逻辑有问题，比如：横屏视频时，  按16:9crop， 旋转90度 ，视频变为竖排， 16:9crop的区域旋转后就变成9:16（与预期不符）  ）
             mRectVideoClipBound = mCvCrop.getCrop();
-            if (mVideoOb.getCropMode() != CROP_MODE_NORMAL) {
-                if (checkIsLandRotate()) {
-                    mRectVideoClipBound.set(mRectVideoClipBound.top, mMedia.getWidth() - mRectVideoClipBound.right,
-                            mRectVideoClipBound.bottom, mMedia.getWidth() - mRectVideoClipBound.left);
-                    if (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
-                            .getFlipType() == FlipType.FLIP_TYPE_VERTICAL) {
-                        mRectVideoClipBound.set(mMedia.getHeight() - mRectVideoClipBound.right, mMedia.getWidth() - mRectVideoClipBound.bottom,
-                                mMedia.getHeight() - mRectVideoClipBound.left, mMedia.getWidth() - mRectVideoClipBound.top);
-                    }
-                } else {
-                    mRectVideoClipBound.set(mRectVideoClipBound.top, mMedia.getHeight() - mRectVideoClipBound.right,
-                            mRectVideoClipBound.bottom, mMedia.getHeight() - mRectVideoClipBound.left);
-                    if (mMedia.getFlipType() == FlipType.FLIP_TYPE_HORIZONTAL || mMedia
-                            .getFlipType() == FlipType.FLIP_TYPE_VERTICAL) {
-                        mRectVideoClipBound.set(mMedia.getWidth() - mRectVideoClipBound.right, mMedia.getHeight() - mRectVideoClipBound.bottom,
-                                mMedia.getWidth() - mRectVideoClipBound.left, mMedia.getHeight() - mRectVideoClipBound.top);
-                    }
-                }
-            } else {
-                mRectVideoClipBound.setEmpty();
-            }
+            mRectVideoClipBound.setEmpty();
         }
         if (checkIsLandRotate()) {
             mPlayout.setAspectRatio((double) mMedia.getHeight() / mMedia.getWidth());
         } else {
             mPlayout.setAspectRatio((double) mMedia.getWidth() / mMedia.getHeight());
         }
-        reload();
-        videoPlay();
     }
 
     private void setVideoMirror(boolean updown) {
-//        mCvCrop.setVisibility(View.INVISIBLE);
         if (updown) {
             if (FlipType.FLIP_TYPE_VERTICAL == mMedia.getFlipType()) {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
             } else if (FlipType.FLIP_TYPE_HORIZONTAL == mMedia.getFlipType()) {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
-                onSetRotate(false, true);
+                onSetRotate(true);
             } else {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_VERTICAL);
             }
@@ -652,7 +955,7 @@ public class CropRotateMirrorActivity extends BaseActivity {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
             } else if (FlipType.FLIP_TYPE_VERTICAL == mMedia.getFlipType()) {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_NONE);
-                onSetRotate(false, true);
+                onSetRotate(true);
             } else {
                 mMedia.setFlipType(FlipType.FLIP_TYPE_HORIZONTAL);
             }
@@ -664,7 +967,6 @@ public class CropRotateMirrorActivity extends BaseActivity {
                 mRectVideoClipBound.set(mMedia.getWidth() - mRectVideoClipBound.right, mRectVideoClipBound.top,
                         mMedia.getWidth() - mRectVideoClipBound.left, mRectVideoClipBound.bottom);
             }
-
         }
         reload();
         videoPlay();

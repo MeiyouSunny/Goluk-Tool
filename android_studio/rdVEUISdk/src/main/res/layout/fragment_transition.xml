@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/dark_bg"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/llTitleMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
+
+
+        <CheckBox
+            android:id="@+id/cbTransitionApplyToAll"
+            style="@style/cb_apply_to_all_style"
+            android:layout_gravity="center_vertical"
+            android:text="@string/transition_apply_to_all"/>
+
+        <CheckBox
+            android:id="@+id/cbRandomTransition"
+            style="@style/cb_apply_to_all_style"
+            android:layout_gravity="center_vertical"
+            android:text="@string/transition_default"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:minHeight="40dp"
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/tvTransitionDuration"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/transition_default_duration"
+                android:textColor="@color/transparent_white"
+                android:textSize="@dimen/text_size_14"/>
+
+            <SeekBar
+                android:id="@+id/sbTransitionTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:max="100"
+                android:maxHeight="3dp"
+                android:minHeight="3dp"
+                android:paddingLeft="15dp"
+                android:paddingRight="10dp"
+                android:progressDrawable="@drawable/transition_duration_progress"
+                android:thumb="@drawable/transition_duration_thumb"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/llTransitionList"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/menuBar"
+        android:layout_below="@+id/llTitleMenu"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gridview_transition"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/transparent"
+            android:cacheColorHint="@color/transparent"
+            android:listSelector="@color/transparent"
+            android:scrollbars="none"/>
+
+    </LinearLayout>
+
+    <!--<include layout="@layout/layout_bottom_menu"/>-->
+
+
+    <include layout="@layout/fragment_common_menu_bar_layout"/>
+
+</RelativeLayout>

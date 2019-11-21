@@ -9,5 +9,5 @@ public interface IReloadListener {
     /**
      * 方向改变，重新加载滤镜图标
      */
-    public void onReloadFilters();
+    public void onReloadFilters(boolean isVer);
 }

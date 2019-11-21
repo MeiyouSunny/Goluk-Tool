@@ -6,6 +6,15 @@
         <item>正方形</item>
         <item>自由</item>
     </string-array>
+    <string-array name="cover_picture">
+        <item>本地图片</item>
+        <!--<item>丰富照片素材</item>-->
+        <item>视频本身</item>
+    </string-array>
+    <string-array name="cover_text">
+        <item>添加横排文字</item>
+        <item>添加竖排文字</item>
+    </string-array>
     <string-array name="speed_array">
         <item>1/4</item>
         <item>1/2</item>
@@ -13,16 +22,47 @@
         <item>2X</item>
         <item>4X</item>
     </string-array>
+    <string-array name="cover_duration_array">
+        <item>0s</item>
+        <item>0.5s</item>
+        <item>1s</item>
+        <item>1.5s</item>
+        <item>2s</item>
+    </string-array>
     <string-array name="duration_array">
-        <item>3</item>
+        <item>0.1</item>
+        <item>2</item>
         <item>4</item>
-        <item>5</item>
         <item>6</item>
-        <item>7</item>
+        <item>8</item>
     </string-array>
     <string-array name="scan_sd_menu">
         <item>快速扫描</item>
         <item>自定义扫描</item>
     </string-array>
-
+    <string-array name="music_filter_titles">
+        <item>自定义</item>
+        <item>正常</item>
+        <item>男声</item>
+        <item>女声</item>
+        <item>怪兽</item>
+        <item>卡通</item>
+        <item>混响</item>
+        <item>回声</item>
+        <item>房间</item>
+        <item>舞台</item>
+        <item>KTV</item>
+        <item>厂房</item>
+        <item>竞技场</item>
+        <item>电音</item>
+    </string-array>
+    <string-array name="inscription_library">
+        <item>更换题词</item>
+        <item>自定义题词</item>
+        <item>清除题词</item>
+    </string-array>
+    <string-array name="ae_image_menu">
+        <item>编辑</item>
+        <item>替换</item>
+    </string-array>
 </resources>

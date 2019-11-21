@@ -44,30 +44,29 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 >
-                <!--android:layout_height="@dimen/camera_filter_more_content_height"-->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical">
 
-                    <com.rd.veuisdk.ui.HorizontalListViewCamera
-                        android:id="@+id/lvFilterList"
+
+                <LinearLayout
+                    android:id="@+id/filterLayout"
+                    android:layout_width="match_parent"
+                    android:gravity="center_vertical"
+                    android:layout_gravity="center"
+                    android:orientation="vertical"
+                    android:layout_height="match_parent">
+
+                    <!--滤镜程度-->
+                    <include layout="@layout/filter_lookup_sbar_layout"/>
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerViewFilter"
+                        android:layout_gravity="center"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_gravity="center_vertical"
-                        android:scrollbars="none">
+                        />
+                </LinearLayout>
 
-                        <include
-                            layout="@layout/camare_filters_container"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:paddingLeft="15dp"/>
-                    </com.rd.veuisdk.ui.HorizontalListViewCamera>
-                </RelativeLayout>
 
                 <!-- 开启美颜可自动调节瘦脸、磨皮  横竖屏切换layout -->
-
                 <LinearLayout
                     android:id="@+id/fuLayout_parent"
                     android:layout_width="match_parent"
@@ -87,7 +86,7 @@
             </FrameLayout>
 
             <com.rd.lib.ui.RotateRelativeLayout
-                android:id="@+id/camare_filter_layout"
+                android:id="@+id/rg_menu_parent"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:background="@color/edit_menu_bg"
@@ -109,7 +108,7 @@
                         android:button="@null"
                         android:checked="true"
                         android:gravity="center"
-                        android:text="@string/camare_filter"
+                        android:text="@string/filter"
                         android:textColor="@drawable/record_menu_txt_color"
                         android:textSize="@dimen/text_size_15"/>
 
@@ -133,7 +132,7 @@
                         android:background="@null"
                         android:button="@null"
                         android:gravity="center"
-                        android:text="@string/camare_face_filter"
+                        android:text="@string/sticker"
                         android:textColor="@drawable/record_menu_txt_color"
                         android:textSize="@dimen/text_size_15"/>
                 </RadioGroup>

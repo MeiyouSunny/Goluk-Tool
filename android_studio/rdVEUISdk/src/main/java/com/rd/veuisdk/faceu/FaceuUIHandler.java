@@ -14,7 +14,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.RelativeLayout;
@@ -40,7 +39,6 @@ import com.rd.veuisdk.adapter.FaceuAdapter;
 import com.rd.veuisdk.adapter.MyViewPagerAdapter;
 import com.rd.veuisdk.manager.FaceInfo;
 import com.rd.veuisdk.manager.FaceuConfig;
-import com.rd.veuisdk.ui.HorizontalListViewCamera;
 import com.rd.veuisdk.ui.HorizontalListViewFuSticker;
 import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.PathUtils;
@@ -64,12 +62,11 @@ import java.util.List;
  */
 class FaceuUIHandler {
 
-    private HorizontalListViewCamera mCameraFilterLV;
+    private View mFilterLayout;
     private RadioGroup mRgFilters, mRgFuBlue;
-    private RadioButton mRbFilter, mRbFaceFiter, mRbFUBeaty, mRbblue1, mRbblue2,
-            mRbblue3, mRbblue4, mRbblue5, mRbblue6;
+    //    private RadioButton mRbFilter, mRbFaceFiter, mRbFUBeaty, mRbblue1, mRbblue2,
+//            mRbblue3, mRbblue4, mRbblue5, mRbblue6;
     private SeekBar mSbarThin, mSbarEye, mSbarColor;
-    private View mCamareFilterMenuParent;
     private boolean bSupportFace = false;
     private LinearLayout mFuLayoutParent;
 
@@ -87,48 +84,42 @@ class FaceuUIHandler {
     private FaceuListener mListener;
     private LinearLayout fuLayout;
     private LayoutInflater inflater;
-    private LinearLayout filterParentLayout;
+    private LinearLayout moreMenuLayout;   // 滤镜、 美颜 、贴纸所有的view的容器
     private IReloadListener mReloadListener;
 
-    FaceuUIHandler(RadioGroup filterGroup, HorizontalListViewCamera camareLV,
-                   View filter_menu_parent, boolean supportFacePack,
-                   FaceuConfig _config, View fuBeautyLayout, FaceuListener _iface,
+    FaceuUIHandler(RadioGroup filterGroup, View filterLayout, View rgMenuParent,
+                   boolean supportFacePack,
+                   FaceuConfig _config, FaceuListener _iface,
                    LinearLayout _fuLayout, LinearLayout _fuLayoutParent, LinearLayout _filter_parent_layout, IReloadListener listener) {
         mReloadListener = listener;
         inflater = LayoutInflater.from(filterGroup.getContext());
-        filterParentLayout = _filter_parent_layout;
+        moreMenuLayout = _filter_parent_layout;
         mFuLayoutParent = _fuLayoutParent;
         fuLayout = _fuLayout;
         mListener = _iface;
         config = _config;
 
         ImageCacheParams cacheParams = new ImageCacheParams(
-                camareLV.getContext(), null);
+                filterLayout.getContext(), null);
         cacheParams.compressFormat = CompressFormat.PNG;
         // 缓冲占用系统内存的10%
         cacheParams.setMemCacheSizePercent(0.05f);
         if (config.isEnableNetFaceu()) {
-            mFetcher = new HttpImageFetcher(camareLV.getContext(), 150, 150);
+            mFetcher = new HttpImageFetcher(filterLayout.getContext(), 150, 150);
         } else {
-            mFetcher = new GalleryImageFetcher(camareLV.getContext(), 150, 150);
+            mFetcher = new GalleryImageFetcher(filterLayout.getContext(), 150, 150);
         }
-        mFetcher.addImageCache(camareLV.getContext(), cacheParams);
+        mFetcher.addImageCache(filterLayout.getContext(), cacheParams);
         mRgFilters = filterGroup;
-        mCamareFilterMenuParent = filter_menu_parent;
         bSupportFace = (RecorderCore.isSupportFaceU() && supportFacePack && (null != config));
-        if (isbSupportFace()) {// 4.3 以上且代码库支持解密
-            mCamareFilterMenuParent.setVisibility(View.VISIBLE);
-        } else {
-            mCamareFilterMenuParent.setVisibility(View.GONE);
-        }
 
-        mRbFilter = (RadioButton) mRgFilters.findViewById(R.id.camare_filter);
-        mRbFaceFiter = (RadioButton) mRgFilters
-                .findViewById(R.id.camare_face_filter);
-        mRbFUBeaty = (RadioButton) mRgFilters
-                .findViewById(R.id.camare_face_beauty);
+        mFilterLayout = filterLayout;
 
-        mCameraFilterLV = camareLV;
+
+        bSupportFace = (RecorderCore.isSupportFaceU() && supportFacePack && (null != config));
+
+        // 4.3 以上且代码库支持解密
+        rgMenuParent.setVisibility(isbSupportFace() ? View.VISIBLE : View.GONE);
 
         mRgFilters.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -136,17 +127,17 @@ class FaceuUIHandler {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.camare_filter) {
                     fuLayout.setVisibility(View.INVISIBLE);
-                    mCameraFilterLV.setVisibility(View.VISIBLE);
+                    mFilterLayout.setVisibility(View.VISIBLE);
                     mFuLayoutParent.setVisibility(View.INVISIBLE);
                 } else if (checkedId == R.id.camare_face_filter) {
-                    mCameraFilterLV.setVisibility(View.INVISIBLE);
+                    mFilterLayout.setVisibility(View.INVISIBLE);
                     mFuLayoutParent.setVisibility(View.INVISIBLE);
                     fuLayout.setVisibility(View.VISIBLE);
                 } else if (checkedId == R.id.camare_face_beauty) {
                     mFuLayoutParent.setVisibility(View.VISIBLE);
                     initBeautyView(mFuLayoutParent, tempOrientation);
                     fuLayout.setVisibility(View.INVISIBLE);
-                    mCameraFilterLV.setVisibility(View.INVISIBLE);
+                    mFilterLayout.setVisibility(View.INVISIBLE);
                 }
 
             }
@@ -174,18 +165,25 @@ class FaceuUIHandler {
      * @param isVer
      */
     private void reLoadFilter(boolean isVer) {
-        mCameraFilterLV.removeAllListItem();
-        mCameraFilterLV.setOrientation(isVer);
+
+        if (null != mFilterLayout) {
+        }
         if (null != mReloadListener) {
-            mReloadListener.onReloadFilters();
+            mReloadListener.onReloadFilters(isVer);
         }
     }
 
     private View fuLvLayout;
 
     private HorizontalListViewFuSticker fuLV;
+
+    public boolean isCurrentIsVer() {
+        return mCurrentIsVer;
+    }
+
     //当前录制方向
     private boolean mCurrentIsVer = true;
+    private String TAG = "FaceuHandler";
 
     /**
      * 切换横竖屏(UI重新初始化方向)
@@ -195,15 +193,12 @@ class FaceuUIHandler {
      */
     private void initBeautyView(final ViewGroup group, int nOrientation) {
 
-//        Log.e("initBeautyView", lastShowOrientation + "..........."
-//                + tempOrientation + "......" + nOrientation);
         tempOrientation = nOrientation;
         if (lastShowOrientation != tempOrientation) {
-//        if (lastShowOrientation != tempOrientation && (mRbFUBeaty.isChecked())) {
             group.removeAllViews();
             int height = 0;
-            filterParentLayout.setVisibility(View.INVISIBLE);
-            Resources res = filterParentLayout.getResources();
+            moreMenuLayout.setVisibility(View.INVISIBLE);
+            Resources res = moreMenuLayout.getResources();
             if (0 == nOrientation || nOrientation == 180) {
                 mCurrentIsVer = true;
                 if (isbSupportFace()) {
@@ -212,7 +207,7 @@ class FaceuUIHandler {
                     height = res.getDimensionPixelSize(R.dimen.record_filter_parent_layout_height_vertical) - res.getDimensionPixelSize(R.dimen.camera_radiogroup_height);
                 }
                 reLoadFilter(mCurrentIsVer);
-                filterParentLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
+                moreMenuLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
                 target = inflater.inflate(R.layout.fu_beauty_layout, null);
                 fuLvLayout = inflater.inflate(R.layout.fu_stickers_layout, null);
                 vp = (ViewPager) fuLvLayout.findViewById(R.id.fuViewpager);
@@ -228,7 +223,7 @@ class FaceuUIHandler {
                 }
 
                 reLoadFilter(mCurrentIsVer);
-                filterParentLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
+                moreMenuLayout.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, height));
                 target = inflater.inflate(R.layout.fu_beauty_layout_land, null);
                 fuLvLayout = inflater.inflate(R.layout.fu_stickers_layout_land, null);
                 fuLV = (HorizontalListViewFuSticker) fuLvLayout.findViewById(R.id.lvFuList);
@@ -244,12 +239,12 @@ class FaceuUIHandler {
             mSbarEye = (SeekBar) target.findViewById(R.id.sbFuEyebar);
             mSbarColor = (SeekBar) target.findViewById(R.id.sbFuColorbar);
             mRgFuBlue = (RadioGroup) target.findViewById(R.id.fu_blue_level);
-            mRbblue1 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_1);
-            mRbblue2 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_2);
-            mRbblue3 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_3);
-            mRbblue4 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_4);
-            mRbblue5 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_5);
-            mRbblue6 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_6);
+//            mRbblue1 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_1);
+//            mRbblue2 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_2);
+//            mRbblue3 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_3);
+//            mRbblue4 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_4);
+//            mRbblue5 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_5);
+//            mRbblue6 = (RadioButton) mRgFuBlue.findViewById(R.id.fu_blue_6);
 
             mSbarThin.setMax(100);
             mSbarEye.setMax(100);
@@ -361,9 +356,9 @@ class FaceuUIHandler {
             mFuLayoutParent.addView(target, new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT));
-            filterParentLayout.startAnimation(AnimationUtils.loadAnimation(
-                    filterParentLayout.getContext(), R.anim.alpha_in));
-            filterParentLayout.setVisibility(View.VISIBLE);
+            moreMenuLayout.startAnimation(AnimationUtils.loadAnimation(
+                    moreMenuLayout.getContext(), R.anim.alpha_in));
+            moreMenuLayout.setVisibility(View.VISIBLE);
         }
     };
 
@@ -476,9 +471,9 @@ class FaceuUIHandler {
             faceuAdapter.setFuListener(new FaceuListener() {
 
                 @Override
-                public void onFUChanged(String mp3Path, int lastPosition) {
+                public void onFUChanged(String filePath, int lastPosition) {
                     if (null != mListener) {
-                        mListener.onFUChanged(mp3Path, lastPosition);
+                        mListener.onFUChanged(filePath, lastPosition);
                         for (int j = 0; j < adapters.size(); j++) {
                             adapters.get(j).resetChecked();
                         }
@@ -754,9 +749,8 @@ class FaceuUIHandler {
             mHandler.removeMessages(MSG_INITDATAUI);
         }
 
-        if (null != mCameraFilterLV) {
-            mCameraFilterLV.recycle();
-            mCameraFilterLV = null;
+        if (null != mFilterLayout) {
+            mFilterLayout = null;
         }
         if (null != inflater) {
             inflater = null;
@@ -876,14 +870,11 @@ class FaceuUIHandler {
 
                 @Override
                 public void onProgress(long mid, int progress) {
-                    // Log.e("onprogres...." + mid, progress + "......");
-
                     mHandler.obtainMessage(PROGRESS, (int) mid, progress).sendToTarget();
                 }
 
                 @Override
                 public void Canceled(long mid) {
-//                    Log.e("Canceled....", mid + ".........");
                     loading.remove(info.getUrl());
                     mHandler.obtainMessage(CANCEL, (int) mid, -1)
                             .sendToTarget();
@@ -893,20 +884,16 @@ class FaceuUIHandler {
                 @Override
                 public void Finished(long mid, String localPath) {
                     loading.remove(info.getUrl());
-
-
-                    File fsrc = new File(localPath);
-                    File ftarget = new File(info.getPath());
-                    boolean re = fsrc.renameTo(ftarget);
+                    File src = new File(localPath);
+                    File dst = new File(info.getPath());
+                    boolean re = src.renameTo(dst);
                     if (re) {
                         mHandler.obtainMessage(FINISHED, (int) mid, -1)
                                 .sendToTarget();
                     } else {
                         mHandler.obtainMessage(CANCEL, (int) mid, -1)
                                 .sendToTarget();
-
                     }
-
                 }
             });
             fuLV.setdownStart(p);

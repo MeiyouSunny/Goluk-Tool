@@ -1,102 +1,146 @@
 package com.rd.veuisdk;
 
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.rd.lib.ui.ExtButton;
 import com.rd.lib.ui.PreviewFrameLayout;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.VirtualVideoView;
 import com.rd.vecore.exception.InvalidStateException;
+import com.rd.vecore.models.EffectInfo;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
+import com.rd.vecore.models.VideoConfig;
 import com.rd.vecore.utils.Log;
 import com.rd.veuisdk.model.VideoOb;
-import com.rd.veuisdk.ui.DragItemScrollView;
-import com.rd.veuisdk.utils.AppConfiguration;
+import com.rd.veuisdk.ui.RulerSeekbar;
 import com.rd.veuisdk.utils.DateTimeUtils;
+import com.rd.veuisdk.utils.EffectManager;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.Utils;
 import com.rd.veuisdk.utils.ViewUtils;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+
 /**
  * 图片时长
- *
- * @author JIAN
  */
 public class ImageDurationActivity extends BaseActivity {
-    private static final String TAG = "ImageDurationActivity";
     private Scene mScene;
-    int mTimeIndex = 0;
-    private int mCurTime;
+    private float mCurTime;
+    private TextView mTvTitle;
+    private VirtualVideoView mMediaPlayer;
+    private ImageView mIvPlayState;
+    private SeekBar mSbEditor;
+    private TextView mTvCurrentDuration;
+    private RulerSeekbar mDragDuration;
+    private ArrayList<EffectInfo> mEffectInfos;
+    private TextView tvDuration;
+    private CheckBox cbApplyToAll;
 
-    ExtButton mBtnLeft;
-    TextView mTvTitle;
-    VirtualVideoView mMediaPlayer;
-    ImageView mIvPlayState;
-    SeekBar mSbEditor;
-    TextView mTvCurrentDuration;
-    DragItemScrollView mDragDuration;
+    /**
+     * 图片时长
+     */
+    static void onImageDuration(Context context, Scene scene, boolean needExport, int requestCode) {
+        Intent intent = new Intent(context, ImageDurationActivity.class);
+        intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, scene);
+        intent.putExtra(IntentConstants.INTENT_NEED_EXPORT, needExport);
+        ((Activity) context).startActivityForResult(intent, requestCode);
+    }
 
+    /**
+     * 是否需要导出视频
+     */
+    private boolean bExportVideo = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mStrActivityPageName = getString(R.string.photo_duration);
+        TAG = "ImageDurationActivity";
         setContentView(R.layout.activity_image_duration);
         mScene = getIntent().getParcelableExtra(IntentConstants.INTENT_EXTRA_SCENE);
         if (null == mScene) {
             finish();
             return;
         }
+        bExportVideo = getIntent().getBooleanExtra(IntentConstants.INTENT_NEED_EXPORT, false);
+        MediaObject mMedia = mScene.getAllMedia().get(0);
+        mEffectInfos = new ArrayList<>();
+        if (null != mMedia.getEffectInfos()) {
+            mEffectInfos.addAll(mMedia.getEffectInfos());
+        }
+        mVirtualvideo = new VirtualVideo();
+        mMedia.setEffectInfos(null);
+
         initViews();
         initPlayer();
-        mTimeIndex = getIndex((int) mScene.getDuration());
-        mCurTime = mArrTimes[mTimeIndex];
-        onPlay(mArrTimes[mTimeIndex]);
-        mDragDuration.setCheckedChangedListener(mOnScrollListener);
+        mCurTime = mScene.getDuration();
+        onPlay(mCurTime);
+        if (bExportVideo) {
+            cbApplyToAll.setVisibility(View.GONE);
+        }
+        mDragDuration.setOnSeekListener(mOnSeekListener);
+        mDragDuration.setMax(100);
         mDragDuration.post(new Runnable() {
             @Override
             public void run() {
-                mDragDuration.setCheckIndex(mTimeIndex);
+                resetTimeText(mCurTime);
+                mDragDuration.setProgress(getProgress(mCurTime, mDragDuration.getMax()));
             }
         });
     }
 
-    private int getIndex(int duration) {
-        int mTimeIndex = 0;
-        for (int i = 0; i < mArrTimes.length; i++) {
-            if (mArrTimes[i] + 0.2 >= duration && duration >= mArrTimes[i] - 0.2) {
-                mTimeIndex = i;
-                break;
-            }
-        }
-        return mTimeIndex;
 
-    }
-
-    private int[] mArrTimes = new int[]{3, 4, 5, 6, 7};
-
-    private DragItemScrollView.onCheckedListener mOnScrollListener = new DragItemScrollView.onCheckedListener() {
+    private RulerSeekbar.OnSeekListener mOnSeekListener = new RulerSeekbar.OnSeekListener() {
 
         @Override
-        public void onCheckedChanged(boolean user, int mTimeIndex) {
-            if (user) {
-                mCurTime = mArrTimes[mTimeIndex];
-                onPlay(mCurTime);
-            }
+        public void onSeekStart(float progress, int max) {
+            resetTimeText(getTime(progress, max));
+        }
+
+        @Override
+        public void onSeek(float progress, int max) {
+            resetTimeText(getTime(progress, max));
+        }
+
+        @Override
+        public void onSeekEnd(float progress, int max) {
+            mCurTime = getTime(progress, max);
+            onPlay(mCurTime);
         }
     };
+
+
+    private void resetTimeText(float time) {
+        tvDuration.setText(mDecimalFormat.format(time) + "秒");
+    }
+
+    private final DecimalFormat mDecimalFormat = new DecimalFormat("##0.00");
+    private final float MIN = 0.1f;
+    private final float DU = 8f - MIN;
+
+    private float getTime(float progress, int max) {
+        float time = MIN + DU * progress / max;
+        return time;
+    }
+
+    private float getProgress(float time, int max) {
+        float progress = max * (time - MIN) / DU;
+        return progress;
+    }
 
     @Override
     protected void onPause() {
@@ -121,11 +165,14 @@ public class ImageDurationActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         if (mMediaPlayer != null) {
-            mMediaPlayer.stop();
-            mMediaPlayer.reset();
+            mMediaPlayer.cleanUp();
             mMediaPlayer = null;
         }
         super.onDestroy();
+        if (null != mVirtualvideo) {
+            mVirtualvideo.release();
+            mVirtualvideo = null;
+        }
     }
 
     @Override
@@ -143,19 +190,15 @@ public class ImageDurationActivity extends BaseActivity {
     }
 
     private void initViews() {
-        mBtnLeft = (ExtButton) findViewById(R.id.btnLeft);
-        mTvTitle = (TextView) findViewById(R.id.tvTitle);
-        mMediaPlayer = (VirtualVideoView) findViewById(R.id.vvMediaPlayer);
-        mIvPlayState = (ImageView) findViewById(R.id.ivPlayerState);
-        mSbEditor = (SeekBar) findViewById(R.id.sbEditor);
-        mTvCurrentDuration = (TextView) findViewById(R.id.tvEditorDuration);
-        mDragDuration = (DragItemScrollView) findViewById(R.id.drag_image_duration);
-
-        PreviewFrameLayout layout = (PreviewFrameLayout) findViewById(R.id.rlImageLayout);
-        layout.setAspectRatio(AppConfiguration.ASPECTRATIO);
-        mBtnLeft.setVisibility(View.INVISIBLE);
-        mTvTitle.setText(mStrActivityPageName);
-
+        mTvTitle = $(R.id.tvBottomTitle);
+        mMediaPlayer = $(R.id.vvMediaPlayer);
+        mIvPlayState = $(R.id.ivPlayerState);
+        mSbEditor = $(R.id.sbEditor);
+        mTvCurrentDuration = $(R.id.tvEditorDuration);
+        mDragDuration = $(R.id.dragViewDuration);
+        tvDuration = $(R.id.tvCurDuration);
+        cbApplyToAll = $(R.id.cbDurationApplyToAll);
+        mTvTitle.setText(R.string.photo_duration);
         mIvPlayState.setOnClickListener(new OnClickListener() {
 
             @Override
@@ -174,32 +217,42 @@ public class ImageDurationActivity extends BaseActivity {
         return DateTimeUtils.stringForMillisecondTime(nprogress, true, true);
     }
 
-    private void onPlay(int nProgress) {
+    private VirtualVideo mVirtualvideo = null;
+
+    private void onPlay(float nProgress) {
         mMediaPlayer.stop();
         mMediaPlayer.reset();
+        mVirtualvideo.reset();
         for (MediaObject mo : mScene.getAllMedia()) {
             mo.setIntrinsicDuration(nProgress);
             mo.setTimeRange(0, nProgress);
         }
-        VirtualVideo virtualVideo = new VirtualVideo();
-        virtualVideo.addScene(mScene);
+        reload(mVirtualvideo);
         try {
-            virtualVideo.build(mMediaPlayer);
+            mVirtualvideo.build(mMediaPlayer);
         } catch (InvalidStateException e) {
             e.printStackTrace();
         }
         videoPlay();
     }
 
+    private void reload(VirtualVideo virtualVideo) {
+        virtualVideo.addScene(mScene);
+    }
+
+
     public void clickView(View v) {
         int id = v.getId();
-        if (id == R.id.public_menu_cancel) {
+        if (id == R.id.ivCancel) {
             setResult(RESULT_CANCELED);
             onBackPressed();
 
-        } else if (id == R.id.public_menu_sure) {
-            Intent intent = new Intent();
-            for (MediaObject mo : mScene.getAllMedia()) {
+        } else if (id == R.id.ivSure) {
+            if (bExportVideo) {
+                onExport();
+            } else {
+                Intent intent = new Intent();
+                MediaObject mo = mScene.getAllMedia().get(0);
                 VideoOb vo = (VideoOb) mo.getTag();
                 vo.nStart = mo.getTrimStart();
                 vo.nEnd = mo.getIntrinsicDuration();
@@ -207,15 +260,33 @@ public class ImageDurationActivity extends BaseActivity {
                 vo.rEnd = vo.nEnd;
                 vo.TStart = vo.nStart;
                 vo.TEnd = vo.nEnd;
+                //修正特效有效时间线
+                EffectManager.fixEffect(mo, mEffectInfos);
+                if (cbApplyToAll.isChecked()) {
+                    intent.putExtra(
+                            IntentConstants.EXTRA_EXT_APPLYTOALL_DURATION, mCurTime);
+                } else {
+                    intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mScene);
+                }
+                setResult(RESULT_OK, intent);
+                onBackPressed();
             }
-            intent.putExtra(IntentConstants.INTENT_EXTRA_SCENE, mScene);
-            setResult(RESULT_OK, intent);
-            onBackPressed();
-        } else if (id == R.id.durationApplyToAll) {
-            onCreateDialog(DIALOG_APPLYTOALL_ID).show();
         }
-
     }
+
+
+    private void onExport() {
+        onPause();
+        ExportHandler exportHandler = new ExportHandler(this, new ExportHandler.IExport() {
+            @Override
+            public void addData(VirtualVideo virtualVideo) {
+                reload(virtualVideo);
+            }
+        });
+        VideoConfig videoConfig = exportHandler.getExportConfig(0);
+        exportHandler.onExport(true, videoConfig);
+    }
+
 
     private void initPlayer() {
         mMediaPlayer.setOnPlaybackListener(new VirtualVideoView.VideoViewListener() {
@@ -225,14 +296,14 @@ public class ImageDurationActivity extends BaseActivity {
                 int ms = Utils.s2ms(mMediaPlayer.getDuration());
                 mSbEditor.setMax(ms);
                 mTvCurrentDuration.setText(getProgressStr(ms));
-                onVideoViewPrepared(mMediaPlayer.getVideoWidth(), mMediaPlayer.getVideoHeight());
+                float asp = mMediaPlayer.getVideoWidth() / (mMediaPlayer.getVideoHeight() + 0.0f);
+                ((PreviewFrameLayout) $(R.id.rlVideoCropFramePreview)).setAspectRatio(asp);
             }
 
             @Override
             public boolean onPlayerError(int what, int extra) {
                 Log.e("onPlayerError", "what.." + what + ".....extra" + extra);
-                SysAlertDialog.showAutoHideDialog(ImageDurationActivity.this,
-                        R.string.string_null, R.string.error_preview_retry, Toast.LENGTH_SHORT);
+                onToast(R.string.preview_error);
                 return false;
             }
 
@@ -260,13 +331,9 @@ public class ImageDurationActivity extends BaseActivity {
                 }
             }
         });
-        onPlay((int) mScene.getDuration());
+        onPlay(mScene.getDuration());
     }
 
-    protected void onVideoViewPrepared(int nVideoWidth, int nVideoHeight) {
-        PreviewFrameLayout pflVideoTrim = (PreviewFrameLayout) findViewById(R.id.rlVideoCropFramePreview);
-        pflVideoTrim.setAspectRatio((double) nVideoWidth / nVideoHeight);
-    }
 
     private static final int DIALOG_APPLYTOALL_ID = 1;
 
@@ -274,10 +341,8 @@ public class ImageDurationActivity extends BaseActivity {
     protected Dialog onCreateDialog(int id) {
 
         Dialog dialog = null;
-        String strMessage = null;
         if (id == DIALOG_APPLYTOALL_ID) {
-            strMessage = getString(R.string.image_duration_apply_to_all);
-            dialog = SysAlertDialog.showAlertDialog(this, "", strMessage,
+            dialog = SysAlertDialog.showAlertDialog(this, "", getString(R.string.image_duration_apply_to_all),
                     getString(R.string.no),
                     new DialogInterface.OnClickListener() {
 

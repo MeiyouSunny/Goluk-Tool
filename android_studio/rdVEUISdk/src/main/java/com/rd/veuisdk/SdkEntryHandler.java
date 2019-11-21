@@ -5,15 +5,17 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 
+import com.rd.veuisdk.callback.IExportCallBack;
 import com.rd.veuisdk.utils.Utils;
 
 /**
  * @author JIAN
  * @date 2016-12-8 上午9:40:39
  */
-public class SdkEntryHandler {
+class SdkEntryHandler {
 
     private Object isdk;
+    private Object iExportCallBack;
     private static SdkEntryHandler instance;
 
     static SdkEntryHandler getInstance() {
@@ -26,6 +28,10 @@ public class SdkEntryHandler {
 
     void setICallBack(com.rd.veuisdk.callback.ISdkCallBack iback) {
         isdk = iback;
+    }
+
+    void setIExportCallBack(IExportCallBack callBack) {
+        iExportCallBack = callBack;
     }
 
     /**
@@ -158,6 +164,14 @@ public class SdkEntryHandler {
         }
     }
 
+    void onExportClick(Context context) {
+        if (null != iExportCallBack) {
+            Message msg = mhandler.obtainMessage(MSG_ON_EXPORT);
+            msg.obj = context;
+            msg.sendToTarget();
+        }
+    }
+
     private final int MSG_EDIT_EXPORT = 1; // 编辑导出视频路径
     private final int MSG_CAMERA_EXPORT = 2; // 简单录制
     private final int MSG_INTERCEP_TVIDEO = 3; // 普通截取导出时间
@@ -168,6 +182,7 @@ public class SdkEntryHandler {
     private final int MSG_TRIM_VIDEO_DURATION_EXPORT = 8; // 定长截取导出视频
     private final int MSG_CAMERA_EDIT_EXPORT = 9; // 摄像头录制并编辑
     private final int MSG_TRIM_DURATION_VIDEO = 10; // 定长截取导出时间
+    private final int MSG_ON_EXPORT = 11; // 点击导出响应
 
     /**
      * 构造msg.obj
@@ -289,14 +304,20 @@ public class SdkEntryHandler {
                         }
                     }
                     break;
-
+                case MSG_ON_EXPORT:
+                    if (null != iExportCallBack) {
+                        if (iExportCallBack instanceof com.rd.veuisdk.callback.IExportCallBack) {
+                            ((com.rd.veuisdk.callback.IExportCallBack) iExportCallBack)
+                                    .onExport((Context) msg.obj);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }
             msg.obj = null;
         }
 
-        ;
     };
 
 }

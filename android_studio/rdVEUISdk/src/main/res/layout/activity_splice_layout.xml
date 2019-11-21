@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:background="@color/public_background_color"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <include
+        layout="@layout/rdveuisdk_public_title_bar"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"/>
+
+    <!-- 拼接-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp">
+
+        <com.rd.lib.ui.PreviewFrameLayout
+            android:id="@+id/previewFrame"
+            android:layout_width="match_parent"
+            android:layout_centerInParent="true"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!--预览播放器-->
+                <com.rd.vecore.VirtualVideoView
+                    android:id="@+id/splicePlayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+
+                <com.rd.veuisdk.ui.ExtDragLayout
+                    android:id="@+id/spliceParent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/ivPlayerState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/empty"
+                    android:visibility="gone"
+                    android:scaleType="center"
+                    android:src="@drawable/btn_play"/>
+
+                <!--防止界面闪烁-->
+                <View
+                    android:id="@+id/drag_masking"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/public_background_color"/>
+            </FrameLayout>
+        </com.rd.lib.ui.PreviewFrameLayout>
+
+        <include
+            android:id="@+id/progressBarLayout"
+            layout="@layout/player_sbar_layout"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="210dp">
+
+
+        <FrameLayout
+            android:id="@+id/fl_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_above="@+id/bottomLayout"
+            android:layout_height="match_parent"
+            android:background="@color/splice_fragment_bg"
+            />
+
+        <LinearLayout
+            android:id="@+id/bottomLayout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:background="@color/splice_menu_bg"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckedTextView
+                    android:id="@+id/btn_splice_layout"
+                    style="@style/edit_menu"
+                    android:onClick="clickView"
+                    android:textColor="@drawable/splice_menu_textcolor"
+                    android:layout_gravity="center"
+                    android:checked="true"
+                    android:drawablePadding="-2dp"
+                    android:drawableTop="@drawable/btn_splice_layout"
+                    android:text="@string/splice_layout"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckedTextView
+                    android:id="@+id/btn_splice_border"
+                    style="@style/edit_menu"
+                    android:layout_gravity="center"
+                    android:drawablePadding="-2dp"
+                    android:textColor="@drawable/splice_menu_textcolor"
+                    android:onClick="clickView"
+                    android:drawableTop="@drawable/btn_splice_border"
+                    android:text="@string/splice_border"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckedTextView
+                    android:id="@+id/btn_splice_order"
+                    style="@style/edit_menu"
+                    android:layout_gravity="center"
+                    android:textColor="@drawable/splice_menu_textcolor"
+                    android:drawablePadding="-2dp"
+                    android:onClick="clickView"
+                    android:drawableTop="@drawable/btn_splice_order"
+                    android:text="@string/splice_order"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <CheckedTextView
+                    android:id="@+id/btn_splice_music"
+                    style="@style/edit_menu"
+                    android:drawablePadding="-2dp"
+                    android:layout_gravity="center"
+                    android:onClick="clickView"
+                    android:textColor="@drawable/splice_menu_textcolor"
+                    android:drawableTop="@drawable/btn_splice_music"
+                    android:text="@string/splice_music"/>
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

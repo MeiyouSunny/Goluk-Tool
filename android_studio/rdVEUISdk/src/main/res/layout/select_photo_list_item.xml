@@ -3,7 +3,6 @@
                                   android:layout_height="match_parent"
     >
 
-    <!-- android:background="@color/grid_listview_item_outer" -->
 
     <com.rd.lib.ui.RotateImageView
         android:id="@+id/ivPhotoListThumbnail"
@@ -27,10 +26,14 @@
         android:textSize="@dimen/text_size_12"
         android:visibility="gone"/>
 
-    <com.rd.veuisdk.ui.NumItemView
-        android:id="@+id/ivPhotoListSelected"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+
+    <com.rd.veuisdk.ui.ExtImageView
+        android:id="@+id/part_add"
+        android:layout_width="@dimen/media_add_btn"
+        android:layout_height="@dimen/media_add_btn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@null"
+        android:src="@drawable/media_part_add"/>
 
 </com.rd.lib.ui.PreviewFrameLayout>

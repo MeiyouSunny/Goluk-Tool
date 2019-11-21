@@ -37,40 +37,17 @@
     <string name="camera_effect_36">节气</string>
     <string name="camera_effect_37">晚霞</string>
     <string name="camera_effect_38">朦胧</string>
-    <string name="camera_effect_39">记忆</string>
-    <!-- 配乐方式1 (内置配乐) -->
-    <string name="music_1_1">悦动</string>
-    <string name="music_1_2">励志</string>
-    <string name="music_1_3">浪漫</string>
-    <string name="music_1_4">旅行</string>
-    <string name="music_1_5">小清新</string>
-    <string name="music_1_6">小资</string>
-    <string name="music_1_7">时尚</string>
-    <string name="music_1_8">回忆</string>
-    <string name="music_1_9">轻松</string>
-    <string name="music_1_10">乡村</string>
-    <string name="music_1_11">悠闲</string>
 
-    <!-- 配乐方式二 -->
-    <string name="music_2_0">Wave</string>
-    <string name="music_2_1">Discover</string>
-    <string name="music_2_2">Black and white</string>
-    <string name="music_2_3">Memory</string>
-    <string name="music_2_4">Crowd</string>
-    <string name="music_2_5">Travel</string>
-    <string name="music_2_6">Fresh</string>
-    <string name="music_2_7">Wild</string>
 
-    <!-- 极录客使用 (配乐方式二 ) 同上-->
-    <string name="sp_music_null">无</string>
-    <string name="sp_music_chaowan">Wave</string>
-    <string name="sp_music_faxian">Discover</string>
-    <string name="sp_music_heibai">Black and white</string>
-    <string name="sp_music_huiyi">Memory</string>
-    <string name="sp_music_jietou">Crowd</string>
-    <string name="sp_music_lvxing">Travel</string>
-    <string name="sp_music_qingxin">Fresh</string>
-    <string name="sp_music_saye">Wild</string>
+    <!-- 滤镜方式1 -> 分组信息-->
+    <string name="filter_lomo">LOMO集</string>
+    <string name="filter_bomo">薄暮集</string>
+    <string name="filter_gete">哥特集</string>
+    <string name="filter_huaijiu">怀旧集</string>
+    <string name="filter_lengdiao">冷调集</string>
+    <string name="filter_wucha">午茶集</string>
+    <string name="filter_yishu">艺术集</string>
+    <string name="filter_yese">夜色集</string>
 
     <!-- 滤镜方式1(多组滤镜) -->
     <string name="filter_1_0">原图</string>
@@ -108,18 +85,30 @@
     <string name="filter_1_36">节气</string>
     <string name="filter_1_37">晚霞</string>
     <string name="filter_1_38">朦胧</string>
-    <string name="filter_1_39">记忆</string>
 
     <!-- 滤镜方式二 (jlk) -->
-    <string name="sp_filter_1">Original</string>
-    <string name="sp_filter_2">Fade</string>
-    <string name="sp_filter_3">Brightness</string>
-    <string name="sp_filter_4">Blank</string>
-    <string name="sp_filter_5">Lightyear</string>
-    <string name="sp_filter_6">Mark</string>
-    <string name="sp_filter_7">Spark</string>
-    <string name="sp_filter_8">Clouds</string>
-    <string name="sp_filter_9">Tranquil</string>
-    <string name="sp_filter_10">Sketch</string>
+    <string name="sp_filter_1">原图</string>
+    <string name="sp_filter_2">褪色</string>
+    <string name="sp_filter_3">明暗</string>
+    <string name="sp_filter_4">空白</string>
+    <string name="sp_filter_5">光年</string>
+    <string name="sp_filter_6">印记</string>
+    <string name="sp_filter_7">火花</string>
+    <string name="sp_filter_8">流云</string>
+    <string name="sp_filter_9">清欢</string>
+    <string name="sp_filter_10">描摹</string>
 
+
+
+    <!-- lookup 滤镜-->
+    <string name="lookup1">黑白</string>
+    <string name="lookup2">香草</string>
+    <string name="lookup3">香水</string>
+    <string name="lookup4">香檀</string>
+    <string name="lookup5">飞花</string>
+    <string name="lookup6">颜如玉</string>
+    <string name="lookup7">韶华</string>
+    <string name="lookup8">露丝</string>
+    <string name="lookup9">霓裳</string>
+    <string name="lookup10">雨后</string>
 </resources>

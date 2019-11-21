@@ -2,24 +2,25 @@ package com.rd.veuisdk.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.PaintFlagsDrawFilter;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.rd.lib.utils.CoreUtils;
 import com.rd.veuisdk.R;
 
 import java.util.ArrayList;
 
 /**
  * 字幕选择Shader
- *
- * @author JIAN
  */
 public class ColorPicker extends View {
     private final int PADDING = 20;
@@ -28,41 +29,81 @@ public class ColorPicker extends View {
     protected boolean mChangleLastStoke = false;
     private boolean mIsLandscape = false;
     private int mRadius = 0;
+    private Bitmap mBmpNoColor, mBmpNoColorChecked;
+    private float mDensity;
+    private int columnNum = 0;
 
     private ArrayList<Location> mLocationList = new ArrayList<ColorPicker.Location>();
 
 
     private int mWidth, mHeight;
 
+    /**
+     * 是否用圆形图标
+     */
+    private boolean mDrawCircle = true;
+    /**
+     * 是否为空心图标
+     */
+    private boolean mDrawStrokeOnly = false;
+
+    private boolean mTextEdit = false;
 
     public ColorPicker(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPointPaint.setAntiAlias(true);
         mStokePaint.setAntiAlias(true);
         mStokePaint.setColor(Color.BLACK);
-        mStokePaint.setStyle(Style.STROKE);
+        mStokePaint.setStyle(Paint.Style.STROKE);
         mStokePaint.setStrokeWidth(mStokeWidth - 4);
+        mDensity = CoreUtils.getPixelDensity();
 
-        colorArr = new int[]{Color.parseColor("#FFFFFF"),
-                Color.parseColor("#e8ce6b"), Color.parseColor("#f9b73c"),
-                Color.parseColor("#e3573b"), Color.parseColor("#be213b"),
-                Color.parseColor("#00ffff"), Color.parseColor("#5da9cf"),
-                Color.parseColor("#0695b5"), Color.parseColor("#2791db"),
-                Color.parseColor("#3564b7"), Color.parseColor("#e9c930"),
-                Color.parseColor("#a6b45c"), Color.parseColor("#87a522"),
-                Color.parseColor("#32b16c"), Color.parseColor("#017e54"),
-                Color.parseColor("#fdbacc"), Color.parseColor("#ff5a85"),
-                Color.parseColor("#ca4f9b"), Color.parseColor("#71369a"),
-                Color.parseColor("#6720d4"), Color.parseColor("#164c6e"),
-                Color.parseColor("#9f9f9f"), Color.parseColor("#484848"),
-                Color.parseColor("#000000")};
-
+        mBmpNoColor = BitmapFactory.decodeResource(context.getResources(), R.drawable.subtitle_effect_no_color_n);
+        mBmpNoColorChecked = BitmapFactory.decodeResource(context.getResources(), R.drawable.subtitle_effect_no_color_p);
         TypedArray tA = context.obtainStyledAttributes(attrs,
                 R.styleable.extColorPicker);
-        mDrawCircle = tA.getBoolean(R.styleable.extColorPicker_isdrawcircle,
-                true);
+        mTextEdit = tA.getBoolean(R.styleable.extColorPicker_isTextEdit, false);
+        if (mTextEdit) {
+            colorArr = new int[]{Color.parseColor("#484848"), Color.parseColor("#FFFFFF"),
+                    Color.parseColor("#e8ce6b"), Color.parseColor("#f9b73c"),
+                    Color.parseColor("#e3573b"), Color.parseColor("#be213b"),
+                    Color.parseColor("#00ffff"), Color.parseColor("#5da9cf"),
+                    Color.parseColor("#0695b5"), Color.parseColor("#2791db"),
+                    Color.parseColor("#3564b7"), Color.parseColor("#e9c930"),
+                    Color.parseColor("#a6b45c"), Color.parseColor("#87a522"),
+                    Color.parseColor("#32b16c"), Color.parseColor("#017e54"),
+                    Color.parseColor("#fdbacc"), Color.parseColor("#ff5a85"),
+                    Color.parseColor("#ca4f9b"), Color.parseColor("#71369a"),
+                    Color.parseColor("#6720d4"), Color.parseColor("#164c6e"),
+                    Color.parseColor("#9f9f9f"), Color.parseColor("#000000"),};
+        } else {
+            colorArr = new int[]{Color.parseColor("#00000000"), Color.parseColor("#FFFFFF"),
+                    Color.parseColor("#e8ce6b"), Color.parseColor("#f9b73c"),
+                    Color.parseColor("#e3573b"), Color.parseColor("#be213b"),
+                    Color.parseColor("#00ffff"), Color.parseColor("#5da9cf"),
+                    Color.parseColor("#0695b5"), Color.parseColor("#2791db"),
+                    Color.parseColor("#3564b7"), Color.parseColor("#e9c930"),
+                    Color.parseColor("#a6b45c"), Color.parseColor("#87a522"),
+                    Color.parseColor("#32b16c"), Color.parseColor("#017e54"),
+                    Color.parseColor("#fdbacc"), Color.parseColor("#ff5a85"),
+                    Color.parseColor("#ca4f9b"), Color.parseColor("#71369a"),
+                    Color.parseColor("#6720d4"), Color.parseColor("#164c6e"),
+                    Color.parseColor("#9f9f9f"), Color.parseColor("#484848"),};
+        }
+
+
+        mDrawCircle = tA.getBoolean(R.styleable.extColorPicker_isDrawCircle, true);
+        mDrawStrokeOnly = tA.getBoolean(R.styleable.extColorPicker_isDrawStrokeOnly, false);
         tA.recycle();
 
+    }
+
+    public void setColorArr(int[] colorArr) {
+        this.colorArr = colorArr;
+    }
+
+    public void setColumnNum(int num) {
+        columnNum = num;
     }
 
     public void setLandscape(boolean island) {
@@ -87,14 +128,24 @@ public class ColorPicker extends View {
         mHeight = getHeight();
         int mwidth = mWidth - 2 * PADDING;
         int itemwidth, itemheight;
+        int colNum, rowNum;
 
         if (mIsLandscape) {
-            itemwidth = mwidth / 12;
-            itemheight = (mHeight - 2 * PADDING) / 2;
-            for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 12; j++) {
+            colNum = 12;
+            rowNum = colorArr.length / colNum;
+            if (colorArr.length % colNum != 0) {
+                rowNum += 1;
+            }
+            if (columnNum != 0) {
+                colNum = columnNum;
+                rowNum = colorArr.length / columnNum + 1;
+            }
+            itemwidth = mwidth / colNum;
+            itemheight = (mHeight - rowNum * PADDING) / rowNum;
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
                     int centerx;
-                    if (i % 2 == 1) {
+                    if (i % rowNum == 1) {
                         centerx = (int) (itemwidth * (j + 0.75)) + PADDING;
 
                     } else {
@@ -105,16 +156,25 @@ public class ColorPicker extends View {
                 }
             }
         } else {
-            itemwidth = mwidth / 6;
-            itemheight = (mHeight - 2 * PADDING) / 4;
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 6; j++) {
+            if (columnNum != 0) {
+                colNum = columnNum;
+            } else {
+                colNum = 8;
+            }
+            rowNum = colorArr.length / colNum;
+            if (colorArr.length % colNum != 0) {
+                rowNum += 1;
+            }
+            itemwidth = mwidth / colNum;
+            itemheight = (mHeight - (rowNum - 1) * PADDING) / rowNum;
+            for (int i = 0; i < rowNum; i++) {
+                for (int j = 0; j < colNum; j++) {
                     int centerx;
-                    if (i % 2 == 1) {
-                        centerx = (int) (itemwidth * (j + 0.75)) + PADDING;
-                    } else {
-                        centerx = (int) (itemwidth * (j + 0.25)) + PADDING;
-                    }
+//                    if (i % 2 == 1) {
+//                        centerx = (int) (itemwidth * (j + 0.75)) + PADDING;
+//                    } else {
+                    centerx = (int) (itemwidth * (j + 0.5)) + PADDING;
+//                    }
                     int y = (int) (itemheight * (i + 0.5)) + PADDING;
                     mLocationList.add(new Location(centerx, y));
                 }
@@ -131,7 +191,6 @@ public class ColorPicker extends View {
         initLocation();
     }
 
-    private boolean mDrawCircle = true;
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -147,14 +206,30 @@ public class ColorPicker extends View {
         int index = 0;
         Location item;
 
+        if (mDrawStrokeOnly) {
+            mStokePaint.setStyle(Paint.Style.STROKE);
+            mPointPaint.setStyle(Paint.Style.STROKE);
+            mPointPaint.setStrokeWidth(CoreUtils.dpToPixel(2));
+        }
+        int colNum, rowNum;
         // canvas.drawRect(r, paint)
         if (mIsLandscape) {
             mRadius = itemwidth / 4;
-            if (mDrawCircle) {
-                for (int i = 0; i < 2; i++) {
+            colNum = 12;
+            rowNum = colorArr.length / colNum;
+            if (colorArr.length % colNum != 0) {
+                rowNum += 1;
+            }
+            if (columnNum != 0) {
+                colNum = columnNum;
+                rowNum = colorArr.length / columnNum + 1;
+            }
 
-                    for (int j = 0; j < 12; j++) {
-                        index = j + (i * 12);
+            if (mDrawCircle) {
+                for (int i = 0; i < rowNum; i++) {
+
+                    for (int j = 0; j < colNum; j++) {
+                        index = j + (i * colNum);
                         item = mLocationList.get(index);
                         mPointPaint.setColor(colorArr[index]);
                         if (mCheckedId == index) { // 画边框
@@ -171,9 +246,9 @@ public class ColorPicker extends View {
                 }
             } else {
                 RectF rect;
-                for (int i = 0; i < 2; i++) {
-                    for (int j = 0; j < 12; j++) {
-                        index = j + (i * 12);
+                for (int i = 0; i < rowNum; i++) {
+                    for (int j = 0; j < colNum; j++) {
+                        index = j + (i * colNum);
                         item = mLocationList.get(index);
                         mPointPaint.setColor(colorArr[index]);
                         rect = new RectF();
@@ -202,31 +277,66 @@ public class ColorPicker extends View {
                 }
             }
         } else {
+            if (columnNum != 0) {
+                colNum = columnNum;
+            } else {
+                colNum = 8;
+            }
+            rowNum = colorArr.length / colNum;
+            if (colorArr.length % colNum != 0) {
+                rowNum += 1;
+            }
             if (mDrawCircle) {
-                for (int i = 0; i < 4; i++) {
-
-                    for (int j = 0; j < 6; j++) {
-                        index = j + (i * 6);
+                for (int i = 0; i < rowNum; i++) {
+                    for (int j = 0; j < colNum; j++) {
+                        index = j + (i * colNum);
+                        if (index >= colorArr.length) {
+                            break;
+                        }
                         item = mLocationList.get(index);
                         mPointPaint.setColor(colorArr[index]);
-                        if (mCheckedId == index) { // 画边框
-                            canvas.drawCircle(item.px, item.py, mRadius
-                                    + mStokeWidth, mPointPaint);
-                            checkChangeStoke();
-                            canvas.drawCircle(item.px, item.py, mRadius, mStokePaint);
-
-                        } else {
-                            canvas.drawCircle(item.px, item.py, mRadius, mPointPaint);
+                        int py = item.py;
+                        if (mDensity < 2.01) {
+                            if (i == 0) {
+                                py -= 8;
+                            }
+                            if (i == 2) {
+                                py += 8;
+                            }
                         }
+                        if (i == 0 && j == 0 && !mTextEdit) {
+                            if (mCheckedId == index) { // 画边框
+                                canvas.drawBitmap(mBmpNoColorChecked, null,
+                                        new Rect(item.px - mRadius - mStokeWidth, py - mRadius - mStokeWidth,
+                                                item.px + mRadius + mStokeWidth, py + mRadius + mStokeWidth),
+                                        new Paint(Paint.ANTI_ALIAS_FLAG));
+                            } else {
+                                canvas.drawBitmap(mBmpNoColor, null,
+                                        new Rect(item.px - mRadius, py - mRadius, item.px + mRadius, py + mRadius),
+                                        new Paint(Paint.ANTI_ALIAS_FLAG));
+                            }
+                        } else {
+                            if (mCheckedId == index) { // 画边框
+                                canvas.drawCircle(item.px, py, mRadius
+                                        + mStokeWidth, mPointPaint);
+                                checkChangeStoke();
+                                canvas.drawCircle(item.px, py, mRadius, mStokePaint);
 
+                            } else {
+                                canvas.drawCircle(item.px, py, mRadius, mPointPaint);
+                            }
+                        }
                     }
                 }
             } else {
                 RectF rect;
-                for (int i = 0; i < 4; i++) {
-                    for (int j = 0; j < 6; j++) {
-                        index = j + (i * 6);
+                for (int i = 0; i < rowNum; i++) {
+                    for (int j = 0; j < colNum; j++) {
+                        index = j + (i * colNum);
                         item = mLocationList.get(index);
+                        if (index >= colorArr.length) {
+                            break;
+                        }
                         mPointPaint.setColor(colorArr[index]);
                         rect = new RectF();
                         if (mCheckedId == index) { // 画边框
@@ -270,6 +380,10 @@ public class ColorPicker extends View {
      */
     public void ToReset() {
         setCheckId(0);
+    }
+
+    public void clearChecked() {
+        setCheckId(-1);
     }
 
     private int mCheckedId = 0;
@@ -345,8 +459,12 @@ public class ColorPicker extends View {
         return colorArr[mCheckedId];
     }
 
-    public void isDrawCircle(boolean isDrawCircle) {
+    public void setDrawCircle(boolean isDrawCircle) {
         mDrawCircle = isDrawCircle;
+    }
+
+    public void setDrawStrokeOnly(boolean isDrawStrokeOnly) {
+        mDrawStrokeOnly = isDrawStrokeOnly;
     }
 
     private IColorListener mColorListener;

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.vecore.VirtualVideo;
 import com.rd.vecore.exception.InvalidStateException;
+import com.rd.vecore.models.EffectInfo;
 import com.rd.vecore.models.MediaObject;
 import com.rd.vecore.models.Scene;
 import com.rd.veuisdk.model.SplitItem;
@@ -65,38 +66,29 @@ class SplitHandler {
         mRoot = root;
         mContext = context;
         iSplitHandler = iHandler;
-        mMediaLinearLayout = (LinearLayout) mRoot
-                .findViewById(R.id.timeline_media);
-        mScrollView = (TimelineHorizontalScrollView) mRoot
-                .findViewById(R.id.priview_edit_split);
+        mMediaLinearLayout = Utils.$(mRoot, R.id.timeline_media);
+        mScrollView = Utils.$(mRoot, R.id.priview_edit_split);
         mScrollView.enableUserScrolling(true);
         mScrollView.setFadingEdgeLength(0);
         mThumbMargin = mContext.getResources().getDimensionPixelSize(R.dimen.split_thumb_margin);
         mScrollView.setHorizontalFadingEdgeEnabled(false);
         mScrollView.setHorizontalScrollBarEnabled(false);
-        mSplitView = (VideoThumbNailView) mRoot
-                .findViewById(R.id.split_videoview);
-        mScreen = (RelativeLayout) mRoot.findViewById(R.id.rlSplitScreen);
+        mSplitView = Utils.$(mRoot, R.id.split_videoview);
+        mScreen = Utils.$(mRoot, R.id.rlSplitScreen);
 
-        mDraggedLayout = (FrameLayout) mRoot
-                .findViewById(R.id.thelinearDraggedLayout);
-        mDraggedView = (DraggedView) mRoot
-                .findViewById(R.id.dragged_info_trash_View);
+        mDraggedLayout = Utils.$(mRoot, R.id.thelinearDraggedLayout);
+        mDraggedView = Utils.$(mRoot, R.id.dragged_info_trash_View);
 
-        mPriviewLinearLayout = (PriviewLinearLayout) mRoot
-                .findViewById(R.id.the_priview_layout_content);
-        mParentFrame = (PriviewLayout) mRoot
-                .findViewById(R.id.mroot_priview_layout);
-        mSplitLayout = mRoot.findViewById(R.id.split_layout);
-        mTvEndTime = (TextView) mRoot.findViewById(R.id.tvEnd);
-        mTvSplitProgress = (TextView) mRoot
-                .findViewById(R.id.split_item_progress);
-        mFirstDialog = (AutoView) mRoot.findViewById(R.id.split_first_dialog);
+        mPriviewLinearLayout = Utils.$(mRoot, R.id.the_priview_layout_content);
+        mParentFrame = Utils.$(mRoot, R.id.mroot_priview_layout);
+        mSplitLayout = Utils.$(mRoot, R.id.split_layout);
+        mTvEndTime = Utils.$(mRoot, R.id.tvEnd);
+        mTvSplitProgress = Utils.$(mRoot, R.id.split_item_progress);
+        mFirstDialog = Utils.$(mRoot, R.id.split_first_dialog);
 
-
-        mRoot.findViewById(R.id.prepare_split).setOnClickListener(
-                mSplitLisenter);
-        mRoot.findViewById(R.id.public_menu_sure).setOnClickListener(
+        Utils.$(mRoot, R.id.prepare_split).setOnClickListener(mSplitLisenter);
+        ((TextView) Utils.$(mRoot, R.id.tvBottomTitle)).setText(R.string.preview_spilt);
+        Utils.$(mRoot, R.id.ivSure).setOnClickListener(
                 new OnClickListener() {
 
                     @Override
@@ -110,13 +102,12 @@ class SplitHandler {
                         recycle();
                     }
                 });
-        mRoot.findViewById(R.id.public_menu_cancel).setOnClickListener(
+        Utils.$(mRoot, R.id.ivCancel).setOnClickListener(
                 new OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
                         iHandler.onCancel();
-                        recycle();
                     }
                 });
         mScrollView.addScrollListener(mScrollListener);
@@ -149,7 +140,6 @@ class SplitHandler {
 
             @Override
             public void onLong(int x, int y) {
-                // Log.e("ONLONG LISTERE....", x + ",,,," + y);
                 if (!hasSplit()) {
                     return;
                 }
@@ -228,7 +218,7 @@ class SplitHandler {
                     int[] location = new int[2];
                     mScrollView.getLocationOnScreen(location);
                     int[] top = new int[2];
-                    View playview_rel = mRoot.findViewById(R.id.rlPreview);
+                    View playview_rel = Utils.$(mRoot, R.id.rlPreview);
                     playview_rel.getLocationOnScreen(top);
                     final int mtop = location[1] - top[1];
                     final int mleftt = mleft;
@@ -265,9 +255,6 @@ class SplitHandler {
     private Bitmap getThumbBitmap(int moffset, SplitItem mLine) {
         int width = 0, height = ThumbNailUtils.THUMB_HEIGHT;
         ArrayList<SplitThumbItemInfo> thumblist = mLine.getList();
-//        for (int i = 0; i < thumblist.size(); i++) {
-//            width += thumblist.get(i).src.width();
-//        }
         width = mLine.getRect().width();
         int maxWidth = mDispMetrics.widthPixels / 3 * 2;
         final int mwidth = Math.min(maxWidth, width);
@@ -468,16 +455,11 @@ class SplitHandler {
     };
 
     /***
-     * *
-     *
-     *
-     *
-     * @return 手动滚动时间轴 ，获取当前位置的progress (单位ms)
      * @param item
      *            当前位置所在的时间片段
      * @param scrollX
      *            当前滚动的位置（单位px)
-     * @return
+     * @return 手动滚动时间轴 ，获取当前位置的progress (单位ms)
      */
     private int getScrollProgress(SplitItem item, int scrollX) {
         int np = getScrollProgressBySelf(item, scrollX) + item.getStart();
@@ -507,14 +489,28 @@ class SplitHandler {
         SplitItem tempItem;
         int len = mSplitView.getSplits().size();
         MediaObject src = mMedia.getAllMedia().get(0);
+        ArrayList<EffectInfo> effectInfos = src.getEffectInfos();
+        //原始媒体绑定的滤镜特效
+        EffectInfo info = (effectInfos == null || effectInfos.size() == 0) ? null : effectInfos.get(0);
         for (int i = 0; i < len; i++) {
             MediaObject clone = src.clone();
             tempItem = mSplitView.getSplits().get(i);
-
             clone.setSpeed(src.getSpeed());
             float start = Utils.ms2s(tempItem.getTlstart());
             float send = Utils.ms2s(tempItem.getTlend());
             clone.setTimeRange(start, send);
+            clone.setTag(null);
+            if (null != info && info.getFilterId() != EffectInfo.Unknown) {
+                EffectInfo tmp = info.clone();
+                tmp.setTimeRange(0, clone.getDuration());
+                ArrayList<EffectInfo> tmpList = new ArrayList<>();
+                tmpList.add(tmp);
+                //修正特效滤镜的时间线
+                clone.setEffectInfos(tmpList);
+            } else {
+                //时间特效全清
+                clone.setEffectInfos(null);
+            }
             list.add(clone);
         }
         return list;
@@ -542,9 +538,9 @@ class SplitHandler {
         System.runFinalization();
     }
 
+    // 分割保证最小片段duration
+    private final int MIN_SPLIT_DURATION = 400;
     private OnClickListener mSplitLisenter = new OnClickListener() {
-        final int MINSPLITDUTION = 200; // 分割保证最小片段duration =200
-
         @Override
         public void onClick(View v) {
             // 1 找到当前halfParent(偏移的X对应的视频长度)对应的splitItem
@@ -552,15 +548,15 @@ class SplitHandler {
             if (hasSplit()) {
                 int px = mScrollView.getScrollX();
                 SplitItem info = mSplitView.getSplitItemByScrollX(px);
-                if (null != info) { // 有拆分
-
+                if (null != info) {
+                    // 有拆分
                     int progress = getProgressByPx(px);
                     int np = progress - info.getStart();
                     if (np < 0) {
                         np = 0;
                     }
-                    if (np > MINSPLITDUTION
-                            && (info.getEnd() - info.getStart() - np) > MINSPLITDUTION) {
+                    if (np > MIN_SPLIT_DURATION
+                            && (info.getEnd() - info.getStart() - np) > MIN_SPLIT_DURATION) {
 
                         progress = (int) (info.getStart() + (px
                                 - info.getRect().left + 0.0)
@@ -576,20 +572,14 @@ class SplitHandler {
                         setProgress(0);
                         initLayout();
                     } else {
-                        Utils.autoToastNomal(mContext,
-                                R.string.split_duration_too_low);
+                        onAutoSplitLessThan();
                     }
-
-                } else {
-                    Utils.autoToastNomal(mContext,
-                            R.string.split_check_video_length);
                 }
             } else {
                 long progress = mScrollView.getProgress();
-                if (progress < MINSPLITDUTION
-                        || (mDuration - progress) < MINSPLITDUTION) {
-                    Utils.autoToastNomal(mContext,
-                            R.string.split_duration_too_low);
+                if (progress < MIN_SPLIT_DURATION
+                        || (mDuration - progress) < MIN_SPLIT_DURATION) {
+                    onAutoSplitLessThan();
                     return;
                 }
                 int p = (int) progress;
@@ -602,6 +592,13 @@ class SplitHandler {
 
         }
     };
+
+    private void onAutoSplitLessThan() {
+        float min = MIN_SPLIT_DURATION / 1000.0f;
+        String str = mContext.getString(R.string.split_duration_less_than, min);
+        Utils.autoToastNomal(mContext, str);
+    }
+
 
     private boolean hasSplit() {
         return (mSplitView.getSplits().size() >= 1) ? true : false;
@@ -618,8 +615,6 @@ class SplitHandler {
         void onSure(ArrayList<MediaObject> list);
 
         void onCancel();
-
-        void onPlayOrPause();
 
         /**
          * 分割视频后，从该位置播放

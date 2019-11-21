@@ -2,6 +2,7 @@ package com.rd.veuisdk.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
@@ -15,7 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.SectionIndexer;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +34,6 @@ import com.rd.vecore.utils.Log;
 import com.rd.veuisdk.MoreMusicActivity;
 import com.rd.veuisdk.R;
 import com.rd.veuisdk.fragment.MyMusicFragment;
-import com.rd.veuisdk.hb.views.PinnedSectionListView;
-import com.rd.veuisdk.hb.views.PinnedSectionListView.PinnedSectionListAdapter;
 import com.rd.veuisdk.model.AudioMusicInfo;
 import com.rd.veuisdk.model.MyMusicInfo;
 import com.rd.veuisdk.model.WebMusicInfo;
@@ -50,12 +49,11 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class MyMusicAdapter extends BaseAdapter implements
-        PinnedSectionListAdapter, SectionIndexer {
+public class MyMusicAdapter extends BaseAdapter {
     private boolean mCanAutoPlay = false;
     private final int DEFALUTPOSITION = -1;
-    private ArrayList<TreeNode> mTreeNodeGroups = new ArrayList<TreeNode>(),
-            mSections = new ArrayList<TreeNode>();
+    private ArrayList<TreeNode> mTreeNodeGroups = new ArrayList<>(),
+            mListTreeNode = new ArrayList<>();
     private LayoutInflater mGroupInflater;
     private final String EXTENSION = "mp3";
 
@@ -68,7 +66,7 @@ public class MyMusicAdapter extends BaseAdapter implements
             mAudioPlayer.stop();
         }
         mTreeNodeGroups.clear();
-        mSections.clear();
+        mListTreeNode.clear();
         notifyDataSetChanged();
     }
 
@@ -80,49 +78,11 @@ public class MyMusicAdapter extends BaseAdapter implements
         notifyDataSetChanged();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        return getItem(position).type;
-    }
 
-    @Override
-    public boolean isItemViewTypePinned(int viewType) {
-        return viewType == TreeNode.SECTION;
-    }
-
-    public void onSectionAdded(TreeNode section, int sectionPosition) {
-        mSections.add(section);
-    }
-
-    @Override
-    public Object[] getSections() {
-        return mSections.toArray();
-    }
-
-    @Override
-    public int getPositionForSection(int section) {
-        if (section >= mSections.size()) {
-            section = mSections.size() - 1;
+    public void addTreeNode(TreeNode treeNode) {
+        if (null != mListTreeNode) {
+            mListTreeNode.add(treeNode);
         }
-        if (section < 0) {
-            return 0;
-        } else {
-            return mSections.get(section).listPosition;
-        }
-
-    }
-
-    @Override
-    public int getSectionForPosition(int position) {
-        if (position >= getCount()) {
-            position = getCount() - 1;
-        }
-        return getItem(position).sectionPosition;
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
     }
 
     private Context mContext;
@@ -146,13 +106,12 @@ public class MyMusicAdapter extends BaseAdapter implements
     }
 
     public ArrayList<TreeNode> getData() {
-
-        return new ArrayList<TreeNode>(mTreeNodeGroups);
+        return new ArrayList<>(mTreeNodeGroups);
     }
 
-    private PinnedSectionListView mListView;
+    private ListView mListView;
 
-    public void getView(PinnedSectionListView mlistivew) {
+    public void setListView(ListView mlistivew) {
         mListView = mlistivew;
     }
 
@@ -185,25 +144,11 @@ public class MyMusicAdapter extends BaseAdapter implements
      * @param bForceClick 下载完成，响应再次点击 播放音频
      */
     public void onItemClick(View convertView, int position, boolean bForceClick) {
-        // Log.e("onItemClick", "..." + position + "...." + mTempPosition);
-        if (null == convertView) {
+        if (null == convertView || position >= getCount()) {
             return;
         }
-        // if (mTempPosition != position) {
-        // onSendMessage();
-        ImageView tempstate = (ImageView) convertView
-                .findViewById(R.id.iv_select_music_state);
-        convertView.findViewById(R.id.artname).setVisibility(View.GONE);
-        ExpRangeSeekBar tempm_rbBar = (ExpRangeSeekBar) convertView
-                .findViewById(R.id.mrangseekbar);
-        FrameLayout templayout = (FrameLayout) convertView
-                .findViewById(R.id.llRangeSeekBar);
-        View addbtn = convertView.findViewById(R.id.item_add);
-        View temp_child_hintView = convertView
-                .findViewById(R.id.child_hintview);
-        View cbCheckBox = convertView.findViewById(R.id.cbHistoryCheck);
 
-        ExpRangeSeekBar msb;
+        Utils.$(convertView, R.id.artname).setVisibility(View.GONE);
 
         MyMusicInfo myMusicInfo = getItem(position).childs;
         if (null == myMusicInfo) {
@@ -215,7 +160,7 @@ public class MyMusicAdapter extends BaseAdapter implements
         if (mTempPosition != DEFALUTPOSITION) {
 
             if (mTempPosition == position && (!bForceClick)) {
-                Log.i("onItemClick", "不响应重复点击");
+                Log.i(TAG, "onItemClick repeat click...");
                 return;
             } else {
                 if (isRunning) {
@@ -225,29 +170,18 @@ public class MyMusicAdapter extends BaseAdapter implements
                 }
                 View itemView = getItemView();
                 if (null != itemView) {
-                    msb = (ExpRangeSeekBar) itemView
-                            .findViewById(R.id.mrangseekbar);
+                    ExpRangeSeekBar msb = Utils.$(itemView, R.id.mrangseekbar);
                     msb.setOnRangeSeekBarChangeListener(null);
-                    FrameLayout lrangseekbar = (FrameLayout) itemView
-                            .findViewById(R.id.llRangeSeekBar);
-                    View laddbtn = itemView.findViewById(R.id.item_add);
-                    laddbtn.setVisibility(View.INVISIBLE);
-                    lrangseekbar.setVisibility(View.GONE);
-                    ImageView state = (ImageView) itemView
-                            .findViewById(R.id.iv_select_music_state);
-                    state.setVisibility(View.GONE);
-                    itemView.findViewById(R.id.child_hintview).setVisibility(
-                            View.GONE);
-
+                    Utils.$(itemView, R.id.llRangeSeekBar).setVisibility(View.GONE);
+                    Utils.$(itemView, R.id.item_add).setVisibility(View.INVISIBLE);
+                    Utils.$(itemView, R.id.iv_select_music_state).setVisibility(View.GONE);
+                    Utils.$(itemView, R.id.child_hintview).setVisibility(View.GONE);
                     if (mTreeNodeGroups.get(position).tag == 3) {
-                        itemView.findViewById(R.id.cbHistoryCheck)
-                                .setVisibility(View.VISIBLE);
+                        Utils.$(itemView, R.id.cbHistoryCheck).setVisibility(View.VISIBLE);
                     }
                 }
             }
-
         }
-
         if (null != mAudioPlayer) {
             if (mAudioPlayer.isPlaying()) {
                 mAudioPlayer.stop();
@@ -266,27 +200,27 @@ public class MyMusicAdapter extends BaseAdapter implements
         mduration = Utils.s2ms(VirtualVideo.getMediaInfo(info.getLocalPath(), null));
 
         max = mduration;
-        if (null != tempm_rbBar) {
-            tempm_rbBar.setDuration(mduration);
-            tempm_rbBar.setHandleValue(0, mduration);
-            tempm_rbBar.resetProgress();
-            tempm_rbBar.setAutoScroll();
-            tempm_rbBar.canTouchRight();
+        ExpRangeSeekBar seekBar = Utils.$(convertView, R.id.mrangseekbar);
+        if (null != seekBar) {
+            seekBar.setDuration(mduration);
+            seekBar.setHandleValue(0, mduration);
+            seekBar.resetProgress();
+            seekBar.setAutoScroll();
+            seekBar.canTouchRight();
         }
         onPrePare(0, mduration);
-        tempstate.setVisibility(View.VISIBLE);
-
+        Utils.$(convertView, R.id.iv_select_music_state).setVisibility(View.VISIBLE);
+        Utils.$(convertView, R.id.llRangeSeekBar).setVisibility(View.VISIBLE);
+        View addbtn = Utils.$(convertView, R.id.item_add);
         addbtn.setVisibility(View.VISIBLE);
-        templayout.setVisibility(View.VISIBLE);
-        temp_child_hintView.setVisibility(View.VISIBLE);
+        Utils.$(convertView, R.id.child_hintview).setVisibility(View.VISIBLE);
 
         addbtn.setOnClickListener(mAddMusicListener);
-        tempm_rbBar.setOnRangeSeekBarChangeListener(onrangListener);
+        seekBar.setOnRangeSeekBarChangeListener(onrangListener);
 
         Intent in = new Intent(MyMusicFragment.ACTION_SHOW);
         if (mTempPosition == (getCount() - 1)
                 || mTempPosition == (getCount() - 2)) {
-
             in.putExtra(MyMusicFragment.BCANSHOW, false);
             mContext.sendBroadcast(in);
         } else {
@@ -297,30 +231,32 @@ public class MyMusicAdapter extends BaseAdapter implements
     }
 
 
-    private ArrayList<String> mDownloading = new ArrayList<String>();
+    private ArrayList<String> mDownloading = new ArrayList<>();
 
     private void onDownMusic(final int position, final WebMusicInfo info) {
+        if (null == info || TextUtils.isEmpty(info.getMusicUrl())) {
+            return;
+        }
         if (CoreUtils.checkNetworkInfo(mContext) == CoreUtils.UNCONNECTED) {
             SysAlertDialog.showAutoHideDialog(mContext, 0,
                     R.string.please_check_network, Toast.LENGTH_SHORT);
         } else {
             if (null == mDownloading) {
-                mDownloading = new ArrayList<String>();
+                mDownloading = new ArrayList<>();
             }
             if (mDownloading.contains(info.getMusicUrl())) {
                 // 下载中
                 return;
             }
-            DownLoadUtils down = new DownLoadUtils(info.getMusicUrl()
+            DownLoadUtils down = new DownLoadUtils(mContext, info.getMusicUrl()
                     .hashCode(), info.getMusicUrl(), EXTENSION);
             down.setMethod(false);
 
             View v = getItemView();
 
             if (null != v) {
-                v.findViewById(R.id.music_state).setVisibility(View.GONE);
-                CircleProgressBarView bar = (CircleProgressBarView) v
-                        .findViewById(R.id.music_pbar);
+                Utils.$(v, R.id.music_state).setVisibility(View.GONE);
+                CircleProgressBarView bar = Utils.$(v, R.id.music_pbar);
                 if (null != bar) {
                     bar.setVisibility(View.VISIBLE);
                     bar.setProgress(1);
@@ -328,26 +264,25 @@ public class MyMusicAdapter extends BaseAdapter implements
             }
 
             down.DownFile(new IDownFileListener() {
-
                 @Override
                 public void onProgress(long arg0, int arg1) {
                     if (null != mHandler) {
-                        mHandler.obtainMessage(MSG_PROGRESS, (int) arg0, arg1)
-                                .sendToTarget();
+                        onDownloadProgress(arg1);
                     }
                 }
 
                 @Override
                 public void Finished(long arg0, String arg1) {
-                    // Log.e("Finished", "Finished" + arg0);
                     File ftarget = new File(info.getLocalPath());
                     File fold = new File(arg1);
                     FileUtils.deleteAll(ftarget);
                     if (fold.renameTo(ftarget)) {
                         if (null != mHandler) {
                             info.checkExists();
-                            mHandler.obtainMessage(MSG_FINISHED, position)
-                                    .sendToTarget();
+                            mHandler.obtainMessage(MSG_FINISHED, position).sendToTarget();
+                        }
+                        if (null != mDownloading) {
+                            mDownloading.remove(info.getMusicUrl());
                         }
                     } else {
                         Canceled(arg0);
@@ -356,13 +291,11 @@ public class MyMusicAdapter extends BaseAdapter implements
 
                 @Override
                 public void Canceled(long arg0) {
-                    // Log.e("Canceled", "Canceled" + arg0);
                     if (null != mDownloading) {
                         mDownloading.remove(info.getMusicUrl());
                     }
                     if (null != mHandler) {
-                        mHandler.obtainMessage(MSG_CANCELED, position)
-                                .sendToTarget();
+                        mHandler.obtainMessage(MSG_CANCELED, position).sendToTarget();
                     }
 
                 }
@@ -384,23 +317,17 @@ public class MyMusicAdapter extends BaseAdapter implements
 
     public void onPause() {
         isRunning = false;
-//		Log.e("onPause", this.toString());
         if (null != mAudioPlayer) {
             mAudioPlayer.stop();
-            // Log.e("onPause", "player pause");
         }
         View itemView = getItemView();
         if (null != itemView) {
-
-            ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                    .findViewById(R.id.mrangseekbar);
+            ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
             if (null != m_sbRanger) {
                 m_sbRanger.setHandleValue(min, max);
                 m_sbRanger.resetProgress();
             }
-
-            ImageView state = (ImageView) itemView
-                    .findViewById(R.id.iv_select_music_state);
+            ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
             state.setImageResource(R.drawable.edit_music_play);
         }
     }
@@ -423,21 +350,17 @@ public class MyMusicAdapter extends BaseAdapter implements
         isRunning = false;
         mIsStoped = true;
         if (null != mAudioPlayer) {
-            // Log.e("onstop", "stopmusic");
             mAudioPlayer.stop();
         }
         View itemView = getItemView();
         if (null != itemView) {
-            ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                    .findViewById(R.id.mrangseekbar);
+            ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
             if (null != m_sbRanger) {
                 m_sbRanger.resetProgress();
             }
         }
-        // Log.e("onstop", "xxxxxxxxxxxxxxxxxxxxxx" + this.toString());
         DownLoadUtils.forceCancelAll();
         if (null != mDownloading) {
-            // Log.e("onstop", "yyyyyyyyyyyyyyyyyyyyyyy");
             mLastMusic = "";
             mDownloading.clear();
             mDownloading = null;
@@ -447,11 +370,9 @@ public class MyMusicAdapter extends BaseAdapter implements
 
     public void onDestroy() {
         mHandler = null;
-        // Log.e("onDestroy", "onDestroy" + this.toString());
         View itemView = getItemView();
         if (null != itemView) {
-            ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                    .findViewById(R.id.mrangseekbar);
+            ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
             if (null != m_sbRanger) {
                 m_sbRanger.setOnRangeSeekBarChangeListener(null);
             }
@@ -474,30 +395,23 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         @Override
         public void onClick(View v) {
-            // Log.e("state click....", mAudioPlayer.isPlaying() + ".........."
-            // + mAudioPlayer.getCurrentPosition() + "...."
-            // + mAudioPlayer.getDuration());
             View itemView = getItemView();
             if (null != mAudioPlayer) {
                 if (mAudioPlayer.isPlaying()) {
                     // 暂停播放
                     mAudioPlayer.pause();
                     if (null != itemView) {
-                        ImageView state = (ImageView) itemView
-                                .findViewById(R.id.iv_select_music_state);
+                        ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
                         state.setImageResource(R.drawable.edit_music_play);
                     }
                 } else {
                     // 继续播放
                     mAudioPlayer.start();
                     setCanAutoPlay(true);
-
                     if (null != itemView) {
-                        ImageView state = (ImageView) itemView
-                                .findViewById(R.id.iv_select_music_state);
+                        ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
                         state.setImageResource(R.drawable.edit_music_pause);
                     }
-
                 }
             } else {
                 if (isRunning) {
@@ -529,8 +443,7 @@ public class MyMusicAdapter extends BaseAdapter implements
         public void onClick(View v) {
             View itemView = getItemView();
             if (null != itemView) {
-                ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                        .findViewById(R.id.mrangseekbar);
+                ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
                 if (null != m_sbRanger) {
                     MyMusicInfo info = getItem(mTempPosition).childs;
                     WebMusicInfo minfo = info.getmInfo();
@@ -547,24 +460,18 @@ public class MyMusicAdapter extends BaseAdapter implements
     private void onCompleted() {
         setCanAutoPlay(false);
         if (null != mAudioPlayer) {
-            // mAudioPlayer.stop();
-            // mAudioPlayer.reset();
             mAudioPlayer.seekTo(0);
         }
         View itemView = getItemView();
-
         if (null != itemView) {
-            ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                    .findViewById(R.id.mrangseekbar);
+            ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
             if (null != m_sbRanger) {
                 m_sbRanger.setHandleValue(min, max);
                 m_sbRanger.resetProgress();
             }
-            ImageView state = (ImageView) itemView
-                    .findViewById(R.id.iv_select_music_state);
+            ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
             state.setImageResource(R.drawable.edit_music_play);
         }
-        // onPrePare(min, max);
 
     }
 
@@ -575,9 +482,7 @@ public class MyMusicAdapter extends BaseAdapter implements
         public void onProgress(int arg0) {
             View itemView = getItemView();
             if (null != itemView && null != mAudioPlayer) {
-                ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                        .findViewById(R.id.mrangseekbar);
-//                android.util.Log.e(TAG, "onProgress: " + min + "...." + mAudioPlayer.getCurrentPosition());
+                ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
                 m_sbRanger.setProgress(min + mAudioPlayer.getCurrentPosition());
             }
         }
@@ -587,7 +492,6 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         @Override
         public void onPrepared(AudioPlayer arg0) {
-            // Log.e("mOnPrepareListener", arg0.getDuration() + "..");
             mHandler.sendEmptyMessage(PREPARED);
         }
     };
@@ -595,7 +499,6 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         @Override
         public void onCompletion(AudioPlayer arg0) {
-            // Log.e("onCompletion", arg0.getDuration() + "..");
             onCompleted();
 
         }
@@ -604,8 +507,6 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         @Override
         public boolean onError(AudioPlayer arg0, int arg1, int arg2) {
-            // Log.e("mOnErrorListener", arg0.getDuration() + ".." + arg1 + "......" +
-            // arg2);
             return false;
         }
     };
@@ -613,8 +514,6 @@ public class MyMusicAdapter extends BaseAdapter implements
 
         @Override
         public boolean onInfo(AudioPlayer arg0, int arg1, int arg2) {
-            // Log.e("onInfo", arg0.getDuration() + ".." + arg1 + "...." +
-            // arg2);
             return false;
         }
     };
@@ -626,7 +525,6 @@ public class MyMusicAdapter extends BaseAdapter implements
      * @param end
      */
     private void onPrePare(int start, int end) {
-//		Log.e("mOnPrepareListener", start + "------------/" + end);
         if (mAudioPlayer == null) {
             mAudioPlayer = new AudioPlayer();
         } else {
@@ -678,9 +576,6 @@ public class MyMusicAdapter extends BaseAdapter implements
             return null;
         }
         try {
-            // Log.e("getItemView",
-            // "childat-->" + mtep + "...temp:" + mTempPosition
-            // + "...firt:" + mListView.getFirstVisiblePosition());
             return mListView.getChildAt(mtep);
         } catch (Exception e) {
 
@@ -697,7 +592,6 @@ public class MyMusicAdapter extends BaseAdapter implements
         public void onPlay(int currentProgress) {
             tempStart = currentProgress;
             min = tempStart;
-//            Log.e("ranglistern,....", "onPlay.mminValue" + currentProgress);
             mCanAutoPlay = true;
             onPrePare(tempStart, tempEnd);
         }
@@ -705,30 +599,22 @@ public class MyMusicAdapter extends BaseAdapter implements
         private int tempStart = 0, tempEnd = 0;
 
         @Override
-        public void onRangeSeekBarValuesChanged(RangeSeekBar bar,
-                                                int minValue, int maxValue) {
+        public void onRangeSeekBarValuesChanged(RangeSeekBar bar, int minValue, int maxValue) {
             tempStart = minValue;
             tempEnd = maxValue;
             min = tempStart;
             max = tempEnd;
-//            Log.e(".ranglistern", minValue
-//                    + "   onRangeSeekBarValuesChanged,...." + maxValue);
         }
 
         @Override
         public void onActionDown(int currentprogress) {
-//            Log.e(".ranglistern", "   onActionDown,...." + currentprogress);
             itemView = getItemView();
             if (null != itemView) {
-
-                ImageView state = (ImageView) itemView
-                        .findViewById(R.id.iv_select_music_state);
+                ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
                 state.setImageResource(R.drawable.edit_music_play);
-                ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                        .findViewById(R.id.mrangseekbar);
+                ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
                 if (null != m_sbRanger) {
                     m_sbRanger.resetProgress();
-
                 }
             }
             onPlayerPause();
@@ -744,7 +630,6 @@ public class MyMusicAdapter extends BaseAdapter implements
             if (mAudioPlayer.isPlaying()) {
                 mAudioPlayer.pause();
             }
-
         }
     }
 
@@ -755,8 +640,7 @@ public class MyMusicAdapter extends BaseAdapter implements
         }
         View itemView = getItemView();
         if (null != itemView) {
-            ImageView state = (ImageView) itemView
-                    .findViewById(R.id.iv_select_music_state);
+            ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
             state.setImageResource(R.drawable.edit_music_pause);
         }
 
@@ -765,24 +649,36 @@ public class MyMusicAdapter extends BaseAdapter implements
     private void preparePlayer() {
         View itemView = getItemView();
         if (null != itemView) {
-            ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                    .findViewById(R.id.mrangseekbar);
-
-            ImageView state = (ImageView) itemView
-                    .findViewById(R.id.iv_select_music_state);
-//            Log.e("preparePlayer", "..." + mduration);
-            m_sbRanger.setDuration(mduration);
-            m_sbRanger.setHandleValue(min, max);
-            m_sbRanger.setAutoScroll();
-            m_sbRanger.canTouchRight();
-            m_sbRanger.resetProgress();
+            ExpRangeSeekBar seekBar = Utils.$(itemView, R.id.mrangseekbar);
+            ImageView state = Utils.$(itemView, R.id.iv_select_music_state);
+            seekBar.setDuration(mduration);
+            seekBar.setHandleValue(min, max);
+            seekBar.setAutoScroll();
+            seekBar.canTouchRight();
+            seekBar.resetProgress();
             state.setImageResource(R.drawable.edit_music_play);
         }
     }
 
+    /**
+     * 下载进度
+     */
+    private void onDownloadProgress(int progress) {
+        View item = getItemView();
+        if (null != item) {
+            CircleProgressBarView barView = Utils.$(item, R.id.music_pbar);
+            if (null != barView) {
+                barView.setProgress(progress);
+                if (barView.getVisibility() != View.VISIBLE) {
+                    barView.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+
+    }
+
     private final int PREPARED = 1;
     private int mduration;
-    private final int MSG_PROGRESS = 2001;
     private final int MSG_FINISHED = 2002;
     private final int MSG_CANCELED = 2003;
     private Handler mHandler = new Handler() {
@@ -792,51 +688,30 @@ public class MyMusicAdapter extends BaseAdapter implements
             switch (msg.what) {
                 case PREPARED:
                     preparePlayer();
-                    // Log.e("handler", mduration + "prepared" + mCanAutoPlay);
                     if (mCanAutoPlay) {
                         onMediaPlay();
                     }
                     break;
-                case MSG_PROGRESS:
-                    // Log.e("MSG_PROGRESS", "MSG_PROGRESS---" + mTempPosition);
-                    View item = getItemView();
-                    if (null != item) {
-                        CircleProgressBarView pbar = (CircleProgressBarView) item
-                                .findViewById(R.id.music_pbar);
-                        if (null != pbar) {
-                            pbar.setProgress(msg.arg2);
-                            if (pbar.getVisibility() != View.VISIBLE) {
-                                pbar.setVisibility(View.VISIBLE);
-                            }
-                        }
-                    }
-                    break;
                 case MSG_FINISHED: {
-//                    Log.e(TAG, "MSG_FINISHED---" + mTempPosition + "..." + this.toString());
                     View v = getItemView();
                     if (null != v) {
-                        v.findViewById(R.id.music_state).setVisibility(View.GONE);
-                        v.findViewById(R.id.music_down_layout).setVisibility(
-                                View.GONE);
-                        v.findViewById(R.id.music_pbar).setVisibility(View.GONE);
+                        Utils.$(v, R.id.music_state).setVisibility(View.GONE);
+                        Utils.$(v, R.id.music_down_layout).setVisibility(View.GONE);
+                        Utils.$(v, R.id.music_pbar).setVisibility(View.GONE);
                     }
                     notifyDataSetChanged();
                     if (!mIsStoped) {
-
                         onItemClick(getItemView(), mTempPosition, true);
                     }
                 }
                 break;
                 case MSG_CANCELED: {
-                    // Log.e("MSG_CANCELED", "MSG_CANCELED---" + mTempPosition);
                     View v = getItemView();
                     if (null != v) {
-                        v.findViewById(R.id.music_state)
-                                .setVisibility(View.VISIBLE);
-                        v.findViewById(R.id.music_down_layout).setVisibility(
-                                View.VISIBLE);
-                        v.findViewById(R.id.music_pbar).setVisibility(View.GONE);
-                        v.findViewById(R.id.item_add).setVisibility(View.GONE);
+                        Utils.$(v, R.id.music_state).setVisibility(View.VISIBLE);
+                        Utils.$(v, R.id.music_down_layout).setVisibility(View.VISIBLE);
+                        Utils.$(v, R.id.music_pbar).setVisibility(View.GONE);
+                        Utils.$(v, R.id.item_add).setVisibility(View.GONE);
                     }
                     mTempPosition = DEFALUTPOSITION;
                     notifyDataSetChanged();
@@ -845,18 +720,16 @@ public class MyMusicAdapter extends BaseAdapter implements
                     }
                 }
                 break;
-
                 default:
                     break;
             }
         }
-
-        ;
     };
 
-    private class ChildViewHolder {
+    private class ItemHolder {
 
-        TextView songname, title, artname, tvDuration;
+        TextView songname, artname, tvDuration;
+        //        TextView songname, title, artname, tvDuration;
         View content, layout, child_hint;
         View addbtn;
         ImageView state;
@@ -865,6 +738,22 @@ public class MyMusicAdapter extends BaseAdapter implements
         FrameLayout mLayout;
         FrameLayout music_down_layout;
 
+        public ItemHolder(View view) {
+//            title = Utils.$(view, R.id.node_title);
+            state = Utils.$(view, R.id.iv_select_music_state);
+            delete = Utils.$(view, R.id.cbHistoryCheck);
+            songname = Utils.$(view, R.id.songname);
+            artname = Utils.$(view, R.id.artname);
+            addbtn = Utils.$(view, R.id.item_add);
+            content = Utils.$(view, R.id.mymusic_item_content);
+            layout = Utils.$(view, R.id.mymusic_item);
+            mBar = Utils.$(view, R.id.mrangseekbar);
+            mLayout = Utils.$(view, R.id.llRangeSeekBar);
+            tvDuration = Utils.$(view, R.id.duration);
+            music_down_layout = Utils.$(view, R.id.music_down_layout);
+            child_hint = Utils.$(view, R.id.child_hintview);
+
+        }
     }
 
     @Override
@@ -875,7 +764,6 @@ public class MyMusicAdapter extends BaseAdapter implements
     @Override
     public TreeNode getItem(int position) {
         try {
-
             return mTreeNodeGroups.get(position);
         } catch (Exception e) {
             e.printStackTrace();
@@ -895,34 +783,15 @@ public class MyMusicAdapter extends BaseAdapter implements
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ChildViewHolder vh = null;
-        StateListener mStateListener;
+        ItemHolder vh = null;
         final TreeNode node = getItem(position);
         if (null == convertView) {
-            convertView = mGroupInflater.inflate(R.layout.rdveuisdk_mymusic_child,
-                    null);
-            vh = new ChildViewHolder();
-            vh.title = (TextView) convertView.findViewById(R.id.node_title);
-            vh.state = (ImageView) convertView
-                    .findViewById(R.id.iv_select_music_state);
-            vh.delete = (CheckBox) convertView
-                    .findViewById(R.id.cbHistoryCheck);
-            vh.songname = (TextView) convertView.findViewById(R.id.songname);
-            vh.artname = (TextView) convertView.findViewById(R.id.artname);
-            vh.addbtn = convertView.findViewById(R.id.item_add);
-            vh.content = convertView.findViewById(R.id.mymusic_item_content);
-            vh.layout = convertView.findViewById(R.id.mymusic_item);
-            vh.mBar = (ExpRangeSeekBar) convertView
-                    .findViewById(R.id.mrangseekbar);
+            convertView = mGroupInflater.inflate(R.layout.rdveuisdk_mymusic_child, null);
+            vh = new ItemHolder(convertView);
             vh.mBar.canTouchRight();
-            vh.mLayout = (FrameLayout) convertView
-                    .findViewById(R.id.llRangeSeekBar);
-            vh.tvDuration = (TextView) convertView.findViewById(R.id.duration);
-            vh.music_down_layout = (FrameLayout) convertView
-                    .findViewById(R.id.music_down_layout);
-            mStateListener = new StateListener();
-            vh.state.setOnClickListener(mStateListener);
-            vh.state.setTag(mStateListener);
+            StateListener listener = new StateListener();
+            vh.state.setOnClickListener(listener);
+            vh.state.setTag(listener);
             vh.delete.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
                 @Override
@@ -934,75 +803,42 @@ public class MyMusicAdapter extends BaseAdapter implements
             vh.child_hint = convertView.findViewById(R.id.child_hintview);
             convertView.setTag(vh);
         } else {
-            vh = (ChildViewHolder) convertView.getTag();
-            mStateListener = (StateListener) vh.state.getTag();
+            vh = (ItemHolder) convertView.getTag();
         }
-
+        convertView.setBackgroundColor(Color.TRANSPARENT);
         if (node.type == TreeNode.SECTION) {
             vh.content.setVisibility(View.GONE);
-            vh.title.setVisibility(View.VISIBLE);
-            vh.title.setText(node.text);
-            View divider = convertView.findViewById(R.id.viewDivider);
-            divider.setVisibility(View.GONE);
-            View topdivider = convertView.findViewById(R.id.viewTopDivider);
-            topdivider.setVisibility(View.VISIBLE);
-            convertView.setBackgroundColor(parent.getResources().getColor(
-                    R.color.transparent));
-
-            if (node.tag == 2 || node.tag == 3) {
-                vh.title.setVisibility(View.GONE);
-            }
         } else {
-            View divider = convertView.findViewById(R.id.viewDivider);
-            divider.setVisibility(View.VISIBLE);
-            View topdivider = convertView.findViewById(R.id.viewTopDivider);
-            topdivider.setVisibility(View.GONE);
-            convertView.setBackgroundColor(0);
-            vh.title.setVisibility(View.GONE);
             vh.content.setVisibility(View.VISIBLE);
             MyMusicInfo info = node.childs;
             vh.songname.setText(info.getmInfo().getMusicName());
             info.getmInfo().checkExists();
             boolean isdownloading = (null != mDownloading && mDownloading
                     .contains(info.getmInfo().getMusicUrl()));
-            int vi = (info.getmInfo().exists() || isdownloading) ? View.GONE
-                    : View.VISIBLE;
-            vh.music_down_layout.setVisibility(vi);
-            if (vi != View.VISIBLE) {
-                convertView.findViewById(R.id.music_state).setVisibility(
-                        View.GONE);
-                convertView.findViewById(R.id.music_pbar).setVisibility(
-                        View.GONE);
-            } else {
+            int visiblity = (info.getmInfo().exists() || isdownloading) ? View.GONE : View.VISIBLE;
+            //如果文件存在 全部不显示 如果正在下载只显示进度
+            vh.music_down_layout.setVisibility(visiblity);
+            if (visiblity != View.VISIBLE) {
                 if (isdownloading) {
-                    convertView.findViewById(R.id.music_state).setVisibility(
-                            View.GONE);
-                    convertView.findViewById(R.id.music_pbar).setVisibility(
-                            View.VISIBLE);
+                    vh.music_down_layout.setVisibility(View.VISIBLE);
+                    Utils.$(convertView, R.id.music_state).setVisibility(View.GONE);
+                    Utils.$(convertView, R.id.music_pbar).setVisibility(View.VISIBLE);
                 } else {
-                    convertView.findViewById(R.id.music_state).setVisibility(
-                            View.VISIBLE);
-                    convertView.findViewById(R.id.music_pbar).setVisibility(
-                            View.GONE);
+                    Utils.$(convertView, R.id.music_state).setVisibility(View.GONE);
+                    Utils.$(convertView, R.id.music_pbar).setVisibility(View.GONE);
                 }
-
+            } else {
+                Utils.$(convertView, R.id.music_state).setVisibility(View.VISIBLE);
+                Utils.$(convertView, R.id.music_pbar).setVisibility(View.GONE);
             }
+
             if (node.tag == 2 || node.tag == 0) {
-                // vh.artname.setText(info.getmInfo().getArtName());
             } else {
                 vh.artname.setText("");
             }
+            vh.tvDuration.setText(DateTimeUtils.stringForTime(info.getmInfo().getDuration()));
 
-            vh.tvDuration.setText(DateTimeUtils.stringForTime(info.getmInfo()
-                    .getDuration()));
-
-            // Log.e("getview->" + info.getmInfo().getMusicName(), position
-            // + "...." + mTempPosition + "...."
-            // + info.getmInfo().getLocalPath() + "...."
-            // + info.getmInfo().exists() + "..." + vi + ".....duration:"
-            // + mduration + "...." + min + "<>" + max);
-
-            if (position == mTempPosition) {
+            if (info.getmInfo().exists() && position == mTempPosition) {
                 if (mduration > 0) {
                     vh.mBar.setDuration(mduration);
                 }
@@ -1057,8 +893,7 @@ public class MyMusicAdapter extends BaseAdapter implements
         if (mTempPosition != DEFALUTPOSITION) {
             View itemView = getItemView();
             if (null != itemView) {
-                ExpRangeSeekBar m_sbRanger = (ExpRangeSeekBar) itemView
-                        .findViewById(R.id.mrangseekbar);
+                ExpRangeSeekBar m_sbRanger = Utils.$(itemView, R.id.mrangseekbar);
                 TreeNode mitemNode = getItem(mTempPosition);
                 WebMusicInfo mInfo = mitemNode.childs.getmInfo();
 

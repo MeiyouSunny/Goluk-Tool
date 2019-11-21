@@ -2,9 +2,9 @@
                                               android:layout_width="match_parent"
                                               android:layout_height="match_parent"
                                               android:background="@color/public_background_color"
+                                              android:fitsSystemWindows="true"
                                               android:orientation="vertical">
 
-    <include layout="@layout/rdveuisdk_public_title_bar"/>
 
     <com.rd.veuisdk.ui.PriviewLayout
         android:id="@+id/mroot_priview_layout"
@@ -21,10 +21,26 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+                <FrameLayout
+                    android:id="@+id/theframe"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:minHeight="100dp">
+
+                    <include layout="@layout/preview_edit"/>
+
+                    <include layout="@layout/preview_edit_split"/>
+
+                    <include layout="@layout/layout_partedit_add"/>
+                </FrameLayout>
+
                 <FrameLayout
                     android:id="@+id/flUpperZone"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent"
+                    android:layout_above="@+id/theframe">
 
                     <com.rd.lib.ui.PreviewFrameLayout
                         android:id="@+id/rlPreview"
@@ -37,66 +53,79 @@
                             android:layout_height="match_parent"
                             android:layout_centerInParent="true"/>
 
-                        <com.rd.lib.ui.PreviewFrameLayout
-                            android:id="@+id/rlPreview_player"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignParentTop="true">
-
-                            <ImageView
-                                android:id="@+id/ivPlayerState"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true"
-                                android:contentDescription="@string/empty"
-                                android:onClick="clickView"
-                                android:scaleType="center"
-                                android:src="@drawable/btn_play"/>
-
-                        </com.rd.lib.ui.PreviewFrameLayout>
-
                         <RelativeLayout
                             android:id="@+id/rlSplitView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:visibility="gone"></RelativeLayout>
+                            android:visibility="gone"/>
                     </com.rd.lib.ui.PreviewFrameLayout>
                 </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/theframe"
+                <LinearLayout
+                    android:id="@+id/llDurationSeekbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/flUpperZone"
-                    android:minHeight="100dp">
+                    android:layout_above="@+id/theframe"
+                    android:layout_marginBottom="-22dp"
+                    android:background="@color/transparent"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
-                    <include layout="@layout/preview_edit"/>
+                    <ImageView
+                        android:id="@+id/ivPlayerState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/btn_edit_play"/>
 
-                    <include layout="@layout/preview_edit_split"/>
-                </FrameLayout>
+                    <TextView
+                        android:id="@+id/tvCurTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="10dp"
+                        android:text="@string/record_default_time"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_12"/>
+
+
+                    <com.rd.veuisdk.ui.RdSeekBar
+                        android:id="@+id/sbPreview"
+                        android:layout_width="0dp"
+                        android:layout_height="44dp"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@id/tvTotalTime"
+                        android:layout_toRightOf="@id/tvCurTime"
+                        android:layout_weight="1"
+                        android:maxHeight="8px"
+                        android:minHeight="8px"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="15dp"
+                        android:progressDrawable="@drawable/video_editor_progress"
+                        android:thumb="@drawable/seekbar_thumb"
+                        android:thumbOffset="23dp"/>
+
+
+                    <TextView
+                        android:id="@+id/tvTotalTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/record_default_time"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_12"/>
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/ivProportion"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_marginRight="7dp"
                     android:layout_marginTop="3dp"
-                    android:background="@drawable/edit_more_orientation_button"/>
+                    android:layout_marginRight="7dp"
+                    android:background="@drawable/edit_more_orientation_button"
+                    android:visibility="gone"/>
 
-                <com.rd.veuisdk.ui.RdSeekBar
-                    android:id="@+id/sbPreview"
-                    android:layout_width="match_parent"
-                    android:layout_height="44dp"
-                    android:layout_below="@id/flUpperZone"
-                    android:layout_marginTop="-21dp"
-                    android:maxHeight="8px"
-                    android:minHeight="8px"
-                    android:progressDrawable="@drawable/video_editor_progress"
-                    android:thumb="@drawable/seekbar_thumb"
-                    android:thumbOffset="23dp"/>
+                <include layout="@layout/rdveuisdk_public_title_bar"/>
             </RelativeLayout>
         </com.rd.veuisdk.ui.PriviewLinearLayout>
         <!-- 可拖动的层 -->
@@ -122,5 +151,6 @@
 
         </RelativeLayout>
     </com.rd.veuisdk.ui.PriviewLayout>
+
 
 </com.rd.veuisdk.ui.NoneMultiTouchLinearLayout>

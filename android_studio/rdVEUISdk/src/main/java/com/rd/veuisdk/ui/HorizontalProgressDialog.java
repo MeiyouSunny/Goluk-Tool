@@ -47,6 +47,7 @@ public class HorizontalProgressDialog extends Dialog {
 
             @Override
             public void onClick(View v) {
+
                 if (mCancelListener != null) {
                     mCancelListener.onCancel();
                 }

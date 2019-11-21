@@ -2,26 +2,25 @@ package com.rd.veuisdk.model;
 
 /**
  * 音乐(historymusic ,)
- * 
+ *
  * @author JIAN
- * 
  */
 public interface IMusic {
 
-    public abstract void setPath(String path);
+    void setPath(String path);
 
-    public abstract String getPath();
+    String getPath();
 
-    public abstract void setName(String name);
+    void setName(String name);
 
-    public abstract String getName();
+    String getName();
 
-    public abstract void setDuration(int duration);
+    void setDuration(int duration);
 
-    public abstract int getDuration();
+    int getDuration();
 
-    public abstract void setId(long id);
+    void setId(long id);
 
-    public abstract long getId();
+    long getId();
 
 }
