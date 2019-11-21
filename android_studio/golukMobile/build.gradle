@@ -27,8 +27,8 @@ android {
     }
 
     packagingOptions {
-        doNotStrip '*/armeabi/*.so'
         doNotStrip '*/mips/*.so'
+        doNotStrip '*/mips64/*.so'
     }
 
         compileOptions {
@@ -85,6 +85,7 @@ android {
     }
 
     lintOptions {
+        checkReleaseBuilds false
         abortOnError false
     }
 
