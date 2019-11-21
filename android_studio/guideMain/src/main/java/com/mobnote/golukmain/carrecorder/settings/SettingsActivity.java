@@ -745,6 +745,12 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			}
 		}
 
+		// T3隐藏休眠模式UI
+		if(mIPCName.equals(IPCControlManager.T3_SIGN) || mIPCName.equals(IPCControlManager.T3U_SIGN)) {
+			mParkingSleepHintText.setVisibility(View.GONE);
+			mParkingSleepLayout.setVisibility(View.GONE);
+		}
+
 		mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 		findViewById(R.id.tcaf).setBackgroundResource(R.drawable.set_close_btn);// 打开
 		mStorayeText = (TextView) findViewById(R.id.mStorayeText);
