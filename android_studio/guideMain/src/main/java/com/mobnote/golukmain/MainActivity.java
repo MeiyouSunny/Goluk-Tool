@@ -1,13 +1,11 @@
 package com.mobnote.golukmain;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
@@ -20,12 +18,8 @@ import android.os.Process;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.ViewStub;
-import android.view.ViewStub.OnInflateListener;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.widget.ImageView;
@@ -35,21 +29,7 @@ import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
 import android.widget.Toast;
 
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
-import cn.com.mobnote.module.location.LocationNotifyAdapter;
-import cn.com.mobnote.module.msgreport.IMessageReportFn;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.page.PageNotifyAdapter;
-import cn.com.mobnote.module.talk.ITalkFn;
-import cn.com.mobnote.module.talk.TalkNotifyAdapter;
-import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
-import cn.com.tiros.api.Tapi;
-import cn.com.tiros.baidu.LocationAddressDetailBean;
-import cn.com.tiros.debug.GolukDebugUtils;
-
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
-import com.elvishew.xlog.XLog;
 import com.google.widget.FragmentTabHost;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
@@ -329,7 +309,15 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         mSharePlatform = new SharePlatformUtil(this);
 
         BaiduLocation.getInstance().startLocation();
+
+        // 网络监听
+        networkStateReceiver = new NetworkStateReceiver();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(networkStateReceiver, intentFilter);
     }
+
+    NetworkStateReceiver networkStateReceiver;
 
     public void onEventMainThread(Event event) {
         if (EventUtil.isNotInChinaEvent(event)  && GolukApplication.getInstance().isMainland()) {
@@ -970,6 +958,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         // Unregister EventBus
         EventBus.getDefault().unregister(this);
         // mBannerLoaded = false;
+
+        unregisterReceiver(networkStateReceiver);
     }
 
     @Override

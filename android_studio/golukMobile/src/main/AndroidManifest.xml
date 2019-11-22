@@ -463,13 +463,13 @@
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <!-- 网络变化广播监听 -->
-        <receiver android:name="com.mobnote.receiver.NetworkStateReceiver">
-            <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+<!--        <receiver android:name="com.mobnote.receiver.NetworkStateReceiver">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </receiver>
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
         <receiver
             android:name="com.mobnote.golukmain.xdpush.GolukClickNotificationReceiver"
             android:exported="true">

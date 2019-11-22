@@ -1,6 +1,8 @@
 package com.mobnote.golukmain.carrecorder.entity;
 
-public class VideoInfo {
+import java.io.Serializable;
+
+public class VideoInfo implements Serializable {
     /**
      * Video-only mark
      */

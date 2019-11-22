@@ -645,7 +645,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     private void playCaptureVideo(VideoInfo videoInfo) {
-        GolukUtils.startPhotoAlbumPlayerActivityT2S(this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, "ipc", videoInfo.videoUrl, videoInfo.relativePath, videoInfo.filename, videoInfo.videoCreateDate, videoInfo.videoHP, videoInfo.videoSize, null);
+        GolukUtils.startPhotoAlbumPlayerActivityT2S(this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND, "ipc", videoInfo.videoUrl, videoInfo.relativePath, videoInfo.filename, videoInfo.videoCreateDate, videoInfo.videoHP, videoInfo.videoSize, null, true, videoInfo);
     }
 
     /**

@@ -43,6 +43,7 @@ import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UpdateActivity;
 import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.cluster.ClusterActivity;
 import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 import com.mobnote.golukmain.fan.FanListActivity;
@@ -1134,6 +1135,24 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
         intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        context.startActivity(intent);
+    }
+
+    public static void startPhotoAlbumPlayerActivityT2S(Context context, int type, String vidFrom, String path, String relativePath, String filename, String createTime,
+                                                        String videoHP, String size, PromotionSelectItem promotionItem, boolean isFromPreviewPage,
+                                                        VideoInfo videoInfo) {
+        Intent intent = new Intent(context, PhotoAlbumPlayer.class);
+        intent.putExtra(PhotoAlbumPlayer.TYPE, type);
+        intent.putExtra(PhotoAlbumPlayer.VIDEO_FROM, vidFrom);
+        intent.putExtra(PhotoAlbumPlayer.PATH, path);
+        intent.putExtra(PhotoAlbumPlayer.RELATIVE_PATH, relativePath);
+        intent.putExtra(PhotoAlbumPlayer.FILENAME, filename);
+        intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
+        intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
+        intent.putExtra(PhotoAlbumPlayer.SIZE, size);
+        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+        intent.putExtra(PhotoAlbumPlayer.KEY_IS_FROM_T2S_PREVIEW_PAGE, isFromPreviewPage);
+        intent.putExtra("videoInfoT2S", videoInfo);
         context.startActivity(intent);
     }
 

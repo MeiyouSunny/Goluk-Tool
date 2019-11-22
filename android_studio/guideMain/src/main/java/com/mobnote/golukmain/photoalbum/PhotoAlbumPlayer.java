@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +14,6 @@ import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -52,15 +50,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elvishew.xlog.XLog;
+import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadIpcVid;
+import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.eventbus.EventShareCompleted;
 import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
+import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
@@ -78,10 +78,15 @@ import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.log.app.LogConst;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
+import com.mobnote.t1sp.download2.IpcDownloadListener;
+import com.mobnote.t1sp.download2.IpcDownloader;
+import com.mobnote.t1sp.download2.IpcDownloaderImpl;
+import com.mobnote.t1sp.file.IpcFileDelete;
+import com.mobnote.t1sp.file.IpcFileListener;
 import com.mobnote.t1sp.util.CollectionUtils;
-import com.mobnote.log.app.LogConst;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.SDKUtils;
@@ -117,6 +122,7 @@ import cn.npnt.ae.core.MediaUtils;
 import cn.npnt.ae.model.VideoEncoderCapability;
 import cn.npnt.ae.model.VideoFile;
 import de.greenrobot.event.EventBus;
+import likly.dollar.$;
 
 import static com.rd.veuisdk.SdkEntry.editMedia;
 
@@ -133,6 +139,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
     public static final String SIZE = "size";
     public static final String FILENAME = "file_name";
     public static final String TYPE = "type";
+    public static final String KEY_IS_FROM_T2S_PREVIEW_PAGE = "isFromPreviewPage";
     private final int EDIT_REQUEST_CODE = 102;
 
     /**
@@ -216,6 +223,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
     private boolean isExporting;
     private String mExportedFilename;
+
+    // 是否从T2S预览页面来
+    private boolean isFromT2SPreviewPage;
+    private VideoInfo videoInfoT2S;
+
     private final Runnable mPlayingChecker = new Runnable() {
         @Override
         public void run() {
@@ -333,6 +345,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mSize = intent.getStringExtra(SIZE);
             mFileName = intent.getStringExtra(FILENAME);
             mType = intent.getIntExtra(TYPE, 0);
+            isFromT2SPreviewPage = intent.getBooleanExtra(KEY_IS_FROM_T2S_PREVIEW_PAGE, false);
+            videoInfoT2S = (VideoInfo) intent.getSerializableExtra("videoInfoT2S");
         } else {
             mDate = savedInstanceState.getString(DATE);
             mHP = savedInstanceState.getString(HP);
@@ -343,6 +357,8 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             mFileName = savedInstanceState.getString(FILENAME);
             mType = savedInstanceState.getInt(TYPE);
             mPlayTime = savedInstanceState.getInt("playtime");
+            isFromT2SPreviewPage = savedInstanceState.getBoolean(KEY_IS_FROM_T2S_PREVIEW_PAGE);
+            videoInfoT2S = (VideoInfo) savedInstanceState.getSerializable("videoInfoT2S");
         }
         threshold = DensityUtil.dip2px(this, 18);
         mOrignManager = new OrientationManager(this, this);
@@ -723,7 +739,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 //相册详情页面-下载到本地
                 ZhugeUtils.eventAlbumDownloadVideo(PhotoAlbumPlayer.this);
                 String path = mApp.getIPCControlManager().isT2S() ? mRelativePath : mFileName;
-                EventBus.getDefault().post(new EventDownloadIpcVid(path, getType()));
+                if (isFromT2SPreviewPage) {
+                    downloadT2SCaptureVideo(videoInfoT2S);
+                } else {
+                    EventBus.getDefault().post(new EventDownloadIpcVid(path, getType()));
+                }
             }
         } else if (id == R.id.btn_delete) {
             String tempPath = "";
@@ -852,12 +872,16 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
 
                             if (mApp.getIPCControlManager().isT2S()) {
                                 mVideoView.stopPlayback();
-                                new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
-                                    }
-                                }, 500);
+                                if (isFromT2SPreviewPage) {
+                                    deleteT2SRemoteVideo(mRelativePath);
+                                } else {
+                                    new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                                        }
+                                    }, 500);
+                                }
                             } else {
                                 EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
                             }
@@ -1967,5 +1991,79 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
     }
 
+    // T2S 下载
+    public void downloadT2SCaptureVideo(VideoInfo videoInfo) {
+        List<VideoInfo> videoInfos = new ArrayList<>();
+        videoInfos.add(videoInfo);
+
+        final IpcDownloader ipcDownloader = IpcDownloaderImpl.getInstance();
+        ipcDownloader.addDownloadFileList(videoInfos);
+        ipcDownloader.setListener(new IpcDownloadListener() {
+            @Override
+            public void onDownloadCountUpdate(int currentDownload, int total) {
+                // 更新下载: 当前下载第几个/总个数
+                Log.e("IpcDownloader", currentDownload + "/" + total);
+                final String showTxt = getString(R.string.str_video_transfer_ongoing)
+                        + currentDownload + getString(R.string.str_slash) + total;
+                if (!GlobalWindow.getInstance().isShow()) {
+                    GlobalWindow.getInstance().createVideoUploadWindow(showTxt);
+                } else {
+                    GlobalWindow.getInstance().updateText(showTxt);
+                }
+            }
+
+            @Override
+            public void onProgressUpdate(String fileName, int progress) {
+                // 当前文件下载进度
+                Log.e("IpcDownloader", fileName + ": " + progress + "%");
+                GlobalWindow.getInstance().refreshPercent(progress);
+            }
+
+            @Override
+            public void onSingleFileDownloadResult(String fileName, boolean isSuccess, String msg) {
+                // 当前文件下载最后状态
+                Log.e("IpcDownloader", fileName + " Result:" + isSuccess);
+            }
+
+            @Override
+            public void onDownloadedComplete(int countSuccess, int countfailed, int countTotal) {
+                // 所有文件下载完成
+                Log.e("IpcDownloader", "onAllDownloaded");
+                Toast.makeText(PhotoAlbumPlayer.this, "下载完成", Toast.LENGTH_SHORT).show();
+                GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
+                // 发送本地更新视频Event
+                EventBus.getDefault().post(new EventDownloadVideoFinish());
+            }
+
+            @Override
+            public void onSDNoEnoughError(int countSuccess, int countfailed, int countTotal) {
+
+            }
+
+        });
+        // 开始下载
+        ipcDownloader.start();
+    }
+
+    // T2S删除抓拍视频
+    private void deleteT2SRemoteVideo(String path) {
+        List<VideoInfo> videoInfos = IpcDownloaderImpl.getInstance().getDownloadingFiles();
+        if (!CollectionUtils.isEmpty(videoInfos)) {
+            for (VideoInfo videoInfo : videoInfos) {
+                if (path.contains(videoInfo.filename)) {
+                    $.toast().text(R.string.str_photo_downing).show();
+                    return;
+                }
+            }
+        }
+        IpcFileDelete ipcDeleteOption = new IpcFileDelete(new IpcFileListener() {
+            @Override
+            public void onRemoteFileDeleted(boolean success) {
+                GolukUtils.showToast(PhotoAlbumPlayer.this, getResources().getString(R.string.str_photo_delete_ok));
+                finish();
+            }
+        });
+        ipcDeleteOption.deleteRemoteFile(path);
+    }
 
 }
