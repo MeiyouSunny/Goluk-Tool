@@ -8,13 +8,11 @@ import android.net.wifi.WifiManager;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
 import com.mobnote.eventbus.EventWifiState;
-import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.t1sp.service.T1SPUdpService;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.t1sp.util.Const;
 import com.mobnote.t1sp.util.TimeSync;
-import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiConnectManager;
 
 import java.util.ArrayList;
@@ -118,7 +116,7 @@ public class T1SPConnecter {
                 // 保存设备ID和版本
                 //SharedPrefUtil.saveIPCNumber(settingInfo.deviceId);
                 //SharedPrefUtil.saveIPCVersion(settingInfo.deviceVersion);
-                SharedPrefUtil.saveIpcModel(IPCControlManager.T2S_SIGN);
+                //SharedPrefUtil.saveIpcModel(IPCControlManager.T2S_SIGN);
             }
 
             @Override

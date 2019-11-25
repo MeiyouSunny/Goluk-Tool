@@ -154,10 +154,11 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
 
         WifiRsBean result = wifiSupport.getConnResult(TITLE);
         return result != null &&
-                (result.getIpc_ssid().startsWith("T2S")
-                        || result.getIpc_ssid().startsWith("T2SU")
-                        || result.getIpc_ssid().startsWith("T4")
-                        || result.getIpc_ssid().startsWith("T4U"));
+                (result.getIpc_ssid().startsWith("Goluk_T2S")
+                        || result.getIpc_ssid().startsWith("Goluk_T2SU")
+                        || result.getIpc_ssid().startsWith("Goluk_T4")
+                        || result.getIpc_ssid().startsWith("Goluk_T4U")
+                        || result.getIpc_ssid().startsWith("Goluk_T1S"));
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//

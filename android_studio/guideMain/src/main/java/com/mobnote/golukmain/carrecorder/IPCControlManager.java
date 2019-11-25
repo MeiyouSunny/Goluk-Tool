@@ -2,16 +2,6 @@ package com.mobnote.golukmain.carrecorder;
 
 import android.text.TextUtils;
 
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.TimeZone;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import com.alibaba.fastjson.JSON;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -139,10 +129,15 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     /**
-     * 是否是T1SP设备
+     * 是否是T2S设备
      */
     public boolean isT2S() {
-        return !TextUtils.isEmpty(mProduceName) && TextUtils.equals(mProduceName, T2S_SIGN);
+        return !TextUtils.isEmpty(mProduceName) &&
+                (TextUtils.equals(mProduceName, "T2S")
+                        || TextUtils.equals(mProduceName, "T2SU")
+                        || TextUtils.equals(mProduceName, "T4")
+                        || TextUtils.equals(mProduceName, "T4U")
+                        || TextUtils.equals(mProduceName, "T1S"));
     }
 
     /**

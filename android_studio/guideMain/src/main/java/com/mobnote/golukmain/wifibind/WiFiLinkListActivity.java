@@ -505,8 +505,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         }
     }
 
-
-    int POST_FAILED_DELAY = 1  * 1000;
+    int POST_FAILED_DELAY = 1 * 1000;
 
     public void ipcFailedCallBack() {
         collectLog("ipcLinkFailedCallBack", "--------1");
@@ -703,7 +702,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
      */
     private void saveT2SInfo() {
         // Product
-        getApp().getIPCControlManager().setProduceName(IPCControlManager.T2S_SIGN);
+        //getApp().getIPCControlManager().setProduceName(IPCControlManager.T2S_SIGN);
         // WIFI
         if (null == mWac)
             return;
@@ -939,7 +938,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         this.dimissLoadingDialog();
     }
 
-
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -1020,7 +1018,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 //        }
     }
 
-
     private final int MSG_H_REGION = 1;
 
     @Override
@@ -1043,6 +1040,7 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
 
     private String mDeviceTypeSelected = "";
     private boolean mNeedAutoConnectAfterSelectDeviceType;
+
     public void showSelectDeviceType(final boolean needGotoSystemWifiList) {
         mNeedAutoConnectAfterSelectDeviceType = needGotoSystemWifiList;
         DeviceTypeSelector typeSelector = new DeviceTypeSelector();
@@ -1052,7 +1050,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 mDeviceTypeSelected = type;
                 IPCControlManager ipcControlManager = mApp.getIPCControlManager();
                 if (ipcControlManager != null) {
-                    ipcControlManager.setProduceName(type);
+                    if (!type.startsWith("T4") && !type.startsWith("T2S"))
+                        ipcControlManager.setProduceName(type);
                     ipcControlManager.setIpcMode();
                     if (!needGotoSystemWifiList) {
                         // T2S

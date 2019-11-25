@@ -65,6 +65,8 @@ public class VersionInfoActivity extends BackTitleActivity {
                     type = "T2SU";
                 } else if (wifiName.startsWith("Goluk_T2S")) {
                     type = "T2S";
+                } else if (wifiName.startsWith("Goluk_T1S")) {
+                    type = "T1S";
                 }
                 mDeviceModel.setText(getString(R.string.str_goluk) + type);
             }

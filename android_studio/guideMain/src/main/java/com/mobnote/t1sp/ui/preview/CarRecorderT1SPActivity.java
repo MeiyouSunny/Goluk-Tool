@@ -31,6 +31,7 @@ import com.mobnote.eventbus.EventWifiState;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.VideoResEvent;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.PlayUrlManager;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.golukmain.carrecorder.util.ReadWifiConfig;
@@ -59,6 +60,7 @@ import com.mobnote.t2s.files.IpcFileQueryListener;
 import com.mobnote.t2s.files.IpcQuery;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.GolukVideoUtils;
+import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
@@ -75,6 +77,8 @@ import de.greenrobot.event.EventBus;
 import goluk.com.t1s.api.ApiUtil;
 import goluk.com.t1s.api.callback.CallbackSDCardStatus;
 import goluk.com.t1s.api.callback.CallbackSetting;
+import goluk.com.t1s.api.callback.CallbackVersion;
+import goluk.com.t1s.api.callback.CallbackWifiInfo;
 import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
@@ -182,6 +186,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         mIpcQuery = new IpcFileQueryF4(this, this);
 //        startPlay();
+
+        // 查询设备版本和型号信息
+        getIpcVersionAndTypeInfo();
     }
 
     /**
@@ -1048,6 +1055,57 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onQueryVideoListFailed() {
+    }
+
+    /**
+     * 查询设备版本和型号信息
+     */
+    private void getIpcVersionAndTypeInfo() {
+        ApiUtil.getVersion(new CallbackVersion() {
+            @Override
+            public void onSuccess(String version) {
+                System.out.println("");
+                SharedPrefUtil.saveIPCVersion(version);
+            }
+
+            @Override
+            public void onFail() {
+                System.out.println("");
+            }
+        });
+
+        ApiUtil.queryWifiInfo(new CallbackWifiInfo() {
+            @Override
+            public void onSuccess(String wifiName, String wifiPwd) {
+                System.out.println("");
+                saveModeTypeByWifiName(wifiName);
+            }
+
+            @Override
+            public void onFail() {
+                System.out.println("");
+            }
+        });
+    }
+
+    private void saveModeTypeByWifiName(String wifiName) {
+        if (TextUtils.isEmpty(wifiName))
+            return;
+        String type = "";
+        if (wifiName.startsWith("Goluk_T4U")) {
+            type = "T4U";
+        } else if (wifiName.startsWith("Goluk_T4")) {
+            type = "T4";
+        } else if (wifiName.startsWith("Goluk_T2SU")) {
+            type = "T2SU";
+        } else if (wifiName.startsWith("Goluk_T2S")) {
+            type = "T2S";
+        } else if (wifiName.startsWith("Goluk_T1S")) {
+            type = "T1S";
+        }
+
+        SharedPrefUtil.saveIpcModel(type);
+        mApp.getIPCControlManager().setProduceName(type);
     }
 
 }
