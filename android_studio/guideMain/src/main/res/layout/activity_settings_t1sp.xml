@@ -296,6 +296,29 @@
 
                 <View style="@style/LineGrayHorizontal"/>
 
+                <RelativeLayout
+                    style="@style/SettingLabelLayout"
+                    android:clickable="false">
+
+                    <TextView
+                        style="@style/SettingLabel"
+                        android:text="@string/str_settings_fatigue_title"/>
+
+                    <com.kyleduo.switchbutton.SwitchButton
+                        android:id="@+id/switch_fatigue"
+                        style="@style/SwitchButton"
+                        app:kswBackDrawable="@drawable/switch_button_drawable"
+                        app:kswBackMeasureRatio="1.4"
+                        app:kswThumbDrawable="@drawable/switch_selector"
+                        app:kswThumbMarginBottom="-8dp"
+                        app:kswThumbMarginLeft="-5dp"
+                        app:kswThumbMarginRight="-5dp"
+                        app:kswThumbMarginTop="-2.5dp"/>
+
+                </RelativeLayout>
+
+                <View style="@style/LineGrayHorizontal"/>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -78,6 +78,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     SwitchButton switchEmgVideoSound;
     @BindView(R2.id.switch_dormant_mode)
     SwitchButton switchDormantMode;
+    @BindView(R2.id.switch_fatigue)
+    SwitchButton switchFatigue;
 
     // 忽略首次由程序修改设置的check状态
     private boolean mIgnoreSwtich = true;
@@ -109,6 +111,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchMTD.setOnCheckedChangeListener(this);
         switchEmgVideoSound.setOnCheckedChangeListener(this);
         switchDormantMode.setOnCheckedChangeListener(this);
+        switchFatigue.setOnCheckedChangeListener(this);
 
         mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables);
         mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
@@ -205,6 +208,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             mConfigOption.setWatermarkStatus(isChecked);
         } else if (viewId == R.id.switch_mtd) {
             //getPresenter().setMTD(isChecked);
+        } else if (viewId == R.id.switch_fatigue) {
+            mConfigOption.setDriveFatigue(isChecked);
         }
     }
 
@@ -360,7 +365,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onDeviceTimeGet(long timestamp) {
-
     }
 
     @Override
@@ -380,7 +384,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onDriveFatigueGet(boolean enable) {
-
+        setSwitchState(switchFatigue, enable);
     }
 
     @Override
