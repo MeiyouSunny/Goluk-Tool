@@ -555,6 +555,8 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             public void onDownloadCountUpdate(int currentDownload, int total) {
                 // 更新下载: 当前下载第几个/总个数
                 Log.e("IpcDownloader", currentDownload + "/" + total);
+                if (getContext() == null)
+                    return;
                 final String showTxt = getString(R.string.str_video_transfer_ongoing)
                         + currentDownload + getString(R.string.str_slash) + total;
                 if (!GlobalWindow.getInstance().isShow()) {
