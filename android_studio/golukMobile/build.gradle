@@ -14,7 +14,8 @@ android {
         targetSdkVersion 26
         multiDexEnabled true
         ndk {
-            abiFilters 'armeabi'
+//            abiFilters 'armeabi'
+            abiFilters 'arm64-v8a'
         }
 
         manifestPlaceholders = [

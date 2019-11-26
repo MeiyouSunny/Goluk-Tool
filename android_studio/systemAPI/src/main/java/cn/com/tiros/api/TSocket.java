@@ -30,7 +30,7 @@ public class TSocket {
     
 	private int mSocketType;
 	
-	private int mTSocket;
+	private long mTSocket;
 	
 	private String mHostAddress = null;
 	
@@ -115,7 +115,7 @@ public class TSocket {
 	 * @param[in] type - Socket������(STREAM,DGRAM,HOST)
 	 * @return - �ɹ�����Socket�ṹ��ָ��,ʧ�ܷ���NULL
 	 */
-    public void sys_sktopen(int pSocket, int type) {
+    public void sys_sktopen(long pSocket, int type) {
 		mTSocket = pSocket;
 		mSocketType = type;
 	}
@@ -415,10 +415,10 @@ public class TSocket {
 		return mSendingOrReceiving;
 	}
 	
-	public static native void sys_socketEvent(int socket, int dwEvent, int dwParam1, int dwParam2);
+	public static native void sys_socketEvent(long socket, int dwEvent, int dwParam1, int dwParam2);
 
-	public static native void sys_socketEvent(int socket, int dwEvent, String dwParam1, int dwParam2);
+	public static native void sys_socketEvent(long socket, int dwEvent, String dwParam1, int dwParam2);
 
-	public static native void sys_socketEvent(int socket, int dwEvent, int dwParam1, byte[] dwParam2);
+	public static native void sys_socketEvent(long socket, int dwEvent, int dwParam1, byte[] dwParam2);
 }
 

@@ -33,12 +33,12 @@ public class HttpAsyncTask extends AsyncTask<Void, Integer, Boolean> implements 
 	private HttpRequestBase mRequest;
 
 	private Http mHttp;
-	private int mHttpHandler;
+	private long mHttpHandler;
 	private boolean mIsCheckHeader = false; // 是否校验头信息
 
 	public volatile boolean mIsCancel = false;
 
-	public HttpAsyncTask(Http http, int handle, HttpClient client, HttpRequestBase request, boolean bcheck) {
+	public HttpAsyncTask(Http http, long handle, HttpClient client, HttpRequestBase request, boolean bcheck) {
 		mHttp = http;
 		mHttpHandler = handle;
 		mRequest = request;

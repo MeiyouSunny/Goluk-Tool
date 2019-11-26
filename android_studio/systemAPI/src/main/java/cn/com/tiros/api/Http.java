@@ -44,7 +44,7 @@ import cn.com.tiros.debug.GolukDebugUtils;
 
 public class Http implements IHttpFn {
 
-	private int mHttpHandler; // http c端句柄
+	private long mHttpHandler; // http c端句柄
 	private HttpGet mHttpGet;
 	private HttpPost mHttpPost;
 	private HttpPut mHttpPut = null;
@@ -60,7 +60,7 @@ public class Http implements IHttpFn {
 	// 暂定3G网络上传的速率为10/s
 	private final int mSpeed = 10;
 
-	public void sys_httpcreate(int http) {
+	public void sys_httpcreate(long http) {
 		mHttpHandler = http;
 		mHeaders = new HashMap<String, String>();
 		mParams = new BasicHttpParams();
@@ -541,9 +541,9 @@ public class Http implements IHttpFn {
 				: true;
 	}
 
-	public static native void sys_httpEvent(int http, int statecode, int param1, int param2);
+	public static native void sys_httpEvent(long http, int statecode, int param1, int param2);
 
-	public static native void sys_httpEvent(int http, int statecode, int param1, byte[] param2);
+	public static native void sys_httpEvent(long http, int statecode, int param1, byte[] param2);
 
-	public static native void sys_httpEvent(int http, int statecode, int param1, String param2);
+	public static native void sys_httpEvent(long http, int statecode, int param1, String param2);
 }
