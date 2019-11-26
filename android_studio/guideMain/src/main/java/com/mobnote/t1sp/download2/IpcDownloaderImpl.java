@@ -52,9 +52,15 @@ public class IpcDownloaderImpl implements IpcDownloader {
     public void addDownloadFileList(List<VideoInfo> fileNames) {
         if (mFileNames == null)
             mFileNames = new ArrayList<>();
-        if (mFileNames != null) {
-            mFileNames.addAll(fileNames);
+
+        for (VideoInfo videoInfo : fileNames) {
+            if (!mFileNames.contains(videoInfo))
+                mFileNames.add(videoInfo);
         }
+
+//        if (mFileNames != null) {
+//            mFileNames.addAll(fileNames);
+//        }
     }
 
     @Override

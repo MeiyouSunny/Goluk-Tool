@@ -34,7 +34,6 @@ import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import goluk.com.t1s.api.ApiUtil;
-import goluk.com.t1s.api.callback.CallbackVersion;
 import goluk.com.t1s.api.callback.CallbackWifiInfo;
 
 public class UnbindActivity extends BaseActivity implements OnClickListener, IPCManagerFn {
@@ -159,22 +158,8 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
 
         if (GolukApplication.getInstance().getIPCControlManager().isT2S()) {
             getWifiInfoT2S();
-            getT2SSN();
             return;
         }
-    }
-
-    private void getT2SSN() {
-        ApiUtil.getSN(new CallbackVersion() {
-            @Override
-            public void onSuccess(String sn) {
-                mIPCNumberText.setText(getResources().getString(R.string.str_ipc_number_text) + sn);
-            }
-
-            @Override
-            public void onFail() {
-            }
-        });
     }
 
     private void getWifiInfoT2S() {

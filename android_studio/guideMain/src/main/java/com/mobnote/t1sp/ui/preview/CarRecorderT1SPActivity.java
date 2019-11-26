@@ -796,14 +796,14 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     @Override
     public void onDestroy() {
         //disable wifi if ipcConnected
-        if (mApp.isIpcLoginSuccess && T1SPConnecter.instance().needDisconnectWIFI()) {
-            mApp.mIPCControlManager.setVdcpDisconnect();
-            mApp.setIpcLoginOut();
-            WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
-            if (wifiInfo != null) {
-                mWifiManager.disableNetwork(wifiInfo.getNetworkId());
-            }
-        }
+//        if (mApp.isIpcLoginSuccess && T1SPConnecter.instance().needDisconnectWIFI()) {
+//            mApp.mIPCControlManager.setVdcpDisconnect();
+//            mApp.setIpcLoginOut();
+//            WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+//            if (wifiInfo != null) {
+//                mWifiManager.disableNetwork(wifiInfo.getNetworkId());
+//            }
+//        }
         if (null != mRtspPlayerView) {
             mRtspPlayerView.removeCallbacks(retryRunnable);
             mRtspPlayerView.cleanUp();
@@ -1084,6 +1084,17 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             @Override
             public void onFail() {
                 System.out.println("");
+            }
+        });
+
+        ApiUtil.getSN(new CallbackVersion() {
+            @Override
+            public void onSuccess(String sn) {
+                SharedPrefUtil.saveIPCNumber(sn);
+            }
+
+            @Override
+            public void onFail() {
             }
         });
     }

@@ -885,10 +885,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                             } else {
                                 EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
                                 GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_delete_ok));
+                                PhotoAlbumPlayer.this.finish();
                             }
                         }
-
-                        PhotoAlbumPlayer.this.finish();
                     } else {
                         GolukUtils.showToast(PhotoAlbumPlayer.this, PhotoAlbumPlayer.this.getResources().getString(R.string.str_photo_downing));
                     }
