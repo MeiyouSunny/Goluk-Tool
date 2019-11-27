@@ -879,6 +879,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                                         @Override
                                         public void run() {
                                             EventBus.getDefault().post(new EventDeletePhotoAlbumVid(path, mRelativePath, getType()));
+                                            finish();
                                         }
                                     }, 500);
                                 }

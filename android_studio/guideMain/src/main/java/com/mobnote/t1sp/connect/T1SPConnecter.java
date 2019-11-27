@@ -68,7 +68,7 @@ public class T1SPConnecter {
     public void onEventMainThread(EventWifiState event) {
         if (EventConfig.WIFI_STATE == event.getOpCode()) {
             if (event.getMsg()) {
-                if (NetUtil.isWifiConnected(mContext) && mWifiConnectManager.isConnectedT1sWifi() && hasListeners()) {
+                if (NetUtil.isWIFIConnected(mContext) && mWifiConnectManager.isConnectedT1sWifi() && hasListeners()) {
                     // WIFI连接成功,发送连接请求
                     connectToDevice();
                 } else {

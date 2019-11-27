@@ -587,6 +587,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //            }
             // 进入设置模式
             //mCurrentMode = MODE_SETTING;
+            if (mCaptureTime > 0 || !mApp.isIpcConnSuccess)
+                return;
             ViewUtil.goActivity(this, DeviceSettingsActivity.class);
         } else if (id == R.id.mFullScreen) {
             setFullScreen(true);
@@ -618,11 +620,13 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //            videoName = videoName.substring(videoName.lastIndexOf("/") + 1);
 //            gotoPlayVideo(videoName);
 
+            if (mCaptureTime > 0 || !mApp.isIpcConnSuccess)
+                return;
             if (CollectionUtils.isEmpty(mCaptueList))
                 return;
             VideoInfo videoInfo = mCaptueList.get(0);
             playCaptureVideo(videoInfo);
-        } else if (id == R.id.image2 || mIsInCapture) {
+        } else if (id == R.id.image2) {
 //            new2.setVisibility(View.GONE);
 //            if (mLatestTwoVideos != null && mLatestTwoVideos.size() == 2) {
 //                String videoName = mLatestTwoVideos.get(0);
@@ -630,6 +634,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //                gotoPlayVideo(videoName);
 //            }
 
+            if (mCaptureTime > 0 || !mApp.isIpcConnSuccess)
+                return;
             if (CollectionUtils.isEmpty(mCaptueList) || mCaptueList.size() < 2)
                 return;
             VideoInfo videoInfo = mCaptueList.get(1);
@@ -637,6 +643,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         } else if (id == R.id.image3) {
 //            if (mIsInCapture || !mConnectedIpc)
 //                return;
+            if (mCaptureTime > 0 || !mApp.isIpcConnSuccess)
+                return;
             enterRemoteAlbumPage();
         } else if (id == R.id.mRtmpPlayerView) {
             if (m_bIsFullScreen) {
@@ -973,7 +981,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     public void onEventMainThread(EventWifiState event) {
         if (EventConfig.WIFI_STATE == event.getOpCode()) {
             if (!event.getMsg()) {
-                if (!NetUtil.isWifiConnected(this)) {
+                if (!NetUtil.isWIFIConnected(this)) {
                     // WIFI 断开
                     startActivity(new Intent(this, CarRecorderT1SPActivity.class));
                 }
