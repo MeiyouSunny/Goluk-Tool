@@ -58,6 +58,8 @@ public interface IPCConfigListener {
 
     void onVideoEncodeConfigGet(int index);
 
+    void onVideoEncodeConfigT1SGet(int index);
+
     void onVideoEncodeConfigSet(boolean success);
 
     void onSDCapacityGet(double total, double free);

@@ -113,7 +113,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchDormantMode.setOnCheckedChangeListener(this);
         switchFatigue.setOnCheckedChangeListener(this);
 
-        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables);
+        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables_t1s);
         mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
         mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
         mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);
@@ -241,7 +241,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         final SettingValue settingValue = data.getParcelableExtra("value");
         if (requestCode == TYPE_VIDEO_RES) {
             mTvVideoResolve.setText(settingValue.description);
-            mConfigOption.setVideoEncodeConfig(settingValue.value);
+            mConfigOption.setVideoEncodeT1SConfig(settingValue.value);
         } else if (requestCode == TYPE_CAPTURE_QULITY) {
             mTvCaptureQulity.setText(settingValue.description);
             mConfigOption.setCaptureVideoQulity(settingValue.value);
@@ -493,6 +493,11 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onVideoEncodeConfigGet(int index) {
+        mTvVideoResolve.setText(mArrayVideoQulity[index]);
+    }
+
+    @Override
+    public void onVideoEncodeConfigT1SGet(int index) {
         mTvVideoResolve.setText(mArrayVideoQulity[index]);
     }
 

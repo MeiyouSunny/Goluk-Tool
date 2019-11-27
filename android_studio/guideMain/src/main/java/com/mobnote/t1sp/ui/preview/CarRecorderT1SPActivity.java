@@ -199,8 +199,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             @Override
             public void onGetSettingInfo(goluk.com.t1s.api.bean.SettingInfo settingInfo) {
                 if (settingInfo != null) {
-                    String[] videoQulities = getResources().getStringArray(R.array.video_qulity_lables);
-                    mVideoResolutions.setText(videoQulities[settingInfo.recordSize]);
+                    String[] videoQulities = getResources().getStringArray(R.array.video_qulity_lables_t1s);
+                    mVideoResolutions.setText(videoQulities[settingInfo.recordSizeT1S]);
                 }
             }
 

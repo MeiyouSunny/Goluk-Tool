@@ -47,8 +47,9 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
         mIpcConfigListener.onSoundCaptureStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundCapture));
         mIpcConfigListener.onSoundRecordStatusGet(GolukUtils.isSwitchOn(mSettingInfo.audioRecord));
         mIpcConfigListener.onCollisionSensityGet(mSettingInfo.GSensor);
-        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
-        mIpcConfigListener.onVideoEncodeConfigGet(mSettingInfo.recordSize);
+//        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
+//        mIpcConfigListener.onVideoEncodeConfigGet(mSettingInfo.recordSize);
+        mIpcConfigListener.onVideoEncodeConfigT1SGet(mSettingInfo.recordSizeT1S);
         mIpcConfigListener.onSoundUrgentStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundUrgent));
         mIpcConfigListener.onVolumeValueGet(GolukUtils.parseVolumeLevel(mSettingInfo.volumeLevel));
         mIpcConfigListener.onLanguageGet(mSettingInfo.language);
@@ -309,6 +310,20 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     @Override
     public boolean setVideoEncodeConfig(int index) {
         ApiUtil.setRecordSize(index, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+        return true;
+    }
+
+    @Override
+    public boolean setVideoEncodeT1SConfig(int index) {
+        ApiUtil.setRecordSizeT1S(index, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
             }

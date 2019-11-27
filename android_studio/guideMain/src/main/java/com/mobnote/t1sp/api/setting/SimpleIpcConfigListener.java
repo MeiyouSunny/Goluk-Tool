@@ -142,6 +142,11 @@ public class SimpleIpcConfigListener implements IPCConfigListener {
     }
 
     @Override
+    public void onVideoEncodeConfigT1SGet(int index) {
+
+    }
+
+    @Override
     public void onVideoEncodeConfigSet(boolean success) {
 
     }
