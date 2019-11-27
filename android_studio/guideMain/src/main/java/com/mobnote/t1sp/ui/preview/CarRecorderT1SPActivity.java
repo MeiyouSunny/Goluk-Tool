@@ -11,6 +11,7 @@ import android.net.wifi.WifiManager;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -75,6 +76,7 @@ import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import goluk.com.t1s.api.ApiUtil;
+import goluk.com.t1s.api.callback.CallbackCmd;
 import goluk.com.t1s.api.callback.CallbackSDCardStatus;
 import goluk.com.t1s.api.callback.CallbackSetting;
 import goluk.com.t1s.api.callback.CallbackVersion;
@@ -189,6 +191,32 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         // 查询设备版本和型号信息
         getIpcVersionAndTypeInfo();
+    }
+
+    private void changeToRecordMode() {
+        ApiUtil.changeToMovieMode(new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                startRecord();
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+    }
+
+    private void startRecord() {
+        ApiUtil.startRecord(true, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                Log.d("T2SRecorder", "startRecord: true");
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
     }
 
     /**
@@ -756,6 +784,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         super.onResume();
 
         if (GolukApplication.getInstance().getIpcIsLogin()) {
+            changeToRecordMode();
             startPlay();
             getResolutionInfo();
             mIpcQuery.queryCaptureVideoList();

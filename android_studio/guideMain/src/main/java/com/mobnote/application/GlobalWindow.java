@@ -1,17 +1,13 @@
 package com.mobnote.application;
 
-import com.mobnote.golukmain.R;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.PixelFormat;
-import android.media.audiofx.BassBoost;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,8 +23,6 @@ import com.mobnote.golukmain.R;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 
 import java.lang.reflect.Method;
-import com.mobnote.golukmain.R;
-import com.mobnote.user.UserUtils;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -90,6 +84,13 @@ public class GlobalWindow implements View.OnClickListener {
 		return mInstance;
 	}
 
+	public void createVideoUploadWindow(int currentCount, int totalCount) {
+		if (mContext == null)
+			return;
+		String content = mContext.getString(R.string.str_video_transfer_ongoing)
+				+ currentCount + mContext.getString(R.string.str_slash) + totalCount;
+		createVideoUploadWindow(content);
+	}
 	@SuppressLint("InflateParams")
 	public void createVideoUploadWindow(String promptText) {
 		GolukDebugUtils.e("", "jyf----------createVideoUploadWindow:-------111: " + promptText);
@@ -169,6 +170,20 @@ public class GlobalWindow implements View.OnClickListener {
 
 	public boolean isShow() {
 		return isShowGlobalwindow;
+	}
+
+	public void updateText(int currentCount, int totalCount) {
+		if (!isShowGlobalwindow) {
+			// 窗口未显示
+			return;
+		}
+		if (mContext == null)
+			return;
+		String content = mContext.getString(R.string.str_video_transfer_ongoing)
+				+ currentCount + mContext.getString(R.string.str_slash) + totalCount;
+		if (null != mPrompTv) {
+			mPrompTv.setText(content);
+		}
 	}
 
 	/**

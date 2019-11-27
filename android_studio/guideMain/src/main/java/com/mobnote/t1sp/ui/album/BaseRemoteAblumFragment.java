@@ -555,14 +555,12 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             public void onDownloadCountUpdate(int currentDownload, int total) {
                 // 更新下载: 当前下载第几个/总个数
                 Log.e("IpcDownloader", currentDownload + "/" + total);
-                if (getContext() == null)
-                    return;
                 final String showTxt = getString(R.string.str_video_transfer_ongoing)
                         + currentDownload + getString(R.string.str_slash) + total;
                 if (!GlobalWindow.getInstance().isShow()) {
                     GlobalWindow.getInstance().createVideoUploadWindow(showTxt);
                 } else {
-                    GlobalWindow.getInstance().updateText(showTxt);
+                    GlobalWindow.getInstance().updateText(currentDownload, total);
                 }
             }
 
@@ -583,10 +581,13 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
             public void onDownloadedComplete(int countSuccess, int countfailed, int countTotal) {
                 // 所有文件下载完成
                 Log.e("IpcDownloader", "onAllDownloaded");
-                Toast.makeText(getContext(), "下载完成", Toast.LENGTH_SHORT).show();
-                GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
+                if (getContext() != null) {
+                    Toast.makeText(getContext(), "下载完成", Toast.LENGTH_SHORT).show();
+                    GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
+                }
                 // 发送本地更新视频Event
                 EventBus.getDefault().post(new EventDownloadVideoFinish());
+                GlobalWindow.getInstance().dimissGlobalWindow();
             }
 
             @Override
