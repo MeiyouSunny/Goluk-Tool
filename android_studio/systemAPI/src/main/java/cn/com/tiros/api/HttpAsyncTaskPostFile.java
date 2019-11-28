@@ -39,7 +39,7 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 	private int mUploadProgress = 0;
 
 	private Http mHttp;
-	private int mHttpHandler;
+	private long mHttpHandler;
 	private boolean mIsCheckHeader = false; // 是否校验头信息
 
 	public volatile boolean mIsCancel = false;
@@ -51,7 +51,7 @@ public class HttpAsyncTaskPostFile extends AsyncTask<Void, Integer, Boolean> imp
 	private String mFilePath = null;
 	private Map<String, String> mHeaders;
 
-	public HttpAsyncTaskPostFile(Http http, int handle, String url, String filePath, boolean bcheck,
+	public HttpAsyncTaskPostFile(Http http, long handle, String url, String filePath, boolean bcheck,
 			Map<String, String> headers) {
 
 		mHttp = http;

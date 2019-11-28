@@ -1,0 +1,5 @@
+rm -f -R obj
+ndk-build NDK_DEBUG=0 -B
+cp -f obj/local/armeabi/liblogictachograph.a ../../../android/tiros-module4x/lib/ipcmanger/lib
+
+
