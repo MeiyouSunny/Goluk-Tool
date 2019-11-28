@@ -48,9 +48,9 @@ else
 	cp -f   version_test/version  ${project_source_path}/assets/version
 fi
 
-	echo "拷贝so文件到工程目录下"
-	mkdir -p ${project_source_path}/jniLibs/armeabi/
-	cp -f tiros-module4x/libs/armeabi/* ${project_source_path}/jniLibs/armeabi/
+	#echo "拷贝so文件到工程目录下"
+	#mkdir -p ${project_source_path}/jniLibs/armeabi/
+	#cp -f tiros-module4x/libs/armeabi/* ${project_source_path}/jniLibs/armeabi/
 
 
 echo "构建apk包"
