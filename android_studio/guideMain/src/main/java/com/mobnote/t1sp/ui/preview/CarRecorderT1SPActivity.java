@@ -210,7 +210,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         ApiUtil.startRecord(true, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
-                Log.d("T2SRecorder", "startRecord: true");
+                startPlay();
             }
 
             @Override
@@ -793,7 +793,6 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             changeToRecordMode();
-            startPlay();
             getResolutionInfo();
             mIpcQuery.queryCaptureVideoList();
         }

@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId "cn.com.mobnote.golukmobile"
-        minSdkVersion 21
+        minSdkVersion 20
         targetSdkVersion 28
         multiDexEnabled true
         ndk {

@@ -84,6 +84,7 @@ import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
+import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.util.CrashReportUtil;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
@@ -435,9 +436,16 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             if (mApp.canNotUse()) {
                 GolukUtils.showToast(this, getResources().getString(R.string.interantion_ban_mainland_goluk));
             } else {
-                Intent intent = new Intent(MainActivity.this, CarRecorderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                Intent intent = new Intent();
+                if (mApp.getIPCControlManager().isT2S()) {
+                    // T2S
+                    intent.setClass(this, CarRecorderT1SPActivity.class);
+                } else {
+                    // Other
+                    intent.setClass(this, CarRecorderActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                }
                 startActivity(intent);
             }
             return;

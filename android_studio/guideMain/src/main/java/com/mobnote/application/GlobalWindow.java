@@ -130,7 +130,7 @@ public class GlobalWindow implements View.OnClickListener {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             mWMParams.type = LayoutParams.TYPE_APPLICATION_OVERLAY;
         } else {
-            mWMParams.type = LayoutParams.TYPE_SYSTEM_ALERT;
+            mWMParams.type = LayoutParams.TYPE_TOAST;
         }
 
         // mWMParams.type = LayoutParams.TYPE_PRIORITY_PHONE;
