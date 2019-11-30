@@ -1,6 +1,8 @@
 package com.mobnote.t1sp.file;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import goluk.com.t1s.api.ApiUtil;
@@ -10,8 +12,10 @@ public class IpcFileDelete {
 
     private IpcFileListener mIpcFileListener;
 
-    private int mNeedDeleteFilesCount, mDeletedFilesCount;
     private CallbackCmd mCallback;
+
+    private List<String> mPaths;
+    private String mCurrentPath;
 
     public IpcFileDelete(IpcFileListener listener) {
         mIpcFileListener = listener;
@@ -19,17 +23,12 @@ public class IpcFileDelete {
         mCallback = new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
-                mDeletedFilesCount++;
-                if (mDeletedFilesCount >= mNeedDeleteFilesCount && mIpcFileListener != null) {
-                    mDeletedFilesCount = 0;
-                    mNeedDeleteFilesCount = 0;
-                    mIpcFileListener.onRemoteFileDeleted(true);
-                }
+                deleteNext();
             }
 
             @Override
             public void onFail(int i, int i1) {
-                System.out.println("");
+                deleteNext();
             }
         };
     }
@@ -41,10 +40,20 @@ public class IpcFileDelete {
     }
 
     public void deleteRemoteFiles(List<String> paths) {
-        mNeedDeleteFilesCount = paths.size();
-        for (String path : paths) {
-            ApiUtil.deleteRemoteFile(path, mCallback);
+        mPaths = new ArrayList(Arrays.asList(new String[paths.size()]));
+        Collections.copy(mPaths, paths);
+        deleteNext();
+    }
+
+    private void deleteNext() {
+        if (mPaths == null || mPaths.isEmpty()) {
+            mIpcFileListener.onRemoteFileDeleted(true);
+            mPaths = null;
+            mCurrentPath = null;
         }
+
+        mCurrentPath = mPaths.remove(0);
+        ApiUtil.deleteRemoteFile(mCurrentPath, mCallback);
     }
 
 }

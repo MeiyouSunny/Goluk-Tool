@@ -2601,10 +2601,12 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
 
         if (event.getCityCode().equals("-1") && TextUtils.isEmpty(event.getAddress())) {// 定位失败
-            if (mLocationAddress.equals("")) {
-                mAddr.setText(this.getResources().getString(R.string.str_unknow_street));
-            } else {
-                mAddr.setText(mLocationAddress);
+            if (mAddr != null) {
+                if (mLocationAddress.equals("")) {
+                    mAddr.setText(this.getResources().getString(R.string.str_unknow_street));
+                } else {
+                    mAddr.setText(mLocationAddress);
+                }
             }
         } else {// 定位成功
             if (event.getAddress() != null && !"".equals(event.getAddress())) {
@@ -2612,7 +2614,8 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                 mLocationLat = event.getLat();
                 mLocationLon = event.getLon();
                 com.mobnote.util.GolukFileUtils.saveString("loactionAddress", mLocationAddress);
-                mAddr.setText(mLocationAddress);
+                if (mAddr != null)
+                    mAddr.setText(mLocationAddress);
             }
         }
 

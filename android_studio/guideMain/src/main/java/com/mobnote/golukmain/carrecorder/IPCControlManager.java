@@ -136,8 +136,7 @@ public class IPCControlManager implements IPCManagerFn {
                 (TextUtils.equals(mProduceName, "T2S")
                         || TextUtils.equals(mProduceName, "T2SU")
                         || TextUtils.equals(mProduceName, "T4")
-                        || TextUtils.equals(mProduceName, "T4U")
-                        || TextUtils.equals(mProduceName, "T1S"));
+                        || TextUtils.equals(mProduceName, "T4U"));
     }
 
     /**
