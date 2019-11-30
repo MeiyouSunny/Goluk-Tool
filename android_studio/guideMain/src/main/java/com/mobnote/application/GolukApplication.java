@@ -96,8 +96,6 @@ import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
 import com.rd.veuisdk.SdkEntry;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.vk.sdk.VKAccessToken;
-import com.vk.sdk.VKAccessTokenTracker;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONException;
@@ -1579,7 +1577,9 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 break;
             case IPC_VDCP_Msg_SetVedioEncodeCfg:
                 if (param1 == RESULE_SUCESS) {
-                    getVideoEncodeCfg();
+                    if (!mIPCControlManager.isT3Relative() && !mIPCControlManager.isG1Relative()) {
+                        getVideoEncodeCfg();
+                    }
                 }
 
                 break;
@@ -1742,7 +1742,14 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * @date 2015年4月10日
      */
     private void getVideoEncodeCfg() {
-        if (GolukApplication.getInstance().getIpcIsLogin()) {
+        if (mIPCControlManager.isT3Relative() || mIPCControlManager.isG1Relative()) {
+            mVideoConfigState = new VideoConfigState();
+            mVideoConfigState.bitstreams = 0;
+            mVideoConfigState.resolution = "1080P";
+            mVideoConfigState.frameRate = 30;
+            mVideoConfigState.bitrate = 10240;
+            mVideoConfigState.AudioEnabled = 1;
+        } else {
             getIPCControlManager().getVideoEncodeCfg(0);
         }
     }

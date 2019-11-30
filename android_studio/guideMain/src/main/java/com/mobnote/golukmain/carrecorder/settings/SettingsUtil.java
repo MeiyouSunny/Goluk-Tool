@@ -1,10 +1,10 @@
 package com.mobnote.golukmain.carrecorder.settings;
 
+import android.content.Context;
+
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
-
-import android.content.Context;
 
 public class SettingsUtil {
 
@@ -38,7 +38,7 @@ public class SettingsUtil {
 	public static String[] returnBitrate(Context context, String ipcName) {
 		String[] bitrate = null;
 		if (GolukApplication.getInstance().mIPCControlManager.isG1Relative()) {
-			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_g1_t1s);
+			bitrate = context.getResources().getStringArray(R.array.list_quality_bitrate_g2_t3);
 		} else if (IPCControlManager.G2_SIGN.equals(ipcName)
 				|| IPCControlManager.T3_SIGN.equals(ipcName)
 				|| IPCControlManager.T3U_SIGN.equals(ipcName)) {

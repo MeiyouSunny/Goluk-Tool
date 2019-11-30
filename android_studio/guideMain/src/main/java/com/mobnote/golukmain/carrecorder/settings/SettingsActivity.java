@@ -853,11 +853,15 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if (id == R.id.mVideoDefinition) {
 				click_videQuality();
 			} else if (id == R.id.zdxhlx) {
-				showLoading();
+				//showLoading();
 				if (recordState) {
+					recordState = false;
+					mAutoRecordBtn.setBackgroundResource(R.drawable.set_close_btn);
 					boolean a = GolukApplication.getInstance().getIPCControlManager().stopRecord();
 					GolukDebugUtils.e("xuhw", "video===========stopRecord=============a=" + a);
 				} else {
+					recordState = true;
+					mAutoRecordBtn.setBackgroundResource(R.drawable.set_open_btn);
 					boolean b = GolukApplication.getInstance().getIPCControlManager().startRecord();
 					GolukDebugUtils.e("xuhw", "video===========startRecord=============b=" + b);
 				}
@@ -1265,15 +1269,17 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 			if (null != mVideoConfigState) {
 				if (1 == mVideoConfigState.AudioEnabled) {
 					mVideoConfigState.AudioEnabled = 0;
+					mAudioBtn.setBackgroundResource(R.drawable.set_close_btn);
 				} else {
 					mVideoConfigState.AudioEnabled = 1;
+					mAudioBtn.setBackgroundResource(R.drawable.set_open_btn);
 				}
-				boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
-				if (a) {
-					showLoading();
-				} else {
-					GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
-				}
+//				boolean a = GolukApplication.getInstance().getIPCControlManager().setAudioCfg(mVideoConfigState);
+//				if (a) {
+//					showLoading();
+//				} else {
+//					GolukUtils.showToast(this, getResources().getString(R.string.str_carrecoder_setting_failed));
+//				}
 			}
 		}
 
@@ -2564,6 +2570,9 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 	 * @param param2
 	 */
 	private void callback_getWonderfulVideoType(int event, int msg, int param1, Object param2) {
+		mVideoType = 6 + "";
+		mCurrentVideoType = mVideoType;
+		mVideoTypeDesc.setText(this.getString(R.string.str_settings_video_type1));
 		GolukDebugUtils.e("", "SettingsActivity-----------callback_getWonderfulVideoType-----param2: " + param2);
 		if (RESULE_SUCESS == param1) {
 			try {
