@@ -63,8 +63,6 @@ public interface IpcConfigOption {
 
     boolean setVideoEncodeConfig(int index);
 
-    boolean setVideoEncodeT1SConfig(int index);
-
     boolean getSDCapacity();
 
     boolean formatSD();

@@ -94,7 +94,6 @@
     <array name="video_qulity_lables_t1s">
         <item>1080P</item>
         <item>720P</item>
-        <item>480P</item>
     </array>
 
 </resources>

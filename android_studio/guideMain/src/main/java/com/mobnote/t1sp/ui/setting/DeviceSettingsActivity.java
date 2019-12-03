@@ -241,7 +241,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         final SettingValue settingValue = data.getParcelableExtra("value");
         if (requestCode == TYPE_VIDEO_RES) {
             mTvVideoResolve.setText(settingValue.description);
-            mConfigOption.setVideoEncodeT1SConfig(settingValue.value);
+            mConfigOption.setVideoEncodeConfig(settingValue.value);
         } else if (requestCode == TYPE_CAPTURE_QULITY) {
             mTvCaptureQulity.setText(settingValue.description);
             mConfigOption.setCaptureVideoQulity(settingValue.value);
@@ -493,11 +493,6 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onVideoEncodeConfigGet(int index) {
-        mTvVideoResolve.setText(mArrayVideoQulity[index]);
-    }
-
-    @Override
-    public void onVideoEncodeConfigT1SGet(int index) {
         mTvVideoResolve.setText(mArrayVideoQulity[index]);
     }
 
