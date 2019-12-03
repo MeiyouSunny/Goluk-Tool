@@ -11,10 +11,13 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
 import android.os.Process;
+import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -194,7 +197,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         }
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -247,12 +249,12 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 //        if (mApp.isBindSucess()) {
 //            if (mApp.getEnableSingleWifi()) {
 //                mApp.mIpcIp = WiFiLinkListActivity.CONNECT_IPC_IP;
-                //什么都不干
+        //什么都不干
 //            } else {
 //                startWifi();
-                // 启动创建热点
+        // 启动创建热点
 //                autoConnWifi();
-                // 等待IPC连接时间
+        // 等待IPC连接时间
 
 //                mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
 //            }
@@ -316,12 +318,15 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(networkStateReceiver, intentFilter);
+
+        // 申请悬浮窗权限
+        requestOverlayAuthority();
     }
 
     NetworkStateReceiver networkStateReceiver;
 
     public void onEventMainThread(Event event) {
-        if (EventUtil.isNotInChinaEvent(event)  && GolukApplication.getInstance().isMainland()) {
+        if (EventUtil.isNotInChinaEvent(event) && GolukApplication.getInstance().isMainland()) {
             // 显示国内App无法在海外使用提示
             showChinaAppInOverseasAlert();
         }
@@ -451,8 +456,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             return;
         }
         Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
-            intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
-            startActivity(intent);
+        intent.putExtra(INTENT_ACTION_RETURN_MAIN_ALBUM, returnToMainActivityWhenSuccess);
+        startActivity(intent);
 
 //        } else {
 //            Intent intent = new Intent(this, WifiHistorySelectListActivity.class);
@@ -579,7 +584,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         MobclickAgent.setCatchUncaughtExceptions(false);
         // 添加腾讯崩溃统计 初始化SDK
         String appId = null;
-        if(GolukApplication.getInstance().isMainland()) {
+        if (GolukApplication.getInstance().isMainland()) {
             appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK_INTERNAL;
         } else {
             appId = CrashReportUtil.BUGLY_RELEASE_APPID_GOLUK_INTERNATIONAL;
@@ -1000,13 +1005,14 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         super.onResume();
     }
 
-    public void requestIsAlive(){
+    public void requestIsAlive() {
         SharedPrefUtil.setIsLiveNormalExit(true);
         mApp.isNeedCheckLive = false;
         mApp.isCheckContinueLiveFinish = true;
-        IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE,this);
+        IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE, this);
         isLiveRequest.request();
     }
+
     public void showContinueLive() {
         if (mApp.getIpcIsLogin()) {
             LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
@@ -1107,7 +1113,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                 //直播页面
                 ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
 
-                GolukUtils.startPublishOrWatchLiveActivity(this, true, true,null, null, null);
+                GolukUtils.startPublishOrWatchLiveActivity(this, true, true, null, null, null);
             } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
                 if (mApp.mIPCControlManager.isT1Relative()) {
                     mApp.mIPCControlManager.stopLive();
@@ -1369,19 +1375,40 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             }
         } else if (requestType == IPageNotifyFn.PAGE_TYPE_IS_ALIVE) {
             IsLiveRetBean isLiveRetBean = (IsLiveRetBean) result;
-            if(isLiveRetBean == null){
+            if (isLiveRetBean == null) {
                 mApp.mIPCControlManager.stopLive();
                 return;
             }
-            if(TextUtils.isEmpty(isLiveRetBean.code)) {
+            if (TextUtils.isEmpty(isLiveRetBean.code)) {
                 mApp.mIPCControlManager.stopLive();
                 return;
             }
-            if("200".equals(isLiveRetBean.code)){
+            if ("200".equals(isLiveRetBean.code)) {
                 showContinueLive();
-            }else {
+            } else {
                 mApp.mIPCControlManager.stopLive();
             }
         }
     }
+
+    private final int REQUEST_CODE_OVERLAYS = 9;
+
+    /**
+     * 申请悬浮窗权限
+     */
+    private void requestOverlayAuthority() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (!Settings.canDrawOverlays(this)) {
+                    //启动Activity让用户授权
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
+                    startActivityForResult(intent, REQUEST_CODE_OVERLAYS);
+                    return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
