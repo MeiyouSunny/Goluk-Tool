@@ -134,16 +134,27 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     }
 
     @Override
-    public boolean setSoundRecordStatus(boolean enable) {
-        ApiUtil.setSoundRecord(enable, new CallbackCmd() {
+    public boolean setSoundRecordStatus(final boolean enable) {
+        ApiUtil.startRecord(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
+                ApiUtil.setSoundRecord(enable, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
             }
         });
+
         return true;
     }
 
@@ -153,8 +164,31 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     }
 
     @Override
-    public boolean setWatermarkStatus(boolean enable) {
-        ApiUtil.setWatermark(enable, new CallbackCmd() {
+    public boolean setWatermarkStatus(final boolean enable) {
+        ApiUtil.startRecord(false, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                ApiUtil.setWatermark(enable, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+        return true;
+    }
+
+    private void startRecord() {
+        ApiUtil.startRecord(true, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
             }
@@ -163,7 +197,6 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
             public void onFail(int i, int i1) {
             }
         });
-        return true;
     }
 
     @Override
@@ -259,14 +292,25 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     }
 
     @Override
-    public boolean setCaptureVideoQulity(int index) {
-        ApiUtil.setCaptureSize(index, new CallbackCmd() {
+    public boolean setCaptureVideoQulity(final int index) {
+        ApiUtil.startRecord(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
+                ApiUtil.setCaptureSize(index, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
+
             }
         });
         return true;
@@ -307,16 +351,27 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     }
 
     @Override
-    public boolean setVideoEncodeConfig(int index) {
-        ApiUtil.setRecordSize(index, new CallbackCmd() {
+    public boolean setVideoEncodeConfig(final int index) {
+        ApiUtil.startRecord(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
+                ApiUtil.setRecordSize(index, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
             }
         });
+
         return true;
     }
 
@@ -335,19 +390,31 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean formatSD() {
-        ApiUtil.formatSDCard(new CallbackCmd() {
+        ApiUtil.startRecord(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
-                if (mIpcConfigListener != null)
-                    mIpcConfigListener.onFormatSDCardResult(true);
+                ApiUtil.formatSDCard(new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        if (mIpcConfigListener != null)
+                            mIpcConfigListener.onFormatSDCardResult(true);
+
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                        if (mIpcConfigListener != null)
+                            mIpcConfigListener.onFormatSDCardResult(false);
+                    }
+                });
             }
 
             @Override
             public void onFail(int i, int i1) {
-                if (mIpcConfigListener != null)
-                    mIpcConfigListener.onFormatSDCardResult(false);
             }
         });
+
         return true;
     }
 
