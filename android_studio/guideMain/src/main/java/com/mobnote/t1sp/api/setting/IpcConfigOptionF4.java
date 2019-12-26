@@ -135,26 +135,16 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean setSoundRecordStatus(final boolean enable) {
-        ApiUtil.startRecord(false, new CallbackCmd() {
+        ApiUtil.setSoundRecord(enable, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
-                ApiUtil.setSoundRecord(enable, new CallbackCmd() {
-                    @Override
-                    public void onSuccess(int i) {
-                        startRecord();
-                    }
-
-                    @Override
-                    public void onFail(int i, int i1) {
-                    }
-                });
+                startRecord();
             }
 
             @Override
             public void onFail(int i, int i1) {
             }
         });
-
         return true;
     }
 
@@ -165,7 +155,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean setWatermarkStatus(final boolean enable) {
-        ApiUtil.startRecord(false, new CallbackCmd() {
+        ApiUtil.startRecordWithoutVoice(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
                 ApiUtil.setWatermark(enable, new CallbackCmd() {
@@ -188,7 +178,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
     }
 
     private void startRecord() {
-        ApiUtil.startRecord(true, new CallbackCmd() {
+        ApiUtil.startRecordWithoutVoice(true, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
             }
@@ -293,7 +283,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean setCaptureVideoQulity(final int index) {
-        ApiUtil.startRecord(false, new CallbackCmd() {
+        ApiUtil.startRecordWithoutVoice(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
                 ApiUtil.setCaptureSize(index, new CallbackCmd() {
@@ -352,7 +342,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean setVideoEncodeConfig(final int index) {
-        ApiUtil.startRecord(false, new CallbackCmd() {
+        ApiUtil.startRecordWithoutVoice(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
                 ApiUtil.setRecordSize(index, new CallbackCmd() {
@@ -390,7 +380,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
 
     @Override
     public boolean formatSD() {
-        ApiUtil.startRecord(false, new CallbackCmd() {
+        ApiUtil.startRecordWithoutVoice(false, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
                 ApiUtil.formatSDCard(new CallbackCmd() {
