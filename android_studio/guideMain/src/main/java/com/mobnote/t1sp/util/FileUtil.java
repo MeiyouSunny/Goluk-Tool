@@ -7,6 +7,8 @@ import android.text.TextUtils;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.SortByDate;
 
+import org.apache.commons.io.FileUtils;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,7 +37,7 @@ public class FileUtil {
     /* 缩时视频路径 */
     public static final String REDUCE_VIDEO_PATH = EXTERNAL_SD_PATH + "/goluk/video/reduce/";
     /* 视频缩略图缓存路径 */
-    public static final String THUMB_CACHE_DIR = EXTERNAL_SD_PATH + "/goluk/goluk_carrecorder/image/";
+    public static final String THUMB_CACHE_DIR = EXTERNAL_SD_PATH + "/goluk/thumb/";
 
     /* 精彩视频文件前缀 */
     public static final String WONDERFUL_VIDEO_PREFIX = "SHARE";
@@ -262,6 +264,19 @@ public class FileUtil {
     public static boolean hasGpsFile(String videoPath) {
         String gpsFilePath = getGpsFileByVideoPath(videoPath);
         return !TextUtils.isEmpty(gpsFilePath) && (new File(gpsFilePath).exists());
+    }
+
+    /**
+     * 删除远程视频封面缓存文件
+     */
+    public static void deleteThumbCache() {
+        File thumbCacheDir = new File(EXTERNAL_SD_PATH + "/goluk/goluk_carrecorder/image");
+
+        try {
+            FileUtils.deleteDirectory(thumbCacheDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

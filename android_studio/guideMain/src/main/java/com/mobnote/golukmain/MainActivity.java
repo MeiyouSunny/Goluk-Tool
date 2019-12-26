@@ -88,6 +88,7 @@ import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.CrashReportUtil;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
@@ -973,6 +974,9 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         // mBannerLoaded = false;
 
         unregisterReceiver(networkStateReceiver);
+
+        // 删除封面缓存目录
+        FileUtil.deleteThumbCache();
     }
 
     @Override
@@ -1040,6 +1044,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             GolukUtils.showToast(getApplicationContext(), getString(R.string.str_double_click_to_exit_app));
             exitTime = System.currentTimeMillis();
         } else {
+            FileUtil.deleteThumbCache();
+
             mApp.setExit(true);
             mApp.mHandler.removeMessages(1001);
             mApp.mHandler.removeMessages(1002);

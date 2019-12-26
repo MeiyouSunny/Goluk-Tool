@@ -1,7 +1,12 @@
 package com.mobnote.t1sp.download2;
 
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.util.Log;
+
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.t1sp.util.GolukUtils;
 
@@ -144,6 +149,8 @@ public class IpcDownloaderImpl implements IpcDownloader {
             mCurrentIndex++;
             mCountDownloaded++;
             startNextTask();
+
+            mediaScan(task.getPath());
         }
 
         @Override
@@ -183,6 +190,16 @@ public class IpcDownloaderImpl implements IpcDownloader {
         File file = new File(mCurrentSavaPath + ".temp");
         if (file != null && file.exists())
             file.delete();
+    }
+
+    private void mediaScan(String filePath) {
+        MediaScannerConnection.scanFile(GolukApplication.getInstance().getApplicationContext(),
+                new String[]{filePath}, new String[]{"video/mp4"},
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.e("MediaScan", "onScanCompleted " + path + " : " + uri);
+                    }
+                });
     }
 
 }

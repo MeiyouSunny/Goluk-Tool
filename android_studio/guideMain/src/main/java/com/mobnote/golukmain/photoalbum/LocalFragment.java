@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.elvishew.xlog.XLog;
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
-import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventDeletePhotoAlbumVid;
 import com.mobnote.eventbus.EventDownloadVideoFinish;
 import com.mobnote.golukmain.R;
@@ -72,7 +71,6 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     public void deleteListData(List<String> deleteData) {
-        final String filePath = GolukApplication.getInstance().getCarrecorderCachePath() + File.separator + "image";
         for (String path : deleteData) {
             for (VideoInfo info : mDataList) {
                 if (info.videoPath.equals(path)) {
@@ -88,19 +86,12 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
                     // 删除数据库中的数据
                     GolukVideoInfoDbManager.getInstance().delVideoInfo(filename);
                     // 删除视频对应的图片
-                    filename = filename.replace(".mp4", ".jpg");
-                    File imgfile = new File(filePath + File.separator + filename);
+                    File imgfile = new File(FileUtil.getThumbCacheByVideoName(filename));
                     if (imgfile.exists()) {
                         if (!imgfile.delete()) {
                             GolukDebugUtils.e(LocalFragment.this.getClass().getSimpleName(), "Delete failed  Path is :" + imgfile.getAbsolutePath());
                         }
                     }
-                    // T1SP删除对应的GPS文件
-//                    final String gpsFilePath = FileUtil.getGpsFileByVideoPath(path);
-//                    File gpsFile = new File(gpsFilePath);
-//                    if (gpsFile.exists()) {
-//                        gpsFile.delete();
-//                    }
 
                     SettingUtils.getInstance().putBoolean(filename, true);
                     break;

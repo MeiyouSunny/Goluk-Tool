@@ -156,8 +156,8 @@ public class GolukUtils {
                 + "goluk" + File.separator
                 + "thumb" + File.separator
                 + fileName;
-        videoPath = videoPath.replace("mp4", "thumb");
-        videoPath = videoPath.replace("MP4", "thumb");
+        videoPath = videoPath.replace("mp4", "jpg");
+        videoPath = videoPath.replace("MP4", "jpg");
         return videoPath;
     }
 
