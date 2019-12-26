@@ -1,9 +1,13 @@
 package com.mobnote.t1sp.util;
 
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.SortByDate;
 
@@ -277,6 +281,50 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 获取视频保存路径
+     *
+     * @param fileName 视频名称
+     * @return
+     */
+    public static String getVideoSavePath(String fileName) {
+        String dir = "";
+        if (fileName.contains("WND")) {
+            dir = Const.DIR_WONDERFUL;
+        } else if (fileName.contains("URG")) {
+            dir = Const.DIR_URGENT;
+        } else if (fileName.contains("NRM_TL")) {
+            dir = Const.DIR_TIMESLAPSE;
+        } else if (fileName.contains("NRM")) {
+            dir = Const.DIR_LOOP;
+        }
+
+        String videoPath = Environment.getExternalStorageDirectory() + File.separator
+                + "goluk" + File.separator
+                + "video" + File.separator
+                + dir + File.separator
+                + fileName;
+        return videoPath;
+    }
+
+    /**
+     * 通过扫描媒体库
+     *
+     * @param filePath
+     */
+    public static void mediaScan(String filePath) {
+        File file = new File(filePath);
+        if (!file.exists())
+            return;
+        MediaScannerConnection.scanFile(GolukApplication.getInstance().getApplicationContext(),
+                new String[]{filePath}, new String[]{"video/mp4"},
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.e("MediaScan", "onScanCompleted " + path + " : " + uri);
+                    }
+                });
     }
 
 }

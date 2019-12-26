@@ -79,6 +79,7 @@ import com.mobnote.map.LngLat;
 import com.mobnote.t1sp.base.ui.BaseOnViewBindListener;
 import com.mobnote.t1sp.connect.T1SPConnecter;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.user.IpcUpdateManage;
 import com.mobnote.user.TimerManage;
 import com.mobnote.user.User;
@@ -1041,6 +1042,13 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                                 mNoDownLoadFileList.add(filename);
                             }
                         }
+
+                        // 通知扫描媒体库
+                        String filePath = FileUtil.getVideoSavePath(filename);
+                        if (!TextUtils.isEmpty(filePath)) {
+                            FileUtil.mediaScan(filePath);
+                        }
+
                     } catch (Exception e) {
                     }
 
