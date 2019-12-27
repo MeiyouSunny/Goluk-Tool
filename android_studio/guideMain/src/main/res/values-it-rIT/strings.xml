@@ -1111,4 +1111,9 @@
     <string name="manual_connect">Collegare manualmente il registratore</string>
     <string name="connect_failed_upload_log">Connessione non riuscita. Conferma che il telefono è collegato al registratore WiFi e che è stato selezionato il modello di dispositivo corretto. Se è corretto, si prega di inviare il registro e contattare il servizio clienti.</string>
     <string name="need_disconnect_goluk_wifi">È necessario scollegare il registratore WiFi per utilizzare la funzione di rete!</string>
+
+    <string name="record_time">Durata del video in loop</string>
+    <string name="minute_one">1 minuto</string>
+    <string name="minute_two">2 minuti</string>
+    <string name="minute_three">3 minuti</string>
 </resources>

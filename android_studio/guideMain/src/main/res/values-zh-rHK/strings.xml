@@ -1113,4 +1113,9 @@
     <string name="manual_connect">手動連接記錄儀</string>
     <string name="connect_failed_upload_log">連接失敗，請確認手機已連接記錄儀WiFi並選擇了正確的設備型號。如果是正確操作請提交日誌並聯繫客服。</string>
     <string name="need_disconnect_goluk_wifi">需斷開記錄儀WiFi才能使用網絡功能!</string>
+
+    <string name="record_time">循環視頻時長</string>
+    <string name="minute_one">1分鐘</string>
+    <string name="minute_two">2分鐘</string>
+    <string name="minute_three">3分鐘</string>
 </resources>

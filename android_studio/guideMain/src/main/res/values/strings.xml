@@ -1562,4 +1562,9 @@
     <string name="need_disconnect_goluk_wifi">You need to disconnect the recorder WiFi to use the network function!</string>
     <string name="connect_failed_upload_log">The connection failed, please confirm that the phone is connected to the recorder WiFi and the correct device model is selected. If it is correct, please submit a log and contact customer service.</string>
 
+    <string name="record_time">Loop video time</string>
+    <string name="minute_one">1 minute</string>
+    <string name="minute_two">2 minutes</string>
+    <string name="minute_three">3 minutes</string>
+
 </resources>

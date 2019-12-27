@@ -1112,4 +1112,9 @@
     <string name="manual_connect">Schließen Sie den Recorder manuell an</string>
     <string name="connect_failed_upload_log">Die Verbindung ist fehlgeschlagen. Vergewissern Sie sich, dass das Telefon mit dem WLAN-Recorder verbunden und das richtige Gerätemodell ausgewählt ist. Wenn es korrekt ist, senden Sie das Protokoll und wenden Sie sich an den Kundendienst.</string>
     <string name="need_disconnect_goluk_wifi">Sie müssen den Rekorder vom WLAN trennen, um die Netzwerkfunktion nutzen zu können!</string>
+
+    <string name="record_time">Videodauer der Schleife</string>
+    <string name="minute_one">1 Minute</string>
+    <string name="minute_two">2 Minuten</string>
+    <string name="minute_three">3 Minuten</string>
 </resources>
