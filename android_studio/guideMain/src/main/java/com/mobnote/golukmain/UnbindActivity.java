@@ -298,6 +298,9 @@ public class UnbindActivity extends BaseActivity implements OnClickListener, IPC
             it.putExtra("appwd", mApPWD);
             startActivityForResult(it, 11);
         } else if (id == R.id.unbind_layout_update) {
+            if (mIpcInfo == null)
+                return;
+
             if (mApplication.mIpcUpdateManage.isDownloadSuccess() || canOfflineInstall || canOfflineInstallLater
                     || !TextUtils.isEmpty(mApplication.mIpcUpdateManage.isHasIPCFile(mIpcInfo.version))) {
                 GolukUtils.startUpdateActivity(UnbindActivity.this, 1, mIpcInfo, false);

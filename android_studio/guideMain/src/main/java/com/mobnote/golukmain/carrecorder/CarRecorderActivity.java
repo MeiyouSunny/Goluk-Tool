@@ -2232,42 +2232,42 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         e.printStackTrace();
                     }
                 } else if (1 == param1) {
-
-                    try {
-                        JSONObject json = new JSONObject((String) param2);
-                        if (null != json) {
-                            String filename = json.optString("filename");
-                            // 如果是循环视频或者下载的是图片，就不做UI上的操作
-                            if (filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
-                                return;
-                            }
-
-                            /**
-                             * 如果下载的是当前文件就不打开新的下载进度
-                             */
-                            if (!filename.equals(mNowDownloadName)) {
-                                this.canvasProcess();
-                                mNowDownloadName = filename;
-                                image1.setVisibility(View.VISIBLE);
-                                image1.setImageResource(R.drawable.album_default_img);//(images[2].getBitmap());
-                            } else {
-                                if (image1.getVisibility() != View.VISIBLE) {
-                                    image1.setVisibility(View.VISIBLE);
-                                    image1.setImageBitmap(images[2].getBitmap());
+                    if (!TextUtils.isEmpty((String) param2)) {
+                        try {
+                            JSONObject json = new JSONObject((String) param2);
+                            if (null != json) {
+                                String filename = json.optString("filename");
+                                // 如果是循环视频或者下载的是图片，就不做UI上的操作
+                                if (filename.indexOf("NRM") >= 0 || filename.indexOf(".jpg") >= 0) {
+                                    return;
                                 }
-                                int filesize = json.getInt("filesize");
-                                int filerecvsize = json.getInt("filerecvsize");
-                                int process = (filerecvsize * 100) / filesize;
-                                downloadSize.setProcess(process);
+
+                                /**
+                                 * 如果下载的是当前文件就不打开新的下载进度
+                                 */
+                                if (!filename.equals(mNowDownloadName)) {
+                                    this.canvasProcess();
+                                    mNowDownloadName = filename;
+                                    image1.setVisibility(View.VISIBLE);
+                                    image1.setImageResource(R.drawable.album_default_img);//(images[2].getBitmap());
+                                } else {
+                                    if (image1.getVisibility() != View.VISIBLE) {
+                                        image1.setVisibility(View.VISIBLE);
+                                        image1.setImageBitmap(images[2].getBitmap());
+                                    }
+                                    int filesize = json.getInt("filesize");
+                                    int filerecvsize = json.getInt("filerecvsize");
+                                    int process = (filerecvsize * 100) / filesize;
+                                    downloadSize.setProcess(process);
+                                }
+                                // }
+
                             }
-                            // }
-
+                        } catch (JSONException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        // TODO Auto-generated catch block
-                        e.printStackTrace();
                     }
-
                     // 下载中
                 } else {
                     // 下载失败

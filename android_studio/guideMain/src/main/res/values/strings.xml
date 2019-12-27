@@ -1559,5 +1559,7 @@
     <string name="cloud_save_tip">Shared videos are only kept for one year</string>
     <string name="not_in_china_alert">This application is limited to use in China.</string>
     <string name="close_app">Quit App</string>
+    <string name="need_disconnect_goluk_wifi">You need to disconnect the recorder WiFi to use the network function!</string>
+    <string name="connect_failed_upload_log">The connection failed, please confirm that the phone is connected to the recorder WiFi and the correct device model is selected. If it is correct, please submit a log and contact customer service.</string>
 
 </resources>

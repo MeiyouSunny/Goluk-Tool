@@ -8,6 +8,7 @@ import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.Settings;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,7 +103,7 @@ public class GlobalWindow implements View.OnClickListener {
 		}
 		cancelTimer();
 		mContext = mApplication;
-        if(Build.VERSION.SDK_INT >= 23) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             boolean allowDrawOverlays = true;
             try {
                 Class<?> c = Class.forName("android.provider.Settings");
@@ -114,11 +115,13 @@ public class GlobalWindow implements View.OnClickListener {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            if(!allowDrawOverlays && !toastShowed) {
-				toastShowed = true;
-                Toast.makeText(mContext, mContext.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
-                return;
-            }
+			if ((!Settings.canDrawOverlays(mContext) || !allowDrawOverlays)) {
+				if (!toastShowed) {
+					toastShowed = true;
+					Toast.makeText(mContext, mContext.getString(R.string.str_system_window_not_allowed), Toast.LENGTH_LONG).show();
+				}
+				return;
+			}
         }
 
 		// 获取LayoutParams对象

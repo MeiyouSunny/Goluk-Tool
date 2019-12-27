@@ -463,6 +463,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         ;
     };
 
+    public boolean XLogIsInit;
     private void initXLog() {
         AppLogOpreater appLogOpreater = new AppLogOpreaterImpl();
         appLogOpreater.deleteSurplusLogFile();
@@ -489,6 +490,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 androidPrinter,                                        // Specify printers, if no printer is specified, AndroidPrinter(for Android)/ConsolePrinter(for java) will be used.
                 //consolePrinter,
                 filePrinter);
+        XLogIsInit = true;
     }
 
     public void initLogic() {

@@ -157,10 +157,12 @@ public abstract class GolukFastjsonRequest<T> {
 		request.setRetryPolicy(mDefaultRetryPolicy);
 		HttpManager.getInstance().add(request);
 
+		if (!GolukApplication.getInstance().XLogIsInit)
+			return;
 		// XLog
-        String method = (type == Method.GET) ? "Get" : "Post";
-        XLog.tag(LogConst.TAG_HTTP).i("URL(%s): %s", method, url);
-        XLog.tag(LogConst.TAG_HTTP).i("Params:%s", mParams);
+		String method = (type == Method.GET) ? "Get" : "Post";
+		XLog.tag(LogConst.TAG_HTTP).i("URL(%s): %s", method, url);
+		XLog.tag(LogConst.TAG_HTTP).i("Params:%s", mParams);
     }
 
 	public String getRequestBody() {
