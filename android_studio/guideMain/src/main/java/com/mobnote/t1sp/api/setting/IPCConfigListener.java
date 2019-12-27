@@ -78,4 +78,8 @@ public interface IPCConfigListener {
 
     void onAutoRotateSet(boolean success);
 
+    void onCycleRecTimeGet(int timeType);
+
+    void onCycleRecTimeSet(boolean success);
+
 }

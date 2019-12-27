@@ -1284,4 +1284,9 @@
     <string name="hint_gsensor_t1sp">启动后，⻋辆在⾏⻋中如果发⽣异常的碰撞，极路客会⾃动保存15秒（碰撞时刻的前5秒和后10秒）紧急视频影像。当存储空间不⾜时，将⾃动覆盖早期录制的⽂件。</string>
     <!-- T2S end-->
 
+    <string name="record_time">循环视频时长</string>
+    <string name="minute_one">1分钟</string>
+    <string name="minute_two">2分钟</string>
+    <string name="minute_three">3分钟</string>
+
 </resources>

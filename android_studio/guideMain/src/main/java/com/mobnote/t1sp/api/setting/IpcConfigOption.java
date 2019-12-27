@@ -77,6 +77,8 @@ public interface IpcConfigOption {
 
     boolean setAutoRotate(boolean enable);
 
+    boolean setCycleRecTime(int timeType);
+
 //    // 获取主录分辨率设置项
 //    String[] getMainRecordSizeOptions();
 //

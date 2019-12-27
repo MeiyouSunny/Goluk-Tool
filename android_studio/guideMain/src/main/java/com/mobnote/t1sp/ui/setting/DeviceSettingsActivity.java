@@ -48,6 +48,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     TextView mTvSDCardStorage;
     @BindView(R2.id.video_resolve_value)
     TextView mTvVideoResolve;
+    @BindView(R2.id.video_time_value)
+    TextView mTvRecordTime;
     @BindView(R2.id.wonderful_video_quality_value)
     TextView mTvCaptureQulity;
     @BindView(R2.id.tv_volume_level)
@@ -89,7 +91,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     private IpcConfigOption mConfigOption;
 
-    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel, mArrayLanguages;
+    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel, mArrayLanguages, mArrayRecordTime;
 
     @Override
     public int initLayoutResId() {
@@ -118,6 +120,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
         mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);
         mArrayLanguages = getResources().getStringArray(R.array.list_language_t);
+        mArrayRecordTime = getResources().getStringArray(R.array.record_time);
 
         mConfigOption = new IpcConfigOptionF4(this);
         mConfigOption.getAllSettingConfig();
@@ -151,7 +154,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
-            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set})
+            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
@@ -172,6 +175,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             ViewUtil.goActivity(this, TimeSettingActivity.class);
         } else if (viewId == R.id.language_set) {
             startSelections(R.string.str_settings_language_title, mArrayLanguages, ViewUtil.getTextViewValue(mTvLanguage), TYPE_LANGUAGE);
+        } else if (viewId == R.id.video_time) {
+            startSelections(R.string.record_time, mArrayRecordTime, ViewUtil.getTextViewValue(mTvRecordTime), TYPE_VIDEO_TIME);
         }
     }
 
@@ -254,6 +259,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         } else if (requestCode == TYPE_LANGUAGE) {
             mTvLanguage.setText(settingValue.description);
             mConfigOption.setLanguage(settingValue.value);
+        } else if (requestCode == TYPE_VIDEO_TIME) {
+            mTvRecordTime.setText(settingValue.description);
+            mConfigOption.setCycleRecTime(settingValue.value + 1);
         }
     }
 
@@ -543,6 +551,16 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onAutoRotateSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCycleRecTimeGet(int timeType) {
+        mTvRecordTime.setText(mArrayRecordTime[timeType - 1]);
+    }
+
+    @Override
+    public void onCycleRecTimeSet(boolean success) {
 
     }
 

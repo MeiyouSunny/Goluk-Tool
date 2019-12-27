@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <integer-array name="list_frame_source_local">
+        <item>24</item>
+        <item>18</item>
+    </integer-array>
+    <integer-array name="list_ma_source_local">
+        <item>11</item>
+        <item>5</item>
+    </integer-array>
+    <integer-array name="list_frame_source_live">
+        <item>24</item>
+        <item>15</item>
+    </integer-array>
+    <integer-array name="list_ma_source_live">
+        <item>300</item>
+        <item>500</item>
+        <item>800</item>
+        <item>1000</item>
+        <item>1200</item>
+        <item>1500</item>
+        <item>2000</item>
+    </integer-array>
+
+    <item name="tag_slideshow_item" type="id"></item>
+
     <string-array name="list_dpi_value">
         <item>0</item>
         <item>1</item>
@@ -11,21 +35,17 @@
         <item>1280*720</item>
         <item>640*480</item>
     </string-array>
+
     <string-array name="list_frame_value">
         <item>0</item>
         <item>1</item>
         <item>2</item>
     </string-array>
+
     <string-array name="list_frame_key">
         <item>@string/str_frame24</item>
         <item>@string/str_frame18</item>
     </string-array>
-
-    <integer-array name="list_frame_source_local">
-        <item>24</item>
-        <item>18</item>
-    </integer-array>
-
     <string-array name="list_ma_value_local">
         <item>0</item>
         <item>1</item>
@@ -34,40 +54,29 @@
         <item>11M</item>
         <item>5M</item>
     </string-array>
-
-    <integer-array name="list_ma_source_local">
-        <item>11</item>
-        <item>5</item>
-    </integer-array>
-
     <string-array name="list_dpi_live_value">
         <item>0</item>
         <item>1</item>
         <item>2</item>
         <item>3</item>
     </string-array>
+
     <string-array name="list_dpi_live_key">
         <item>360*240</item>
         <item>480*360</item>
         <item>640*480</item>
         <item>1280*720</item>
     </string-array>
+
     <string-array name="list_frame_live_value">
         <item>0</item>
         <item>1</item>
     </string-array>
+
     <string-array name="list_frame_live_key">
         <item>@string/str_frame24</item>
         <item>@string/str_frame15</item>
     </string-array>
-
-    <integer-array name="list_frame_source_live">
-        <item>24</item>
-        <item>15</item>
-    </integer-array>
-
-    <item name="tag_slideshow_item" type="id"></item>
-
     <string-array name="list_ma_live_value">
         <item>0</item>
         <item>1</item>
@@ -77,6 +86,7 @@
         <item>5</item>
         <item>6</item>
     </string-array>
+
     <string-array name="list_ma_live_key">
         <item>300K</item>
         <item>500K</item>
@@ -86,16 +96,6 @@
         <item>1.5M</item>
         <item>2M</item>
     </string-array>
-
-    <integer-array name="list_ma_source_live">
-        <item>300</item>
-        <item>500</item>
-        <item>800</item>
-        <item>1000</item>
-        <item>1200</item>
-        <item>1500</item>
-        <item>2000</item>
-    </integer-array>
 
     <string-array name="list_hw_live_value">
         <item>0</item>
@@ -195,7 +195,7 @@
         <item>6144</item>
         <item>5120</item>
     </string-array>
-    
+
     <string-array name="list_wonderful_video_quality">
         <item>1080P</item>
         <item>480P</item>
@@ -204,7 +204,7 @@
         <item>1080p</item>
         <item>480p</item>
     </string-array>
-    
+
     <string-array name="list_tone_volume">
         <item>High ( 100% )</item>
         <item>Middle ( 70% )</item>
@@ -219,7 +219,7 @@
         <item>10 seconds</item>
         <item>60 seconds</item>
     </string-array>
-    
+
     <string-array name="list_language">
         <item>中文</item>
         <item>English</item>
@@ -236,12 +236,12 @@
         <item>zh_CN</item>
         <item>en_US</item>
     </string-array>
-    
+
     <string-array name="list_wonderful_video_type">
         <item>@string/str_settings_video_type1</item>
         <item>@string/str_settings_video_type2</item>
     </string-array>
-    
+
     <string-array name="list_wonderful_video_type_value">
         <item>6</item>
         <item>30</item>
@@ -284,6 +284,13 @@
         <item>T3</item>
         <item>T4</item>
         <item>T2S</item>
+    </string-array>
+
+    <!-- 循环视频时长 -->
+    <string-array name="record_time">
+        <item>@string/minute_one</item>
+        <item>@string/minute_two</item>
+        <item>@string/minute_three</item>
     </string-array>
 
 </resources>

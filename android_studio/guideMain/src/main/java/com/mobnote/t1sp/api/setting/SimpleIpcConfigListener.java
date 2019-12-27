@@ -191,4 +191,14 @@ public class SimpleIpcConfigListener implements IPCConfigListener {
 
     }
 
+    @Override
+    public void onCycleRecTimeGet(int timeType) {
+
+    }
+
+    @Override
+    public void onCycleRecTimeSet(boolean success) {
+
+    }
+
 }

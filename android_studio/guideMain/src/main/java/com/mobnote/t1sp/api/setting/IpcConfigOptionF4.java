@@ -53,6 +53,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
         mIpcConfigListener.onVolumeValueGet(GolukUtils.parseVolumeLevel(mSettingInfo.volumeLevel));
         mIpcConfigListener.onLanguageGet(mSettingInfo.language);
         mIpcConfigListener.onAutoRotateGet(GolukUtils.isSwitchOn(mSettingInfo.autoRotate));
+        mIpcConfigListener.onCycleRecTimeGet(mSettingInfo.cycleRecTime);
 
     }
 
@@ -469,6 +470,32 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
                     mIpcConfigListener.onAutoRotateSet(false);
             }
         });
+        return true;
+    }
+
+    @Override
+    public boolean setCycleRecTime(final int timeType) {
+        ApiUtil.startRecordWithoutVoice(false, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                ApiUtil.setCycleRecTime(timeType, new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        startRecord();
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                        startRecord();
+                    }
+                });
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+
         return true;
     }
 

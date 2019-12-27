@@ -69,6 +69,21 @@
 
                 </RelativeLayout>
 
+                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+
+                <RelativeLayout
+                    android:id="@+id/video_time"
+                    style="@style/SettingLabelLayout">
+
+                    <TextView
+                        style="@style/SettingLabel.Arrow"
+                        android:text="@string/record_time"/>
+
+                    <TextView
+                        android:id="@+id/video_time_value"
+                        style="@style/SettingLabelValue"/>
+
+                </RelativeLayout>
 
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
