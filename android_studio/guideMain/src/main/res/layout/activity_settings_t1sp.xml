@@ -42,6 +42,19 @@
 
                 </RelativeLayout>
 
+                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+
+
+                <RelativeLayout
+                    android:id="@+id/mFormatSDCard"
+                    style="@style/SettingLabelLayout">
+
+                    <TextView
+                        style="@style/SettingLabel.Arrow"
+                        android:text="@string/str_carrecorder_storage_format_sdcard"/>
+
+                </RelativeLayout>
+
                 <View style="@style/LineGrayHorizontal"/>
 
             </LinearLayout>

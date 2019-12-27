@@ -74,6 +74,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/mFormatSDCard"
         android:layout_width="match_parent"
         android:layout_height="42dp"
@@ -98,8 +99,6 @@
             android:layout_marginRight="15dp"
             android:background="@drawable/icon_next_press"
             android:contentDescription="@string/def"/>
-
-        <View style="@style/LineGrayHorizontal"/>
 
         <View style="@style/LineGrayHorizontal"/>
 

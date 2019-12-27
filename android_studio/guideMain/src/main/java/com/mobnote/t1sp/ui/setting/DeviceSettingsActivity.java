@@ -15,6 +15,7 @@ import com.mobnote.golukmain.R2;
 import com.mobnote.golukmain.carrecorder.settings.TimeSettingActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
+import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.t1sp.api.setting.IPCConfigListener;
 import com.mobnote.t1sp.api.setting.IpcConfigOption;
@@ -153,12 +154,14 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     }
 
-    @OnClick({R2.id.SDCard_storage, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
+    @OnClick({R2.id.SDCard_storage, R2.id.mFormatSDCard, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
             R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
             ViewUtil.goActivity(this, SdCardInfoActivity.class);
+        } else if (viewId == R.id.mFormatSDCard) {
+            showConfirmDialog();
         } else if (viewId == R.id.video_resolve) {
             startSelections(R.string.spzl_title, mArrayVideoQulity, ViewUtil.getTextViewValue(mTvVideoResolve), TYPE_VIDEO_RES);
         } else if (viewId == R.id.gsensor_level) {
@@ -216,6 +219,55 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         } else if (viewId == R.id.switch_fatigue) {
             mConfigOption.setDriveFatigue(isChecked);
         }
+    }
+
+    private void formartSDCard() {
+        if (mConfigOption != null) {
+            mConfigOption.formatSD();
+        }
+    }
+
+    private CustomFormatDialog mFormatDialog;
+
+    private void showConfirmDialog() {
+        CustomDialog confirmDialog = new CustomDialog(this);
+        confirmDialog.setMessage(getString(R.string.str_carrecorder_storage_format_sdcard_dialog_message), Gravity.CENTER);
+        confirmDialog.setLeftButton(
+                this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_yes),
+                new CustomDialog.OnLeftClickListener() {
+                    @Override
+                    public void onClickListener() {
+                        formartSDCard();
+
+                        mFormatDialog = new CustomFormatDialog(DeviceSettingsActivity.this);
+                        mFormatDialog.setCancelable(false);
+                        mFormatDialog.setMessage(getResources().getString(R.string.str_carrecorder_storage_format_sdcard_formating));
+                        mFormatDialog.show();
+                    }
+                });
+        confirmDialog.setRightButton(
+                this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_no), null);
+        confirmDialog.show();
+    }
+
+    private void onSdFormated(boolean isFormat) {
+        // 取消进度提示框
+        if (null != mFormatDialog && mFormatDialog.isShowing())
+            mFormatDialog.dismiss();
+
+        // 刷新数据
+        if (isFormat)
+            mConfigOption.getSDCapacity();
+
+        // 显示结果提示框
+        String message = getString(isFormat ? R.string.str_carrecorder_storage_format_sdcard_success : R.string.str_carrecorder_storage_format_sdcard_fail);
+        CustomDialog confirmDialog = new CustomDialog(this);
+        confirmDialog.setMessage(message, Gravity.CENTER);
+        confirmDialog.setLeftButton(getString(R.string.user_repwd_ok), null);
+        confirmDialog.show();
+
+        // Event
+        EventBus.getDefault().post(new SDCardFormatEvent());
     }
 
     private void startSelections(@StringRes int titleId, String[] lables, String selectedLable, int requestCode) {
@@ -517,7 +569,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onFormatSDCardResult(boolean success) {
-
+        onSdFormated(success);
     }
 
     @Override
