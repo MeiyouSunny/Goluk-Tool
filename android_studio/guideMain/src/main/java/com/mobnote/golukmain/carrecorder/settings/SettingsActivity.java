@@ -38,6 +38,7 @@ import com.mobnote.golukmain.carrecorder.util.IpcSettingUtil;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
@@ -787,6 +788,7 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 		findViewById(R.id.jcsp).setOnClickListener(this);// 精彩视频拍摄提示音
 
 		findViewById(R.id.rlcx_line).setOnClickListener(this);// 存储容量查询
+		findViewById(R.id.mFormatSDCard).setOnClickListener(this);// 格式化SD
 		findViewById(R.id.sjsz_line).setOnClickListener(this);// 时间设置
 		findViewById(R.id.hfccsz_line).setOnClickListener(this);// 恢复出厂设置
 		findViewById(R.id.bbxx_line).setOnClickListener(this);// 版本信息
@@ -1024,14 +1026,44 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				startActivityForResult(itWonderful, REQUEST_CODE_WONDERFUL_VIDEO_TYPE);
 			} else if (id == R.id.btn_emergency_switch){
 				click_EmergencyVideoSound();
-			}else if (id ==R.id.btn_time_lapse_video){
+			} else if (id == R.id.btn_time_lapse_video) {
 				click_Timelapse();
-			}else {
-
+			} else if (id == R.id.mFormatSDCard) {
+				showFormatSDDialog();
 			}
 		} else {
 			dialog();
 		}
+	}
+
+	CustomFormatDialog mCustomFormatDialog;
+
+	private void showFormatSDDialog() {
+		CustomDialog dialog = new CustomDialog(this);
+		dialog.setMessage(
+				this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_message),
+				Gravity.CENTER);
+		dialog.setLeftButton(
+				this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_yes),
+				new OnLeftClickListener() {
+					@Override
+					public void onClickListener() {
+						if (GolukApplication.getInstance().getIpcIsLogin()) {
+							boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+							GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
+							if (flag) {
+								mCustomFormatDialog = new CustomFormatDialog(SettingsActivity.this);
+								mCustomFormatDialog.setCancelable(false);
+								mCustomFormatDialog.setMessage(SettingsActivity.this.getResources()
+										.getString(R.string.str_carrecorder_storage_format_sdcard_formating));
+								mCustomFormatDialog.show();
+							}
+						}
+					}
+				});
+		dialog.setRightButton(
+				this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_no), null);
+		dialog.show();
 	}
 
 	private void click_antiFlicker() {
@@ -1749,6 +1781,23 @@ public class SettingsActivity extends BaseActivity implements OnClickListener, I
 				callback_getCollisionControlCfg(msg,param1,param2);
 			}else if (msg == IPC_VDCP_Msg_SetCollisionValueConf){//设置碰撞感应灵敏度
 				GolukApplication.getInstance().getIPCControlManager().getGSensorMoreValueCfg();
+			} else if (msg == IPC_VDCP_Msg_FormatDisk) {
+				if (null != mCustomFormatDialog && mCustomFormatDialog.isShowing()) {
+					mCustomFormatDialog.dismiss();
+				}
+				GolukDebugUtils.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg=" + msg + "===param1=" + param1
+						+ "==param2=" + param2);
+				String message = "";
+				if (param1 == RESULE_SUCESS) {
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_success);
+					GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
+				} else {
+					message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_fail);
+				}
+				CustomDialog dialog = new CustomDialog(this);
+				dialog.setMessage(message, Gravity.CENTER);
+				dialog.setLeftButton(this.getResources().getString(R.string.user_repwd_ok), null);
+				dialog.show();
 			}
 		} else if (msg == IPC_VDCP_Msg_Reboot) {// 重启IPC
 				GolukDebugUtils.e("", "SettingsActivity-----------IPC_VDCP_Msg_Reboot-----param2: " + param2);

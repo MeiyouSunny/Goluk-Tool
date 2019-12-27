@@ -91,7 +91,48 @@
                     android:layout_width="match_parent"
                     android:layout_height="1px"
                     android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="15dp"
                     android:background="@color/setting_line_color" />
+            </RelativeLayout>
+
+            <!-- 格式化SD -->
+            <RelativeLayout
+                android:id="@+id/mFormatSDCard"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:background="@color/setting_white_color"
+                >
+
+                <TextView
+                    android:paddingLeft="15dp"
+                    android:paddingRight="15dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|left"
+                    android:text="@string/str_carrecorder_storage_format_sdcard"
+                    android:textColor="@color/setting_black_color"
+                    android:textSize="16sp" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:background="@drawable/icon_next_press"
+                    android:contentDescription="@string/def" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:background="@color/setting_line_color"/>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="1px"
+                    android:layout_alignParentBottom="true"
+                    android:background="@color/setting_line_color"/>
+
             </RelativeLayout>
 
             <!-- 视频质量栏目 -->

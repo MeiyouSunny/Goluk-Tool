@@ -41,6 +41,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
+import com.mobnote.golukmain.carrecorder.view.CustomFormatDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -358,6 +359,7 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
     private void setListener() {
         findViewById(R.id.ib_t_settings_back).setOnClickListener(this);
         findViewById(R.id.ry_t_settings_sd).setOnClickListener(this);
+        findViewById(R.id.mFormatSDCard).setOnClickListener(this);
         findViewById(R.id.ry_t_settings_recycle_video_quality).setOnClickListener(this);
         findViewById(R.id.ry_t_settings_wonderful_video_type).setOnClickListener(this);
         findViewById(R.id.ry_t_settings_wonderful_video_quality).setOnClickListener(this);
@@ -485,6 +487,8 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
             startActivity(mBugLayout);
         } else if (id == R.id.ry_t_settings_sd) {// 存储卡容量查询
             click_sd();
+        } else if (id == R.id.mFormatSDCard) {
+            showFormatSDDialog();
         } else if (id == R.id.ry_t_settings_recycle_video_quality) {// 循环视频质量
             click_recycleVideoQuality();
         } else if (id == R.id.btn_t_settings_auto_recycle) {// 自动循环录像
@@ -542,6 +546,36 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
         } else if (id == R.id.btn_timelapse) { // 缩时录影
             click_Timeslapse();
         }
+    }
+
+    CustomFormatDialog mCustomFormatDialog;
+
+    private void showFormatSDDialog() {
+        CustomDialog dialog = new CustomDialog(this);
+        dialog.setMessage(
+                this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_message),
+                Gravity.CENTER);
+        dialog.setLeftButton(
+                this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_yes),
+                new OnLeftClickListener() {
+                    @Override
+                    public void onClickListener() {
+                        if (GolukApplication.getInstance().getIpcIsLogin()) {
+                            boolean flag = GolukApplication.getInstance().getIPCControlManager().formatDisk();
+                            GolukDebugUtils.e("xuhw", "YYYYYY=====formatDisk===flag=" + flag);
+                            if (flag) {
+                                mCustomFormatDialog = new CustomFormatDialog(TSettingsActivity.this);
+                                mCustomFormatDialog.setCancelable(false);
+                                mCustomFormatDialog.setMessage(TSettingsActivity.this.getResources()
+                                        .getString(R.string.str_carrecorder_storage_format_sdcard_formating));
+                                mCustomFormatDialog.show();
+                            }
+                        }
+                    }
+                });
+        dialog.setRightButton(
+                this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_dialog_no), null);
+        dialog.show();
     }
 
     private void exit() {
@@ -740,6 +774,23 @@ public class TSettingsActivity extends BaseActivity implements OnClickListener, 
                 callback_getCollisionControlCfg(msg, param1, param2);
             } else if (msg == IPC_VDCP_Msg_SetCollisionValueConf) { // 设置碰撞感应灵敏度
                 GolukApplication.getInstance().getIPCControlManager().getGSensorMoreValueCfg();
+            } else if (msg == IPC_VDCP_Msg_FormatDisk) {
+                if (null != mCustomFormatDialog && mCustomFormatDialog.isShowing()) {
+                    mCustomFormatDialog.dismiss();
+                }
+                GolukDebugUtils.e("xuhw", "YYYYYY====IPC_VDCP_Msg_FormatDisk====msg=" + msg + "===param1=" + param1
+                        + "==param2=" + param2);
+                String message = "";
+                if (param1 == RESULE_SUCESS) {
+                    message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_success);
+                    GolukApplication.getInstance().getIPCControlManager().queryRecordStorageStatus();
+                } else {
+                    message = this.getResources().getString(R.string.str_carrecorder_storage_format_sdcard_fail);
+                }
+                CustomDialog dialog = new CustomDialog(this);
+                dialog.setMessage(message, Gravity.CENTER);
+                dialog.setLeftButton(this.getResources().getString(R.string.user_repwd_ok), null);
+                dialog.show();
             }
         }
     }
