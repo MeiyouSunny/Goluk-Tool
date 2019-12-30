@@ -7,8 +7,10 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
@@ -41,7 +43,8 @@ public class PhotoAlbumT1SPActivity extends BaseActivity implements T1SPConntect
                 ApiUtil.changeToPlaybackMode(new CallbackCmd() {
                     @Override
                     public void onSuccess(int i) {
-                        System.out.println("");
+                        // 开始心跳
+                        mHandler.sendEmptyMessage(MSG_TYPE_HEARTBEAT);
                     }
 
                     @Override
@@ -75,6 +78,33 @@ public class PhotoAlbumT1SPActivity extends BaseActivity implements T1SPConntect
 //        if (mFragmentAlubm != null)
 //            mFragmentAlubm.loadData();
         T1SPConnecter.instance().addListener(this);
+    }
+
+    private final int MSG_TYPE_HEARTBEAT = 1;
+    private final int HEARTBEAT_DELAY = 35 * 1000;
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (msg.what == MSG_TYPE_HEARTBEAT) {
+                ApiUtil.sendConnectTest(new CallbackCmd() {
+                    @Override
+                    public void onSuccess(int i) {
+                        Log.e("HeartBeat", "onSuccess");
+                    }
+
+                    @Override
+                    public void onFail(int i, int i1) {
+                        Log.e("HeartBeat", "onFail");
+                    }
+                });
+
+                sendEmptyMessageDelayed(MSG_TYPE_HEARTBEAT, HEARTBEAT_DELAY);
+            }
+        }
+    };
+
+    private void startHeartbeat() {
     }
 
     @Override
@@ -120,6 +150,8 @@ public class PhotoAlbumT1SPActivity extends BaseActivity implements T1SPConntect
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
+        mHandler.removeMessages(MSG_TYPE_HEARTBEAT);
 
         ApiUtil.changeToMovieMode(new CallbackCmd() {
             @Override

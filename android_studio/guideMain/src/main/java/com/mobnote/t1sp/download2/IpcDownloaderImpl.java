@@ -31,6 +31,8 @@ public class IpcDownloaderImpl implements IpcDownloader {
     private IpcDownloadListener mListener;
 
     private boolean mNeedCheckSD;
+    // 是否同时下载封面
+    private boolean mNeedDownloadThumb;
 
     private static IpcDownloaderImpl instance;
 
@@ -85,6 +87,12 @@ public class IpcDownloaderImpl implements IpcDownloader {
         startNextTask();
     }
 
+    @Override
+    public void start(boolean mNeedDownloadThumb) {
+        mNeedDownloadThumb = false;
+        start();
+    }
+
     private void startNextTask() {
         if (GolukUtils.isEmpty(mFileNames))
             return;
@@ -107,8 +115,10 @@ public class IpcDownloaderImpl implements IpcDownloader {
 
         FileDownloader.getImpl().create(videoInfo.videoUrl).setPath(mCurrentSavaPath).setCallbackProgressMinInterval(1).setListener(mTaskListener).start();
         // 同时下载视频封面
-        String thumbSavePath = GolukUtils.getThumbSavePath(mCurrentFileName);
-        FileDownloader.getImpl().create(videoInfo.thumbUrl).setPath(thumbSavePath).start();
+        if (mNeedDownloadThumb) {
+            String thumbSavePath = GolukUtils.getThumbSavePath(mCurrentFileName);
+            FileDownloader.getImpl().create(videoInfo.thumbUrl).setPath(thumbSavePath).start();
+        }
 
         if (mListener != null)
             mListener.onDownloadCountUpdate(mCurrentIndex + 1, mFileNames.size());

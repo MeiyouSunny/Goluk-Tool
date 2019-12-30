@@ -1,5 +1,9 @@
 package com.mobnote.t1sp.ui.preview;
 
+import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
+
+import java.util.List;
+
 import likly.mvp.View;
 
 public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
@@ -20,5 +24,7 @@ public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
     void showLoading();
 
     void hideLoading();
+
+    void onRefreshWonderfulVideos(List<VideoInfo> videoInfos);
 
 }

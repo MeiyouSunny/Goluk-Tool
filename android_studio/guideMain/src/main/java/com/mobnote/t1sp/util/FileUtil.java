@@ -141,7 +141,7 @@ public class FileUtil {
      */
     public static String getFileNameFromPath(String path) {
         if (TextUtils.isEmpty(path) || !path.contains("/"))
-            return "";
+            return path;
 
         return path.substring(path.lastIndexOf("/") + 1);
     }
@@ -325,6 +325,17 @@ public class FileUtil {
                         Log.e("MediaScan", "onScanCompleted " + path + " : " + uri);
                     }
                 });
+    }
+
+    /**
+     * 根据视频名称判断本地是否已经存在
+     *
+     * @param videoFileName
+     * @return
+     */
+    public static boolean isLocalExist(String videoFileName) {
+        File localFile = new File(getVideoSavePath(videoFileName));
+        return localFile != null && localFile.exists();
     }
 
 }

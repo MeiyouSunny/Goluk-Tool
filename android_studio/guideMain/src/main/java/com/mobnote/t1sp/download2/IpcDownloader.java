@@ -27,7 +27,7 @@ public interface IpcDownloader {
 
     List<VideoInfo> getDownloadingFiles();
 
-   /**
+    /**
      * 设置监听
      *
      * @param listener IpcDownloadListener
@@ -38,6 +38,13 @@ public interface IpcDownloader {
      * 开始下载
      */
     void start();
+
+    /**
+     * 开始下载
+     *
+     * @param mNeedDownloadThumb 是否下载封面
+     */
+    void start(boolean mNeedDownloadThumb);
 
     /**
      * 取消下载任务
