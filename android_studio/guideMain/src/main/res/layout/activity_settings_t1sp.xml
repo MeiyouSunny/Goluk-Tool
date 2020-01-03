@@ -85,7 +85,6 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     android:id="@+id/video_time"
                     style="@style/SettingLabelLayout">
 

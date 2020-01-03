@@ -126,15 +126,15 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         mConfigOption = new IpcConfigOptionF4(this);
         mConfigOption.getAllSettingConfig();
 
-        ApiUtil.startRecord(false, new CallbackCmd() {
-            @Override
-            public void onSuccess(int i) {
-            }
-
-            @Override
-            public void onFail(int i, int i1) {
-            }
-        });
+//        ApiUtil.startRecord(false, new CallbackCmd() {
+//            @Override
+//            public void onSuccess(int i) {
+//            }
+//
+//            @Override
+//            public void onFail(int i, int i1) {
+//            }
+//        });
 
         T1SPConnecter.instance().addListener(this);
     }
@@ -397,15 +397,15 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     private void startRecord() {
-        ApiUtil.startRecord(true, new CallbackCmd() {
-            @Override
-            public void onSuccess(int i) {
-            }
-
-            @Override
-            public void onFail(int i, int i1) {
-            }
-        });
+//        ApiUtil.startRecord(true, new CallbackCmd() {
+//            @Override
+//            public void onSuccess(int i) {
+//            }
+//
+//            @Override
+//            public void onFail(int i, int i1) {
+//            }
+//        });
     }
 
     @Override
