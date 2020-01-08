@@ -92,7 +92,7 @@ public class GolukIPCUtils {
         videoInfo.videoUrl = fileInfo.videoUrl;
         videoInfo.thumbUrl = fileInfo.thumbUrl;
         videoInfo.relativePath = fileInfo.path;
-        videoInfo.videoCreateDate = fileInfo.time.replaceAll("/", "-");
+        videoInfo.videoCreateDate = fileInfo.time;
         videoInfo.time = parseStringToMilli(videoInfo.videoCreateDate);
 
         String[] nameSplits = fileInfo.name.split("_");
