@@ -1,5 +1,6 @@
 package com.mobnote.t1sp.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -74,6 +75,12 @@ public class ThumbAsyncTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String thumbPath) {
         super.onPostExecute(thumbPath);
+        if (isCancelled())
+            return;
+        if (mContext instanceof Activity) {
+            if (((Activity) mContext).isDestroyed())
+                return;
+        }
         if (mImageView != null && !TextUtils.isEmpty(thumbPath)) {
             GlideUtils.loadImage(mContext, mImageView, thumbPath, R.drawable.album_default_img);
         }
