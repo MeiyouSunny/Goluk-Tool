@@ -173,6 +173,10 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
             videoInfos.add(fileList.get(1));
         if (fileList.size() >= 3 && !FileUtil.isLocalExist(fileList.get(2).filename))
             videoInfos.add(fileList.get(2));
+        if (fileList.size() >= 4 && !FileUtil.isLocalExist(fileList.get(3).filename))
+            videoInfos.add(fileList.get(3));
+        if (fileList.size() >= 5 && !FileUtil.isLocalExist(fileList.get(4).filename))
+            videoInfos.add(fileList.get(4));
 
         // 开始下载
         final IpcDownloader ipcDownloader = IpcDownloaderImpl.getInstance();
