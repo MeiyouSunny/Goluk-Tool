@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
 import com.liulishuo.filedownloader.FileDownloader;
+import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
 import com.mobnote.t1sp.util.GolukUtils;
@@ -200,6 +201,9 @@ public class IpcDownloaderImpl implements IpcDownloader {
         File file = new File(mCurrentSavaPath + ".temp");
         if (file != null && file.exists())
             file.delete();
+
+        GlobalWindow.getInstance().reset();
+        GlobalWindow.getInstance().dimissGlobalWindow();
     }
 
     private void mediaScan(String filePath) {

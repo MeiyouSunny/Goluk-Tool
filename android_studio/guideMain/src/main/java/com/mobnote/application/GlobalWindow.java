@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobnote.golukmain.R;
-import com.mobnote.t1sp.download.DownloaderT1spImpl;
+import com.mobnote.t1sp.download2.IpcDownloaderImpl;
 
 import java.lang.reflect.Method;
 
@@ -355,10 +355,11 @@ public class GlobalWindow implements View.OnClickListener {
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialoginterface, int i) {
 						dimissDialog();
-                        if (GolukApplication.getInstance().getIPCControlManager().isT2S())
-                            DownloaderT1spImpl.getInstance().cancelAllDownloadTask(true);
-                        else
-                            GolukApplication.getInstance().userStopDownLoadList();
+						if (GolukApplication.getInstance().getIPCControlManager().isT2S())
+//                            DownloaderT1spImpl.getInstance().cancelAllDownloadTask(true);
+							IpcDownloaderImpl.getInstance().cancel();
+						else
+							GolukApplication.getInstance().userStopDownLoadList();
 					}
 				});
 		mTwoButtonDialog.show();

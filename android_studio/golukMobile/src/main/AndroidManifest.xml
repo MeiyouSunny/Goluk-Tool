@@ -402,7 +402,6 @@
         <activity
             android:name="com.mobnote.golukmain.PushSettingActivity"
             android:configChanges="screenSize|keyboardHidden|orientation"
-            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent"
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
