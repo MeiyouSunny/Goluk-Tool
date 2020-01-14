@@ -20,6 +20,60 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="48dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/sensor_xy_et"
+                        android:hint="XY"
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="48dp"/>
+
+                    <Button
+                        android:id="@+id/sensor_xy_bt"
+                        android:text="设置"
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/sensor_z_et"
+                        android:hint="Z"
+                        android:inputType="number"
+                        android:gravity="center"
+                        android:layout_width="60dp"
+                        android:layout_height="48dp"/>
+
+                    <Button
+                        android:id="@+id/sensor_z_bt"
+                        android:text="设置"
+                        android:layout_marginLeft="40dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"/>
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"

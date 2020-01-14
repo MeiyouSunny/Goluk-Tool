@@ -5,6 +5,7 @@ import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
@@ -35,6 +36,7 @@ import butterknife.OnClick;
 import de.greenrobot.event.EventBus;
 import goluk.com.t1s.api.ApiUtil;
 import goluk.com.t1s.api.callback.CallbackCmd;
+import likly.dollar.$;
 import likly.mvp.MvpBinder;
 
 @MvpBinder(
@@ -83,6 +85,11 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     SwitchButton switchDormantMode;
     @BindView(R2.id.switch_fatigue)
     SwitchButton switchFatigue;
+
+    @BindView(R2.id.sensor_xy_et)
+    EditText mEtSensorXY;
+    @BindView(R2.id.sensor_z_et)
+    EditText mEtSensorZ;
 
     // 忽略首次由程序修改设置的check状态
     private boolean mIgnoreSwtich = true;
@@ -155,7 +162,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.mFormatSDCard, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
-            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time})
+            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time, R2.id.sensor_xy_bt, R2.id.sensor_z_bt})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
@@ -178,8 +185,30 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             ViewUtil.goActivity(this, TimeSettingActivity.class);
         } else if (viewId == R.id.language_set) {
             startSelections(R.string.str_settings_language_title, mArrayLanguages, ViewUtil.getTextViewValue(mTvLanguage), TYPE_LANGUAGE);
-        } else if (viewId == R.id.video_time) {
-            startSelections(R.string.record_time, mArrayRecordTime, ViewUtil.getTextViewValue(mTvRecordTime), TYPE_VIDEO_TIME);
+        } else if (viewId == R.id.sensor_xy_bt) {
+            int xy = Integer.valueOf(mEtSensorXY.getText().toString());
+            ApiUtil.setGSensorXY(xy, new CallbackCmd() {
+                @Override
+                public void onSuccess(int i) {
+                    $.toast().text("设置成功").show();
+                }
+
+                @Override
+                public void onFail(int i, int i1) {
+                }
+            });
+        } else if (viewId == R.id.sensor_z_bt) {
+            int z = Integer.valueOf(mEtSensorZ.getText().toString());
+            ApiUtil.setGSensorZ(z, new CallbackCmd() {
+                @Override
+                public void onSuccess(int i) {
+                    $.toast().text("设置成功").show();
+                }
+
+                @Override
+                public void onFail(int i, int i1) {
+                }
+            });
         }
     }
 
