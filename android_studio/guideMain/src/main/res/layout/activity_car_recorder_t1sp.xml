@@ -132,6 +132,16 @@
                     android:visibility="gone"/>
 
                 <ImageButton
+                    android:id="@+id/ic_sound"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:layout_above="@+id/mFullScreen"
+                    android:layout_alignRight="@+id/mFullScreen"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/recorder_btn_sound"/>
+
+                <ImageButton
                     android:id="@+id/mFullScreen"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

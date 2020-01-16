@@ -42,6 +42,9 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifibind.WifiHistorySelectListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
+import com.mobnote.t1sp.api.setting.IPCConfigListener;
+import com.mobnote.t1sp.api.setting.IpcConfigOption;
+import com.mobnote.t1sp.api.setting.IpcConfigOptionF4;
 import com.mobnote.t1sp.base.ui.AbsActivity;
 import com.mobnote.t1sp.bean.SettingInfo;
 import com.mobnote.t1sp.connect.T1SPConnecter;
@@ -88,7 +91,7 @@ import likly.mvp.MvpBinder;
         model = CarRecorderT1SPModelImpl.class
 )
 @SuppressLint("NewApi")
-public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener, IpcFileQueryListener {
+public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresenter> implements CarRecorderT1SPView, OnClickListener, OnCaptureListener, T1SPConntectListener, IpcFileQueryListener, IPCConfigListener {
 
     // 抓拍按钮
     private Button mBtnCapture = null;
@@ -123,7 +126,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     private boolean m_bIsFullScreen = false;
     /* 全屏/旋转 */
-    private ImageButton mFullScreen, mBtnRotate;
+    private ImageButton mFullScreen, mBtnRotate, mBtnSound;
 
     private RelativeLayout mPalyerLayout, mLayoutVideo;
     private View mNotconnected, mConncetLayout, mLayoutTitle, mLayoutState,
@@ -153,6 +156,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 //    private ArrayList<VideoInfo> mCaptueList;
 
     private List<VideoInfo> mWonderfulVideos;
+    private IpcConfigOption mConfigOption;
 
     @Override
     public int initLayoutResId() {
@@ -186,6 +190,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
 //        mIpcQuery = new IpcFileQueryF4(this, this);
 //        startPlay();
+
+        mConfigOption = new IpcConfigOptionF4(this);
 
         // 查询设备版本和型号信息
         getIpcVersionAndTypeInfo();
@@ -231,6 +237,23 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 if (settingInfo != null) {
                     String[] videoQulities = getResources().getStringArray(R.array.video_qulity_lables);
                     mVideoResolutions.setText(videoQulities[settingInfo.recordSize]);
+                }
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+            }
+        });
+    }
+
+    private boolean mIsSoundOn;
+    private void getSoundRecord() {
+        ApiUtil.getSettingInfo(new CallbackSetting() {
+            @Override
+            public void onGetSettingInfo(goluk.com.t1s.api.bean.SettingInfo settingInfo) {
+                if (settingInfo != null) {
+                    mIsSoundOn = (settingInfo.audioRecord == 1) ? true : false;
+                    mBtnSound.setBackgroundResource(mIsSoundOn ? R.drawable.recorder_btn_sound : R.drawable.recorder_btn_nosound);
                 }
             }
 
@@ -364,6 +387,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mPalyerLayout = (RelativeLayout) findViewById(R.id.mPalyerLayout);
         mFullScreen = (ImageButton) findViewById(R.id.mFullScreen);
         mBtnRotate = (ImageButton) findViewById(R.id.ic_rotate);
+        mBtnSound = (ImageButton) findViewById(R.id.ic_sound);
         mVideoResolutions = (TextView) findViewById(R.id.mVideoResolutions);
         mRtmpPlayerLayout = (RelativeLayout) findViewById(R.id.mRtmpPlayerLayout);
         mVLayout = (RelativeLayout) findViewById(R.id.vLayout);
@@ -419,6 +443,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         findViewById(R.id.mPlayBtn).setOnClickListener(this);
         mPalyerLayout.setOnClickListener(this);
         mFullScreen.setOnClickListener(this);
+        mBtnSound.setOnClickListener(this);
         mBtnRotate.setOnClickListener(this);
         mBtnCapture.setOnClickListener(this);
         mNotconnected.setOnClickListener(this);
@@ -673,6 +698,10 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             Intent intent = new Intent(this, WiFiLinkListActivity.class);
             intent.putExtra(WiFiLinkListActivity.ACTION_FROM_CAM, false);
             startActivity(intent);
+        } else if (id == R.id.ic_sound) {
+            mIsSoundOn = !mIsSoundOn;
+            mBtnSound.setBackgroundResource(mIsSoundOn ? R.drawable.recorder_btn_sound : R.drawable.recorder_btn_nosound);
+            mConfigOption.setSoundRecordStatus(mIsSoundOn);
         }
     }
 
@@ -815,6 +844,7 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (GolukApplication.getInstance().getIpcIsLogin()) {
             changeToRecordMode();
             getResolutionInfo();
+            getSoundRecord();
 //            mIpcQuery.queryCaptureVideoList();
         }
 //        if (isShowPlayer) {
@@ -1176,4 +1206,203 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         mApp.getIPCControlManager().setProduceName(type);
     }
 
+    @Override
+    public void onDeviceTimeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onDeviceTimeGet(long timestamp) {
+
+    }
+
+    @Override
+    public void onParkSleepModeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onDriveFatigueSet(boolean success) {
+
+    }
+
+    @Override
+    public void onParkSleepModeGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onDriveFatigueGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onParkSecurityModeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onParkSecurityModeGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onRecordStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onRecordStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundRecordStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onSoundRecordStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onWatermarkStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onWatermarkStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundPowerStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onSoundPowerAndCaptureStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSoundCaptureStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onSoundUrgentStatusGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onSoundUrgentStatusSet(boolean success) {
+
+    }
+
+    @Override
+    public void onVolumeValueGet(int value) {
+
+    }
+
+    @Override
+    public void onVolumeValueSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCaptureVideoQulityGet(int index) {
+
+    }
+
+    @Override
+    public void onCaptureVideoQulitySet(boolean success) {
+
+    }
+
+    @Override
+    public void onCaptureVideoTypeGet(int value) {
+
+    }
+
+    @Override
+    public void onCaptureVideoTypeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCollisionSensityGet(int value) {
+
+    }
+
+    @Override
+    public void onCollisionSensitySet(boolean success) {
+
+    }
+
+    @Override
+    public void onVideoEncodeConfigGet(int index) {
+
+    }
+
+    @Override
+    public void onVideoEncodeConfigSet(boolean success) {
+
+    }
+
+    @Override
+    public void onSDCapacityGet(double total, double free) {
+
+    }
+
+    @Override
+    public void onFormatSDCardResult(boolean success) {
+
+    }
+
+    @Override
+    public void onResetFactoryResult(boolean success) {
+
+    }
+
+    @Override
+    public void onTimeslapseConfigGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onTimeslapseConfigSet(boolean success) {
+
+    }
+
+    @Override
+    public void onLanguageGet(int type) {
+
+    }
+
+    @Override
+    public void onLanguageSet(boolean success) {
+
+    }
+
+    @Override
+    public void onAutoRotateGet(boolean enable) {
+
+    }
+
+    @Override
+    public void onAutoRotateSet(boolean success) {
+
+    }
+
+    @Override
+    public void onCycleRecTimeGet(int timeType) {
+
+    }
+
+    @Override
+    public void onCycleRecTimeSet(boolean success) {
+
+    }
 }
