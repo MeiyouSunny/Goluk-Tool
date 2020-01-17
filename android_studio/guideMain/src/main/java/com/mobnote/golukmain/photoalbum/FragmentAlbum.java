@@ -231,14 +231,14 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
         mBackBtn = (ImageView) mAlbumRootView.findViewById(R.id.back_btn);
         mCBAll = (CheckBox) mAlbumRootView.findViewById(R.id.cb_select_all);
         if (parentViewIsMainActivity) {
-            mBackBtn.setVisibility(View.VISIBLE);
+            mBackBtn.setVisibility(View.GONE);
             if (selectMode) {
                 mTabLocal.setText(R.string.str_ae_add_video_title);
             }
-            if (!selectMode && !fromCloud) {
-                mBackBtn.setImageResource(R.drawable.remote_album_sd);
-                mBackBtn.setBackgroundResource(0);
-            }
+//            if (!selectMode && !fromCloud) {
+//                mBackBtn.setImageResource(R.drawable.remote_album_sd);
+//                mBackBtn.setBackgroundResource(0);
+//            }
             mTabLocal.setVisibility(View.VISIBLE);
             mTabTimeslapse.setVisibility(View.GONE);
             mTabWonderful.setVisibility(View.GONE);
