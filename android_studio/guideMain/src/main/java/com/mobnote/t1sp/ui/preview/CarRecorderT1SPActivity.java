@@ -280,11 +280,11 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
                 @Override
                 public void run() {
                     mIsInCapture = false;
+                    // 下载抓拍视频
+                    getPresenter().queryRecent3WonderfulVideo(CarRecorderT1SPActivity.this);
                 }
             }, 3000);
 
-            // 下载抓拍视频
-            getPresenter().queryRecent3WonderfulVideo(this);
         }
 
     }

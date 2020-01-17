@@ -9,7 +9,7 @@ import likly.mvp.View;
 public interface CarRecorderT1SPView extends View<CarRecorderT1SPPresenter> {
 
     /* 抓拍视频为前8后8 */
-    int CAPTURE_TIME_16_COUNT_TIME = 10;
+    int CAPTURE_TIME_16_COUNT_TIME = 12;
 
     void onOpenLoopModeSuccess();
 
