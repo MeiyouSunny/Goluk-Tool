@@ -1288,5 +1288,6 @@
     <string name="minute_one">1分钟</string>
     <string name="minute_two">2分钟</string>
     <string name="minute_three">3分钟</string>
+    <string name="download_complete">下载完成</string>
 
 </resources>

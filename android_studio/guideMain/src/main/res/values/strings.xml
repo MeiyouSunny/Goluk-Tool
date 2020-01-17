@@ -1566,5 +1566,6 @@
     <string name="minute_one">1 minute</string>
     <string name="minute_two">2 minutes</string>
     <string name="minute_three">3 minutes</string>
+    <string name="download_complete">Download completed</string>
 
 </resources>

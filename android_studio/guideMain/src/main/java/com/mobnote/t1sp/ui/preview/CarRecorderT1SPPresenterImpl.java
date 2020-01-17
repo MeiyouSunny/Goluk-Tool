@@ -2,7 +2,6 @@ package com.mobnote.t1sp.ui.preview;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.eventbus.EventDownloadVideoFinish;
@@ -220,7 +219,7 @@ public class CarRecorderT1SPPresenterImpl extends BasePresenter<CarRecorderT1SPM
                 // 所有文件下载完成
                 Log.e("IpcDownloader", "onAllDownloaded");
                 if (mContext != null) {
-                    Toast.makeText(mContext, "下载完成", Toast.LENGTH_SHORT).show();
+                    $.toast().text(R.string.download_complete).show();
                     GlobalWindow.getInstance().topWindowSucess(mContext.getString(R.string.str_video_transfer_success));
                 }
                 // 发送本地更新视频Event

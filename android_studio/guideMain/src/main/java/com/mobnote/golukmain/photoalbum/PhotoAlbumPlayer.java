@@ -2029,7 +2029,7 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             public void onDownloadedComplete(int countSuccess, int countfailed, int countTotal) {
                 // 所有文件下载完成
                 Log.e("IpcDownloader", "onAllDownloaded");
-                Toast.makeText(PhotoAlbumPlayer.this, "下载完成", Toast.LENGTH_SHORT).show();
+                $.toast().text(R.string.download_complete).show();
                 GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
                 // 发送本地更新视频Event
                 EventBus.getDefault().post(new EventDownloadVideoFinish());

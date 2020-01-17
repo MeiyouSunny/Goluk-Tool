@@ -1114,4 +1114,6 @@
     <string name="minute_one">1 분</string>
     <string name="minute_two">2 분</string>
     <string name="minute_three">3 분</string>
+    <string name="download_complete">다운로드 완료</string>
+
 </resources>

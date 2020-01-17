@@ -14,7 +14,6 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.emilsjolander.components.stickylistheaders.StickyListHeadersListView;
 import com.mobnote.application.GlobalWindow;
@@ -582,7 +581,7 @@ public abstract class BaseRemoteAblumFragment extends Fragment implements LocalW
                 // 所有文件下载完成
                 Log.e("IpcDownloader", "onAllDownloaded");
                 if (getContext() != null) {
-                    Toast.makeText(getContext(), "下载完成", Toast.LENGTH_SHORT).show();
+                    $.toast().text(R.string.download_complete).show();
                     GlobalWindow.getInstance().topWindowSucess(getString(R.string.str_video_transfer_success));
                 }
                 // 发送本地更新视频Event

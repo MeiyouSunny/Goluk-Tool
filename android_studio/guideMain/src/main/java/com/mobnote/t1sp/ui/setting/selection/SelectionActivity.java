@@ -67,12 +67,13 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
 
         mType = data.getIntExtra("type", -1);
         if (mType != -1) {
-            mTvWonderfulCaptureHint.setVisibility(android.view.View.VISIBLE);
             if (mType == TYPE_CAPTURE_TIME) {
+                mTvWonderfulCaptureHint.setVisibility(android.view.View.VISIBLE);
                 mTvWonderfulCaptureHint.setText(R.string.str_settings_wonderful_video_type_ts1p_hint_text);
-            } else if (mType == TYPE_G_SENSOR) {
-                mTvWonderfulCaptureHint.setText(R.string.hint_gsensor_t1sp);
             }
+//            else if (mType == TYPE_G_SENSOR) {
+//                mTvWonderfulCaptureHint.setText(R.string.hint_gsensor_t1sp);
+//            }
         }
 
         mRepeatView.onClick(this);

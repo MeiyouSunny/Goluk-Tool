@@ -185,6 +185,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             ViewUtil.goActivity(this, TimeSettingActivity.class);
         } else if (viewId == R.id.language_set) {
             startSelections(R.string.str_settings_language_title, mArrayLanguages, ViewUtil.getTextViewValue(mTvLanguage), TYPE_LANGUAGE);
+        } else if (viewId == R.id.video_time) {
+            startSelections(R.string.record_time, mArrayRecordTime, ViewUtil.getTextViewValue(mTvRecordTime), TYPE_VIDEO_TIME);
         } else if (viewId == R.id.sensor_xy_bt) {
             int xy = Integer.valueOf(mEtSensorXY.getText().toString());
             ApiUtil.setGSensorXY(xy, new CallbackCmd() {
