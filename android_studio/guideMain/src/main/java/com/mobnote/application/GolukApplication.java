@@ -562,7 +562,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         autoLoginStatus = 0;
         loginoutStatus = false;
         identifyStatus = 0;
-        mTimerManage.timerCancel();
+        if (mTimerManage != null)
+            mTimerManage.timerCancel();
         isconnection = false;
         isBackground = false;
         startTime = 0;
@@ -980,7 +981,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                     String filename = json.optString("filename");
                     long filesize = json.optLong("filesize");
                     long filerecvsize = json.optLong("filerecvsize");
-                    percent = (int) ((filerecvsize * 100) / filesize);
+                    if (filesize != 0)
+                        percent = (int) ((filerecvsize * 100) / filesize);
                     isDownloading = true;
 
                     if (!mNoDownLoadFileList.contains(filename)) {

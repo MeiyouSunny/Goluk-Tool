@@ -106,7 +106,7 @@ public class CacheManager {
     public static CacheManager getInstance() {
         if (mCacheManager == null) {
             synchronized (CacheManager.class) {
-                if (mCacheManager == null) {
+                if (mCacheManager == null && mContext != null) {
                     mCacheManager = new CacheManager(mContext.getApplicationContext());
                 }
             }

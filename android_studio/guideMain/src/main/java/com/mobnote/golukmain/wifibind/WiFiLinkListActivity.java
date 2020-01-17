@@ -384,6 +384,9 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
     private AlertDialog connectFailedDialog;
 
     private void showConnectFailedDialog() {
+        if (isDestroyed())
+            return;
+
         if (connectFailedDialog == null) {
             connectFailedDialog = new AlertDialog
                     .Builder(this)

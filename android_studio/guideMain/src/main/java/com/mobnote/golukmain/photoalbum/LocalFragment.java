@@ -226,6 +226,8 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
     }
 
     public void allSelect(boolean selected) {
+        if (mFragmentAlbum == null)
+            return;
         List<String> selectedListData = mFragmentAlbum.getSelectedList();
         selectedListData.clear();
         if (selected) {

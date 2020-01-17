@@ -2,6 +2,7 @@ package com.mobnote.t1sp.util;
 
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.text.TextUtils;
 
 import java.util.HashMap;
 
@@ -34,6 +35,8 @@ public class ThumbUtil {
      * 获取本地视频缩略图
      */
     public static Bitmap getLocalVideoThumb(String localPath) {
+        if (TextUtils.isEmpty(localPath))
+            return null;
         Bitmap bitmap = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {

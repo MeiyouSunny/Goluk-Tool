@@ -1540,7 +1540,8 @@ public final class SdkEntry {
             server.reset();
         }
         sdkService = null;
-        CacheManager.getInstance().close();
+        if (CacheManager.getInstance() != null)
+            CacheManager.getInstance().close();
         ThreadPoolUtils.executeEx(new Runnable() {
 
             @Override
