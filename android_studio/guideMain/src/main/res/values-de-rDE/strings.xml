@@ -16,7 +16,7 @@
     <string name="str_live_switch">Wechseln</string>
     <string name="live_flow">Verbrauch</string>
     <string name="str_carrecorder_storage_all">Gesamt</string>
-    <string name="str_carrecorder_storage_use">Verwendet</string>
+    <string name="str_carrecorder_storage_use">Benutzter Raum</string>
     <string name="str_carrecorder_storage_cycle">Schleife verfügbar</string>
     <string name="str_carrecorder_storage_wonderful">Verfügbar (Eindrücke)</string>
     <string name="str_carrecorder_storage_emergency">Verfügbar (Notfall)</string>

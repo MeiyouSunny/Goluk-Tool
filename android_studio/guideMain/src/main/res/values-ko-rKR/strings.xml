@@ -16,7 +16,7 @@
     <string name="str_live_switch">스위치</string>
     <string name="live_flow">소비</string>
     <string name="str_carrecorder_storage_all">총</string>
-    <string name="str_carrecorder_storage_use">사용됨</string>
+    <string name="str_carrecorder_storage_use">사용 된 공간</string>
     <string name="str_carrecorder_storage_cycle">루프 사용 가능</string>
     <string name="str_carrecorder_storage_wonderful">원더풀 사용 가능</string>
     <string name="str_carrecorder_storage_emergency">비상 사용 가능</string>

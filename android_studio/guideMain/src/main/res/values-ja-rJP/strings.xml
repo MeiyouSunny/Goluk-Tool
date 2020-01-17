@@ -16,7 +16,7 @@
     <string name="str_live_switch">スイッチ</string>
     <string name="live_flow">消費</string>
     <string name="str_carrecorder_storage_all">合計</string>
-    <string name="str_carrecorder_storage_use">使用中</string>
+    <string name="str_carrecorder_storage_use">使用済みスペース</string>
     <string name="str_carrecorder_storage_cycle">利用可能なループビデオ</string>
     <string name="str_carrecorder_storage_wonderful">利用可能なハイライトビデオ</string>
     <string name="str_carrecorder_storage_emergency">利用可能な緊急ビデオ</string>

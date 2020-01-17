@@ -16,7 +16,7 @@
     <string name="str_live_switch">Interruttore</string>
     <string name="live_flow">Consumo</string>
     <string name="str_carrecorder_storage_all">Totale</string>
-    <string name="str_carrecorder_storage_use">Utilizzato</string>
+    <string name="str_carrecorder_storage_use">Spazio usato</string>
     <string name="str_carrecorder_storage_cycle">Loop disponibile</string>
     <string name="str_carrecorder_storage_wonderful">Meraviglioso disponibile</string>
     <string name="str_carrecorder_storage_emergency">Emergenza disponibile</string>

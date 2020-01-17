@@ -16,7 +16,7 @@
     <string name="str_live_switch">切換</string>
     <string name="live_flow">耗費</string>
     <string name="str_carrecorder_storage_all">總共</string>
-    <string name="str_carrecorder_storage_use">已使用</string>
+    <string name="str_carrecorder_storage_use">已用空間</string>
     <string name="str_carrecorder_storage_cycle">提供循環影片</string>
     <string name="str_carrecorder_storage_wonderful">提供精彩影片</string>
     <string name="str_carrecorder_storage_emergency">提供危急影片</string>

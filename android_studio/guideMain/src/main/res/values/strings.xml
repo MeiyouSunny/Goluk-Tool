@@ -428,7 +428,7 @@
     <string name="str_live_switch">Live Video switch</string>
     <string name="live_flow">Consump:</string>
     <string name="str_carrecorder_storage_all">Total</string>
-    <string name="str_carrecorder_storage_use">Loop Available</string>
+    <string name="str_carrecorder_storage_use">Used storage</string>
     <string name="str_carrecorder_storage_cycle">Loop Video</string>
     <string name="str_carrecorder_storage_wonderful">Wonderful Available</string>
     <string name="str_carrecorder_storage_emergency">Emergency Available</string>

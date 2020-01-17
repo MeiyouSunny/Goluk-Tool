@@ -16,7 +16,7 @@
     <string name="str_live_switch">Переключить</string>
     <string name="live_flow">Потреб</string>
     <string name="str_carrecorder_storage_all">Всего</string>
-    <string name="str_carrecorder_storage_use">Использовано</string>
+    <string name="str_carrecorder_storage_use">Используемое пространство</string>
     <string name="str_carrecorder_storage_cycle">Доступна циклическая запись</string>
     <string name="str_carrecorder_storage_wonderful">Доступно замечательное видео</string>
     <string name="str_carrecorder_storage_emergency">Доступно аварийное видео</string>

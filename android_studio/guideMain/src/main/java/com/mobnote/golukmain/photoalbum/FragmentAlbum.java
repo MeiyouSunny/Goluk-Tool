@@ -392,7 +392,8 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
         mDownLoadIcon.setBackgroundResource(R.drawable.photo_download_icon);
         mDeleteIcon.setBackgroundResource(R.drawable.select_video_del_icon);
         editState = false;
-        mBackBtn.setVisibility(View.VISIBLE);
+        if (!parentViewIsMainActivity)
+            mBackBtn.setVisibility(View.VISIBLE);
         mTitleName.setVisibility(View.GONE);
         mEditLayout.setVisibility(View.GONE);
         selectedListData.clear();

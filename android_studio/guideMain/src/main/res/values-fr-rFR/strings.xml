@@ -16,7 +16,7 @@
     <string name="str_live_switch">Changer</string>
     <string name="live_flow">Consommation</string>
     <string name="str_carrecorder_storage_all">Total</string>
-    <string name="str_carrecorder_storage_use">Utilisé</string>
+    <string name="str_carrecorder_storage_use">Espace utilisé</string>
     <string name="str_carrecorder_storage_cycle">Boucle disponible</string>
     <string name="str_carrecorder_storage_wonderful">Magnifique disponible</string>
     <string name="str_carrecorder_storage_emergency">D\'urgence disponible</string>
