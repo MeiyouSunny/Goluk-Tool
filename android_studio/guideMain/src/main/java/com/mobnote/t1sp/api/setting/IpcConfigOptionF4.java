@@ -47,7 +47,7 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
         mIpcConfigListener.onSoundCaptureStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundCapture));
         mIpcConfigListener.onSoundRecordStatusGet(GolukUtils.isSwitchOn(mSettingInfo.audioRecord));
         mIpcConfigListener.onCollisionSensityGet(mSettingInfo.GSensor);
-        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
+//        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
         mIpcConfigListener.onVideoEncodeConfigGet(mSettingInfo.recordSize);
         mIpcConfigListener.onSoundUrgentStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundUrgent));
         mIpcConfigListener.onVolumeValueGet(GolukUtils.parseVolumeLevel(mSettingInfo.volumeLevel));

@@ -172,6 +172,7 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     android:id="@+id/wonderful_video_quality"
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
@@ -311,6 +312,7 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
+                    android:visibility="gone"
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
 
@@ -591,7 +593,8 @@
 
                 <RelativeLayout
                     android:id="@+id/language_set"
-                    style="@style/SettingLabelLayout">
+                    style="@style/SettingLabelLayout"
+                    android:visibility="gone">
 
                     <TextView
                         style="@style/SettingLabel.Arrow"

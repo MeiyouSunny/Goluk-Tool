@@ -123,7 +123,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchDormantMode.setOnCheckedChangeListener(this);
         switchFatigue.setOnCheckedChangeListener(this);
 
-        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables);
+        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables_t1s);
         mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
         mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
         mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);

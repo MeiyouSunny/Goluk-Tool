@@ -91,4 +91,10 @@
         <item>480P</item>
     </array>
 
+    <!-- 循环视频质量T1S -->
+    <array name="video_qulity_lables_t1s">
+        <item>1080P</item>
+        <item>720P</item>
+    </array>
+
 </resources>
