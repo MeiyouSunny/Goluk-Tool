@@ -1568,4 +1568,8 @@
     <string name="minute_three">3 minutes</string>
     <string name="download_complete">Download completed</string>
 
+    <string name="acc_option">ACC从ON到OFF时</string>
+    <string name="acc_option_timeslapse">开启缩时录影</string>
+    <string name="acc_option_power_off">直接关机</string>
+
 </resources>

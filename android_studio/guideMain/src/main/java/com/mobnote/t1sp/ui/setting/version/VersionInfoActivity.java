@@ -31,8 +31,8 @@ public class VersionInfoActivity extends BackTitleActivity {
     TextView mDeviceId;
     @BindView(R2.id.mVersion)
     TextView mDeviceVersion;
-//    @BindView(R2.id.iv_qrcode)
-//    ImageView mSNQrcode;
+    @BindView(R2.id.iv_qrcode)
+    ImageView mSNQrcode;
 
     @Override
     public int initLayoutResId() {
@@ -67,6 +67,12 @@ public class VersionInfoActivity extends BackTitleActivity {
                     type = "T2S";
                 } else if (wifiName.startsWith("Goluk_T1S")) {
                     type = "T1S";
+                } else if (wifiName.startsWith("Goluk_T3Pro")) {
+                    type = "T3Pro";
+                } else if (wifiName.startsWith("Goluk_F30")) {
+                    type = "F30";
+                } else if (wifiName.startsWith("Goluk_F20")) {
+                    type = "F20";
                 }
                 mDeviceModel.setText(getString(R.string.str_goluk) + type);
             }
@@ -94,7 +100,7 @@ public class VersionInfoActivity extends BackTitleActivity {
 //                mDeviceModel.setText(getString(R.string.str_goluk) + "T2S");
                 mDeviceId.setText(sn);
 
-                //mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));
+                mSNQrcode.setImageBitmap(QRCodeEncoder.creatBarcode(sn, 800,300));
 
             }
 

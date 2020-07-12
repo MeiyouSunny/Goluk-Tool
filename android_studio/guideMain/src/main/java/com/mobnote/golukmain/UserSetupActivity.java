@@ -36,7 +36,7 @@ import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.userlogin.CancelResult;
 import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
-import com.mobnote.golukmain.xdpush.GolukNotification;
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.manager.MessageManager;
@@ -437,7 +437,7 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         GolukUtils.showToast(mContext, this.getResources().getString(R.string.str_loginout_success));
         btnLoginout.setText(this.getResources().getString(R.string.login_text));
         MessageManager.getMessageManager().setMessageEveryCount(0, 0, 0, 0);
-        GolukNotification.getInstance().clearAllNotification(this);
+//        GolukNotification.getInstance().clearAllNotification(this);
     }
 
     /**

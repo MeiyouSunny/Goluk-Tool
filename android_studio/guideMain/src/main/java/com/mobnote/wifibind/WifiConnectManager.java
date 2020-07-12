@@ -157,7 +157,10 @@ public class WifiConnectManager implements WifiConnectInterface, IMultiCastFn {
                 (result.getIpc_ssid().startsWith("Goluk_T2S")
                         || result.getIpc_ssid().startsWith("Goluk_T2SU")
                         || result.getIpc_ssid().startsWith("Goluk_T4")
-                        || result.getIpc_ssid().startsWith("Goluk_T4U"));
+                        || result.getIpc_ssid().startsWith("Goluk_T4U")
+                        || result.getIpc_ssid().startsWith("Goluk_F30")
+                        || result.getIpc_ssid().startsWith("Goluk_F20")
+                        || result.getIpc_ssid().startsWith("Goluk_T3Pro"));
     }
 
     // -------------------------------以上为封装后的对外接口----------------------------------------//

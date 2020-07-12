@@ -51,7 +51,8 @@ android {
 
         international {
             dimension "default"
-            applicationId "com.mobnote.golukmobile"
+            applicationId "com.mobnote.goluk"
+//            applicationId "com.mobnote.golukmobile"
             resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'
             resValue 'string', 'ZhugeChannel', '"googleplay"'
@@ -62,14 +63,24 @@ android {
         }
     }
 
+//    signingConfigs {
+//        release {
+//            storeFile file("../../makeApk/xiaocheben.keystore")
+//            storePassword 'zhiquchelian#xiaocheben.com'
+//            keyAlias 'xiaocheben'
+//            keyPassword 'zhiquchelian#xiaocheben.com'
+//        }
+//    }
+
     signingConfigs {
         release {
-            storeFile file("../../makeApk/xiaocheben.keystore")
-            storePassword 'zhiquchelian#xiaocheben.com'
-            keyAlias 'xiaocheben'
-            keyPassword 'zhiquchelian#xiaocheben.com'
+            storeFile file("../../makeApk/goluk_international.jks")
+            storePassword 'Goluk2016T1'
+            keyAlias 'goluk'
+            keyPassword 'Goluk2016T1'
         }
     }
+
     buildTypes {
         release {
             minifyEnabled false

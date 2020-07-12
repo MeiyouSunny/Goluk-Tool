@@ -235,7 +235,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             @Override
             public void onGetSettingInfo(goluk.com.t1s.api.bean.SettingInfo settingInfo) {
                 if (settingInfo != null) {
-                    String[] videoQulities = getResources().getStringArray(R.array.video_qulity_lables_t1s);
+                    int resId = GolukApplication.getInstance().getIPCControlManager().isT1S() ? R.array.video_qulity_lables_t1s : R.array.video_qulity_lables;
+                    String[] videoQulities = getResources().getStringArray(resId);
                     mVideoResolutions.setText(videoQulities[settingInfo.recordSize]);
                 }
             }
@@ -1190,16 +1191,18 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
         if (TextUtils.isEmpty(wifiName))
             return;
         String type = "";
-        if (wifiName.startsWith("Goluk_T4U")) {
-            type = "T4U";
+        if (wifiName.startsWith("Goluk_T2S")) {
+            type = "T2S";
         } else if (wifiName.startsWith("Goluk_T4")) {
             type = "T4";
-        } else if (wifiName.startsWith("Goluk_T2SU")) {
-            type = "T2SU";
-        } else if (wifiName.startsWith("Goluk_T2S")) {
-            type = "T2S";
-        } else if (wifiName.startsWith("Goluk_T1S")) {
-            type = "T1S";
+        } else if (wifiName.startsWith("Goluk_T4U")) {
+            type = "T4U";
+        } else if (wifiName.startsWith("Goluk_F30")) {
+            type = "F30";
+        } else if (wifiName.startsWith("Goluk_F20")) {
+            type = "F20";
+        } else if (wifiName.startsWith("Goluk_T3Pro")) {
+            type = "T3Pro";
         }
 
         SharedPrefUtil.saveIpcModel(type);
@@ -1403,6 +1406,16 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
 
     @Override
     public void onCycleRecTimeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onACCOptionGet(int option) {
+
+    }
+
+    @Override
+    public void onACCOptionSet(boolean success) {
 
     }
 }

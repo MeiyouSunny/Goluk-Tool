@@ -71,7 +71,7 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifimanage.WifiApAdmin;
-import com.mobnote.golukmain.xdpush.GolukNotification;
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.log.app.LogConst;
@@ -1192,7 +1192,7 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 break;
             case PageType_PushReg:
                 // token上传回调
-                GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
+//                GolukNotification.getInstance().getXg().golukServerRegisterCallBack(success, param1, param2);
                 break;
 //            case PageType_GetPushCfg:
 //            case PageType_SetPushCfg:

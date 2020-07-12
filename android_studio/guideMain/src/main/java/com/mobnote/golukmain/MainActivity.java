@@ -81,9 +81,9 @@ import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
-import com.mobnote.golukmain.xdpush.GolukNotification;
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
-import com.mobnote.golukmain.xdpush.XingGeMsgBean;
+//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
@@ -513,18 +513,18 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         if (null == intent) {
             return;
         }
-        final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
-        GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
-        if (null != from && !"".equals(from) && from.equals("notication")) {
-            String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
-
-            GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
-            XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
-            if (null != bean) {
-                GolukNotification.getInstance().dealAppinnerClick(this, bean);
-            }
-            // GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
-        }
+//        final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
+//        GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
+//        if (null != from && !"".equals(from) && from.equals("notication")) {
+//            String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+//
+//            GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
+//            XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
+//            if (null != bean) {
+//                GolukNotification.getInstance().dealAppinnerClick(this, bean);
+//            }
+//            // GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
+//        }
         // 处理网页启动App
         mStartAppBean = (StartAppBean) intent.getSerializableExtra(GuideActivity.KEY_WEB_START);
         dealWebStart();
@@ -1064,7 +1064,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.appFree();
             if (!isDestroyed())
                 finish();
-            GolukNotification.getInstance().destroy();
+//            GolukNotification.getInstance().destroy();
             CommentTimerManager.getInstance().cancelTimer();
         }
     }

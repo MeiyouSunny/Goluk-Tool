@@ -98,7 +98,7 @@ public class IPCControlManager implements IPCManagerFn {
     }
 
     public void setIpcMode() {
-        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T1s_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
+        if (G1_SIGN.equals(mProduceName) || G2_SIGN.equals(mProduceName) || T3_SIGN.equals(mProduceName)|| T3U_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_IPCDirect);
         } else if (T1_SIGN.equals(mProduceName) || T2_SIGN.equals(mProduceName)) {
             setIpcMode(IPCMgrMode_T1);
@@ -135,8 +135,17 @@ public class IPCControlManager implements IPCManagerFn {
         return !TextUtils.isEmpty(mProduceName) &&
                 (TextUtils.equals(mProduceName, "T2S")
                         || TextUtils.equals(mProduceName, "T2SU")
+                        || TextUtils.equals(mProduceName, "F30")
+                        || TextUtils.equals(mProduceName, "F20")
                         || TextUtils.equals(mProduceName, "T4")
-                        || TextUtils.equals(mProduceName, "T4U"));
+                        || TextUtils.equals(mProduceName, "T4U")
+                        || TextUtils.equals(mProduceName, "T3Pro"));
+    }
+
+    // 是否是新的T1S设备
+    public boolean isT1S() {
+        return !TextUtils.isEmpty(mProduceName) &&
+                (TextUtils.equals(mProduceName, "T3Pro") || TextUtils.equals(mProduceName, "F20"));
     }
 
     /**

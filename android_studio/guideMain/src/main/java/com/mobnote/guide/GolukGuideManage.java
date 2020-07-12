@@ -16,17 +16,17 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.LinearLayout.LayoutParams;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.widget.RelativeLayout;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
 import com.mobnote.golukmain.carrecorder.util.ImageManager;
 import com.mobnote.golukmobile.GuideActivity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ 功能描述:引导页管理
@@ -100,9 +100,9 @@ public class GolukGuideManage {
 		ArrayList<Bitmap> imgId = new ArrayList<>();
 		imgId.add(mBGBitmap2);
 		imgId.add(mBGBitmap3);
-		if(GolukApplication.getInstance().isMainland()) {
-			imgId.add(mBGBitmap4);
-		}
+//		if(GolukApplication.getInstance().isMainland()) {
+//			imgId.add(mBGBitmap4);
+//		}
 		imgId.add(mBGBitmap5);
 		for (int i = 0, len = imgId.size(); i < len; i++) {
 			// 最后一个,采用最后一个布局,

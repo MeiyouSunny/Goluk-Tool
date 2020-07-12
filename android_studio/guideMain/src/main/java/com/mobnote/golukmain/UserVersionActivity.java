@@ -1,12 +1,9 @@
 package com.mobnote.golukmain;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.user.IpcUpdateManage;
-import com.mobnote.util.SharedPrefUtil;
-
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,8 +11,11 @@ import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.user.IpcUpdateManage;
+import com.mobnote.util.SharedPrefUtil;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
@@ -59,15 +59,27 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 		vIpc = SharedPrefUtil.getIPCVersion();
 	}
 
+	public String getVersionName() {
+		PackageManager pm = getPackageManager();
+		try {
+			PackageInfo packageInfo = pm.getPackageInfo(getPackageName(), 0);
+			return packageInfo.versionName;
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		return "";
+	}
+
 	@Override
 	protected void onResume() {
 		super.onResume();
 		mApp.setContext(mContext, "UserVersion");
-		// 调用同步接口，在设置页显示APP版本号
-		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
-				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
-		GolukDebugUtils.i("lily", "=======+version+=====" + verName);
-		mTextVersion.setText(verName);
+//		// 调用同步接口，在设置页显示APP版本号
+//		String verName = mApp.mGoluk.GolukLogicCommGet(GolukModule.Goluk_Module_HttpPage,
+//				IPageNotifyFn.PageType_GetVersion, "fs6:/version");
+//		GolukDebugUtils.i("lily", "=======+version+=====" + verName);
+		mTextVersion.setText(getVersionName());
 
 	}
 

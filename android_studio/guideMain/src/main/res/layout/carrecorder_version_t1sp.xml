@@ -82,15 +82,14 @@
     </RelativeLayout>
 
     <ImageView
-        android:visibility="gone"
         android:id="@+id/iv_qrcode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:scaleType="matrix"
         android:layout_below="@id/layout_device_info"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/dimen_60"
-        />
+        android:scaleType="matrix"
+        android:visibility="gone" />
 
 
 </RelativeLayout>

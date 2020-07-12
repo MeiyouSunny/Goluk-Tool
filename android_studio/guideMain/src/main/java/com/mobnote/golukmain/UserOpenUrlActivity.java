@@ -274,7 +274,7 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (!mBaseApp.isMainland()){
 						url = "http://www.goluk.com/legal_cn.html";
 					}else{
-						url = "http://surl3.goluk.cn/golukwebsite_phone/legal_cn.html?commlocale=zh";
+						url = "https://www.goluk.com/legal_cn.html?commlocale=zh";
 					}
 					mTextTitle.setText(this.getString(R.string.str_user_protocol_and_privacy));
 					if (mErrorState) {

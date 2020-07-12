@@ -6,9 +6,11 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.kyleduo.switchbutton.SwitchButton;
+import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.RestoreFactoryEvent;
 import com.mobnote.eventbus.SDCardFormatEvent;
 import com.mobnote.golukmain.R;
@@ -53,6 +55,10 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     TextView mTvVideoResolve;
     @BindView(R2.id.video_time_value)
     TextView mTvRecordTime;
+    @BindView(R2.id.wonderful_video_quality)
+    RelativeLayout mLayoutCaptureQulity;
+    @BindView(R2.id.lineWonderfulQuality)
+    View mLineCaptureQulity;
     @BindView(R2.id.wonderful_video_quality_value)
     TextView mTvCaptureQulity;
     @BindView(R2.id.tv_volume_level)
@@ -63,6 +69,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     TextView mTvPowerOffDelay;
     @BindView(R2.id.gsensor_level_value)
     TextView mTvGSensor;
+    @BindView(R2.id.acc_option_value)
+    TextView mTvAccOption;
     @BindView(R2.id.language_value)
     TextView mTvLanguage;
     @BindView(R2.id.switch_record_sound)
@@ -91,6 +99,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     @BindView(R2.id.sensor_z_et)
     EditText mEtSensorZ;
 
+    @BindView(R2.id.language_set)
+    RelativeLayout mLayoutLanguage;
+
     // 忽略首次由程序修改设置的check状态
     private boolean mIgnoreSwtich = true;
 
@@ -99,7 +110,7 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     private IpcConfigOption mConfigOption;
 
-    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel, mArrayLanguages, mArrayRecordTime;
+    private String[] mArrayVideoQulity, mArrayGSensorLevel, mArrayCaptureQulity, mArrayVolumeLevel, mArrayLanguages, mArrayRecordTime, mArrayAccOptions;
 
     @Override
     public int initLayoutResId() {
@@ -123,9 +134,18 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         switchDormantMode.setOnCheckedChangeListener(this);
         switchFatigue.setOnCheckedChangeListener(this);
 
-        mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables_t1s);
+        if (GolukApplication.getInstance().getIPCControlManager().isT1S()) {
+            mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables_t1s);
+            mLayoutCaptureQulity.setVisibility(View.GONE);
+            mLineCaptureQulity.setVisibility(View.GONE);
+            mLayoutLanguage.setVisibility(View.GONE);
+        } else {
+            mArrayVideoQulity = getResources().getStringArray(R.array.video_qulity_lables);
+        }
+
         mArrayCaptureQulity = getResources().getStringArray(R.array.capture_qulity_lables);
         mArrayGSensorLevel = getResources().getStringArray(R.array.parking_guard_and_mtd);
+        mArrayAccOptions = getResources().getStringArray(R.array.acc_option_values);
         mArrayVolumeLevel = getResources().getStringArray(R.array.list_tone_volume);
         mArrayLanguages = getResources().getStringArray(R.array.list_language_t);
         mArrayRecordTime = getResources().getStringArray(R.array.record_time);
@@ -162,7 +182,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
     }
 
     @OnClick({R2.id.SDCard_storage, R2.id.mFormatSDCard, R2.id.video_resolve, R2.id.wonderful_video_quality, R2.id.wonderful_video_time, R2.id.gsensor_level,
-            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time, R2.id.sensor_xy_bt, R2.id.sensor_z_bt})
+            R2.id.volume_level, R2.id.shutdown_time, R2.id.time_setting, R2.id.version_info, R2.id.reset_factory, R2.id.language_set, R2.id.video_time, R2.id.sensor_xy_bt,
+            R2.id.sensor_z_bt, R2.id.acc_option})
     public void onClick(View view) {
         final int viewId = view.getId();
         if (viewId == R.id.SDCard_storage) {
@@ -175,6 +196,8 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
             startSelections(R.string.pzgy_title, mArrayGSensorLevel, ViewUtil.getTextViewValue(mTvGSensor), TYPE_GSENSOR);
         } else if (viewId == R.id.wonderful_video_quality) {
             startSelections(R.string.str_wonderful_video_quality_title, mArrayCaptureQulity, ViewUtil.getTextViewValue(mTvCaptureQulity), TYPE_CAPTURE_QULITY);
+        } else if (viewId == R.id.acc_option) {
+            startSelections(R.string.acc_option, mArrayAccOptions, ViewUtil.getTextViewValue(mTvAccOption), TYPE_ACC_OPTION);
         } else if (viewId == R.id.volume_level) {
             startSelections(R.string.str_settings_tone_title, mArrayVolumeLevel, ViewUtil.getTextViewValue(mTvVolumeLevel), TYPE_VOLUME_LEVEL);
         } else if (viewId == R.id.reset_factory) {
@@ -345,6 +368,9 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
         } else if (requestCode == TYPE_VIDEO_TIME) {
             mTvRecordTime.setText(settingValue.description);
             mConfigOption.setCycleRecTime(settingValue.value + 1);
+        } else if (requestCode == TYPE_ACC_OPTION) {
+            mTvAccOption.setText(settingValue.description);
+            mConfigOption.setAccOption(settingValue.value);
         }
     }
 
@@ -644,6 +670,16 @@ public class DeviceSettingsActivity extends BackTitleActivity<DeviceSettingsPres
 
     @Override
     public void onCycleRecTimeSet(boolean success) {
+
+    }
+
+    @Override
+    public void onACCOptionGet(int option) {
+        mTvAccOption.setText(mArrayAccOptions[option]);
+    }
+
+    @Override
+    public void onACCOptionSet(boolean success) {
 
     }
 

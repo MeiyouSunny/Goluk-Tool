@@ -79,6 +79,8 @@ public interface IpcConfigOption {
 
     boolean setCycleRecTime(int timeType);
 
+    boolean setAccOption(int option);
+
 //    // 获取主录分辨率设置项
 //    String[] getMainRecordSizeOptions();
 //

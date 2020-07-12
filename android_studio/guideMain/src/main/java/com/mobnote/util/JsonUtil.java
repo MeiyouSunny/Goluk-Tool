@@ -1,12 +1,5 @@
 package com.mobnote.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.settings.VideoQualityActivity;
 import com.mobnote.golukmain.cluster.bean.UserLabelBean;
@@ -17,13 +10,22 @@ import com.mobnote.golukmain.live.LiveSettingBean;
 import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.xdpush.SettingBean;
-import com.mobnote.golukmain.xdpush.XingGeMsgBean;
+//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 import com.mobnote.user.APPInfo;
 import com.mobnote.user.IPCInfo;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.tiros.api.CSLog;
 import cn.com.tiros.api.FileUtils;
+
+//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 
 public class JsonUtil {
 
@@ -1287,27 +1289,27 @@ public class JsonUtil {
         return notifyId;
     }
 
-    public static XingGeMsgBean parseXingGePushMsg(String json) {
-        if (null == json) {
-            return null;
-        }
-        try {
-            JSONObject root = new JSONObject(json);
-            XingGeMsgBean bean = new XingGeMsgBean();
-            bean.notifyId = getValidNotifyId();
-            bean.title = getJsonStringValue(root, "t", "");
-            bean.msg = getJsonStringValue(root, "d", "");
-            bean.target = getJsonStringValue(root, "g", "0");
-            bean.tarkey = getJsonStringValue(root, "k", "1");
-            bean.weburl = getJsonStringValue(root, "w", "");
-            bean.params = root.getString("p");
-            bean.disturb = getJsonStringValue(root, "b", "1");
-
-            return bean;
-        } catch (Exception e) {
-            return null;
-        }
-    }
+//    public static XingGeMsgBean parseXingGePushMsg(String json) {
+//        if (null == json) {
+//            return null;
+//        }
+//        try {
+//            JSONObject root = new JSONObject(json);
+//            XingGeMsgBean bean = new XingGeMsgBean();
+//            bean.notifyId = getValidNotifyId();
+//            bean.title = getJsonStringValue(root, "t", "");
+//            bean.msg = getJsonStringValue(root, "d", "");
+//            bean.target = getJsonStringValue(root, "g", "0");
+//            bean.tarkey = getJsonStringValue(root, "k", "1");
+//            bean.weburl = getJsonStringValue(root, "w", "");
+//            bean.params = root.getString("p");
+//            bean.disturb = getJsonStringValue(root, "b", "1");
+//
+//            return bean;
+//        } catch (Exception e) {
+//            return null;
+//        }
+//    }
 
     public static String[] parseVideoDetailId(String jsonArray) {
         try {

@@ -97,4 +97,10 @@
         <item>720P</item>
     </array>
 
+    <!--- ACC Option -->
+    <array name="acc_option_values">
+        <item>@string/acc_option_power_off</item>
+        <item>@string/acc_option_timeslapse</item>
+    </array>
+
 </resources>

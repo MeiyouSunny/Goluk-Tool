@@ -276,14 +276,18 @@
 
     <!-- 设备类型 -->
     <string-array name="device_type">
-        <item>G1</item>
-        <item>G2</item>
+        <item>T2S</item>
+        <item>T4</item>
+        <item>T4U</item>
+        <item>F30</item>
+        <item>F20</item>
+        <item>T3Pro</item>
         <item>T1</item>
-        <item>T1S</item>
         <item>T2</item>
         <item>T3</item>
-        <item>T4</item>
-        <item>T2S</item>
+        <item>T1s</item>
+        <item>G1</item>
+        <item>G2</item>
     </string-array>
 
     <!-- 循环视频时长 -->

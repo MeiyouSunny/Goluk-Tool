@@ -82,4 +82,7 @@ public interface IPCConfigListener {
 
     void onCycleRecTimeSet(boolean success);
 
+    void onACCOptionGet(int option);
+
+    void onACCOptionSet(boolean success);
 }

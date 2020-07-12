@@ -172,7 +172,6 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     android:id="@+id/wonderful_video_quality"
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
@@ -188,7 +187,8 @@
 
                 </RelativeLayout>
 
-                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+                <View android:id="@+id/lineWonderfulQuality"
+                    style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
                     style="@style/SettingLabelLayout"
@@ -312,7 +312,6 @@
                 <View style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
-                    android:visibility="gone"
                     style="@style/SettingLabelLayout"
                     android:clickable="false">
 
@@ -334,8 +333,7 @@
                 </RelativeLayout>
 
                 <View
-                    style="@style/LineGrayHorizontalPaddingLeft"
-                    android:visibility="gone"/>
+                    style="@style/LineGrayHorizontalPaddingLeft"/>
 
                 <RelativeLayout
                     style="@style/SettingLabelLayout"
@@ -437,7 +435,24 @@
 
                 </LinearLayout>
 
-                <View style="@style/LineGrayHorizontalPaddingLeft"/>
+                <View style="@style/LineGrayHorizontalPaddingLeft" />
+
+                <RelativeLayout
+                    android:id="@+id/acc_option"
+                    style="@style/SettingLabelLayout">
+
+                    <TextView
+                        style="@style/SettingLabel.Arrow"
+                        android:text="@string/acc_option" />
+
+                    <TextView
+                        android:id="@+id/acc_option_value"
+                        style="@style/SettingLabelValue" />
+
+                </RelativeLayout>
+
+
+                <View style="@style/LineGrayHorizontalPaddingLeft" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -593,8 +608,7 @@
 
                 <RelativeLayout
                     android:id="@+id/language_set"
-                    style="@style/SettingLabelLayout"
-                    android:visibility="gone">
+                    style="@style/SettingLabelLayout">
 
                     <TextView
                         style="@style/SettingLabel.Arrow"

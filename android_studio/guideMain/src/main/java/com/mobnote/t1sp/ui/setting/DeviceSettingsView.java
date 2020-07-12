@@ -16,5 +16,6 @@ public interface DeviceSettingsView extends View<DeviceSettingsPresenter>, Loadi
     int TYPE_CAPTURE_QULITY = 8;
     int TYPE_VOLUME_LEVEL = 9;
     int TYPE_VIDEO_TIME = 10;
+    int TYPE_ACC_OPTION = 11;
 
 }

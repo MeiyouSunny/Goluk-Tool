@@ -47,14 +47,14 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
         mIpcConfigListener.onSoundCaptureStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundCapture));
         mIpcConfigListener.onSoundRecordStatusGet(GolukUtils.isSwitchOn(mSettingInfo.audioRecord));
         mIpcConfigListener.onCollisionSensityGet(mSettingInfo.GSensor);
-//        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
+        mIpcConfigListener.onCaptureVideoQulityGet(mSettingInfo.captureSize);
         mIpcConfigListener.onVideoEncodeConfigGet(mSettingInfo.recordSize);
         mIpcConfigListener.onSoundUrgentStatusGet(GolukUtils.isSwitchOn(mSettingInfo.soundUrgent));
         mIpcConfigListener.onVolumeValueGet(GolukUtils.parseVolumeLevel(mSettingInfo.volumeLevel));
         mIpcConfigListener.onLanguageGet(mSettingInfo.language);
         mIpcConfigListener.onAutoRotateGet(GolukUtils.isSwitchOn(mSettingInfo.autoRotate));
         mIpcConfigListener.onCycleRecTimeGet(mSettingInfo.cycleRecTime);
-
+        mIpcConfigListener.onACCOptionGet(mSettingInfo.accOption);
     }
 
     @Override
@@ -496,6 +496,24 @@ public class IpcConfigOptionF4 implements IpcConfigOption {
             }
         });
 
+        return true;
+    }
+
+    @Override
+    public boolean setAccOption(int option) {
+        ApiUtil.accOption(option, new CallbackCmd() {
+            @Override
+            public void onSuccess(int i) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onAutoRotateSet(true);
+            }
+
+            @Override
+            public void onFail(int i, int i1) {
+                if (mIpcConfigListener != null)
+                    mIpcConfigListener.onAutoRotateSet(false);
+            }
+        });
         return true;
     }
 

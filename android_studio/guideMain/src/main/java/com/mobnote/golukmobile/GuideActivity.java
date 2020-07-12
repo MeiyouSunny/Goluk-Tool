@@ -19,7 +19,7 @@ import com.mobnote.eventbus.EventStartApp;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
-import com.mobnote.golukmain.xdpush.GolukNotification;
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
 import com.mobnote.guide.GolukGuideManage;
 import com.mobnote.permission.GolukPermissionUtils;
@@ -79,12 +79,12 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 	}
 
 	private void getIntentData() {
-		Intent intent = getIntent();
-		mPushFrom = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
-		if (null != mPushFrom && !"".equals(mPushFrom) && mPushFrom.equals("notication")) {
-			mPushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
-		}
-		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom + "  json:" + mPushJson);
+//		Intent intent = getIntent();
+//		mPushFrom = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
+//		if (null != mPushFrom && !"".equals(mPushFrom) && mPushFrom.equals("notication")) {
+//			mPushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
+//		}
+//		GolukDebugUtils.e("", "jyf----GuideActivity-----from: " + mPushFrom + "  json:" + mPushJson);
 	}
 
 	private boolean getWebStartData() {
@@ -125,12 +125,12 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 	 * @author jyf
 	 */
 	private void addPushData(Intent intent) {
-		if (null == mPushFrom) {
-			return;
-		}
-		GolukDebugUtils.e("", "jyf----GuideActivity--addPushData---from: " + mPushFrom + "  json:" + mPushJson);
-		intent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, mPushFrom);
-		intent.putExtra(GolukNotification.NOTIFICATION_KEY_JSON, mPushJson);
+//		if (null == mPushFrom) {
+//			return;
+//		}
+//		GolukDebugUtils.e("", "jyf----GuideActivity--addPushData---from: " + mPushFrom + "  json:" + mPushJson);
+//		intent.putExtra(GolukNotification.NOTIFICATION_KEY_FROM, mPushFrom);
+//		intent.putExtra(GolukNotification.NOTIFICATION_KEY_JSON, mPushJson);
 	}
 
 	public void addWebStartData(Intent intent) {
@@ -158,7 +158,7 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 				+ BaiduLocation.mServerFlag);
 		mApp.initLogic();
 		// 注册信鸽的推送
-		GolukNotification.getInstance().createXG();
+//		GolukNotification.getInstance().createXG();
 		mApp.startUpgrade();
 		// 判断程序是否第一次启动
 		if (!isFirstStart()) {// 启动过

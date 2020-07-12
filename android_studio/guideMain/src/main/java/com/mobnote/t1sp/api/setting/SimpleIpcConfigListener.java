@@ -201,4 +201,14 @@ public class SimpleIpcConfigListener implements IPCConfigListener {
 
     }
 
+    @Override
+    public void onACCOptionGet(int option) {
+
+    }
+
+    @Override
+    public void onACCOptionSet(boolean success) {
+
+    }
+
 }

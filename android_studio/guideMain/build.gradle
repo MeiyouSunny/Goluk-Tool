@@ -101,7 +101,7 @@ dependencies {
     compile files('libs/SocialSDK_facebook.jar')
 
     // 信鸽jar
-    compile 'com.tencent.xinge:xinge:3.2.3-release'
+//    compile 'com.tencent.xinge:xinge:3.2.3-release'
     //jg包
     //compile'com.tencent.jg:jg:1.1'
     // 信鸽wup包(信鸽和云存储都需要此包)

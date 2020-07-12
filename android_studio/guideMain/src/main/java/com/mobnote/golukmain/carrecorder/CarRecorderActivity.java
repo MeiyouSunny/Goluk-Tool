@@ -553,11 +553,11 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
 
     private void startPlayVideo() {
         // 国际版T1设备隐藏直播
-        if (!mApp.isMainland()) {
-            mllStartLive.setVisibility(View.GONE);
-        } else {
-            mllStartLive.setVisibility(View.VISIBLE);
-        }
+//        if (!mApp.isMainland()) {
+//            mllStartLive.setVisibility(View.GONE);
+//        } else {
+//            mllStartLive.setVisibility(View.VISIBLE);
+//        }
         mSettingBtn.setVisibility(View.VISIBLE);
         mPalyerLayout.setVisibility(View.VISIBLE);
         mNotconnected.setVisibility(View.GONE);
