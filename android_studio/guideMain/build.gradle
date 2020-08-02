@@ -126,7 +126,7 @@ dependencies {
     // Downloader
     compile 'com.liulishuo.filedownloader:library:1.7.1'
     // Gps parser
-    compile files('libs/T1SP-Gps.jar')
+//    compile files('libs/T1SP-Gps.jar')
 
     compile(name: 'T2S', ext: 'aar')
 

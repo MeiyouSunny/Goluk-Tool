@@ -244,7 +244,6 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
         mWonderfulVideoAdapter.notifyDataSetChanged();
     }
 
-
     /**
      * 跳转到本地视频播放页面
      */
@@ -282,16 +281,20 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             }
 
             // T1SP的紧急视频或循环视频,跳转到PhotoAlbumPlayerT1SP(需要播放轨迹)
-//            if (isT1spVideoAndHaveGpsFile(path)) {
-//                boolean isShareVideo = path.contains(FileUtil.WONDERFUL_VIDEO_PREFIX);
-//                GolukUtils.startPhotoAlbumPlayerT1spActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
-//                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO), isShareVideo);
-//                return;
-//            }
+            if (isF5(path)) {
+                GolukUtils.startPhotoAlbumPlayerF5Activity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
+                        (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
+                return;
+            }
             // 其他视频文件
             GolukUtils.startPhotoAlbumPlayerActivity(LocalFragment.this.getContext(), type, "local", path, filename, createTime, videoHP, size,
                     (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
         }
+    }
+
+    private boolean isF5(String path) {
+        String[] data = path.split("\\.");
+        return data[0].endsWith("A") || data[0].endsWith("B");
     }
 
     /**

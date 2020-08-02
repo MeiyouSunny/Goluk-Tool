@@ -1118,4 +1118,7 @@
     <string name="minute_two">2 минуты</string>
     <string name="minute_three">3 минуты</string>
     <string name="download_complete">Загрузка завершена</string>
+
+    <string name="user_policy">Пожалуйста, нажмите на чтение и понимание протокола пользователя и политики уединения</string>
+    <string name="umeng_hint">для того чтобы предоставить общие возможности, наши продукты интегрированы в U - Share + SDK, SDK собирает идентификаторы вашего оборудования и номера социальных счетов, которыми вы должны делиться.</string>
 </resources>

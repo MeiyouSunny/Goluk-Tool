@@ -1290,4 +1290,7 @@
     <string name="minute_three">3分钟</string>
     <string name="download_complete">下载完成</string>
 
+    <string name="user_policy">请阅读并理解我们的《用户协议》和《隐私保护政策》</string>
+    <string name="umeng_hint">为了提供分享功能，我们的产品集成友盟+SDK，SDK将采集您的设备标识和您需要分享的社交账户。</string>
+
 </resources>

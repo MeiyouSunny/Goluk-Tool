@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="cn.com.mobnote.golukmobile"
-    android:versionCode="30009"
-    android:versionName="3.0.9">
+    android:versionCode="30010"
+    android:versionName="3.0.10">
 
     <application
         android:name="com.mobnote.application.GolukApplication"
@@ -60,12 +60,13 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait">
         </activity>
+
         <activity
-            android:name="com.mobnote.t1sp.ui.album.PhotoAlbumPlayerT1SP"
+            android:name="com.mobnote.t1sp.ui.album.PhotoAlbumPlayerF5"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
-            android:theme="@android:style/Theme.NoTitleBar"></activity>
+            android:theme="@android:style/Theme.NoTitleBar" />
 
         <!-- T2S End-->
 

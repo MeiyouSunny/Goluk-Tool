@@ -7,8 +7,7 @@ import android.util.AttributeSet;
 import android.widget.RelativeLayout;
 
 import com.mobnote.application.GolukApplication;
-
-import net.sf.marineapi.bean.GPSData;
+import com.mobnote.t1sp.gps.GPSData;
 
 import java.util.List;
 

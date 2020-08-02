@@ -1,6 +1,6 @@
 package com.mobnote.t1sp.util;
 
-import net.sf.marineapi.bean.GPSData;
+import com.mobnote.t1sp.gps.GPSData;
 
 import java.util.List;
 

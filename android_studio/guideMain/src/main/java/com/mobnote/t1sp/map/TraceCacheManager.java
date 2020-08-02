@@ -23,7 +23,7 @@ import com.mobnote.t1sp.map.DiskLruCache.Snapshot;
  */
 public class TraceCacheManager {
 
-    private static final String TAG = "CarSvc_TraceCacheManager";
+    private static final String TAG = "TraceCacheManager";
 
     private static TraceCacheManager sIns;
 

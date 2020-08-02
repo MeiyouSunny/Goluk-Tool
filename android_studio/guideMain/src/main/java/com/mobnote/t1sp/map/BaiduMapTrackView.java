@@ -40,8 +40,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult.AddressComponent;
 import com.baidu.mapapi.utils.CoordinateConverter;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-
-import net.sf.marineapi.bean.GPSData;
+import com.mobnote.t1sp.gps.GPSData;
 
 import java.util.ArrayList;
 import java.util.List;

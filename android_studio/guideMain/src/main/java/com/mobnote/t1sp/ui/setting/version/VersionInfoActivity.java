@@ -73,6 +73,8 @@ public class VersionInfoActivity extends BackTitleActivity {
                     type = "F30";
                 } else if (wifiName.startsWith("Goluk_F20")) {
                     type = "F20";
+                } else if (wifiName.startsWith("Goluk_F5")) {
+                    type = "F5";
                 }
                 mDeviceModel.setText(getString(R.string.str_goluk) + type);
             }

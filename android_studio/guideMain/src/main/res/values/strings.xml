@@ -1572,4 +1572,7 @@
     <string name="acc_option_timeslapse">开启缩时录影</string>
     <string name="acc_option_power_off">直接关机</string>
 
+    <string name="user_policy">Please click to read and understand our user agreement and privacy policy</string>
+    <string name="umeng_hint">In order to provide the sharing function, our product integrates U-Share+ SDK, and the SDK will collect your device ID and the social account you need to share.</string>
+
 </resources>

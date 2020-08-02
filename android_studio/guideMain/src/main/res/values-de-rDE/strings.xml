@@ -1118,4 +1118,7 @@
     <string name="minute_two">2 Minuten</string>
     <string name="minute_three">3 Minuten</string>
     <string name="download_complete">Download abgeschlossen</string>
+
+    <string name="user_policy">Bitte klicken Sie, um unsere Nutzungsbedingungen und Datenschutzbestimmungen zu lesen und zu verstehen</string>
+    <string name="umeng_hint">Um die Sharing-Funktion zu gewährleisten, integriert unser Produkt U-Share+ SDK, und das SDK wird Ihre Device ID und das soziale Konto, das Sie teilen müssen, sammeln.</string>
 </resources>

@@ -139,7 +139,8 @@ public class IPCControlManager implements IPCManagerFn {
                         || TextUtils.equals(mProduceName, "F20")
                         || TextUtils.equals(mProduceName, "T4")
                         || TextUtils.equals(mProduceName, "T4U")
-                        || TextUtils.equals(mProduceName, "T3Pro"));
+                        || TextUtils.equals(mProduceName, "T3Pro")
+                        || TextUtils.equals(mProduceName, "F5"));
     }
 
     // 是否是新的T1S设备

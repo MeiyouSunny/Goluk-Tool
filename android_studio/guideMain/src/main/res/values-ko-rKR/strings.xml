@@ -1116,4 +1116,6 @@
     <string name="minute_three">3 분</string>
     <string name="download_complete">다운로드 완료</string>
 
+    <string name="user_policy">클릭 하여 저희 의 사용자 협의 와 프라이버시 정책 을 읽 고 이해 하 십시오.</string>
+    <string name="umeng_hint">공유 기능 을 제공 하기 위해 서 저희 제품 은 U - Share + SDK 로 통합 되 었 습 니 다. SDK 는 귀하 의 장비 ID 와 공유 해 야 할 소 셜 계 정 을 수집 할 것 입 니 다.</string>
 </resources>

@@ -1,15 +1,5 @@
 package com.mobnote.golukmain.internation.login;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
@@ -25,11 +15,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
@@ -44,6 +32,7 @@ import com.mobnote.eventbus.EventLoginSuccess;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.profit.MyProfitActivity;
 import com.mobnote.user.UserLoginInterface;
@@ -53,8 +42,14 @@ import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -878,4 +873,9 @@ public class InternationUserLoginActivity extends BaseActivity implements OnClic
         return packageName;
     }
 
+    public void showUserPolicy(View view) {
+        Intent privacy = new Intent(this, UserOpenUrlActivity.class);
+        privacy.putExtra("url", "https://www.goluk.com/policy.html");
+        mContext.startActivity(privacy);
+    }
 }

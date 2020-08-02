@@ -1119,4 +1119,7 @@
     <string name="minute_two">2分鐘</string>
     <string name="minute_three">3分鐘</string>
     <string name="download_complete">下載完成</string>
+
+    <string name="user_policy">請點擊閱讀並理解我們的使用者協定和隱私政策</string>
+    <string name="umeng_hint">為了提供共亯功能，我們的產品集成了U-Share+SDK，SDK會收集你的設備ID和你需要分享的社交帳號。</string>
 </resources>

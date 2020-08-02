@@ -1203,6 +1203,8 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
             type = "F20";
         } else if (wifiName.startsWith("Goluk_T3Pro")) {
             type = "T3Pro";
+        } else if (wifiName.startsWith("Goluk_F5")) {
+            type = "F5";
         }
 
         SharedPrefUtil.saveIpcModel(type);

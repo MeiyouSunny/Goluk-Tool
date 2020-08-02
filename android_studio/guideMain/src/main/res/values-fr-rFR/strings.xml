@@ -1117,4 +1117,7 @@
     <string name="minute_two">2 minutes</string>
     <string name="minute_three">3 minutes</string>
     <string name="download_complete">Téléchargement terminé</string>
+
+    <string name="user_policy">Cliquez sur lire et comprendre notre protocole utilisateur et notre politique de confidentialité</string>
+    <string name="umeng_hint">Afin de fournir une fonction partagée, nos produits sont intégrés dans u - Share + SDK, SDK rassemblera vos identificateurs d \'équipement et les numéros de compte social que vous devez partager.</string>
 </resources>

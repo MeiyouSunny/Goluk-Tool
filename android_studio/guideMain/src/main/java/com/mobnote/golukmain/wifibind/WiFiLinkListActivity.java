@@ -603,7 +603,8 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
             if (mDeviceTypeSelected != null &&
                     (mDeviceTypeSelected.startsWith("T2S") || mDeviceTypeSelected.startsWith("F30")
                             || mDeviceTypeSelected.startsWith("T4") || mDeviceTypeSelected.startsWith("T4U")
-                            || mDeviceTypeSelected.startsWith("F20") || mDeviceTypeSelected.startsWith("T3Pro"))) {
+                            || mDeviceTypeSelected.startsWith("F20") || mDeviceTypeSelected.startsWith("T3Pro")
+                            || mDeviceTypeSelected.startsWith("F5"))) {
                 connectT2S();
             } else {
                 sendLogicLinkIpc();
@@ -1057,13 +1058,14 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 IPCControlManager ipcControlManager = mApp.getIPCControlManager();
                 if (ipcControlManager != null) {
                     if (!type.startsWith("T4") && !type.startsWith("T2S") && !type.startsWith("F30")
-                            && !type.startsWith("T4U") && !type.startsWith("F20") && !type.startsWith("T3Pro"))
+                            && !type.startsWith("T4U") && !type.startsWith("F20") && !type.startsWith("T3Pro") && !type.startsWith("F5"))
                         ipcControlManager.setProduceName(type);
                     ipcControlManager.setIpcMode();
                     if (!needGotoSystemWifiList) {
                         // T2S
                         if (type.startsWith("T2S") || type.startsWith("T4") || type.startsWith("T4U")
-                                || type.startsWith("F30") || type.startsWith("F20") || type.startsWith("T3Pro")) {
+                                || type.startsWith("F30") || type.startsWith("F20") || type.startsWith("T3Pro")
+                                || type.startsWith("F5")) {
                             connectT2S();
                         } else {
                             sendLogicLinkIpc();

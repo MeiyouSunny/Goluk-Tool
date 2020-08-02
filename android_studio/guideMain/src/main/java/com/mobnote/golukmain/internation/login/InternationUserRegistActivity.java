@@ -1,7 +1,5 @@
 package com.mobnote.golukmain.internation.login;
 
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +13,6 @@ import android.text.TextWatcher;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.Button;
@@ -23,8 +20,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import cn.com.tiros.debug.GolukDebugUtils;
-import cn.smssdk.SMSSDK;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventConfig;
@@ -59,7 +54,7 @@ public class InternationUserRegistActivity extends BaseActivity implements OnCli
     /**
      * 免责申明条款
      **/
-    public static final String PRIVACY_POLICY_WEB_URL = "http://www.goluk.cn/legal.html";
+    public static final String PRIVACY_POLICY_WEB_URL = "https://www.goluk.com/policy.html";
     /**
      * 手机号、密码、注册按钮
      **/

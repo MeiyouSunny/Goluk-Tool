@@ -276,6 +276,7 @@
 
     <!-- 设备类型 -->
     <string-array name="device_type">
+        <item>F5</item>
         <item>T2S</item>
         <item>T4</item>
         <item>T4U</item>
