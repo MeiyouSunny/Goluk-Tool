@@ -1,13 +1,10 @@
 package com.mobnote.golukmobile;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
 import android.view.Window;
@@ -19,17 +16,13 @@ import com.mobnote.eventbus.EventStartApp;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserStartActivity;
-//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
 import com.mobnote.guide.GolukGuideManage;
-import com.mobnote.permission.GolukPermissionUtils;
 
-import java.util.List;
-
-import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
-import pub.devrel.easypermissions.EasyPermissions;
+
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 
 /**
  *
@@ -39,7 +32,7 @@ import pub.devrel.easypermissions.EasyPermissions;
  *
  */
 @SuppressLint("HandlerLeak")
-public class GuideActivity extends FragmentActivity implements EasyPermissions.PermissionCallbacks {
+public class GuideActivity extends FragmentActivity {
 
 	public static final String KEY_WEB_START = "web_start_app";
 
@@ -63,10 +56,10 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 		mPreExist = mApp.isExit();
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.guide);
-		if (shouldRequestUserPermission()){
-			requestUserPermission();
-			return;
-		}
+//		if (shouldRequestUserPermission()){
+//			requestUserPermission();
+//			return;
+//		}
 
 		// 初始化
 		init();
@@ -143,23 +136,23 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 	 * 页面初始化,获取页面元素,注册事件
 	 */
 	private void init() {
-		if (mApp == null) return;
-		mApp.initializeSDK();
-		mApp.setContext(this, "GuideActivity");
+//		if (mApp == null) return;
+//		mApp.initializeSDK();
+//		mApp.setContext(this, "GuideActivity");
 		mBackground = (RelativeLayout) findViewById(R.id.ry_guide_background_layout);
 		getIntentData();
-		boolean isExit = getWebStartData();
-		if (isExit) {
-			return;
-		}
+//		boolean isExit = getWebStartData();
+//		if (isExit) {
+//			return;
+//		}
 //		BaiduLocation.mServerFlag = GolukApplication.getInstance().isMainland();
-		GolukDebugUtils.e("", "-------------GuideActivity-------------isMainland: "
-				+ GolukApplication.getInstance().isMainland() + "--------------BaiduLocation.mServerFlag: "
-				+ BaiduLocation.mServerFlag);
-		mApp.initLogic();
+//		GolukDebugUtils.e("", "-------------GuideActivity-------------isMainland: "
+//				+ GolukApplication.getInstance().isMainland() + "--------------BaiduLocation.mServerFlag: "
+//				+ BaiduLocation.mServerFlag);
+//		mApp.initLogic();
 		// 注册信鸽的推送
 //		GolukNotification.getInstance().createXG();
-		mApp.startUpgrade();
+//		mApp.startUpgrade();
 		// 判断程序是否第一次启动
 		if (!isFirstStart()) {// 启动过
 			// 读取SharedPreference中用户的信息
@@ -215,50 +208,50 @@ public class GuideActivity extends FragmentActivity implements EasyPermissions.P
 		return false;
 	}
 
-	private boolean shouldRequestUserPermission() {
-		return !GolukPermissionUtils.hasIndispensablePermission(this);
-	}
+//	private boolean shouldRequestUserPermission() {
+//		return !GolukPermissionUtils.hasIndispensablePermission(this);
+//	}
 
-	private void requestUserPermission() {
-		GolukPermissionUtils.requestPermissions(this, new String[]{
-				Manifest.permission.WRITE_EXTERNAL_STORAGE,
-				Manifest.permission.ACCESS_COARSE_LOCATION,
-				Manifest.permission.ACCESS_FINE_LOCATION,
-				Manifest.permission.READ_PHONE_STATE,
-		});
-	}
+//	private void requestUserPermission() {
+//		GolukPermissionUtils.requestPermissions(this, new String[]{
+//				Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//				Manifest.permission.ACCESS_COARSE_LOCATION,
+//				Manifest.permission.ACCESS_FINE_LOCATION,
+//				Manifest.permission.READ_PHONE_STATE,
+//		});
+//	}
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
-    }
-
-	@Override
-	public void onPermissionsGranted(int requestCode, List<String> perms) {
-		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION && !shouldRequestUserPermission()) {
-			init();
-		}
-	}
-
-	@Override
-	public void onPermissionsDenied(int requestCode, List<String> perms) {
-		GolukPermissionUtils.handlePermissionPermanentlyDenied(this, perms);
-	}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION) {
-			if (resultCode == Activity.RESULT_CANCELED) {
-				finish();
-			} else if (resultCode ==Activity.RESULT_OK){
-				if (shouldRequestUserPermission()) {
-					finish();
-				} else {
-					init();
-				}
-			}
-		}
-		super.onActivityResult(requestCode, resultCode, data);
-	}
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        EasyPermissions.onRequestPermissionsResult(requestCode,permissions,grantResults,this);
+//    }
+//
+//	@Override
+//	public void onPermissionsGranted(int requestCode, List<String> perms) {
+//		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION && !shouldRequestUserPermission()) {
+//			init();
+//		}
+//	}
+//
+//	@Override
+//	public void onPermissionsDenied(int requestCode, List<String> perms) {
+//		GolukPermissionUtils.handlePermissionPermanentlyDenied(this, perms);
+//	}
+//
+//	@Override
+//	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//		if (requestCode == GolukPermissionUtils.CODE_REQUEST_PERMISSION) {
+//			if (resultCode == Activity.RESULT_CANCELED) {
+//				finish();
+//			} else if (resultCode ==Activity.RESULT_OK){
+//				if (shouldRequestUserPermission()) {
+//					finish();
+//				} else {
+//					init();
+//				}
+//			}
+//		}
+//		super.onActivityResult(requestCode, resultCode, data);
+//	}
 }

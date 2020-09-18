@@ -71,27 +71,15 @@ public class LocalDataLoadAsyncTask extends AsyncTask<String, String, String> {
         Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
             @Override
             public int compare(VideoInfo lhs, VideoInfo rhs) {
-                boolean lInValid = (lhs == null || TextUtils.isEmpty(lhs.videoCreateDate));
-                boolean rInValid = (rhs == null || TextUtils.isEmpty(rhs.videoCreateDate));
-                boolean bothInValid = lInValid && rInValid;
-                if (bothInValid) {
+                if (TextUtils.isEmpty(lhs.videoCreateDate) || TextUtils.isEmpty(rhs.videoCreateDate))
                     return 0;
-                }
 
-                if (lInValid) {
-                    return -1;
-                }
-
-                if (rInValid) {
-                    return 1;
-                }
-
-                return (int) (GolukUtils.parseStringToMilli(rhs.videoCreateDate) - GolukUtils.parseStringToMilli(lhs.videoCreateDate));
+                return GolukUtils.parseStringToMilli(rhs.videoCreateDate) > GolukUtils.parseStringToMilli(lhs.videoCreateDate) ? 1 : -1;
             }
         });
 
-		return null;
-	}
+        return null;
+    }
 
     @Override
     protected void onPostExecute(String result) {

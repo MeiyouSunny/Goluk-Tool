@@ -1293,4 +1293,20 @@
     <string name="user_policy">请阅读并理解我们的《用户协议》和《隐私保护政策》</string>
     <string name="umeng_hint">为了提供分享功能，我们的产品集成友盟+SDK，SDK将采集您的设备标识和您需要分享的社交账户。</string>
 
+    <string name="privacy_title">温馨提示</string>
+    <string name="pls_read">请先阅读</string>
+    <string name="user_rule">用户协议</string>
+    <string name="privacy_name">隐私政策</string>
+    <string name="and">和</string>
+    <string name="agree">同意</string>
+    <string name="disagree">不同意</string>
+    <string name="privacy_content">&#160;&#160;感谢您选择使用的产品!我们做了诸多有利于保护个人信息的努力,在使用我们的服务前,请阅读并同意下面的隐私政策,了解个人信息的使用情况与自主选择的权利.\n&#160;&#160;我们将严格按照以下的隐私政策为您提供服务,并以专业的技术为您的信息安全保驾护航.</string>
+
+    <string name="user_data_content">
+        1. 为给您提供发布视频服务,我们可能会事情手机储存权限、网络权限;\n
+        2. 为了基于您所在的位置向您推荐内容,我们可能会申请您的位置权限;\n
+        3. 为了信息推送和账号安全,我们会申请系统设备权限手机设备信息和日志信息;\n
+        4. 为了快捷登录,我们可能会通过社交应用登录获取你的个人信息;\n
+        5. 我们会努力采取各种安全技术保护您的个人信息,未经您同意,我们不会从三方获取、共享或对外提供您的信息.</string>
+
 </resources>

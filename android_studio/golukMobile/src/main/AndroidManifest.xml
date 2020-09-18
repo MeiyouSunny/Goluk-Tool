@@ -2,8 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="cn.com.mobnote.golukmobile"
-    android:versionCode="30010"
-    android:versionName="3.0.10">
+    android:versionCode="30015"
+    android:versionName="3.0.15">
 
     <application
         android:name="com.mobnote.application.GolukApplication"

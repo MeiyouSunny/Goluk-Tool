@@ -8,12 +8,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.facebook.cache.disk.DiskCacheConfig;
-import com.facebook.common.internal.Supplier;
 import com.facebook.common.util.ByteConstants;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.imagepipeline.cache.MemoryCacheParams;
-import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.rd.lib.utils.CoreUtils;
 import com.rd.lib.utils.ThreadPoolUtils;
 import com.rd.net.RdHttpClient;
@@ -53,18 +48,17 @@ import com.rd.veuisdk.manager.UIConfiguration;
 import com.rd.veuisdk.manager.VEOSDBuilder;
 import com.rd.veuisdk.model.ImageCacheUtils;
 import com.rd.veuisdk.model.ShortVideoInfoImp;
-import com.rd.veuisdk.utils.apng.ApngImageLoader;
 import com.rd.veuisdk.utils.AppConfiguration;
 import com.rd.veuisdk.utils.EffectManager;
 import com.rd.veuisdk.utils.ExportHandler;
 import com.rd.veuisdk.utils.FileUtils;
 import com.rd.veuisdk.utils.IntentConstants;
 import com.rd.veuisdk.utils.ModeDataUtils;
-import com.rd.veuisdk.utils.MyOkHttpImagePipelineConfigFactory;
 import com.rd.veuisdk.utils.PathUtils;
 import com.rd.veuisdk.utils.SysAlertDialog;
 import com.rd.veuisdk.utils.TransitionManager;
 import com.rd.veuisdk.utils.Utils;
+import com.rd.veuisdk.utils.apng.ApngImageLoader;
 import com.rd.veuisdk.utils.cache.CacheManager;
 
 import java.io.File;
@@ -73,10 +67,7 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-
 import static com.rd.veuisdk.SelectMediaActivity.APPEND_IMAGE;
-
 
 /**
  * RdVEUISdk API调用入口
@@ -171,7 +162,6 @@ public final class SdkEntry {
         mIsAutoDebugEnabled = enabled;
     }
 
-
     /**
      * 获取SDK版本
      *
@@ -180,7 +170,6 @@ public final class SdkEntry {
     public static String getVersion() {
         return RdVECore.getVersion();
     }
-
 
     /**
      * 初始化SDK
@@ -231,7 +220,6 @@ public final class SdkEntry {
     //是否是精简版（true 精简版；）
     private static boolean isLite = false;
 
-
     /**
      * 初始化SDK
      *
@@ -260,7 +248,7 @@ public final class SdkEntry {
                 ApngImageLoader.getInstance().init(context);
                 SdkEntryHandler.getInstance().setICallBack(callBack);
                 SdkEntryHandler.getInstance().setIExportCallBack(exportCallBack);
-                Fresco.initialize(context, getFrescoConfigureCaches(context));
+//                Fresco.initialize(context, getFrescoConfigureCaches(context));
                 ModeDataUtils.init(appkey);
                 mIsInitialized = true;
                 isLite = checkIsLite(context);
@@ -283,7 +271,6 @@ public final class SdkEntry {
             }
         }
     }
-
 
     /**
      * 返回是否已正常初始
@@ -354,7 +341,6 @@ public final class SdkEntry {
         return !RdVECore.checkAppKey(context);
     }
 
-
     /**
      * 调用摄像录制
      *
@@ -377,7 +363,6 @@ public final class SdkEntry {
             Log.e(TAG, LOW_API_LEVEL_18);
         }
     }
-
 
     /**
      * 选择媒体资源
@@ -828,7 +813,6 @@ public final class SdkEntry {
         return true;
     }
 
-
     /**
      * 动画演示
      *
@@ -856,7 +840,6 @@ public final class SdkEntry {
             Log.e(TAG, LOW_API_LEVEL_18);
         }
     }
-
 
     /**
      * Quik演示
@@ -902,7 +885,6 @@ public final class SdkEntry {
         }
         return false;
     }
-
 
     /**
      * 音效演示
@@ -968,7 +950,6 @@ public final class SdkEntry {
             }
         }
     }
-
 
     /**
      * 异形演示
@@ -1127,7 +1108,6 @@ public final class SdkEntry {
         }
     }
 
-
     /***
      * 直接进入编辑界面
      *
@@ -1197,7 +1177,6 @@ public final class SdkEntry {
         return editMedia(context, medialist, -1);
     }
 
-
     /**
      * 定长截取
      *
@@ -1233,7 +1212,6 @@ public final class SdkEntry {
             Log.e(TAG, LOW_API_LEVEL_16);
         }
     }
-
 
     /**
      * 进入相册
@@ -1333,7 +1311,6 @@ public final class SdkEntry {
             Log.e(TAG, LOW_API_LEVEL_16);
         }
     }
-
 
     private static double _VideoEncodingBitRate = -1;
 
@@ -1554,41 +1531,6 @@ public final class SdkEntry {
     private static int MAX_MEM = 30 * ByteConstants.MB;
     public static final int MAX_DISK_CACHE_SIZE = 300 * ByteConstants.MB;
 
-    private static ImagePipelineConfig getFrescoConfigureCaches(Context context) {
-        final MemoryCacheParams bitmapCacheParams = new MemoryCacheParams(
-                MAX_MEM,// 内存缓存中总图片的最大大小,以字节为单位。
-                Integer.MAX_VALUE,// 内存缓存中图片的最大数量。
-                MAX_MEM,// 内存缓存中准备清除但尚未被删除的总图片的最大大小,以字节为单位。
-                Integer.MAX_VALUE,// 内存缓存中准备清除的总图片的最大数量。
-                Integer.MAX_VALUE);// 内存缓存中单个图片的最大大小。
-
-        Supplier<MemoryCacheParams> mSupplierMemoryCacheParams = new Supplier<MemoryCacheParams>() {
-            @Override
-            public MemoryCacheParams get() {
-                return bitmapCacheParams;
-            }
-        };
-        OkHttpClient okHttpClient = MyOkHttpImagePipelineConfigFactory.getHttpClient();  // build on your own
-        ImagePipelineConfig.Builder builder = null;
-        if (null != okHttpClient) {
-            //支持https
-            builder = MyOkHttpImagePipelineConfigFactory.newBuilder(context, okHttpClient);
-        } else {
-            //只支持http
-            builder = ImagePipelineConfig.newBuilder(context);
-        }
-        builder.setBitmapMemoryCacheParamsSupplier(mSupplierMemoryCacheParams);
-        File cache = getExternalCacheDir(context);
-        builder.setMainDiskCacheConfig(DiskCacheConfig.newBuilder(context)
-                .setBaseDirectoryPath(cache)
-                .setBaseDirectoryName("fresco")
-                .setMaxCacheSize(MAX_DISK_CACHE_SIZE)
-                .build());
-        builder.setDownsampleEnabled(true);
-        return builder.build();
-    }
-
-
     public static File getExternalCacheDir(Context context) {
         return context.getExternalCacheDir();
     }
@@ -1712,7 +1654,6 @@ public final class SdkEntry {
 
     }
 
-
     /**
      * 继续编辑草稿箱视频
      *
@@ -1748,7 +1689,6 @@ public final class SdkEntry {
         return true;
     }
 
-
     /**
      * 导出草稿箱视频
      *
@@ -1779,7 +1719,6 @@ public final class SdkEntry {
         return new ExportHandler(context).export(exportVideo, shortVideoInfo, exportListener, withWatermark);
     }
 
-
     /**
      * 取消导出
      */
@@ -1787,7 +1726,6 @@ public final class SdkEntry {
         if (null != exportVideo) {
             exportVideo.cancelExport();
         }
-
 
     }
 
@@ -1848,6 +1786,5 @@ public final class SdkEntry {
         }
         return false;
     }
-
 
 }

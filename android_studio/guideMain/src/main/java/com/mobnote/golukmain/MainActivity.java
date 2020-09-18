@@ -217,7 +217,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         mApp = (GolukApplication) getApplication();
         mApp.setContext(this, "Main");
         mApp.getEnableSingleWifi();
-        mApp.initLogic();
+        initConfig();
         // 页面初始化,获取页面控件
         mApp.startTime = System.currentTimeMillis();
         // 页面初始化,获取页面控件
@@ -322,6 +322,15 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
         // 申请悬浮窗权限
         requestOverlayAuthority();
+    }
+
+    private void initConfig() {
+        if (mApp == null)
+            return;
+        mApp.initializeSDK();
+        mApp.setContext(this, "GuideActivity");
+        mApp.initLogic();
+        mApp.startUpgrade();
     }
 
     NetworkStateReceiver networkStateReceiver;

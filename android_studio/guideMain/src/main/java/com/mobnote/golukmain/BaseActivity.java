@@ -1,8 +1,5 @@
 package com.mobnote.golukmain;
 
-import java.lang.ref.WeakReference;
-import java.util.List;
-
 import android.app.ActivityManager;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.ActivityNotFoundException;
@@ -19,9 +16,11 @@ import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.thirdshare.FacebookShareHelper;
 import com.mobnote.golukmobile.GuideActivity;
 import com.umeng.analytics.MobclickAgent;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
 
 /**
  * 基础Activity
@@ -59,7 +58,7 @@ public class BaseActivity extends FragmentActivity {
             startActivity(intent);
         }
         mBaseApp = (GolukApplication) getApplication();
-        mBaseApp.initLogic();
+//        mBaseApp.initLogic();
     }
 
     @Override

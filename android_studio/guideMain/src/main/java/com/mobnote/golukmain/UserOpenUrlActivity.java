@@ -214,14 +214,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 						return;
 					}
 					mWebView.loadUrl(getRtmpAddress() + "?type=2" + getCommParams());
-				} else if (from_tag.equals("install")) {
-					mTextTitle.setText(this.getResources().getString(R.string.my_install_title_text));
-					if (mErrorState) {
-						return;
-					}
-//					mWebView.loadUrl(getRtmpAddress() + "?type=3" + getCommParams());
-					GolukDebugUtils.e("", "installationguide------"+HttpManager.getInstance().getWebDirectHost() + "/s/installationguide");
-					mWebView.loadUrl(HttpManager.getInstance().getWebDirectHost() + "/s/installationguide");
 				} else if (from_tag.equals("shopping")) {
 					mTextTitle.setText(this.getResources().getString(R.string.my_shopping_title_text));
 					if (mErrorState) {
@@ -280,6 +272,24 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 					if (mErrorState) {
 						return;
 					}
+					mWebView.loadUrl(url);
+				}  else if(from_tag.equals("privacy")) {
+					String url;
+					if (!mBaseApp.isMainland()){
+						url = "https://www.goluk.com/policy.html";
+					}else{
+						url = "https://www.goluk.com/policy_cn.html";
+					}
+					mTextTitle.setText(this.getString(R.string.privacy_name));
+					mWebView.loadUrl(url);
+				} else if(from_tag.equals("agreement")) {
+					String url;
+					if (!mBaseApp.isMainland()){
+						url = "https://www.goluk.com/legal.html";
+					}else{
+						url = "https://www.goluk.com/legal_cn.html";
+					}
+					mTextTitle.setText(this.getString(R.string.user_rule));
 					mWebView.loadUrl(url);
 				}
 			} else {

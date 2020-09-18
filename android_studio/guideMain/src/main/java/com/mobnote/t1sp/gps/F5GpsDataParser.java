@@ -149,10 +149,6 @@ public class F5GpsDataParser extends AsyncTask<String, Void, List<GPSData>> {
             // Seek到每条Gps记录的起始位置,读取指定长度的byte
             reader.seek(key);
 
-//            byte[] bytes = new byte[80];
-//            reader.read(bytes);
-//            System.out.println(HexConvertTools.bytesToHex(bytes));
-
             // 跳过16个字节
             reader.skipBytes(4 * 4);
 

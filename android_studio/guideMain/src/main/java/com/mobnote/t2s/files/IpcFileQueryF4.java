@@ -82,7 +82,7 @@ public class IpcFileQueryF4 implements IpcQuery {
                 new Comparator<VideoInfo>() {
                     @Override
                     public int compare(VideoInfo lhs, VideoInfo rhs) {
-                        return (int) (rhs.time - lhs.time);
+                        return rhs.time > lhs.time ? 1 : -1;
                     }
                 });
 

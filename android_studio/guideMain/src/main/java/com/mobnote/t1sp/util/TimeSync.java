@@ -4,6 +4,7 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.rd.veuisdk.utils.DateTimeUtils;
 
 import goluk.com.t1s.api.callback.CallbackCmd;
+import likly.dollar.$;
 
 public class TimeSync {
 
@@ -22,6 +23,7 @@ public class TimeSync {
                 goluk.com.t1s.api.ApiUtil.setTime(nowTime, new CallbackCmd() {
                     @Override
                     public void onSuccess(int i) {
+                        $.toast().text("时间同步成功: " + nowDate + " " + nowTime).show();
                     }
 
                     @Override

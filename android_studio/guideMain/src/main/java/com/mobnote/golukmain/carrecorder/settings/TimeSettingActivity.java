@@ -340,14 +340,15 @@ public class TimeSettingActivity extends CarRecordBaseActivity implements OnClic
     /**
      * 同步T2S系统时间
      */
-    private void setT2SSystemTime(String date, final String time, final long milles) {
+    private void setT2SSystemTime(final String date, final String time, final long milles) {
         goluk.com.t1s.api.ApiUtil.setDate(date, new CallbackCmd() {
             @Override
             public void onSuccess(int i) {
                 goluk.com.t1s.api.ApiUtil.setTime(time, new CallbackCmd() {
                     @Override
                     public void onSuccess(int i) {
-                        $.toast().text(R.string.str_set_ok).show();
+//                        $.toast().text(R.string.str_set_ok).show();
+                        $.toast().text("时间同步成功: " + date + " " + time).show();
                         // 保存时间
                         $.config().putLong(TAG_LAST_SYNC_TIME, milles);
                         // 更新显示

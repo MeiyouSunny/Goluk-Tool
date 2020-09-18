@@ -1575,4 +1575,21 @@
     <string name="user_policy">Please click to read and understand our user agreement and privacy policy</string>
     <string name="umeng_hint">In order to provide the sharing function, our product integrates U-Share+ SDK, and the SDK will collect your device ID and the social account you need to share.</string>
 
+    <string name="privacy_title">Reminder</string>
+    <string name="pls_read">Please read it first</string>
+    <string name="user_rule">User agreement</string>
+    <string name="privacy_name">Privacy policy</string>
+    <string name="and">and</string>
+    <string name="agree">Agree</string>
+    <string name="disagree">Disagree</string>
+    <string name="privacy_content">&#160;&#160;Thank you for your choice of products! We have made a lot of efforts to protect your personal information. Before using our services, please read and agree to the following privacy policy to understand the use of personal information and the right to choose your own choice.\n&#160;&#160;We will provide services for you in strict accordance with the following privacy policies, and protect your information security with professional technology.</string>
+
+    <string name="user_data_content">
+        1. In order to provide you with video publishing service, we may have access to mobile phone storage and network;\n
+        2. In order to recommend content to you based on your location, we may apply for your location permission;\n
+        3. For information push and account security, we will apply for system device permission, mobile phone device information and log information;\n
+        4. In order to login quickly, we may log in to get your personal information through social app;\n
+        5. We will strive to take various security technologies to protect your personal information. Without your consent, we will not obtain, share or provide your information from three parties.
+    </string>
+
 </resources>

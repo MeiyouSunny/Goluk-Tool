@@ -48,7 +48,7 @@ public class LocalWonderfulVideoQueryTask extends AsyncTask<Void, String, String
         Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
             @Override
             public int compare(VideoInfo lhs, VideoInfo rhs) {
-                return (int) (GolukUtils.parseStringToMilli(rhs.videoCreateDate) - GolukUtils.parseStringToMilli(lhs.videoCreateDate));
+                return GolukUtils.parseStringToMilli(rhs.videoCreateDate) > GolukUtils.parseStringToMilli(lhs.videoCreateDate) ? 1 : -1;
             }
         });
 
