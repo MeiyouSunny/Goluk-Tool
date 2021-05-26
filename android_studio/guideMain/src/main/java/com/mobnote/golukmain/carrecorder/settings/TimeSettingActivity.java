@@ -25,9 +25,9 @@ import com.mobnote.golukmain.carrecorder.IpcDataParser;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.util.DateTimeUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
-import com.rd.veuisdk.utils.DateTimeUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

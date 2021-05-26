@@ -10,8 +10,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -34,14 +32,7 @@ import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.msg.MessageBadger;
-import com.mobnote.golukmain.msg.MessageCenterActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
-import com.mobnote.golukmain.praised.MyPraisedActivity;
-import com.mobnote.golukmain.profit.MyProfitActivity;
 import com.mobnote.golukmain.userinfohome.UserInfohomeRequest;
 import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 import com.mobnote.golukmain.userinfohome.bean.UserinfohomeRetBean;
@@ -336,7 +327,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
                 int msgCount = MessageManager.getMessageManager()
                         .getMessageTotalCount();
                 setMessageTipCount(msgCount);
-                MessageBadger.sendBadgeNumber(msgCount, getActivity());
                 break;
             default:
                 break;
@@ -481,19 +471,7 @@ public class FragmentMine extends Fragment implements OnClickListener,
                 clickToLogin(TYPE_SHARE_PRAISE);
             }
         } else if (id == R.id.user_fans) {
-            if (isLoginInfoValid()) {
-                GolukUtils.startFanListActivity(getActivity(),
-                        ma.mApp.getMyInfo().uid);
-            } else {
-                clickToLogin(TYPE_FOLLOWING);
-            }
         } else if (id == R.id.user_follow) {
-            if (isLoginInfoValid()) {
-                GolukUtils.startFollowingListActivity(getActivity(),
-                        ma.mApp.getMyInfo().uid);
-            } else {
-                clickToLogin(TYPE_FOLLOWING);
-            }
         } else if (id == R.id.user_center_item) {
             if (isLoginInfoValid()) {
                 GolukUtils.startUserCenterActivity(getActivity(), userUId);
@@ -524,40 +502,8 @@ public class FragmentMine extends Fragment implements OnClickListener,
             Intent itQuestion = new Intent(getActivity(), UserVersionActivity.class);
             getActivity().startActivity(itQuestion);
         } else if (id == R.id.profit_item) {
-            if (isLoginInfoValid()) {
-                Intent itProfit = new Intent(getActivity(),
-                        MyProfitActivity.class);
-                getActivity().startActivity(itProfit);
-            } else {
-                clickToLogin(TYPE_PROFIT);
-            }
         } else if (id == R.id.rl_my_message) {
-            Intent msgIntent = new Intent(getActivity(), MessageCenterActivity.class);
-            getActivity().startActivity(msgIntent);
         } else if (id == R.id.tv_praise_item) {
-            if (!GolukUtils.isNetworkConnected(getActivity())) {
-                Toast.makeText(getActivity(),
-                        getActivity().getString(R.string.network_error),
-                        Toast.LENGTH_SHORT).show();
-                return;
-            }
-            GolukApplication app = (GolukApplication) (getActivity())
-                    .getApplication();
-            if (!app.isUserLoginSucess) {
-                // GolukUtils.showToast(this,
-                // this.getResources().getString(R.string.str_please_login));
-                Intent loginIntent = null;
-                if (!GolukApplication.getInstance().isMainland()) {
-                    loginIntent = new Intent(getActivity(), InternationUserLoginActivity.class);
-                } else {
-                    loginIntent = new Intent(getActivity(), UserLoginActivity.class);
-                }
-                getActivity().startActivity(loginIntent);
-            } else {
-                Intent praiseIntent = new Intent(getActivity(),
-                        MyPraisedActivity.class);
-                getActivity().startActivity(praiseIntent);
-            }
         } else if (id == R.id.ll_advanced_setting) {
             gotoSSSSSetting();
         } else if (id == R.id.opinion_item) {
@@ -602,27 +548,6 @@ public class FragmentMine extends Fragment implements OnClickListener,
      * @param intentType
      */
     private void clickToLogin(int intentType) {
-        mPreferences = getActivity().getSharedPreferences("toRepwd",
-                Context.MODE_PRIVATE);
-        mEditor = mPreferences.edit();
-        Intent itNo = null;
-        if (GolukApplication.getInstance().isMainland()) {
-            itNo = new Intent(getActivity(), UserLoginActivity.class);
-        } else {
-            itNo = new Intent(getActivity(), InternationUserLoginActivity.class);
-        }
-
-        if (intentType == TYPE_USER) {
-            itNo.putExtra("isInfo", "indexmore");
-            mEditor.putString("toRepwd", "more");
-        } else if (intentType == TYPE_PROFIT) {
-            // 登录页回调判断
-            itNo.putExtra("isInfo", "profit");
-            mEditor.putString("toRepwd", "toProfit");
-        }
-        mEditor.commit();
-
-        getActivity().startActivity(itNo);
     }
 
     private void dismissDialog() {
@@ -679,92 +604,9 @@ public class FragmentMine extends Fragment implements OnClickListener,
      * 个人资料信息
      */
     public void initData() {
-        if (null == ma || null == ma.mApp) {
-            return;
-        }
-
-        UserInfo userInfo = GolukApplication.getInstance().getMyInfo();
-        if (null != userInfo) {
-            userHead = userInfo.head;
-            userName = userInfo.nickname;
-            userDesc = userInfo.desc;
-            newFansCout = userInfo.newfansnumber;
-            userUId = userInfo.uid;
-            userSex = userInfo.sex;
-            customavatar = userInfo.customavatar;
-            userPhone = userInfo.phone;
-            GolukApplication.getInstance().mCurrentPhoneNum = userInfo.phone;
-            if (customavatar != null && !"".equals(customavatar)) {
-                mImageHead.setImageURI(Uri.parse(customavatar));
-                if (null != getActivity()) {
-                    GlideUtils.loadNetHead(getActivity(), mImageHead, customavatar,
-                            R.drawable.editor_head_feault7);
-                }
-            } else {
-                showHead(mImageHead, userHead);
-            }
-            if (null != userInfo.mUserLabel) {
-                mImageAuthentication.setVisibility(View.VISIBLE);
-                if ("1".equals(userInfo.mUserLabel.approvelabel)) {
-                    mImageAuthentication
-                            .setImageResource(R.drawable.authentication_bluev_icon);
-                } else if ("1".equals(userInfo.mUserLabel.headplusv)) {
-                    mImageAuthentication
-                            .setImageResource(R.drawable.authentication_yellowv_icon);
-                } else if ("1".equals(userInfo.mUserLabel.tarento)) {
-                    mImageAuthentication
-                            .setImageResource(R.drawable.authentication_star_icon);
-                } else {
-                    mImageAuthentication.setVisibility(View.GONE);
-                }
-            } else {
-                mImageAuthentication.setVisibility(View.GONE);
-            }
-
-            mTextName.setText(userName);
-            GolukDebugUtils.i("lily", userHead);
-
-            if ("".equals(userDesc) || null == userDesc) {
-                if (null != getActivity()) {
-                    mTextIntroduction.setText(getActivity().getResources()
-                            .getString(R.string.str_let_sharevideo));
-                }
-            } else {
-                mTextIntroduction.setText(userDesc);
-            }
-            mTextIntroduction.setTextColor(Color.parseColor("#808080"));
-            // mTextShare.setText(GolukUtils.getFormatNumber(0));
-            // mTextFans.setText(GolukUtils.getFormatNumber(0));
-            // mTextFollow.setText(GolukUtils.getFormatNumber(0));
-            if (newFansCout > 0) {
-                if (null != getActivity()) {
-                    Drawable redPoint = getActivity().getResources().getDrawable(
-                            R.drawable.home_red_point_little);
-                    redPoint.setBounds(0, 0, redPoint.getMinimumWidth(),
-                            redPoint.getMinimumHeight());
-                    mTextFans.setCompoundDrawables(null, null, redPoint, null);
-                }
-            } else {
-                mTextFans.setCompoundDrawables(null, null, null, null);
-            }
-            // 获取用户信息
-            boolean b = GolukApplication.getInstance().getVideoSquareManager()
-                    .getUserInfo(userUId);
-            GolukDebugUtils.e("", "=======IndexMoreActivity====b：" + b);
-        }
     }
 
     private void showHead(ImageView view, String headportrait) {
-        if (null == getActivity()) {
-            return;
-        }
-        try {
-            GlideUtils.loadLocalHead(getActivity(), view,
-                    ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
-        } catch (Exception e) {
-            GlideUtils.loadLocalHead(getActivity(), view,
-                    R.drawable.usercenter_head_default);
-        }
     }
 
     @Override

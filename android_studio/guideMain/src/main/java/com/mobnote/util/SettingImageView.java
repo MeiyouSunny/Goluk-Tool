@@ -1,7 +1,5 @@
 package com.mobnote.util;
 
-import com.mobnote.golukmain.UserPersonalInfoActivity;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -32,30 +30,6 @@ public class SettingImageView {
 		mContext = context;
 	}
 	
-	
-	/**
-	 * 相册
-	 * 
-	 * @param activity
-	 */
-	public boolean getPhoto() {
-		Intent it = new Intent();
-		it.setAction(Intent.ACTION_GET_CONTENT);
-		it.setType("image/*");
-
-		if (mContext.getPackageManager().resolveActivity(it, PackageManager.GET_INTENT_FILTERS) != null) {
-			((UserPersonalInfoActivity) mContext).startActivityForResult(it, PHOTO_REQUEST_CODE);
-			return true;
-		}
-		return false;
-	}
-	
-	
-	/**
-	 * 照相机
-	 * 
-	 * @param activity
-	 */
 	public boolean getCamera() {
 		PackageManager packageManager = mContext.getPackageManager();
 		if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA)) {
@@ -72,18 +46,12 @@ public class SettingImageView {
 			Intent it = new Intent();
 			it.setAction(MediaStore.ACTION_IMAGE_CAPTURE);
 			it.putExtra(MediaStore.EXTRA_OUTPUT, mCameraUri);
-			((UserPersonalInfoActivity) mContext).startActivityForResult(it, CAMERA_QUQUEST_CODE);
 		} catch (Exception e) {
 			return false;
 		}
 		return true;
 	}
 	
-	/**
-	 * 删除uri
-	 * 
-	 * @param context
-	 */
 	public  void deleteUri() {
 		if (mCameraUri != null)
 		mContext.getContentResolver().delete(mCameraUri, null, null);

@@ -1,5 +1,15 @@
 package cn.com.tiros.api;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
+import android.telephony.NeighboringCellInfo;
+import android.telephony.TelephonyManager;
+import android.telephony.gsm.GsmCellLocation;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -8,15 +18,6 @@ import java.io.RandomAccessFile;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
-
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.telephony.NeighboringCellInfo;
-import android.telephony.TelephonyManager;
-import android.telephony.gsm.GsmCellLocation;
 
 public class Tapi {
 
@@ -179,61 +180,27 @@ public class Tapi {
 	public String sys_tapigetmobileid() {
 		return getMobileId();
 	}
-	
+
 	public static String getDeviceId() {
 		initTeleManager();
-		String imei = mTelephonyManager.getDeviceId();
-		return mTelephonyManager.getSubscriberId();
+		return getMobileId();
 	}
 
 	/**
 	 * 获取mobileId
-	 * 
+	 *
 	 * @return
 	 * @author jiayf
 	 * @date Jan 27, 2015
 	 */
 	public static String getMobileId() {
-		// 首先读取SD卡上保存的mobileId
-		String localDeviceId = getLocalFileDeviceId();
-		if (null != localDeviceId) {
-			return localDeviceId;
-		}
-		initTeleManager();
-		String imei = mTelephonyManager.getDeviceId();
-		if (null != imei) {
-			saveLocalFileDeviceId(imei);
-			return imei;
-		}
+		return Build.BRAND + "-" + Build.ID;
 
-		// 读取Wifi的MAC地址
-		String wifiMac = getWifiMac();
-		if (null != wifiMac) {
-			// 先保存文件以方便下次读取
-			saveLocalFileDeviceId(wifiMac);
-			return wifiMac;
-		}
-
-		String androidId = getAndroidId();
-		if (null != androidId) {
-			saveLocalFileDeviceId(androidId);
-			return androidId;
-		}
-
-		String selfDeviceId = getDeviceidFromUUID();
-		if (null != selfDeviceId) {
-			saveLocalFileDeviceId(selfDeviceId);
-			return selfDeviceId;
-		}
-
-		saveLocalFileDeviceId(DEFAULT_MOBILEID);
-
-		return DEFAULT_MOBILEID;
 	}
 
 	/**
 	 * 获取本地文件保存的device ID
-	 * 
+	 *
 	 * @return device ID
 	 * @author jiayf
 	 * @date Mar 23, 2015
@@ -270,7 +237,7 @@ public class Tapi {
 
 	/**
 	 * 保存Device ID到本地文件
-	 * 
+	 *
 	 * @param mobileId
 	 * @author jiayf
 	 * @date Mar 23, 2015
@@ -304,7 +271,7 @@ public class Tapi {
 
 	/**
 	 * 获取wifi Mac地址
-	 * 
+	 *
 	 * @return
 	 * @author jiayf
 	 * @date Mar 23, 2015
@@ -323,7 +290,7 @@ public class Tapi {
 
 	/**
 	 * 产生Android id
-	 * 
+	 *
 	 * @return
 	 * @author jiayf
 	 * @date Jan 27, 2015
@@ -335,7 +302,7 @@ public class Tapi {
 
 	/**
 	 * 产生一个UUID来充当Device ID
-	 * 
+	 *
 	 * @return
 	 * @author jiayf
 	 * @date Mar 23, 2015

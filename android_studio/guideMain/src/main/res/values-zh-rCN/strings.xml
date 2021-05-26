@@ -733,7 +733,7 @@
     <string name="str_bind_fail">绑定失败</string>
     <string name="wifi_link_bind_failed">绑定失败</string>
     <string name="str_praised_list_connect_error">网络不给力，轻触屏幕重试</string>
-    <string name="str_mine">我的</string>
+    <string name="str_mine">关于</string>
     <string name="str_main_page_mine">我的</string>
     <string name="str_usercenter_header_fans_text">粉丝</string>
     <string name="ae_delete">删除</string>
@@ -1304,9 +1304,9 @@
 
     <string name="user_data_content">
         1. 为给您提供发布视频服务,我们可能会事情手机储存权限、网络权限;\n
-        2. 为了基于您所在的位置向您推荐内容,我们可能会申请您的位置权限;\n
-        3. 为了信息推送和账号安全,我们会申请系统设备权限手机设备信息和日志信息;\n
-        4. 为了快捷登录,我们可能会通过社交应用登录获取你的个人信息;\n
-        5. 我们会努力采取各种安全技术保护您的个人信息,未经您同意,我们不会从三方获取、共享或对外提供您的信息.</string>
+        2. 为了信息推送和账号安全,我们会申请系统设备权限手机设备信息和日志信息;\n
+        3. 我们会努力采取各种安全技术保护您的个人信息,未经您同意,我们不会从三方获取、共享或对外提供您的信息.</string>
+
+    <string name="device">记录仪</string>
 
 </resources>

@@ -1,16 +1,15 @@
 package com.mobnote.golukmain.newest;
 
-import com.mobnote.application.GolukApplication;
-import com.mobnote.golukmain.R;
-import com.mobnote.util.GolukUtils;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.mobnote.application.GolukApplication;
+import com.mobnote.golukmain.R;
+import com.mobnote.util.GolukUtils;
 
 public class FunctionDialog extends Dialog implements android.view.View.OnClickListener {
 	private TextView tuijian;
@@ -81,10 +80,6 @@ public class FunctionDialog extends Dialog implements android.view.View.OnClickL
 		if (id == R.id.fun_dialog_del_layout) {
 			click_Del();
 		} else if (id == R.id.tuijian) {
-			dismiss();
-			Intent intent = new Intent(mContext, RecomVideoActivity.class);
-			intent.putExtra("videoid", videoid);
-			mContext.startActivity(intent);
 		} else if (id == R.id.jubao) {
 			dismiss();
 			showDialog();

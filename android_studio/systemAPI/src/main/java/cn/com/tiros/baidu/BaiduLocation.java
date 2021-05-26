@@ -2,11 +2,7 @@ package cn.com.tiros.baidu;
 
 import cn.com.tiros.debug.GolukDebugUtils;
 import cn.com.tiros.location.PostMessageInterface;
-import cn.com.tiros.location.UseBaidu;
 import cn.com.tiros.location.UseGoogle;
-
-import com.baidu.location.LocationClient;
-
 import de.greenrobot.event.EventBus;
 
 public class BaiduLocation implements PostMessageInterface {
@@ -23,7 +19,6 @@ public class BaiduLocation implements PostMessageInterface {
      */
     public static final int LOCATION_DISTANCE = 0;
 
-    public static UseBaidu mBaidu;
     public static UseGoogle mGoogle;
 
     /**
@@ -35,10 +30,6 @@ public class BaiduLocation implements PostMessageInterface {
      * 是否正在定位中
      */
     private boolean mIsBusy;
-    /**
-     * 百度定位接口
-     */
-    private LocationClient mLocClient;
     public static boolean mServerFlag;
     private boolean mIsRunning;
 
@@ -73,16 +64,12 @@ public class BaiduLocation implements PostMessageInterface {
 
     private void initBDLocation() {
         GolukDebugUtils.e("", "-------initBDLocation-------------mServerFlag: " + mServerFlag);
-        if (mServerFlag) {
-            mBaidu = new UseBaidu();
-        } else {
-            mGoogle = new UseGoogle();
-        }
+        mGoogle = new UseGoogle();
     }
 
     private void setLocationParam() {
         if (mServerFlag) {
-            mBaidu.setBaiduLocationParam();
+//            mBaidu.setBaiduLocationParam();
         } else {
             // mGoogle.getLocationParam();
         }
@@ -90,30 +77,18 @@ public class BaiduLocation implements PostMessageInterface {
 
     public void startLocation() {
         mIsRunning = true;
-        if (mServerFlag) {
-            mBaidu.startBaiduLocation();
-            mBaidu.setPostBaiduMessage(this);
-        } else {
-            mGoogle.startGoogleLocation();
-            mGoogle.setPostGoogleMessage(this);
-        }
+        mGoogle.startGoogleLocation();
+        mGoogle.setPostGoogleMessage(this);
     }
 
     public void stopLocation() {
         if (!mIsRunning)
             return;
         mIsRunning = false;
-        if (mServerFlag) {
-            mBaidu.stopBaiduLocation();
-        } else {
-            mGoogle.stopGoogleLocation();
-        }
+        mGoogle.stopGoogleLocation();
     }
 
     public void getLastKnowLocation() {
-        if (mBaidu == null)
-            return;
-        mBaidu.getLastKnownLocation();
     }
 
     public static double INVALID = 4.9E-324;

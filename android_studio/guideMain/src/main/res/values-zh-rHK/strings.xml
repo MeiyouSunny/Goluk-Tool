@@ -578,7 +578,7 @@
     <string name="str_bind_fail">失敗</string>
     <string name="wifi_link_bind_failed">失敗</string>
     <string name="str_praised_list_connect_error">沒有網絡。點按畫面然後再試一次</string>
-    <string name="str_mine">我</string>
+    <string name="str_mine">关于</string>
     <string name="str_main_page_mine">我</string>
     <string name="str_usercenter_header_fans_text">粉絲</string>
     <string name="ae_delete">刪除</string>

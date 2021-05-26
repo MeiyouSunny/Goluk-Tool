@@ -1,29 +1,19 @@
 package com.mobnote.golukmain.newest;
 
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.special.ClusterListActivity;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.ZhugeUtils;
-
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.mobnote.golukmain.R;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 @SuppressLint("ClickableViewAccessibility")
 public class ClickWonderfulSelectedListener implements OnTouchListener {
@@ -61,44 +51,6 @@ public class ClickWonderfulSelectedListener implements OnTouchListener {
 	}
 
 	private void jump() {
-		Intent intent = null;
-		if ("1".equals(mJXListItemDataInfo.ztype)) {// 专题
-			intent = new Intent(mContext, SpecialListActivity.class);
-			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
-			intent.putExtra("title", mJXListItemDataInfo.ztitle);
-		} else if ("2".equals(mJXListItemDataInfo.ztype)) {// tag
-			intent = new Intent(mContext, ClusterActivity.class);
-			intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
-					mJXListItemDataInfo.tagid);
-			String topName = "#" + mJXListItemDataInfo.ztitle;
-			intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-		} else if ("3".equals(mJXListItemDataInfo.ztype)) {// 单视频
-			//视频详情页访问
-			ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_wonderful_event));
-			intent = new Intent(mContext, VideoDetailActivity.class);
-			intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
-			intent.putExtra("ztid", mJXListItemDataInfo.ztid);
-			intent.putExtra("imageurl", mJXListItemDataInfo.jximg);
-			intent.putExtra("title", mJXListItemDataInfo.ztitle);
-		} else if ("4".equals(mJXListItemDataInfo.ztype)) {// url
-			String url = mJXListItemDataInfo.adverturl;
-			intent = new Intent(mContext, UserOpenUrlActivity.class);
-			intent.putExtra(GolukConfig.NEED_H5_TITLE, mJXListItemDataInfo.ztitle);
-			intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
-			intent.putExtra(GolukConfig.H5_URL, url);
-			intent.putExtra(GolukConfig.URL_OPEN_PATH, "wonderful_list");
-		}
-		if (null == intent) {
-			return;
-		}
-		// 防止重复点击
-		if (null != mContext && mContext instanceof BaseActivity) {
-			if (!((BaseActivity) mContext).isAllowedClicked()) {
-				return;
-			}
-			((BaseActivity) mContext).setJumpToNext();
-		}
-		mContext.startActivity(intent);
 	}
 
 	private void showAnimation(final View view) {

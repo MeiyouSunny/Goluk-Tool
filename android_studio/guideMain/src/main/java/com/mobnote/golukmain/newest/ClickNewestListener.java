@@ -1,32 +1,29 @@
 package com.mobnote.golukmain.newest;
 
-import java.util.ArrayList;
-import java.util.List;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.Intent;
+import android.view.Gravity;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.player.MovieActivity;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 import com.zhuge.analysis.stat.ZhugeSDK;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnCancelListener;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.view.Gravity;
-import android.view.View;
-import android.view.View.OnClickListener;
 
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ClickNewestListener implements OnClickListener {
 	private VideoSquareInfo mVideoSquareInfo;
@@ -98,11 +95,6 @@ public class ClickNewestListener implements OnClickListener {
 	}
 
 	public boolean isNetworkConnected() {
-		ConnectivityManager mConnectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-		if (mNetworkInfo != null) {
-			return mNetworkInfo.isAvailable();
-		}
 		return false;
 	}
 
@@ -128,34 +120,6 @@ public class ClickNewestListener implements OnClickListener {
 	 * @date 2015年8月9日
 	 */
 	private void startLookLive() {
-		UserInfo user = new UserInfo();
-		user.active = mVideoSquareInfo.mVideoEntity.livevideodata.active;
-		user.aid = mVideoSquareInfo.mVideoEntity.livevideodata.aid;
-		user.lat = mVideoSquareInfo.mVideoEntity.livevideodata.lat;
-		if (mVideoSquareInfo.mVideoEntity.livevideodata.restime != null
-				&& !"".equals(mVideoSquareInfo.mVideoEntity.livevideodata.restime)) {
-			user.liveDuration = Integer.parseInt(mVideoSquareInfo.mVideoEntity.livevideodata.restime);
-		} else {
-			user.liveDuration = 0;
-		}
-
-		user.lon = mVideoSquareInfo.mVideoEntity.livevideodata.lon;
-		user.nickname = mVideoSquareInfo.mUserEntity.nickname;
-		user.persons = mVideoSquareInfo.mVideoEntity.clicknumber;
-		user.picurl = mVideoSquareInfo.mVideoEntity.picture;
-		user.sex = mVideoSquareInfo.mUserEntity.sex;
-		user.speed = mVideoSquareInfo.mVideoEntity.livevideodata.speed;
-		user.tag = mVideoSquareInfo.mVideoEntity.livevideodata.tag;
-		user.uid = mVideoSquareInfo.mUserEntity.uid;
-		user.zanCount = mVideoSquareInfo.mVideoEntity.praisenumber;
-		user.head = mVideoSquareInfo.mUserEntity.headportrait;
-		user.customavatar = mVideoSquareInfo.mUserEntity.mCustomAvatar;
-		user.mUserLabel = mVideoSquareInfo.mUserEntity.label;
-		user.link = mVideoSquareInfo.mUserEntity.link;
-
-		//直播页面
-		ZhugeUtils.eventLive(mContext, mContext.getString(R.string.str_zhuge_newest_event));
-		GolukUtils.startPublishOrWatchLiveActivity(mContext,false,false,mVideoSquareInfo.mVideoEntity.videoid,null,user);
 	}
 
 	/**

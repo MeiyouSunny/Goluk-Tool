@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.userlogin;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 
 public class UserData {
 	/**请求返回码**/
@@ -36,10 +35,6 @@ public class UserData {
 	/**爱淘客key **/
 	@JSONField(name="key")
 	public String key;
-	
-	/**认证标签**/
-	@JSONField(name="label")
-	public UCUserInfo label;
 	
 	/**CC回调地址**/
 	@JSONField(name="ccbackurl")

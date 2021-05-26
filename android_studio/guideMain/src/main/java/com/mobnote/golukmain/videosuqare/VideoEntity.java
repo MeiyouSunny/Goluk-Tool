@@ -1,6 +1,5 @@
 package com.mobnote.golukmain.videosuqare;
 
-import com.mobnote.golukmain.cluster.bean.TagTagsBean;
 import com.mobnote.golukmain.newest.CommentDataInfo;
 
 import java.util.ArrayList;
@@ -49,9 +48,6 @@ public class VideoEntity {
 	public String ispraise;
 	/** 此视频发布的地点 格式为 北京市. 朝阳区 */
 	public String location;
-	/* 标签 */
-	public List<TagTagsBean> tags;
-
 	public VideoExtra videoExtra;
 
 	/**
@@ -67,7 +63,6 @@ public class VideoEntity {
 
 	public VideoEntity() {
 		this.commentList = new ArrayList<CommentDataInfo>();
-		this.tags = new ArrayList<TagTagsBean>();
 	}
 
 }

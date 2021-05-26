@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
 import com.mobnote.user.UserUtils;
@@ -176,7 +175,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
      * 设置IPC信息成功回调
      */
     public void setIpcLinkWiFiCallBack(int state) {
-        LiveDialogManager.getManagerInstance().dissmissCustomDialog();
         if (0 == state) {
             GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_success));
             updateSavedIpcInfo();
@@ -205,8 +203,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
         String json = getSetIPCJson();
         mApp.stopDownloadList();
         boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-        LiveDialogManager.getManagerInstance().showCustomDialog(this,
-                this.getResources().getString(R.string.str_wait));
     }
 
     private String getSetIPCJson() {
@@ -260,7 +256,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             public void onSuccess(int i) {
                 $.toast().text(R.string.str_wifi_success).show();
                 updateSavedIpcInfo();
-                LiveDialogManager.getManagerInstance().dissmissCustomDialog();
                 setResult(11);
                 finish();
             }
@@ -268,7 +263,6 @@ public class UserSetupWifiActivity extends BaseActivity implements OnClickListen
             @Override
             public void onFail(int i, int i1) {
                 $.toast().text(R.string.str_wifi_name_fail).show();
-                LiveDialogManager.getManagerInstance().dissmissCustomDialog();
             }
         });
     }

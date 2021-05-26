@@ -1,10 +1,5 @@
 package com.mobnote.golukmain;
 
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.util.GolukConfig;
-
-import cn.com.tiros.debug.GolukDebugUtils;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +7,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mobnote.util.GolukConfig;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class VideoSyncSettingActivity extends BaseActivity implements OnClickListener {
 	private TextView mSync5TV;
@@ -37,8 +36,6 @@ public class VideoSyncSettingActivity extends BaseActivity implements OnClickLis
 		mBackIV = (ImageView) findViewById(R.id.iv_video_sync_setting_back_btn);
 		mBackIV.setOnClickListener(this);
 
-		mCurSyncMode = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
-		
 		GolukDebugUtils.e("","sync count ---SettingActivity-----onCreate ---mCurSyncMode:  " + mCurSyncMode );
 		
 		switch (mCurSyncMode) {

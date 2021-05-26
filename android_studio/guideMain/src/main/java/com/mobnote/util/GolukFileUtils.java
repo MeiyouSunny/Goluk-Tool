@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.Environment;
 
 import com.mobnote.application.GolukApplication;
-import com.umeng.socialize.utils.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -388,7 +387,6 @@ public class GolukFileUtils {
             File file = new File(fullPath, name);
             if (file.exists()) {
                 if (!file.delete()) {
-                    Log.e("GolukFileUtils", "can not delete file!");
                     return true;
                 }
             }

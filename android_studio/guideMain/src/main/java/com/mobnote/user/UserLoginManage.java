@@ -11,19 +11,16 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.http.HttpCommHeaderBean;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.userlogin.OtherUserloginBeanRequest;
 import com.mobnote.golukmain.userlogin.UserData;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.userlogin.UserloginBeanRequest;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.umeng.socialize.sina.helper.MD5;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -82,14 +79,12 @@ public class UserLoginManage implements IRequestResultListener {
         userloginBean = new UserloginBeanRequest(IPageNotifyFn.PageType_Login, this);
         mPhone = phone;
         mPwd = pwd;
-        userloginBean.loginByPhone(phone, MD5.hexdigest(mPwd), uid);
     }
 
     public void loginByEmail(String email, String pwd, String uid) {
         userloginBean = new UserloginBeanRequest(IPageNotifyFn.LOGIN_BY_EMAIL, this);
         mEmail = email;
         mPwd = pwd;
-        userloginBean.loginByEmail(email, MD5.hexdigest(mPwd), uid);
     }
 
     public void loginBy3rdPlatform(HashMap<String, String> info) {
@@ -194,23 +189,6 @@ public class UserLoginManage implements IRequestResultListener {
 		String userInfo = SharedPrefUtil.getUserInfo();
 
 		Log.e("dengting", "getUserInfo------------------logic-userInfo1:" + userInfo);
-
-		if (null != userInfo && !"".equals(userInfo) && myInfo != null && myInfo.phone != null
-				&& !"".equals(myInfo.phone)) {
-			try {
-				myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(userInfo));
-				// 退出登录后，将信息存储
-				mSharedPreferences = mApp.getContext().getSharedPreferences("setup", Context.MODE_PRIVATE);
-				mEditor = mSharedPreferences.edit();
-				mEditor.putString("setupPhone", UserUtils.formatSavePhone(myInfo.phone));
-				mEditor.putBoolean("noPwd", false);
-				mEditor.putString("uid", myInfo.uid);
-				mEditor.commit();
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
 
 	}
 

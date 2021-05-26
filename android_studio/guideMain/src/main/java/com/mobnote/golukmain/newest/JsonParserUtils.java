@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.newest;
 
-import com.mobnote.golukmain.cluster.bean.TagTagsBean;
-import com.mobnote.golukmain.cluster.bean.UserLabelBean;
+import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 import com.mobnote.golukmain.videosuqare.LiveVideoData;
 import com.mobnote.golukmain.videosuqare.UserEntity;
 import com.mobnote.golukmain.videosuqare.VideoEntity;
@@ -211,12 +210,6 @@ public class JsonParserUtils {
 					if(null != tagsObjArray && tagsObjArray.length() > 0) {
 						int tagsLength = tagsObjArray.length();
 						for(int j = 0; j < tagsLength; j++) {
-							JSONObject tagsObj = tagsObjArray.optJSONObject(j);
-							TagTagsBean tagsBean = new TagTagsBean();
-							tagsBean.tagid = tagsObj.optString("tagid");
-							tagsBean.name = tagsObj.optString("name");
-							tagsBean.type = tagsObj.optInt("type");
-							mVideoEntity.tags.add(tagsBean);
 						}
 					}
 					if (video.isNull("isopen")) {

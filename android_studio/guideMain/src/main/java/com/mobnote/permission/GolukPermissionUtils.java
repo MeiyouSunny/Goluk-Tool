@@ -29,9 +29,9 @@ public class GolukPermissionUtils {
 
 
     public static boolean hasIndispensablePermission(Context context){
-        return GolukPermissionUtils.hasExternalStoragePermission(context)
-                && GolukPermissionUtils.hasLocationPermission(context)
-                && GolukPermissionUtils.hasReadPhoneStatePermission(context);
+        return GolukPermissionUtils.hasExternalStoragePermission(context);
+//                && GolukPermissionUtils.hasLocationPermission(context)
+//                && GolukPermissionUtils.hasReadPhoneStatePermission(context);
     }
 
     public static boolean hasExternalStoragePermission(Context context) {

@@ -23,6 +23,6 @@ android {
 }
 
 dependencies {
-    compile project(':systemAPI')
-    compile files('libs/volley.jar')
+    implementation project(':systemAPI')
+    implementation files('libs/volley.jar')
 }

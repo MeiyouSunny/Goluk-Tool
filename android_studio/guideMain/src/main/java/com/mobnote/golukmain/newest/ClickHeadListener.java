@@ -1,15 +1,12 @@
 package com.mobnote.golukmain.newest;
 
-import com.mobnote.golukmain.BaseActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
-import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.util.GolukUtils;
-
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
+
+import com.mobnote.golukmain.BaseActivity;
+import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.util.GolukUtils;
 
 /**
  * 点击用户头像 ，跳转“个人中心”

@@ -26,7 +26,7 @@ import com.mobnote.t1sp.util.ThumbAsyncTask;
 import com.mobnote.t2s.files.IpcFileQueryF4;
 import com.mobnote.t2s.files.IpcFileQueryListener;
 import com.mobnote.t2s.files.IpcQuery;
-import com.rd.veuisdk.utils.DateTimeUtils;
+import com.mobnote.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.List;

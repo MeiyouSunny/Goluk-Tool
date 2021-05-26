@@ -1,7 +1,7 @@
 package com.mobnote.t1sp.util;
 
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.rd.veuisdk.utils.DateTimeUtils;
+import com.mobnote.util.DateTimeUtils;
 
 import goluk.com.t1s.api.callback.CallbackCmd;
 import likly.dollar.$;

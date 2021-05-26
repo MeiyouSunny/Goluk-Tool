@@ -1,21 +1,21 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.jakewharton.butterknife'
+//apply plugin: 'com.jakewharton.butterknife'
 
-task generateStrings(type: Exec) {
-    workingDir './'
-    commandLine "python", "excel2str.py"
-}
+//task generateStrings(type: Exec) {
+//    workingDir './'
+//    commandLine "python", "excel2str.py"
+//}
 
 //afterEvaluate {
 //    android.testVariants.all { variant ->
-//        variant.javaCompiler.dependsOn(generateStrings)
+//        variant.javaimplementationr.dependsOn(generateStrings)
 //    }
 //    preBuild.dependsOn generateStrings
 //}
 
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
     buildToolsVersion '26.0.2'
     useLibrary 'org.apache.http.legacy'
 
@@ -48,90 +48,86 @@ dependencies {
             dirs 'libs'
         }
     }
-    compile project(':rdVEUISdk')
+//    implementation project(':rdVEUISdk')
 
-    compile project(':emojicon')
+//    implementation project(':emojicon')
 
     // 仅调用依赖
     provided files('../systemAPI/libs/BaiduLBS_Android.jar')
     provided files('../systemAPI/libs/eventbus-2.4.0.jar')
-    provided files('../systemAPI/libs/umeng-analytics-7.4.0.jar')
     provided files('../commonGoluk/libs/volley.jar')
 
-    compile 'com.google.android.gms:play-services-maps:8.4.0'
-    compile 'com.android.support:appcompat-v7:26.1.0'
+    implementation 'com.google.android.gms:play-services-maps:8.4.0'
+    implementation 'com.android.support:appcompat-v7:26.1.0'
     //dynamic permission
-    compile 'pub.devrel:easypermissions:1.0.1'
+    implementation 'pub.devrel:easypermissions:1.0.1'
     // 文件压缩
-    compile 'net.lingala.zip4j:zip4j:1.3.2'
+    implementation 'net.lingala.zip4j:zip4j:1.3.2'
 
-    compile files('libs/com.rd.car.player.jar')
-    compile files('libs/com.rd.car.sdk.jar')
-    compile files('libs/download_1.1.4.1.jar')
-    compile files('libs/exoplayerlib.jar')
-    //compile files('libs/fastjson-1.1.46.android.jar')
-    //compile files('libs/glide-3.6.1.jar')
-    compile files('libs/glide-volley-integration-1.3.1.jar')
-    compile files('libs/httpmime-4.1.3.jar')
-    compile files('libs/jsr305-3.0.0.jar')
-    compile files('libs/library-2.4.0.jar')
-    compile files('libs/stickylistheaderslibrary.jar')
-    compile files('libs/after-effect.jar')
-    compile 'com.android.support:multidex:1.0.1'
-    compile files('libs/photoview-library-1.2.2.jar')
-    compile files('libs/Zhuge_SDK_v2.3.0.jar')
-    compile 'com.android.support:recyclerview-v7:26.1.0'
-    compile 'com.elvishew:xlog:1.3.0'
-    compile 'com.vk:androidsdk:1.6.8'
-    compile files('libs/MobCommons-2017.0321.1624.jar')
-    compile files('libs/MobTools-2017.0321.1624.jar')
-    compile files('libs/SMSSDK-2.1.4.jar')
-    compile files('libs/umeng_social_api.jar')
-    compile files('libs/umeng_social_net.jar')
-    compile files('libs/umeng_social_tool.jar')
-    compile files('libs/umeng_social_shareview.jar')
-    compile files('libs/umeng-common-1.4.0.jar')
-    compile files('libs/SocialSDK_instagram.jar')
-    compile files('libs/SocialSDK_QQ_Simplify.jar')
-    compile files('libs/SocialSDK_Sina_Simplify.jar')
-    compile files('libs/SocialSDK_twitter.jar')
-    //compile files('libs/SocialSDK_vkontakte.jar')
-    compile files('libs/SocialSDK_WeChat_Simplify.jar')
-    compile files('libs/SocialSDK_whatsapp.jar')
-    compile files('libs/SocialSDK_facebook.jar')
-
-    // 信鸽jar
-//    compile 'com.tencent.xinge:xinge:3.2.3-release'
-    //jg包
-    //compile'com.tencent.jg:jg:1.1'
-    // 信鸽wup包(信鸽和云存储都需要此包)
-    compile 'com.tencent.wup:wup:1.0.0.E-release'
+    implementation files('libs/com.rd.car.player.jar')
+    implementation files('libs/com.rd.car.sdk.jar')
+    implementation files('libs/download_1.1.4.1.jar')
+    implementation files('libs/exoplayerlib.jar')
+    implementation files('libs/fastjson-1.1.46.android.jar')
+    //implementation files('libs/glide-3.6.1.jar')
+    implementation files('libs/glide-volley-integration-1.3.1.jar')
+    implementation files('libs/httpmime-4.1.3.jar')
+    implementation files('libs/jsr305-3.0.0.jar')
+    implementation files('libs/library-2.4.0.jar')
+    implementation files('libs/stickylistheaderslibrary.jar')
+    implementation files('libs/after-effect.jar')
+    implementation 'com.android.support:multidex:1.0.1'
+    implementation files('libs/photoview-library-1.2.2.jar')
+    implementation files('libs/Zhuge_SDK_v2.3.0.jar')
+    implementation 'com.android.support:recyclerview-v7:26.1.0'
+    implementation 'com.elvishew:xlog:1.3.0'
+    implementation 'com.tencent.wup:wup:1.0.0.E-release'
     // 信鸽mid包
-    compile 'com.tencent.mid:mid:4.0.6-release'
+    implementation 'com.tencent.mid:mid:4.0.6-release'
     //COS uploader 腾讯云上传
     implementation 'com.tencent.cos:cos:4.3.2+@aar'
 
-    compile project(':commonGoluk')
+    implementation project(':commonGoluk')
+    implementation project(':systemAPI')
 
     //T2S libs
-    compile 'com.hmcx:mvp:1.0.3'
-    compile 'com.hmcx:rxandroid:1.0.6'
-    compile 'com.hmcx:dialogger:1.0.3'
-    compile 'com.hmcx:repeatview:1.0.3'
-    compile 'com.hmcx:dollar:1.0.1'
-    compile 'com.kyleduo.switchbutton:library:1.4.6'
+//    implementation 'com.hmcx:mvp:1.0.3'
+//    implementation 'com.hmcx:rxandroid:1.0.6'
+//    implementation 'com.hmcx:dialogger:1.0.3'
+//    implementation 'com.hmcx:repeatview:1.0.3'
+//    implementation 'com.hmcx:dollar:1.0.1'
+
+//    implementation 'com.hmcx:mvp:2.0.2'
+//    implementation 'com.hmcx:dollar:1.0.1'
+//    implementation 'com.hmcx:rxandroid:1.0.6'
+//    implementation 'com.hmcx:dialogger:1.0.2'
+//    implementation 'com.hmcx:repeatview:1.0.9'
+
+    implementation 'com.hmcx:mvp:2.0.2'
+    implementation 'com.hmcx:rxandroid:1.0.6'
+    implementation 'com.hmcx:dialogger:1.0.2'
+    implementation 'com.hmcx:repeatview:1.0.9'
+    implementation 'com.hmcx:dollar:1.0.1'
+    implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'com.hmcx:http:1.0.6'
+    implementation 'com.hmcx:okhttp:1.0.6'
+    implementation 'com.hmcx:rxjava:1.0.6'
+
+    implementation 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    implementation 'com.kyleduo.switchbutton:library:1.4.6'
     // butterknife
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
+//    annotationProcessor 'com.jakewharton:butterknife-implementationr:8.5.1'
+//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Downloader
-    compile 'com.liulishuo.filedownloader:library:1.7.1'
-    // Gps parser
-//    compile files('libs/T1SP-Gps.jar')
+    implementation 'com.liulishuo.filedownloader:library:1.7.1'
 
-    compile(name: 'T2S', ext: 'aar')
+    implementation(name: 'T2S', ext: 'aar')
 
-    compile 'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
 
-    compile 'com.google.zxing:core:3.3.0'
+    implementation 'com.google.zxing:core:3.3.0'
 }
 

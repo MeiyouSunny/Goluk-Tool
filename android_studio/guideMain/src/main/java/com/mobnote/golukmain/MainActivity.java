@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.drawable.AnimationDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -18,7 +17,6 @@ import android.os.Bundle;
 import android.os.Message;
 import android.os.Process;
 import android.provider.Settings;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,9 +28,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
-import android.widget.Toast;
 
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.google.widget.FragmentTabHost;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
@@ -45,62 +41,36 @@ import com.mobnote.eventbus.EventFollowPush;
 import com.mobnote.eventbus.EventMapQuery;
 import com.mobnote.eventbus.EventMessageUpdate;
 import com.mobnote.eventbus.EventPhotoUpdateDate;
-import com.mobnote.eventbus.EventUpdateAddr;
 import com.mobnote.eventbus.EventUserLoginRet;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.eventbus.EventWifiAuto;
 import com.mobnote.eventbus.EventWifiConnect;
 import com.mobnote.eventbus.EventWifiState;
-import com.mobnote.golukmain.FollowCount.FollowCountRequest;
-import com.mobnote.golukmain.FollowCount.bean.FollowCountRetBean;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.util.GFileUtils;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.comment.CommentTimerManager;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.followed.FragmentFollowed;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.live.GetBaiduAddress.IBaiduGeoCoderFn;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.IsLiveRequest;
-import com.mobnote.golukmain.livevideo.IsLiveRetBean;
-import com.mobnote.golukmain.msg.MessageBadger;
-import com.mobnote.golukmain.msg.MsgCenterCounterRequest;
-import com.mobnote.golukmain.msg.bean.MessageCounterBean;
 import com.mobnote.golukmain.photoalbum.FragmentAlbum;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
 import com.mobnote.golukmain.wifibind.WiFiInfo;
 import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifidatacenter.WifiBindHistoryBean;
-//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.golukmain.xdpush.StartAppBean;
-//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
-import com.mobnote.golukmobile.GuideActivity;
 import com.mobnote.manager.MessageManager;
 import com.mobnote.receiver.NetworkStateReceiver;
 import com.mobnote.t1sp.ui.preview.CarRecorderT1SPActivity;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.CrashReportUtil;
-import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
 import com.mobnote.util.SharedPrefUtil;
-import com.mobnote.util.ZhugeUtils;
 import com.mobnote.wifibind.WifiConnCallBack;
 import com.mobnote.wifibind.WifiConnectManager;
 import com.mobnote.wifibind.WifiRsBean;
 import com.rd.car.CarRecorderManager;
 import com.tencent.bugly.crashreport.CrashReport;
-import com.umeng.analytics.MobclickAgent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -116,13 +86,11 @@ import cn.com.mobnote.module.talk.TalkNotifyAdapter;
 import cn.com.mobnote.module.videosquare.VideoSquareManagerAdapter;
 import cn.com.tiros.api.Tapi;
 import cn.com.tiros.baidu.BaiduLocation;
-import cn.com.tiros.baidu.LocationAddressDetailBean;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
 @SuppressLint({"HandlerLeak", "NewApi"})
-public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiveDialogManagerFn, IBaiduGeoCoderFn,
-        IRequestResultListener {
+public class MainActivity extends BaseActivity implements WifiConnCallBack, IRequestResultListener {
     public static final String INTENT_ACTION_RETURN_MAIN_ALBUM = "returnToAlbum";
 
     /**
@@ -183,7 +151,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     private ImageView mCarrecorderIv;
     //private ViewStub mGuideMainViewStub;
-    private SharePlatformUtil mSharePlatform = null;
 
     private void playDownLoadedSound() {
         if (null != mSoundPool) {
@@ -223,45 +190,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         // 页面初始化,获取页面控件
         init();
 
-        UserInfo userInfo = mApp.getMyInfo();
-        if (null != userInfo) {
-            mApp.mCurrentUId = userInfo.uid;
-            mApp.mCurrentAid = userInfo.aid;
-        }
-
-//        // 读取SharedPreFerences中需要的数据,使用SharedPreFerences来记录程序启动的使用次数
-//        SharedPreferences preferences = getSharedPreferences("golukmark", MODE_PRIVATE);
-//        // 取得相应的值,如果没有该值,说明还未写入,用true作为默认值
-//        boolean isFirstIndex = preferences.getBoolean("isFirstIndex", true);
-//        if (isFirstIndex) { // 如果是第一次启动
-//            mGuideMainViewStub.inflate();
-//            Editor editor = preferences.edit();
-//            editor.putBoolean("isFirstIndex", false);
-//            // 提交修改
-//            editor.commit();
-//        }
-
         // 为了兼容以前的版本， 把旧的绑定信息读取出来
         mWac = new WifiConnectManager(mWifiManager, this);
         mCurrentConnBean = mWac.readConfig();
         refreshIpcDataToFile();
-
-        // 初始化连接与綁定状态
-//        if (mApp.isBindSucess()) {
-//            if (mApp.getEnableSingleWifi()) {
-//                mApp.mIpcIp = WiFiLinkListActivity.CONNECT_IPC_IP;
-        //什么都不干
-//            } else {
-//                startWifi();
-        // 启动创建热点
-//                autoConnWifi();
-        // 等待IPC连接时间
-
-//                mBaseHandler.sendEmptyMessageDelayed(MSG_H_WIFICONN_TIME, 40 * 1000);
-//            }
-//        } else {
-//            wifiConnectFailed();
-//        }
 
         // 不是第一次登录，并且上次登录成功过，进行自动登录
         mPreferencesAuto = getSharedPreferences("firstLogin", MODE_PRIVATE);
@@ -270,47 +202,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.mUser.initAutoLogin();
         }
 
-        GetBaiduAddress.getInstance().setCallBackListener(this);
-
-        // 未登录跳转登录
-        Intent itStart_have = getIntent();
-        if (null != itStart_have.getStringExtra("userstart")) {
-            String start_have = itStart_have.getStringExtra("userstart").toString();
-            if ("start_have".equals(start_have)) {
-                Intent intent = null;
-                if (GolukApplication.getInstance().isMainland() == false) {
-                    intent = new Intent(this, InternationUserLoginActivity.class);
-                } else {
-                    intent = new Intent(this, UserLoginActivity.class);
-                }
-                // 登录页回调判断
-                intent.putExtra("isInfo", "main");
-                mPreferences = getSharedPreferences("toRepwd", Context.MODE_PRIVATE);
-                mEditor = mPreferences.edit();
-                mEditor.putString("toRepwd", "start");
-                mEditor.commit();
-                // 在黑页面判断是注销进来的还是首次登录进来的
-                if (!mApp.loginoutStatus) {// 注销
-                    // 获取注销成功后传来的信息
-                    mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-                    String phone = mPreferences.getString("setupPhone", "");// 最后一个参数为默认值
-                    intent.putExtra("startActivity", phone);
-                    startActivity(intent);
-                } else {
-                    startActivity(intent);
-                }
-            }
-        }
-
-        dealPush(itStart_have);
-
         if (NetworkStateReceiver.isNetworkAvailable(this)) {
             notifyLogicNetWorkState(true);
         }
         GolukUtils.getMobileInfo(this);
-
-        //msgRequest();
-        mSharePlatform = new SharePlatformUtil(this);
 
         BaiduLocation.getInstance().startLocation();
 
@@ -383,21 +278,26 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         mTabHost.setup(this, getSupportFragmentManager(), R.id.fl_main_tab_content);
 
         Bundle b = new Bundle();
-        b.putString("key", "Discover");
-        LinearLayout discover = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_discover, null);
-        mTabHost.addTab(mTabHost.newTabSpec("Discover").setIndicator(discover), FragmentDiscover.class, b);
+//        b.putString("key", "Discover");
+//        LinearLayout discover = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_discover, null);
+//        mTabHost.addTab(mTabHost.newTabSpec("Discover").setIndicator(discover), FragmentDiscover.class, b);
 
-        b = new Bundle();
-        b.putString("key", "Follow");
-        RelativeLayout follow = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
-        mTabHost.addTab(mTabHost.newTabSpec("Follow").setIndicator(follow), FragmentFollowed.class, b);
-        mFollowedVideoTipIV = (ImageView) follow.findViewById(R.id.iv_new_followed_video_tips);
+//        b = new Bundle();
+//        b.putString("key", "Follow");
+//        RelativeLayout follow = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_follow, null);
+//        mTabHost.addTab(mTabHost.newTabSpec("Follow").setIndicator(follow), FragmentFollowed.class, b);
+//        mFollowedVideoTipIV = (ImageView) follow.findViewById(R.id.iv_new_followed_video_tips);
+
+//        b = new Bundle();
+//        b.putString("key", "CarRecorder");
+//        LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
+//        mCarrecorderIv = (ImageView) carRecorder.findViewById(R.id.tab_host_carrecorder_iv);
+//        mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder), null, b);
 
         b = new Bundle();
         b.putString("key", "CarRecorder");
-        LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_carrecorder, null);
-        mCarrecorderIv = (ImageView) carRecorder.findViewById(R.id.tab_host_carrecorder_iv);
-        mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder), null, b);
+        LinearLayout carRecorder = (LinearLayout) inflater.inflate(R.layout.main_tab_indicator_device, null);
+        mTabHost.addTab(mTabHost.newTabSpec("CarRecorder").setIndicator(carRecorder), FragmentDevice.class, b);
 
         b = new Bundle();
         b.putString("key", "Album");
@@ -410,6 +310,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         RelativeLayout mine = (RelativeLayout) inflater.inflate(R.layout.main_tab_indicator_mine, null);
         mUnreadTips = mine.findViewById(R.id.iv_unread_tips);
         mTabHost.addTab(mTabHost.newTabSpec("Mine").setIndicator(mine), FragmentMine.class, b);
+
         TabWidget widget = mTabHost.getTabWidget();
         widget.setDividerDrawable(null);
         mTabHost.getTabWidget().setBackgroundResource(R.color.color_main_tab_bg);
@@ -424,23 +325,18 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
                     R.dimen.mainactivity_bottom_height);
         }
 
-        mTabHost.getTabWidget().getChildTabViewAt(2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ZhugeUtils.eventIpcCarrecorder(MainActivity.this);
-
-                connectGoluk(false);
-            }
-        });
+//        mTabHost.getTabWidget().getChildTabViewAt(0).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                connectGoluk(false);
+//            }
+//        });
 
         mTabHost.setOnTabChangedListener(new OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
                 if ("Follow".equals(tabId)) {
                     mFollowedVideoTipIV.setVisibility(View.GONE);
-                } else if ("Album".equals(tabId)) {
-                    //tab访问相册统计
-                    ZhugeUtils.eventCallAlbum(MainActivity.this, getString(R.string.str_zhuge_call_album_source_tabbar));
                 }
             }
         });
@@ -486,16 +382,10 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     private void msgRequest() {
         if (GolukApplication.getInstance().isUserLoginSucess) {
-            MsgCenterCounterRequest msgCounterReq = new MsgCenterCounterRequest(IPageNotifyFn.PageType_MsgCounter, this);
-            msgCounterReq.get("100", GolukApplication.getInstance().mCurrentUId, "", "", "");
         }
     }
 
     private void followCountRequest() {
-        if (GolukApplication.getInstance().isUserLoginSucess) {
-            FollowCountRequest followCountRequest = new FollowCountRequest(IPageNotifyFn.PageType_FollowCount, this);
-            followCountRequest.get(GolukApplication.getInstance().mCurrentUId);
-        }
     }
 
     @Override
@@ -508,79 +398,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
             }
         }
-
-        dealPush(intent);
     }
 
-    /**
-     * 处理推送消息
-     *
-     * @param intent
-     * @author jyf
-     */
-    private void dealPush(Intent intent) {
-        if (null == intent) {
-            return;
-        }
-//        final String from = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_FROM);
-//        GolukDebugUtils.e("", "jyf----MainActivity-----from: " + from);
-//        if (null != from && !"".equals(from) && from.equals("notication")) {
-//            String pushJson = intent.getStringExtra(GolukNotification.NOTIFICATION_KEY_JSON);
-//
-//            GolukDebugUtils.e("", "jyf----MainActivity-----pushJson: " + pushJson);
-//            XingGeMsgBean bean = JsonUtil.parseXingGePushMsg(pushJson);
-//            if (null != bean) {
-//                GolukNotification.getInstance().dealAppinnerClick(this, bean);
-//            }
-//            // GolukUtils.showToast(this, "处理推送数据 :" + pushJson);
-//        }
-        // 处理网页启动App
-        mStartAppBean = (StartAppBean) intent.getSerializableExtra(GuideActivity.KEY_WEB_START);
-        dealWebStart();
-    }
-
-    private void dealWebStart() {
-        GolukDebugUtils.e("", "start App: MainActivity:------------: 11111");
-        if (null == mStartAppBean) {
-            return;
-        }
-        String type = mStartAppBean.type;
-        String title = mStartAppBean.title;
-        String id = mStartAppBean.id;
-        String voteUrl = mStartAppBean.voteUrl;
-
-        if ("1".equals(type)) {// 单视频
-            //视频详情页访问
-            ZhugeUtils.eventVideoDetail(this, this.getString(R.string.str_zhuge_share_video_network_other));
-            Intent intent = new Intent(this, VideoDetailActivity.class);
-            intent.putExtra(VideoDetailActivity.VIDEO_ID, id);
-            intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-            startActivity(intent);
-        } else if ("2".equals(type)) {// 专题
-            Intent intent = new Intent(this, SpecialListActivity.class);
-            intent.putExtra("ztid", id);
-            intent.putExtra("title", title);
-            startActivity(intent);
-        } else if ("3".equals(type)) {//活动聚合页面
-            Intent intent = new Intent(this, ClusterActivity.class);
-            intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, id);
-            intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, title);
-            startActivity(intent);
-        } else if ("4".equals(type)) {//个人主页
-            GolukUtils.startUserCenterActivity(this, id);
-        } else if ("5".equals(type)) {//投票网页
-            Intent intent = new Intent(this, UserOpenUrlActivity.class);
-            intent.putExtra(GolukConfig.WEB_TYPE, GolukConfig.NEED_SHARE);
-            intent.putExtra(GolukConfig.H5_URL, voteUrl);
-            intent.putExtra(GolukConfig.URL_OPEN_PATH, "text_banner");
-            if (!TextUtils.isEmpty(title)) {
-                intent.putExtra(GolukConfig.NEED_H5_TITLE, title);
-            }
-            startActivity(intent);
-        }
-
-        mStartAppBean = null;
-    }
 
     /**
      * 初始化第三方SDK
@@ -589,9 +408,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
      * @date 2015年6月17日
      */
     private void initThirdSDK() {
-        // 关闭umeng错误统计(只使用友盟的行为分析，不使用错误统计)
-        MobclickAgent.setDebugMode(false);
-        MobclickAgent.setCatchUncaughtExceptions(false);
         // 添加腾讯崩溃统计 初始化SDK
         String appId = null;
         if (GolukApplication.getInstance().isMainland()) {
@@ -609,19 +425,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         final String mobileId = Tapi.getMobileId();
         CrashReport.setUserId(mobileId);
         GolukDebugUtils.e("", "jyf-----MainActivity-----mobileId:" + mobileId);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        // Sina or facebook sso callback
-        if (null != mSharePlatform) {
-            mSharePlatform.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    public SharePlatformUtil getSharePlatform() {
-        return mSharePlatform;
     }
 
     /**
@@ -749,25 +552,25 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
      */
     public void updateRecoderBtn(int state) {
 
-        if (this.isFinishing() == false) {
-            AnimationDrawable ad = null;
-            if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
-                mCarrecorderIv.setImageResource(R.drawable.carrecoder_btn);
-                ad = (AnimationDrawable) mCarrecorderIv.getDrawable();
-                if (ad.isRunning() == false) {
-                    ad.setOneShot(false);
-                    ad.start();
-                }
-            } else if (state == WIFI_STATE_SUCCESS) {
-                Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn),
-                        Toast.LENGTH_LONG).show();
-                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_connected);
-            } else if (state == WIFI_STATE_FAILED) {
-                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
-            } else {
-                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
-            }
-        }
+//        if (this.isFinishing() == false) {
+//            AnimationDrawable ad = null;
+//            if (state == WIFI_STATE_CONNING && mApp.isBindSucess()) {
+//                mCarrecorderIv.setImageResource(R.drawable.carrecoder_btn);
+//                ad = (AnimationDrawable) mCarrecorderIv.getDrawable();
+//                if (ad.isRunning() == false) {
+//                    ad.setOneShot(false);
+//                    ad.start();
+//                }
+//            } else if (state == WIFI_STATE_SUCCESS) {
+//                Toast.makeText(MainActivity.this, getResources().getString(R.string.wifi_link_success_conn),
+//                        Toast.LENGTH_LONG).show();
+//                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_connected);
+//            } else if (state == WIFI_STATE_FAILED) {
+//                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
+//            } else {
+//                mCarrecorderIv.setImageResource(R.drawable.tb_car_recorder_not_connected);
+//            }
+//        }
     }
 
     private void startWifi() {
@@ -859,7 +662,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             case EventConfig.MESSAGE_UPDATE:
                 int msgCount = MessageManager.getMessageManager().getMessageTotalCount();
                 setMessageTipCount(msgCount);
-                MessageBadger.sendBadgeNumber(msgCount, this);
                 break;
             case EventConfig.MESSAGE_REQUEST:
                 msgRequest();
@@ -993,11 +795,8 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         // GolukApplication.getInstance().queryNewFileList();
         GolukDebugUtils.e("", "crash zh start App ------ MainActivity-----onResume------------:");
         mApp.setContext(this, "Main");
-        LiveDialogManager.getManagerInstance().setDialogManageFn(this);
 
         mApp.setBinding(false);
-
-        GetBaiduAddress.getInstance().setCallBackListener(this);
 
         if (mApp.isIpcLoginSuccess && mApp.isNeedCheckLive) {
             mApp.isNeedCheckLive = false;
@@ -1022,15 +821,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
         SharedPrefUtil.setIsLiveNormalExit(true);
         mApp.isNeedCheckLive = false;
         mApp.isCheckContinueLiveFinish = true;
-        IsLiveRequest isLiveRequest = new IsLiveRequest(IPageNotifyFn.PAGE_TYPE_IS_ALIVE, this);
-        isLiveRequest.request();
-    }
-
-    public void showContinueLive() {
-        if (mApp.getIpcIsLogin()) {
-            LiveDialogManager.getManagerInstance().showTwoBtnDialog(this, LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE,
-                    getString(R.string.user_dialog_hint_title), getString(R.string.str_live_continue));
-        }
     }
 
     @Override
@@ -1059,7 +849,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             mApp.mHandler.removeMessages(1001);
             mApp.mHandler.removeMessages(1002);
             mApp.mHandler.removeMessages(1003);
-            GetBaiduAddress.getInstance().exit();
             GolukVideoInfoDbManager.getInstance().destroy();
             unregisterListener();
             mApp.mIPCControlManager.setVdcpDisconnect();
@@ -1069,12 +858,9 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
             closeWifiHot();
             GlobalWindow.getInstance().dimissGlobalWindow();
             mApp.destroyLogic();
-            MobclickAgent.onKillProcess(this);
             mApp.appFree();
             if (!isDestroyed())
                 finish();
-//            GolukNotification.getInstance().destroy();
-            CommentTimerManager.getInstance().cancelTimer();
         }
     }
 
@@ -1108,58 +894,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
      */
     private void updateHotPointState(boolean isShow) {
         SettingUtils.getInstance().putBoolean("HotPointState", isShow);
-    }
-
-    @Override
-    public void dialogManagerCallBack(int dialogType, int function, String data) {
-        if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGIN) {
-            if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                Intent intent = null;
-                if (GolukApplication.getInstance().isMainland() == false) {
-                    intent = new Intent(this, InternationUserLoginActivity.class);
-                } else {
-                    intent = new Intent(this, UserLoginActivity.class);
-                }
-                intent.putExtra("isInfo", "back");
-                startActivity(intent);
-            }
-        } else if (LiveDialogManager.DIALOG_TYPE_LIVE_CONTINUE == dialogType) {
-            if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                //直播页面
-                ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
-
-                GolukUtils.startPublishOrWatchLiveActivity(this, true, true, null, null, null);
-            } else if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
-                if (mApp.mIPCControlManager.isT1Relative()) {
-                    mApp.mIPCControlManager.stopLive();
-                }
-            }
-        } else if (LiveDialogManager.DIALOG_TYPE_APP_EXIT == dialogType) {
-            if (function == LiveDialogManager.FUNCTION_DIALOG_OK) {
-                exit();
-            }
-        }
-
-    }
-
-    @Override
-    public void CallBack_BaiduGeoCoder(int function, Object obj) {
-        if (null == obj) {
-            GolukDebugUtils.e("", "jyf----20150406----LiveActivity----CallBack_BaiduGeoCoder----获取反地理编码  : "
-                    + (String) obj);
-            return;
-        }
-
-        String address = "";
-        if (GolukApplication.getInstance().isMainland()) {
-            address = ((ReverseGeoCodeResult) obj).getAddress();// 国内
-        } else {
-            address = ((LocationAddressDetailBean) obj).detail;// 国际
-        }
-        GolukDebugUtils.e("", "-----------CallBack_BaiduGeoCoder----MainActivity------address: " + address);
-        GolukApplication.getInstance().mCurAddr = address;
-        // 更新行车记录仪地址
-        EventBus.getDefault().post(new EventUpdateAddr(EventConfig.CAR_RECORDER_UPDATE_ADDR, address));
     }
 
     /**
@@ -1353,57 +1087,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, ILiv
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        // TODO Auto-generated method stub
-        if (null == result) {
-            return;
-        }
-
-        if (requestType == IPageNotifyFn.PageType_MsgCounter) {
-            MessageCounterBean bean = (MessageCounterBean) result;
-            if (null == bean.data) {
-                return;
-            }
-
-            if (null != bean.data.messagecount) {
-                int praiseCount = 0;
-                int commentCount = 0;
-                int systemCount = 0;
-                int followCount = 0;
-                if (null != bean.data.messagecount.user) {
-                    praiseCount = bean.data.messagecount.user.like;
-                    commentCount = bean.data.messagecount.user.comment;
-                }
-                if (null != bean.data.messagecount.system) {
-                    systemCount = bean.data.messagecount.system.total;
-                }
-
-                MessageManager.getMessageManager().setMessageEveryCount(praiseCount, commentCount, followCount,
-                        systemCount);
-            }
-        } else if (requestType == IPageNotifyFn.PageType_FollowCount) {
-            FollowCountRetBean bean = (FollowCountRetBean) result;
-            if (null == bean || null == bean.data) {
-                return;
-            }
-            if (bean.data.newvideo > 0) {
-                mFollowedVideoTipIV.setVisibility(View.VISIBLE);
-            }
-        } else if (requestType == IPageNotifyFn.PAGE_TYPE_IS_ALIVE) {
-            IsLiveRetBean isLiveRetBean = (IsLiveRetBean) result;
-            if (isLiveRetBean == null) {
-                mApp.mIPCControlManager.stopLive();
-                return;
-            }
-            if (TextUtils.isEmpty(isLiveRetBean.code)) {
-                mApp.mIPCControlManager.stopLive();
-                return;
-            }
-            if ("200".equals(isLiveRetBean.code)) {
-                showContinueLive();
-            } else {
-                mApp.mIPCControlManager.stopLive();
-            }
-        }
     }
 
     private final int REQUEST_CODE_OVERLAYS = 9;

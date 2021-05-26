@@ -22,7 +22,6 @@ import com.mobnote.eventbus.EventIPCCheckUpgradeResult;
 import com.mobnote.eventbus.EventIPCUpdate;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UpdateActivity;
-import com.mobnote.golukmain.UserSetupActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.upgrade.CheckUpgradeRequest;
@@ -908,9 +907,6 @@ public class IpcUpdateManage implements IPCManagerFn, IRequestResultListener {
                 }
             } else if (FUNCTION_SETTING_APP == mFunction) {
                 final Context tempContext = mApp.getContext();
-                if (tempContext != null && tempContext instanceof UserSetupActivity) {
-                    ((UserSetupActivity) tempContext).updateCallBack(FUNCTION_SETTING_APP, goluk);
-                }
 
                 if (goluk.equals("{}")) {
                     // 设置页版本检测需要提示

@@ -111,9 +111,6 @@ public class UserVersionActivity extends BaseActivity implements OnClickListener
 			GolukDebugUtils.i("lily", vIpc + "========UserSetupActivity==点击版本检测===中ipcVersion=====");
 			boolean appB = mApp.mIpcUpdateManage.requestInfo(IpcUpdateManage.FUNCTION_SETTING_APP, vIpc);
 		} else if (id == R.id.welcome_item) {
-			Intent itWelcome = new Intent(UserVersionActivity.this,UserStartActivity.class);
-			itWelcome.putExtra("judgeVideo", true);
-			startActivity(itWelcome);
 		} else if (id == R.id.ry_protocol_item) {
 			Intent itProtocol = new Intent(this, UserOpenUrlActivity.class);
 			itProtocol.putExtra(UserOpenUrlActivity.FROM_TAG, "protocol");

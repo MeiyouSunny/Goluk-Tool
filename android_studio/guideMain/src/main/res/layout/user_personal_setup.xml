@@ -32,6 +32,7 @@
     <!-- body -->
 
     <View
+        android:visibility="gone"
         android:id="@+id/solid_1"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
@@ -41,6 +42,7 @@
     <!-- 消息通知 -->
 
     <RelativeLayout
+        android:visibility="gone"
         android:id="@+id/notify_comm_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -67,6 +69,7 @@
     </RelativeLayout>
 
     <View
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:background="@drawable/solid" />
@@ -245,6 +248,7 @@
         android:background="@drawable/solid" />
 
     <View
+        android:visibility="gone"
         android:id="@+id/solid_5"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
@@ -253,6 +257,7 @@
     <!-- 注销/登录 -->
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/loginout_item"
         android:layout_width="match_parent"
         android:layout_height="40dp"
@@ -268,6 +273,7 @@
     </LinearLayout>
 
     <View
+        android:visibility="gone"
         android:id="@+id/solid_6"
         android:layout_width="wrap_content"
         android:layout_height="1dp"

@@ -58,6 +58,7 @@
                 android:paddingLeft="8dp"
                 android:paddingRight="8dp"
                 android:text="@string/share_title2"
+                android:visibility="gone"
                 android:textColor="#ffffff"/>
         </RelativeLayout>
 
@@ -466,6 +467,7 @@
         <!-- 编辑视频 -->
         <LinearLayout
             android:id="@+id/ll_start_videoedit"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"

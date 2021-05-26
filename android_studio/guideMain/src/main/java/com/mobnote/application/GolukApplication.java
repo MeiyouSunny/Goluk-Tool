@@ -38,7 +38,6 @@ import com.mobnote.golukmain.BuildConfig;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpinionActivity;
-import com.mobnote.golukmain.UserSetupActivity;
 import com.mobnote.golukmain.UserSetupChangeWifiActivity;
 import com.mobnote.golukmain.UserSetupWifiActivity;
 import com.mobnote.golukmain.adas.AdasConfigParamterBean;
@@ -54,14 +53,8 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
 import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.internation.login.CountryBean;
-import com.mobnote.golukmain.internation.login.GolukMobUtils;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.LiveOperateVdcp;
-import com.mobnote.golukmain.livevideo.VdcpLiveBean;
-import com.mobnote.golukmain.player.SdkHandler;
-import com.mobnote.golukmain.thirdshare.GolukUmConfig;
 import com.mobnote.golukmain.userlogin.UserData;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.golukmain.userlogin.UserResult;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareManager;
@@ -71,7 +64,6 @@ import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
 import com.mobnote.golukmain.wifidatacenter.JsonWifiBindManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
 import com.mobnote.golukmain.wifimanage.WifiApAdmin;
-//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.log.app.LogConst;
@@ -85,7 +77,6 @@ import com.mobnote.user.TimerManage;
 import com.mobnote.user.User;
 import com.mobnote.user.UserIdentifyManage;
 import com.mobnote.user.UserLoginManage;
-import com.mobnote.user.UserRegistAndRepwdManage;
 import com.mobnote.util.GolukFastJsonUtil;
 import com.mobnote.util.GolukFileUtils;
 import com.mobnote.util.GolukUtils;
@@ -95,7 +86,6 @@ import com.mobnote.util.SortByDate;
 import com.mobnote.util.ZhugeUtils;
 import com.rd.car.CarRecorderManager;
 import com.rd.car.RecorderStateException;
-import com.rd.veuisdk.SdkEntry;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
@@ -127,6 +117,8 @@ import likly.dollar.$;
 import likly.mvp.MVP;
 
 import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
+
+//import com.mobnote.golukmain.xdpush.GolukNotification;
 
 public class GolukApplication extends MultiDexApplication implements IPageNotifyFn, IPCManagerFn, ITalkFn, ILocationFn {
     /**
@@ -271,10 +263,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      **/
     public UserIdentifyManage mIdentifyManage = null;
     /**
-     * 注册/重置密码管理类
-     **/
-    public UserRegistAndRepwdManage mRegistAndRepwdManage = null;
-    /**
      * 计时器管理类
      **/
     public TimerManage mTimerManage = null;
@@ -337,10 +325,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      */
     private boolean enableSingleWifi;
     /**
-     * 当前的国家区号
-     **/
-    public CountryBean mLocationCityCode = null;
-    /**
      * 是否发起过直播
      */
     public boolean isAlreadyLive = false;
@@ -402,17 +386,8 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         // 初始化绑定信息的数据保存
         WifiBindDataCenter.getInstance().setAdatper(new JsonWifiBindManager());
         GolukVideoInfoDbManager.getInstance().initDb(this.getApplicationContext());
-        GolukUmConfig.UmInit();
         initXLog();
-        GolukMobUtils.initMob(this);
         ZhugeSDK.getInstance().init(getApplicationContext());
-        SdkEntry.enableDebugLog(true);
-        String videoPath = android.os.Environment.getExternalStorageDirectory().getPath() + EXPORT_FOLDER_NAME;
-        if(isMainland()) {
-            SdkEntry.initialize(this, videoPath, RD_APP_KEY, RD_APP_SECRET, new SdkHandler().getCallBack());
-        }else{
-            SdkEntry.initialize(this, videoPath, RD_APP_KEY_INNATIONAL, RD_APP_SECRET_INNATIONAL, new SdkHandler().getCallBack());
-        }
 
         // T1SP
         MVP.registerOnViewBindListener(new BaseOnViewBindListener());
@@ -511,7 +486,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         mLoginManage = new UserLoginManage(this);
         mIpcUpdateManage = new IpcUpdateManage(this);
         mIdentifyManage = new UserIdentifyManage(this);
-        mRegistAndRepwdManage = new UserRegistAndRepwdManage(this);
         mTimerManage = new TimerManage(this);
 
         mIPCControlManager = new IPCControlManager(this);
@@ -540,7 +514,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
     public void appFree() {
-        SdkEntry.onExitApp(this);
         mIpcIp = null;
         mContext = null;
         mPageSource = "";
@@ -1179,7 +1152,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 break;
             // 注册PageType_Register
             case PageType_BindInfo:
-                mRegistAndRepwdManage.bindPhoneNumCallback(success, param1, param2);
                 break;
             case PageType_DownloadIPCFile:
                 mIpcUpdateManage.downloadCallback(success, param1, param2);
@@ -1640,9 +1612,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
                 break;
             case IPC_VDCP_Msg_LiveStart:
                 // 开始直播
-                if (null != mLiveOperater) {
-                    mLiveOperater.CallBack_Ipc(msg, param1, param2);
-                }
                 break;
             case IPC_VDCP_Msg_LiveStop:
 
@@ -1650,27 +1619,10 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         }
     }
 
-    public LiveOperateVdcp mLiveOperater = null;
-
     private void IPC_VDCP_PushEvent_Comm(int msg, int param1, Object param2) {
         if (RESULE_SUCESS != param1) {
             GolukDebugUtils.e("", "newlive-----GolukApplication----IPC_VDCP_PushEvent_Comm:  " + param2);
             return;
-        }
-        if (!this.isAlreadyLive) {
-            // 未发起过直播
-            try {
-                VdcpLiveBean bean = GolukFastJsonUtil.getParseObj((String) param2, VdcpLiveBean.class);
-                if ("sending".equals(bean.content)) {
-                    isT1Success = true;
-                    checkContinueLive();
-                }
-            } catch (Exception e) {
-            }
-        }
-
-        if (null != mLiveOperater) {
-            mLiveOperater.CallBack_Ipc(msg, param1, param2);
         }
     }
 
@@ -1815,23 +1767,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
 
     // 设置同步数量
     private void setSyncCount() {
-        GolukDebugUtils.e("", "sync count ---application-----setSyncCount ---1");
-        if (!isBindSucess()) {
-            return;
-        }
-        int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
-
-        GolukDebugUtils.e("", "sync count ---application-----setSyncCount ---2:  " + syncFlag + "   nane: "
-                + mIPCControlManager.mProduceName);
-        /** 初始没有设置同步数量，根据连接设备类型G1，T1S设置自动同步5条，其他设备自动同步20条 **/
-        if (syncFlag == -1) {
-            // if (IPCControlManager.G1_SIGN.equals(mIPCControlManager.mProduceName)
-            //     || IPCControlManager.T1s_SIGN.equalsIgnoreCase(mIPCControlManager.mProduceName)) {
-            SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 5);
-//            } else {
-//                SettingUtils.getInstance().putInt(UserSetupActivity.MANUAL_SWITCH, 20);
-//            }
-        }
     }
 
     /**
@@ -1841,29 +1776,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * @author jyf
      */
     private boolean isCanQueryNewFile() {
-
-        int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, -1);
-        if (syncFlag <= 0) {
-            return false;
-        }
-
-        if (!isBindSucess()) {
-            return false;
-        }
-
-        if (!isIpcLoginSuccess) {
-            return false;
-        }
-
-        if (mDownLoadFileList.size() > 0) {
-            return false;
-        }
-
-        if ("carrecorder".equals(mPageSource)) {
-            if (mIPCControlManager.isG1Relative()) {
-                return false;
-            }
-        }
         return true;
     }
 
@@ -1897,20 +1809,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
      * @date 2015年4月24日
      */
     public void queryNewFileList() {
-        if (!isCanQueryNewFile()) {
-            // 不允许同步视频
-            return;
-        }
-
-        long starttime = SettingUtils.getInstance().getLong("downloadfiletime", 0);
-        int syncFlag = SettingUtils.getInstance().getInt(UserSetupActivity.MANUAL_SWITCH, 5);
-        GolukDebugUtils.e("xuhw", "BBBB=====stopDownloadList==4444===stopDownloadList:   " + starttime + "  syncFlag: "
-                + syncFlag);
-
-        boolean flog = mIPCControlManager.queryFileListInfo(6, syncFlag, starttime, 2147483647, "0");
-        if (flog) {
-            mIsQuery = true;
-        }
     }
 
     /**
@@ -2048,24 +1946,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
     }
 
     /**
-     * 验证固定的几个activity 可以弹框
-     *
-     * @Description:
-     * @return boolean
-     * @author 曾浩
-     */
-    // public boolean isCanShowConnectDialog() {
-    // //////// CK start
-    // // if (mContext instanceof FragmentAlbum) {
-    // // return true;
-    // // } else {
-    // // return false;
-    // // }
-    // return true;
-    // //////// CK End
-    // }
-
-    /**
      * 获取当前登录用户的信息,　未登录則返回NULL
      *
      * @return 用户信息类 UserInfo
@@ -2076,14 +1956,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         UserInfo myInfo = null;
         try {
             String user = SharedPrefUtil.getUserInfo();
-
-            Log.e("dengting", "getUserInfo------------------logic-userInfo2:" + user);
-
-            if (null != user && !"".equals(user)) {
-                myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
-                XLog.i("User info: nickname:%s, userName:%s, uid:%s", myInfo.nickname, myInfo.phone, myInfo.uid);
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -2099,19 +1971,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         try {
             if (user != null && !"".equals(user)) {
                 UserInfo myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
-                if (name != null && !"".equals(name)) {
-                    myInfo.nickname = name;
-                }
-                if (head != null && !"".equals(head)) {
-                    myInfo.head = head;
-                }
-                if (!TextUtils.isEmpty(desc)) {
-                    myInfo.desc = desc;
-                }
-                if (url != null) {
-                    myInfo.customavatar = url;
-                }
-
                 SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
             }
 
@@ -2120,20 +1979,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
             e.printStackTrace();
         }
 
-    }
-
-    public void setMyPhone(String phone) {
-        String user = SharedPrefUtil.getUserInfo();
-        try {
-            if (user != null && !"".equals(user)) {
-                UserInfo myInfo = JsonUtil.parseSingleUserInfoJson(new JSONObject(user));
-                if (!TextUtils.isEmpty(phone)) {
-                    myInfo.phone = phone;
-                }
-                SharedPrefUtil.saveUserInfo(JSON.toJSONString(myInfo));
-            }
-        } catch (JSONException e) {
-        }
     }
 
     /**
@@ -2176,7 +2021,6 @@ public class GolukApplication extends MultiDexApplication implements IPageNotify
         //直播页面
         ZhugeUtils.eventLive(this, this.getString(R.string.str_zhuge_share_video_network_other));
 
-        GolukUtils.startPublishOrWatchLiveActivity(mContext, false, false, null, null, userInfo);
     }
 
     private boolean isMainProcess() {

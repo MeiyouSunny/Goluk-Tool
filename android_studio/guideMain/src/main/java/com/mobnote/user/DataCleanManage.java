@@ -1,15 +1,15 @@
 package com.mobnote.user;
 
+import android.content.Context;
+import android.os.Environment;
+
+import com.mobnote.util.GolukFileUtils;
+
 import java.io.File;
 import java.math.BigDecimal;
 
-import com.mobnote.golukmain.UserSetupActivity;
-import com.mobnote.util.GolukFileUtils;
-
 import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.content.Context;
-import android.os.Environment;
 
 public class DataCleanManage {
 

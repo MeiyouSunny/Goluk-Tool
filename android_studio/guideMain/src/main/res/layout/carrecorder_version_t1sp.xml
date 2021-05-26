@@ -87,7 +87,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/layout_device_info"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="@dimen/dimen_60"
+        android:layout_marginTop="60dp"
         android:scaleType="matrix"
         android:visibility="gone" />
 

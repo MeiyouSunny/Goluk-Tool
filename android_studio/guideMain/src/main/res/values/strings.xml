@@ -991,7 +991,7 @@
     <string name="str_bind_fail">Failed</string>
     <string name="wifi_link_bind_failed">Unable to pair</string>
     <string name="str_praised_list_connect_error">Network unavailable. Tap the screen and try again</string>
-    <string name="str_mine">Me</string>
+    <string name="str_mine">About</string>
     <string name="str_main_page_mine">Me</string>
     <string name="str_usercenter_header_fans_text">Fans</string>
     <string name="ae_delete">Delete</string>
@@ -1586,10 +1586,10 @@
 
     <string name="user_data_content">
         1. In order to provide you with video publishing service, we may have access to mobile phone storage and network;\n
-        2. In order to recommend content to you based on your location, we may apply for your location permission;\n
-        3. For information push and account security, we will apply for system device permission, mobile phone device information and log information;\n
-        4. In order to login quickly, we may log in to get your personal information through social app;\n
-        5. We will strive to take various security technologies to protect your personal information. Without your consent, we will not obtain, share or provide your information from three parties.
+        2. For information push and account security, we will apply for system device permission, mobile phone device information and log information;\n
+        3. We will strive to take various security technologies to protect your personal information. Without your consent, we will not obtain, share or provide your information from three parties.
     </string>
+
+    <string name="device">Device</string>
 
 </resources>

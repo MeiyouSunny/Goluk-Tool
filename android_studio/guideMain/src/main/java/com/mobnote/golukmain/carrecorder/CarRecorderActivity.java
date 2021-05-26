@@ -51,9 +51,6 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.fileinfo.GolukVideoInfoDbManager;
-import com.mobnote.golukmain.live.GetBaiduAddress;
-import com.mobnote.golukmain.live.LiveSettingBean;
-import com.mobnote.golukmain.livevideo.StartLiveActivity;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
@@ -306,11 +303,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
     private RelativeLayout mRootLayout = null;
 
     private LayoutInflater mLayoutFlater = null;
-
-    /**
-     * 用户设置数据
-     */
-    LiveSettingBean mSettingData = null;
 
     private int ipcState = 0;
 
@@ -1170,9 +1162,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
                         dialog.dismiss();
                         Intent intent = new Intent(CarRecorderActivity.this, WiFiLinkCompleteActivity.class);
                         intent.putExtra(WiFiLinkCompleteActivity.INTENT_ACTION_RETURN_LIVE, true);
-                        intent.putExtra(StartLiveActivity.SHORT_LOCATION, mShortLocation);
-                        intent.putExtra(StartLiveActivity.CURR_LON, mLocationLon);
-                        intent.putExtra(StartLiveActivity.CURR_LAT, mLocationLat);
                         startActivity(intent);
                     }
                 });
@@ -1449,7 +1438,6 @@ public class CarRecorderActivity extends BaseActivity implements OnClickListener
         }
         // 移除定位通知及反编码通知
         mApp.removeLocationListener(SelfContextTag);
-        GetBaiduAddress.getInstance().setCallBackListener(null);
     }
 
     @Override

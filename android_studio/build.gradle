@@ -3,27 +3,40 @@ buildscript {
     repositories {
         jcenter()
         google()
-        //maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+        mavenCentral()
+        maven {
+            url 'https://jitpack.io'
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.1'
+        classpath 'com.android.tools.build:gradle:4.1.1'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
-        classpath 'com.jakewharton:butterknife-gradle-plugin:8.4.0'
+        classpath 'com.jakewharton:butterknife-gradle-plugin:8.8.1'
     }
 }
 
 allprojects {
     repositories {
         google()
-        mavenCentral()
         jcenter()
         mavenLocal()
-        //maven { url 'http://maven.aliyun.com/nexus/content/groups/public' }
+        mavenCentral()
         maven {
-            url 'https://dl.bintray.com/likly/maven'
+            url 'https://jitpack.io'
+        }
+//        maven {
+//            url 'https://dl.bintray.com/meiyousunny/hmcx'
+//        }
+
+        maven {
+            url 'https://maven.aliyun.com/repository/public'
         }
         maven {
-            url 'https://dl.bintray.com/meiyousunny/hmcx'
+            credentials {
+                username '60a3d803aa6381038e88bbe6'
+                password 'BMZNSD(=Q9C-'
+            }
+            url 'https://packages.aliyun.com/maven/repository/2104205-release-qPlYsz/'
         }
     }
 }

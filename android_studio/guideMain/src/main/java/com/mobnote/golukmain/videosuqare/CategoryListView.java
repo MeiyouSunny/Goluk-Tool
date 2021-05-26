@@ -1,9 +1,5 @@
 package com.mobnote.golukmain.videosuqare;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -12,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +15,6 @@ import android.widget.AbsListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
@@ -33,19 +24,17 @@ import com.mobnote.golukmain.newest.ClickPraiseListener.IClickPraiseView;
 import com.mobnote.golukmain.newest.ClickShareListener.IClickShareView;
 import com.mobnote.golukmain.newest.JsonParserUtils;
 import com.mobnote.golukmain.newest.NewestAdapter;
-import com.mobnote.golukmain.praise.PraiseCancelRequest;
-import com.mobnote.golukmain.praise.PraiseRequest;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.JsonUtil;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener, OnRTScrollListener, OnClickListener,
         IClickShareView, IClickPraiseView, IRequestResultListener, ZhugeParameterFn {
@@ -96,7 +85,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
      * 2：下拉
      */
     private int uptype = 0;
-    private SharePlatformUtil sharePlatform;
     private VideoSquareInfo endtime = null;
     private VideoSquareInfo mPraiseVideoSquareInfo;
     private final int COUNT = 30;
@@ -134,7 +122,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
     }
 
     private void initYMShare() {
-        sharePlatform = new SharePlatformUtil(mContext);
     }
 
     public void closeProgressDialog() {
@@ -276,9 +263,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (null != sharePlatform) {
-            sharePlatform.onActivityResult(requestCode, resultCode, data);
-        }
     }
 
     private void initLayout() {
@@ -384,18 +368,6 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
                 String nickname = null != mWillShareSquareInfo ? mWillShareSquareInfo.mUserEntity.nickname : "";
                 describe = nickname + mContext.getString(R.string.str_colon) + describe;
 
-                ThirdShareBean bean = new ThirdShareBean();
-                bean.surl = shareBean.shareurl;
-                bean.curl = shareBean.coverurl;
-                bean.db = describe;
-                bean.tl = ttl;
-                bean.bitmap = null;
-                bean.realDesc = realDesc;
-                bean.videoId = videoId;
-                bean.from = mContext.getString(R.string.str_zhuge_newest_event);
-
-                ProxyThirdShare shareBoard = new ProxyThirdShare(activity, sharePlatform, bean);
-                shareBoard.showAtLocation(activity.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
             }
         }
     }
@@ -629,65 +601,15 @@ public class CategoryListView implements VideoSuqareManagerFn, OnRefreshListener
 
     // 点赞请求
     public boolean sendPraiseRequest(String id) {
-        PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-        return request.get("1", id, "1");
+        return true;
     }
 
     // 取消点赞请求
     public boolean sendCancelPraiseRequest(String id) {
-        PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-        return request.get("1", id);
+        return true;
     }
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        switch (requestType) {
-            case IPageNotifyFn.PageType_Praise:
-                PraiseResultBean prBean = (PraiseResultBean) result;
-                if (null == result || !prBean.success) {
-                    GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-                    return;
-                }
-
-                PraiseResultDataBean ret = prBean.data;
-                if (null != ret && !TextUtils.isEmpty(ret.result)) {
-                    if ("0".equals(ret.result)) {
-                        if (null != mPraiseVideoSquareInfo) {
-                            if ("0".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
-                                mPraiseVideoSquareInfo.mVideoEntity.ispraise = "1";
-                                updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
-                            }
-                        }
-                    } else if ("7".equals(ret.result)) {
-                        GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
-                    } else {
-                        GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
-                    }
-                }
-                break;
-            case IPageNotifyFn.PageType_PraiseCancel:
-                PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
-                if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
-                    GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-                    return;
-                }
-
-                PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-                if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-                    if ("0".equals(cancelRet.result)) {
-                        if (null != mPraiseVideoSquareInfo) {
-                            if ("1".equals(mPraiseVideoSquareInfo.mVideoEntity.ispraise)) {
-                                mPraiseVideoSquareInfo.mVideoEntity.ispraise = "0";
-                                updateClickPraiseNumber(true, mPraiseVideoSquareInfo);
-                            }
-                        }
-                    } else {
-                        GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
-                    }
-                }
-                break;
-            default:
-                break;
-        }
     }
 }

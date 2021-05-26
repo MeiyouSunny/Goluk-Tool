@@ -1,7 +1,6 @@
 package com.mobnote.golukmain.userlogin;
 
 import com.alibaba.fastjson.annotation.JSONField;
-import com.mobnote.golukmain.usercenter.UCUserInfo;
 
 public class UpDescResult {
 	/**请求是否成功  **/

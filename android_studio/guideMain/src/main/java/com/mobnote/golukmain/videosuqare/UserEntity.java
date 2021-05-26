@@ -1,6 +1,6 @@
 package com.mobnote.golukmain.videosuqare;
 
-import com.mobnote.golukmain.cluster.bean.UserLabelBean;
+import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
 
 /**
  * 

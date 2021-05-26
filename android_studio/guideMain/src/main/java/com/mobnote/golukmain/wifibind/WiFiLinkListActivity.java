@@ -38,7 +38,6 @@ import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
-import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.golukmain.multicast.NetUtil;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumActivity;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
@@ -941,7 +940,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         mApp.mIPCControlManager.setVdcpDisconnect();
         reportLog();
         finish();
-        LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
         this.dimissLoadingDialog();
     }
 
@@ -976,7 +974,6 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
         if (!mApp.isMainland()) {
             mApp.getIPCControlManager().removeIPCManagerListener("carversion");
         }
-        LiveDialogManager.getManagerInstance().dismissTwoButtonDialog();
         this.dimissLoadingDialog();
     }
 

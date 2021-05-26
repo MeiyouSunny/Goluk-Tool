@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/ll_tabs"
         android:layout_width="match_parent"
-        android:layout_height="46dp"
+        android:layout_height="48dp"
         android:background="#242629">
 
         <LinearLayout
@@ -26,7 +26,7 @@
                 android:gravity="center"
                 android:text="@string/local_album"
                 android:textColor="#0080ff"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/tab_wonderful"
@@ -36,7 +36,7 @@
                 android:gravity="center"
                 android:text="@string/str_wonderful_title"
                 android:textColor="#0080ff"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/tab_urgent"
@@ -46,7 +46,7 @@
                 android:gravity="center"
                 android:text="@string/str_urgent_title"
                 android:textColor="#ffffff"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/tab_timeslapse"
@@ -56,7 +56,7 @@
                 android:gravity="center"
                 android:text="@string/reduce"
                 android:textColor="#ffffff"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
             <TextView
                 android:id="@+id/tab_loop"
@@ -66,7 +66,7 @@
                 android:gravity="center"
                 android:text="@string/str_loop_title"
                 android:textColor="#ffffff"
-                android:textSize="16sp"/>
+                android:textSize="18sp"/>
 
         </LinearLayout>
 

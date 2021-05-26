@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
-import com.mobnote.golukmain.live.LiveDialogManager;
 import com.mobnote.user.UserUtils;
 import com.mobnote.util.GolukUtils;
 
@@ -141,7 +140,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	 * 设置IPC信息成功回调
 	 */
 	public void setIpcLinkWiFiCallBack(int state) {
-		LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 		if (0 == state) {
 			GolukUtils.showToast(this, this.getResources().getString(R.string.str_wifi_change_success));
 			this.setResult(10);
@@ -181,12 +179,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 		String json = getSetIPCJson();
 		mApp.stopDownloadList();
 		boolean b = mApp.mIPCControlManager.setIpcLinkPhoneHot(json);
-//		if (!b) {
-//			GolukUtils.showToast(this, this.getResources().getString(R.string.str_disconnect_ipc));
-//		} else {
-			LiveDialogManager.getManagerInstance().showCustomDialog(this,
-					this.getResources().getString(R.string.str_wait));
-//		}
 	}
 
 	private String getSetIPCJson() {
@@ -224,7 +216,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 	private void updateWifiPwd(String pwd) {
 		if (TextUtils.isEmpty(pwd))
 			return;
-		LiveDialogManager.getManagerInstance().showCustomDialog(UserSetupChangeWifiActivity.this, getString(R.string.str_wait));
 		ApiUtil.modifyWifiPassword(pwd, new CallbackCmd() {
 			@Override
 			public void onSuccess(int i) {
@@ -247,7 +238,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			@Override
 			public void onSuccess(int i) {
 				$.toast().text(R.string.str_wifi_change_success).show();
-				LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 				setResult(10);
 				finish();
 			}
@@ -255,7 +245,6 @@ public class UserSetupChangeWifiActivity extends BaseActivity implements OnClick
 			@Override
 			public void onFail(int i, int i1) {
 				$.toast().text(R.string.str_wifi_change_fail).show();
-				LiveDialogManager.getManagerInstance().dissmissCustomDialog();
 			}
 		});
 	}

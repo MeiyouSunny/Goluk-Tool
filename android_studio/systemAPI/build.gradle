@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
     buildToolsVersion '26.0.2'
 
     defaultConfig {
@@ -24,8 +24,7 @@ android {
 }
 
 dependencies {
-    compile files('libs/BaiduLBS_Android.jar')
-    compile files('libs/eventbus-2.4.0.jar')
-    compile files('libs/umeng-analytics-7.4.0.jar')
-    compile 'com.tencent.bugly:crashreport:latest.release'
+    implementation files('libs/BaiduLBS_Android.jar')
+    implementation files('libs/eventbus-2.4.0.jar')
+    implementation 'com.tencent.bugly:crashreport:latest.release'
 }

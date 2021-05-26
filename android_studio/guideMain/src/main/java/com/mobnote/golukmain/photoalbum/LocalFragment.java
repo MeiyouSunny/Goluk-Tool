@@ -26,7 +26,6 @@ import com.mobnote.log.app.LogConst;
 import com.mobnote.t1sp.util.FileUtil;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
-import com.rd.veuisdk.SdkEntry;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -331,7 +330,6 @@ public class LocalFragment extends Fragment implements LocalWonderfulVideoAdapte
             } else {
                 tempList.add(tag2);
             }
-            SdkEntry.onCustomizeAlbum(getContext(), tempList);
             getActivity().finish();
         } else if (mFragmentAlbum.getEditState()) {
             if (columnIndex == LocalWonderfulVideoAdapter.IListViewItemClickColumn.COLUMN_FIRST) {

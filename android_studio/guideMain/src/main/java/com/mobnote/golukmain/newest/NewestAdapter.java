@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.live.ILive;
 import com.mobnote.golukmain.videosuqare.CategoryListView;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.user.UserUtils;
@@ -341,13 +340,6 @@ public class NewestAdapter extends BaseAdapter {
             UserUtils.showCommentText(holder.detail, mVideoSquareInfo.mUserEntity.nickname,
                     mVideoSquareInfo.mVideoEntity.describe);
         }
-
-        if(null != mVideoSquareInfo.mVideoEntity && null != mVideoSquareInfo.mVideoEntity.tags) {
-            GolukUtils.addTagsViews(mContext, mVideoSquareInfo.mVideoEntity.tags, holder.nTagsFL);
-        } else {
-            holder.nTagsFL.setVisibility(View.GONE);
-        }
-
         if (isLive(mVideoSquareInfo)) {
             // 直播
             holder.liveImg.setVisibility(View.VISIBLE);
@@ -447,11 +439,7 @@ public class NewestAdapter extends BaseAdapter {
     }
 
     private void showHead(ImageView view, String headportrait) {
-        try {
-            GlideUtils.loadLocalHead(mContext, view, ILive.mBigHeadImg[Integer.parseInt(headportrait)]);
-        } catch (Exception e) {
-            GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
-        }
+        GlideUtils.loadLocalHead(mContext, view, R.drawable.editor_head_feault7);
     }
 
     private boolean isLive(VideoSquareInfo mVideoSquareInfo) {
@@ -465,9 +453,9 @@ public class NewestAdapter extends BaseAdapter {
         SpannableStringBuilder style = new SpannableStringBuilder(str);
 
         style.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)),
-                      nikename.length() + 1 + replyLabel.length(),
-                      nikename.length() + replyLabel.length() + replyText.length(),
-                      Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
+                nikename.length() + 1 + replyLabel.length(),
+                nikename.length() + replyLabel.length() + replyText.length(),
+                Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         view.setText(style);
     }
 

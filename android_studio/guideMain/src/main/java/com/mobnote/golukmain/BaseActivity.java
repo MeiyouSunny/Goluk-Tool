@@ -15,9 +15,7 @@ import android.widget.Toast;
 import com.mobnote.application.GlobalWindow;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
 import com.mobnote.golukmobile.GuideActivity;
-import com.umeng.analytics.MobclickAgent;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -65,15 +63,12 @@ public class BaseActivity extends FragmentActivity {
     protected void onResume() {
         m_bJumpActivity = false;
         super.onResume();
-        MobclickAgent.onResume(this);
         GolukApplication.getInstance().setIsBackgroundState(false);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        MobclickAgent.onPause(this);
-
     }
 
     @Override
@@ -120,20 +115,6 @@ public class BaseActivity extends FragmentActivity {
      */
     public void setCanJump() {
         m_bJumpActivity = false;
-    }
-
-    /**
-     * 去登录
-     */
-    public void toLoginBack() {
-        Intent intent;
-        if (!GolukApplication.getInstance().isMainland()) {
-            intent = new Intent(this, InternationUserLoginActivity.class);
-        } else {
-            intent = new Intent(this, UserLoginActivity.class);
-        }
-        intent.putExtra("isInfo", "back");
-        startActivity(intent);
     }
 
     /**

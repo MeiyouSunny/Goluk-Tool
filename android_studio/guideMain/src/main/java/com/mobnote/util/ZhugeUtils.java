@@ -10,8 +10,6 @@ import com.elvishew.xlog.XLog;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.thirdshare.IThirdShareFn;
-import com.mobnote.golukmain.thirdshare.bean.SharePlatform;
 import com.zhuge.analysis.stat.ZhugeSDK;
 
 import org.json.JSONObject;
@@ -318,86 +316,6 @@ public class ZhugeUtils {
         }
     }
 
-    private static String getSharePlatform(Context context, int channel) {
-        switch (channel) {
-            case SharePlatform.SHARE_PLATFORM_QQ:
-                return context.getString(R.string.str_zhuge_share_video_channel_qq);
-            case SharePlatform.SHARE_PLATFORM_QQ_ZONE:
-                return context.getString(R.string.str_zhuge_share_video_channel_qq_space);
-            case SharePlatform.SHARE_PLATFORM_WEXIN:
-                return context.getString(R.string.str_zhuge_share_video_channel_weixin);
-            case SharePlatform.SHARE_PLATFORM_WEXIN_CIRCLE:
-                return context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
-            case SharePlatform.SHARE_PLATFORM_WEIBO_SINA:
-                return context.getString(R.string.str_zhuge_share_video_channel_sina);
-            case SharePlatform.SHARE_PLATFORM_FACEBOOK:
-                return context.getString(R.string.str_zhuge_share_video_channel_facebook);
-            case SharePlatform.SHARE_PLATFORM_LINE:
-                return context.getString(R.string.str_zhuge_share_video_channel_line);
-            case SharePlatform.SHARE_PLATFORM_WHATSAPP:
-                return context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
-            case SharePlatform.SHARE_PLATFORM_TWITTER:
-                return context.getString(R.string.str_zhuge_share_video_channel_twitter);
-            case SharePlatform.SHARE_PLATFORM_INSTAGRAM:
-                return context.getString(R.string.str_zhuge_share_video_channel_instagram);
-            default:
-                return context.getString(R.string.str_zhuge_have_not);
-        }
-    }
-
-    /**
-     * 上传分享视频
-     *
-     * @param context
-     * @param videoType    视频类型
-     * @param videoQuality 分享视频质量
-     * @param videoLength  视频时长范围
-     * @param desc         是否有人工描述
-     * @param channel      分享渠道
-     * @param action       参加活动
-     */
-    public static void eventShareVideo(Context context, String videoType, String videoQuality,
-                                       int videoLength, String desc, int channel, String action, String state) {
-        float duration = ((float) videoLength) / 1000;
-        String durationStr = "unsupported length";
-        if (duration >= 10f && duration < 14f) {
-            durationStr = "10~13S";
-        } else if (duration >= 14f && duration <= 30f) {
-            durationStr = "14~30S";
-        } else if (duration > 30f && duration <= 60f) {
-            durationStr = "30~60S";
-        } else if (duration > 60f && duration <= 90f) {
-            durationStr = "60~90S";
-        }
-        try {
-            JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_share_video_type), getVideoType(context, videoType));
-            json.put(context.getString(R.string.str_zhuge_share_video_quality), videoQuality);
-            json.put(context.getString(R.string.str_zhuge_share_video_network), getNetworkType(context));
-            if (GolukApplication.getInstance().isIpcLoginSuccess) {
-                json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_yes));
-            } else {
-                json.put(context.getString(R.string.str_zhuge_share_video_connect_ipc), context.getString(R.string.str_zhuge_no));
-            }
-            json.put(context.getString(R.string.str_zhuge_share_video_length), durationStr);
-            if (TextUtils.isEmpty(desc)) {
-                json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have_not));
-            } else {
-                json.put(context.getString(R.string.str_zhuge_share_video_desc), context.getString(R.string.str_zhuge_have));
-            }
-            json.put(context.getString(R.string.str_zhuge_share_video_channel), getSharePlatform(context, channel));
-            json.put(context.getString(R.string.str_zhuge_share_video_action), getAction(context, action));
-            json.put(context.getString(R.string.str_zhuge_share_video_state), state);
-
-            ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_upload_sharevideo_event), json);
-
-            // XLog
-            XLog.tag("ShareVideo").i(json);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /**
      * 相册竖屏播放页面访问
      *
@@ -496,7 +414,6 @@ public class ZhugeUtils {
     public static void eventSlideView(Context context, int page) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_slide_view_order), context.getString(R.string.str_zhuge_slide_view_page, page));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_slide_view_event), json);
         } catch (Exception e) {
@@ -536,7 +453,6 @@ public class ZhugeUtils {
     public static void eventWonderfulPush(Context context, int number) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_pushtorefresh_depth), context.getString(R.string.str_zhuge_pushtorefresh_numbers, number));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_wonderful_pushtorefresh_event), json);
         } catch (Exception e) {
@@ -560,7 +476,6 @@ public class ZhugeUtils {
     public static void eventNewestlPush(Context context, int number) {
         try {
             JSONObject json = new JSONObject();
-            json.put(context.getString(R.string.str_zhuge_pushtorefresh_depth), context.getString(R.string.str_zhuge_pushtorefresh_numbers, number));
 
             ZhugeSDK.getInstance().track(context, context.getString(R.string.str_zhuge_newest_pushtorefresh_event), json);
         } catch (Exception e) {
@@ -1322,29 +1237,6 @@ public class ZhugeUtils {
      */
     private static String getShareChannel(Context context, String channel){
         String str = "";
-        if (IThirdShareFn.TYPE_WEIXIN.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_weixin);
-        } else if (IThirdShareFn.TYPE_WEIBO_XINLANG.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_sina);
-        } else if (IThirdShareFn.TYPE_QQ.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_qq);
-        } else if (IThirdShareFn.TYPE_WEIXIN_CIRCLE.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_weixin_friends);
-        } else if (IThirdShareFn.TYPE_QQ_ZONE.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_qq_space);
-        } else if (IThirdShareFn.TYPE_FACEBOOK.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_facebook);
-        } else if (IThirdShareFn.TYPE_TWITTER.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_twitter);
-        } else if (IThirdShareFn.TYPE_INSTAGRAM.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_instagram);
-        } else if (IThirdShareFn.TYPE_WHATSAPP.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_whatsapp);
-        } else if (IThirdShareFn.TYPE_LINE.equals(channel)) {
-            str = context.getString(R.string.str_zhuge_share_video_channel_line);
-        } else {
-            str = context.getString(R.string.str_zhuge_share_video_channel_copy);
-        }
         return str;
     }
 

@@ -10,8 +10,7 @@ import android.util.Log;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.SortByDate;
-
-import org.apache.commons.io.FileUtils;
+import com.tencent.cos.utils.FileUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -276,11 +275,7 @@ public class FileUtil {
     public static void deleteThumbCache() {
         File thumbCacheDir = new File(EXTERNAL_SD_PATH + "/goluk/goluk_carrecorder/image");
 
-        try {
-            FileUtils.deleteDirectory(thumbCacheDir);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        FileUtils.delete(thumbCacheDir.getAbsolutePath());
     }
 
     /**

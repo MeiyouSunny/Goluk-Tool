@@ -8,7 +8,6 @@ import android.text.style.ClickableSpan;
 import android.view.View;
 
 import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.UserRegistActivity;
 
 /**
  * Created by lily on 16-5-30.
@@ -24,9 +23,6 @@ public class UserProtocolClickableSpan extends ClickableSpan {
 
     @Override
     public void onClick(View view) {
-        if (null != mContext && mContext instanceof UserRegistActivity) {
-            UserUtils.hideSoftMethod((UserRegistActivity) mContext);
-        }
         Intent intentUrl = new Intent(mContext, UserOpenUrlActivity.class);
         intentUrl.putExtra(UserOpenUrlActivity.FROM_TAG, "protocol");
         mContext.startActivity(intentUrl);

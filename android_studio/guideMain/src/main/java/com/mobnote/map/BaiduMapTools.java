@@ -1,13 +1,5 @@
 package com.mobnote.map;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -23,10 +15,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.com.mobnote.logic.GolukModule;
-import cn.com.mobnote.module.page.IPageNotifyFn;
-import cn.com.tiros.api.FileUtils;
-import cn.com.tiros.debug.GolukDebugUtils;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -42,8 +30,19 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.util.JsonUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import cn.com.mobnote.logic.GolukModule;
+import cn.com.mobnote.module.page.IPageNotifyFn;
+import cn.com.tiros.api.FileUtils;
+import cn.com.tiros.debug.GolukDebugUtils;
 
 /**
  * 
@@ -213,33 +212,6 @@ public class BaiduMapTools implements IMapTools{
 
 	@Override
 	public void updatePosition(String aid, double lon, double lat) {
-		if (null == mMarkerData) {
-			return;
-		}
-
-		GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --111 : ");
-
-		Iterator<Entry<Marker, Object>> it = mMarkerData.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<Marker, Object> obj = it.next();
-			try {
-				UserInfo temp = JsonUtil.parseSingleUserInfoJson((JSONObject) obj.getValue());
-				if (temp.aid.equals(aid)) {
-					// 更新位置
-					Marker marker = obj.getKey();
-					LatLng point = ConvertLonLat(lat, lon);
-					marker.setPosition(point);
-
-					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat
-							+ "  lon:" + lon);
-
-					break;
-				}
-			} catch (Exception e) {
-
-			}
-
-		}
 	}
 
 	/**

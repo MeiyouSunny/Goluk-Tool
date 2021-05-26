@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
@@ -27,7 +26,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.util.JsonUtil;
 
 import org.json.JSONArray;
@@ -217,17 +216,6 @@ public class GoogleMapTools implements IMapTools{
 			Entry<Marker, Object> obj = it.next();
 			try {
 				UserInfo temp = JsonUtil.parseSingleUserInfoJson((JSONObject) obj.getValue());
-				if (temp.aid.equals(aid)) {
-					// 更新位置
-					Marker marker = obj.getKey();
-					LatLng point = ConvertLonLat(lat, lon);
-					marker.setPosition(point);
-
-					GolukDebugUtils.e("", "jyf----20150406----LiveActivity----updatePosition --222 : lat: " + lat
-							+ "  lon:" + lon);
-
-					break;
-				}
 			} catch (Exception e) {
 
 			}

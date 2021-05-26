@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/user_login_bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginLeft="48dp"
+        android:layout_marginRight="48dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/wifilist_textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/wifilist_textView1"
+            android:layout_below="@id/imageView1"
+            android:text="@string/wifi_link_17_2_text"
+            android:textColor="#595959"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/connectDec"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wifi_link_17_2_text"
+            android:textColor="#595959"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:layout_width="170dp"
+            android:layout_height="134dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/icon_connect_wi_fi"
+            android:contentDescription="@string/imgdes" />
+
+        <TextView
+            android:id="@+id/connect"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            android:text="@string/wifi_link_go_system"
+            android:textColor="@color/color_bind_btn_txt"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/ll_tabs"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="#242629"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/device"
+            android:textColor="#0080ff"
+            android:textSize="16sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

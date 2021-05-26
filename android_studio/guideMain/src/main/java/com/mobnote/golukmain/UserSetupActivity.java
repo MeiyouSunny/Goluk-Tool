@@ -23,20 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.bumptech.glide.Glide;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.EventBindPhoneNum;
 import com.mobnote.golukmain.carrecorder.base.CarRecordBaseActivity;
 import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.http.IRequestResultListener;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.userlogin.CancelResult;
 import com.mobnote.golukmain.userlogin.UserCancelBeanRequest;
-//import com.mobnote.golukmain.xdpush.GolukNotification;
 import com.mobnote.log.app.AppLogOpreater;
 import com.mobnote.log.app.AppLogOpreaterImpl;
 import com.mobnote.manager.MessageManager;
@@ -56,13 +49,14 @@ import cn.com.tiros.api.Const;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
+//import com.mobnote.golukmain.xdpush.GolukNotification;
+
 /**
  * @author 陈宣宇
  * @ 功能描述:Goluk个人设置
  */
 
-public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface, IRequestResultListener,
-        ILiveDialogManagerFn {
+public class UserSetupActivity extends CarRecordBaseActivity implements OnClickListener, UserInterface, IRequestResultListener {
     /**
      * application
      */
@@ -138,7 +132,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         // 页面初始化
         init();
         EventBus.getDefault().register(this);
-        LiveDialogManager.getManagerInstance().setDialogManageFn(this);
     }
 
     @SuppressLint("HandlerLeak")
@@ -178,7 +171,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         // TODO Auto-generated method stub
         super.onDestroy();
         EventBus.getDefault().unregister(this);
-        LiveDialogManager.getManagerInstance().setDialogManageFn(null);
         mApp.mUser.setUserInterface(null);
     }
 
@@ -286,12 +278,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
                     dialog.show();
                     return;
                 }
-                if (GolukApplication.getInstance().isMainland() == false) {
-                    initIntent(InternationUserLoginActivity.class);
-                } else {
-                    initIntent(UserLoginActivity.class);
-                }
-
             } else if (btnLoginout.getText().toString().equals(this.getResources().getString(R.string.logout))) {
                 new Builder(mContext).
                         setTitle(this.getResources().getString(R.string.wifi_link_prompt)).
@@ -337,9 +323,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         } else if (id == R.id.notify_comm_item) {
             startMsgSettingActivity();
         } else if (id == R.id.RelativeLayout_binding_phone) {
-            Intent itRegist = new Intent(this, UserRegistActivity.class);
-            itRegist.putExtra("fromRegist", "fromBindPhone");
-            startActivity(itRegist);
         } else if (id == R.id.tv_upload_log) {
             uploadLog();
         } else {
@@ -401,8 +384,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
             GolukUtils.showToast(this, this.getResources().getString(R.string.str_please_login));
             return;
         }
-        Intent intent = new Intent(this, PushSettingActivity.class);
-        startActivity(intent);
     }
 
     /**
@@ -413,9 +394,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
             GolukUtils.showToast(mContext, this.getResources().getString(R.string.user_net_unavailable));
         } else {
             userCancelBeanRequest = new UserCancelBeanRequest(IPageNotifyFn.PageType_SignOut, this);
-            userCancelBeanRequest.get(mApp.getMyInfo().uid);
-            LiveDialogManager.getManagerInstance().showCommProgressDialog(this, LiveDialogManager.DIALOG_TYPE_LOGOUT,
-                    "", this.getResources().getString(R.string.str_loginouting), true);
         }
     }
 
@@ -444,20 +422,6 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
      * 同步获取用户信息
      */
     public void initData() {
-        UserInfo info = mApp.getMyInfo();
-        try {
-            if (info != null && info.phone != null && !"".equals(info.phone)) {
-                GolukDebugUtils.i("lily", "====json()====" + JSON.toJSONString(info));
-                // 注销后，将信息存储
-                mPreferences = getSharedPreferences("setup", MODE_PRIVATE);
-                mEditor = mPreferences.edit();
-                mEditor.putString("setupPhone", UserUtils.formatSavePhone(info.phone));
-                mEditor.commit();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**
@@ -526,40 +490,9 @@ public class UserSetupActivity extends CarRecordBaseActivity implements OnClickL
         }
     }
 
-    @Override
-    public void dialogManagerCallBack(int dialogType, int function, String data) {
-        if (dialogType == LiveDialogManager.DIALOG_TYPE_LOGOUT) {
-            if (LiveDialogManager.FUNCTION_DIALOG_CANCEL == function) {
-//				// 用户取消注销
-//				mApp.mGoluk.GolukLogicCommRequest(GolukModule.Goluk_Module_HttpPage, IPageNotifyFn.PageType_SignOut,
-//						JsonUtil.getCancelJson());
-            }
-        }
-    }
 
     @Override
     public void onLoadComplete(int requestType, Object result) {
-        if (requestType == IPageNotifyFn.PageType_SignOut) {
-            LiveDialogManager.getManagerInstance().dissmissCommProgressDialog();
-            CancelResult cancelResult = (CancelResult) result;
-            if (cancelResult != null && cancelResult.success) {
-                if ("0".equals(cancelResult.data.result)) {
-                    initData();
-                    SharedPrefUtil.saveUserInfo("");
-                    SharedPrefUtil.saveUserPwd("");
-                    SharedPrefUtil.saveUserToken("");
-                    SharedPrefUtil.saveUserIs4SShop(false);
-                    GolukApplication.getInstance().mCurrentUId = "";
-                    GolukApplication.getInstance().setLoginRespInfo("");
-                    logoutSucess();
-                } else {
-                    GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
-                }
-            } else {
-                GolukUtils.showToast(this, this.getResources().getString(R.string.str_loginout_fail));
-            }
-
-        }
     }
 
 }

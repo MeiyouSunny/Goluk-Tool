@@ -1,12 +1,16 @@
 package com.mobnote.golukmain.newest;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.MainActivity;
@@ -16,37 +20,23 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.http.IRequestResultListener;
 import com.mobnote.golukmain.newest.ClickPraiseListener.IClickPraiseView;
 import com.mobnote.golukmain.newest.ClickShareListener.IClickShareView;
-import com.mobnote.golukmain.praise.PraiseCancelRequest;
-import com.mobnote.golukmain.praise.PraiseRequest;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseCancelResultDataBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultBean;
-import com.mobnote.golukmain.praise.bean.PraiseResultDataBean;
-import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.golukmain.videosuqare.RTPullListView;
-import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
-import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRTScrollListener;
 import com.mobnote.golukmain.videosuqare.RTPullListView.OnRefreshListener;
+import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
+import com.mobnote.golukmain.videosuqare.VideoSquareManager;
 import com.mobnote.golukmain.videosuqare.ZhugeParameterFn;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.text.TextUtils;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.AbsListView;
-import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
-import cn.com.mobnote.module.page.IPageNotifyFn;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 import cn.com.mobnote.module.videosquare.VideoSuqareManagerFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 
@@ -74,7 +64,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 	/** 添加列表底部加载中布局 */
 	private RelativeLayout mBottomLoadingView = null;
 	private int curpageCount = 0;
-	private SharePlatformUtil sharePlatform;
 	private RelativeLayout shareBg = null;
 	private long zXRequestId = 0;
 	private long typeVideoRequestId = 0;
@@ -94,10 +83,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 		mRTPullListView.setLayoutParams(lp);
 		mRootLayout = new RelativeLayout(mContext);
 		shareBg = (RelativeLayout) View.inflate(context, R.layout.video_square_bj, null);
-
-		if (context instanceof MainActivity) {
-			sharePlatform = ((MainActivity) context).getSharePlatform();
-		}
 
 		initListener();
 		historyDate = SettingUtils.getInstance().getString("hotHistoryDate", "");
@@ -411,18 +396,6 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 								String username = null != mWillShareVideoSquareInfo ? mWillShareVideoSquareInfo.mUserEntity.nickname
 										: "";
 								describe = username + mContext.getString(R.string.str_colon) + describe;
-
-								ThirdShareBean bean = new ThirdShareBean();
-								bean.surl = shareurl;
-								bean.curl = coverurl;
-								bean.db = describe;
-								bean.tl = ttl;
-								bean.bitmap = null;
-								bean.realDesc = realDesc;
-								bean.videoId = videoId;
-								bean.from = mContext.getString(R.string.str_zhuge_newest_event);
-								ProxyThirdShare share = new ProxyThirdShare(vspa, sharePlatform, bean);
-								share.showAtLocation(vspa.getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
 							}
 						}
 					} else {
@@ -522,67 +495,15 @@ public class NewestListView implements VideoSuqareManagerFn, IClickShareView, IC
 
 	// 点赞请求
 	public boolean sendPraiseRequest(String id) {
-		PraiseRequest request = new PraiseRequest(IPageNotifyFn.PageType_Praise, this);
-		return request.get("1", id, "1");
+		return true;
 	}
 
 	// 取消点赞请求
 	public boolean sendCancelPraiseRequest(String id) {
-		PraiseCancelRequest request = new PraiseCancelRequest(IPageNotifyFn.PageType_PraiseCancel, this);
-		return request.get("1", id);
+		return true;
 	}
 
 	@Override
 	public void onLoadComplete(int requestType, Object result) {
-		switch (requestType) {
-		case IPageNotifyFn.PageType_Praise:
-			PraiseResultBean prBean = (PraiseResultBean) result;
-			if (null == result || !prBean.success) {
-				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-				return;
-			}
-
-			PraiseResultDataBean ret = prBean.data;
-			if (null != ret && !TextUtils.isEmpty(ret.result)) {
-				if ("0".equals(ret.result)) {
-					//最新页面--视频点赞
-					ZhugeUtils.eventPraiseVideo(mContext, mContext.getString(R.string.str_zhuge_newest_event));
-					if (null != mVideoSquareInfo) {
-						if ("0".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-							mVideoSquareInfo.mVideoEntity.ispraise = "1";
-							updateClickPraiseNumber(true, mVideoSquareInfo);
-						}
-					}
-				} else if ("7".equals(ret.result)) {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_no_duplicated_praise));
-				} else {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_praise_failed));
-				}
-			}
-			break;
-		case IPageNotifyFn.PageType_PraiseCancel:
-			PraiseCancelResultBean praiseCancelResultBean = (PraiseCancelResultBean) result;
-			if (praiseCancelResultBean == null || !praiseCancelResultBean.success) {
-				GolukUtils.showToast(mContext, mContext.getString(R.string.user_net_unavailable));
-				return;
-			}
-
-			PraiseCancelResultDataBean cancelRet = praiseCancelResultBean.data;
-			if (null != cancelRet && !TextUtils.isEmpty(cancelRet.result)) {
-				if ("0".equals(cancelRet.result)) {
-					if (null != mVideoSquareInfo) {
-						if ("1".equals(mVideoSquareInfo.mVideoEntity.ispraise)) {
-							mVideoSquareInfo.mVideoEntity.ispraise = "0";
-							updateClickPraiseNumber(true, mVideoSquareInfo);
-						}
-					}
-				} else {
-					GolukUtils.showToast(mContext, mContext.getString(R.string.str_cancel_praise_failed));
-				}
-			}
-			break;
-		default:
-			break;
-		}
 	}
 }

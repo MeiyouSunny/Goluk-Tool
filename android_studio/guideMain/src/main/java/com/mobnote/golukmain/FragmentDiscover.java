@@ -22,7 +22,6 @@ import com.mobnote.eventbus.EventPraiseStatusChanged;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.newest.NewestListView;
 import com.mobnote.golukmain.newest.WonderfulSelectedListView;
-import com.mobnote.golukmain.search.SearchUserAcivity;
 import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
@@ -78,7 +77,6 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 Intent intent = new Intent();
-                intent.setClass(FragmentDiscover.this.getActivity(), SearchUserAcivity.class);
                 FragmentDiscover.this.getActivity().startActivity(intent);
             }
         });

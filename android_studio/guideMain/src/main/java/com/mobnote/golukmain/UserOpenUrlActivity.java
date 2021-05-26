@@ -9,7 +9,6 @@ import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -29,9 +28,6 @@ import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog.ForbidBack;
 import com.mobnote.golukmain.http.HttpManager;
 import com.mobnote.golukmain.http.UrlHostManager;
-import com.mobnote.golukmain.thirdshare.ProxyThirdShare;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
-import com.mobnote.golukmain.thirdshare.ThirdShareBean;
 import com.mobnote.user.MyProgressWebView;
 import com.mobnote.util.GolukConfig;
 import com.mobnote.util.GolukUtils;
@@ -72,7 +68,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 	private String mShareAddress;
 	private boolean mNeedShare;
 	private String mUrlOpenPath;
-	private SharePlatformUtil mSharePlatform;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +107,6 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 			mShareId = itIndexMore.getStringExtra(GolukConfig.NEED_SHARE_ID);
 			mShareAddress = itIndexMore.getStringExtra(GolukConfig.H5_URL);
 			mUrlOpenPath = itIndexMore.getStringExtra(GolukConfig.URL_OPEN_PATH);
-			mSharePlatform = new SharePlatformUtil(this);
 		} else {
 			mNeedShare = false;
 			mTextRight.setBackgroundResource(R.drawable.btn_close_image);
@@ -378,87 +372,8 @@ public class UserOpenUrlActivity extends BaseActivity implements OnClickListener
 				finish();
 			}
 		} else if (id == R.id.user_title_right) {
-			if (mNeedShare && null != mSharePlatform) {
-				String shareurl = mShareAddress;
-				String coverurl = mPicture;
-				String describe = mIntroduction;
-				String urlOpenPath = mUrlOpenPath;
-
-				if (TextUtils.isEmpty(coverurl)) {
-					if (GolukApplication.getInstance().isMainland()) {
-						coverurl = "http://pic.goluk.cn/ios_icon512.png";
-					} else {
-						coverurl = "http://i.pic.goluk.cn/ios_icon512.png";
-					}
-				}
-
-				if (TextUtils.isEmpty(describe)) {
-					describe = this.getResources().getString(R.string.app_name);
-				}
-
-				if ("cluster_adapter".equals(urlOpenPath)) {
-					String realDesc = getString(R.string.str_vote_share_real_description);
-
-					String ttl = mTitle;
-					if (TextUtils.isEmpty(mTitle)) {
-						ttl = getString(R.string.str_vote_share_title);
-					}
-
-					ThirdShareBean bean = new ThirdShareBean();
-					bean.surl = shareurl;
-					bean.curl = coverurl;
-					bean.db = describe;
-					bean.tl = ttl;
-					bean.bitmap = null;
-					bean.realDesc = realDesc;
-					bean.videoId = "";
-					bean.from = this.getString(R.string.str_zhuge_share_video_network_other);
-
-					GolukDebugUtils.e("", "UserOpenUrlActivity------1: title: " + bean.tl + "  txt: " + bean.db);
-
-					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
-					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-				} else {
-					if (TextUtils.isEmpty(shareurl)) {
-						return;
-					}
-
-					String ttl = mTitle;
-					if (TextUtils.isEmpty(mTitle)) {
-						ttl = getString(R.string.str_wonderful_share);
-					}
-					String realDesc = getString(R.string.str_wonderful_share);
-
-					ThirdShareBean bean = new ThirdShareBean();
-					bean.surl = shareurl;
-					bean.curl = coverurl;
-					bean.db = describe;
-					bean.tl = ttl;
-					bean.bitmap = null;
-					bean.realDesc = realDesc;
-					bean.videoId = "";
-					bean.from = this.getString(R.string.str_zhuge_share_video_network_other);
-
-					GolukDebugUtils.e("", "UserOpenUrlActivity------2: title: " + bean.tl + "  txt: " + bean.db);
-
-					ProxyThirdShare shareBoard = new ProxyThirdShare(this, mSharePlatform, bean);
-					shareBoard.showAtLocation(getWindow().getDecorView(), Gravity.BOTTOM, 0, 0);
-				}
-			} else {
-				this.finish();
-			}
-		} else {
-		}}
-
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (mNeedShare) {
-			if (null != mSharePlatform) {
-				mSharePlatform.onActivityResult(requestCode, resultCode, data);
 			}
 		}
-	}
 
 	private void closeLoading() {
 		if (mLoadingDialog != null) {

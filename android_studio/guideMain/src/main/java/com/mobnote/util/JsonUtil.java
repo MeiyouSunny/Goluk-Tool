@@ -2,15 +2,11 @@ package com.mobnote.util;
 
 import com.mobnote.golukmain.carrecorder.entity.VideoConfigState;
 import com.mobnote.golukmain.carrecorder.settings.VideoQualityActivity;
-import com.mobnote.golukmain.cluster.bean.UserLabelBean;
-import com.mobnote.golukmain.comment.CommentBean;
 import com.mobnote.golukmain.fileinfo.VideoFileInfoBean;
-import com.mobnote.golukmain.live.LiveDataInfo;
-import com.mobnote.golukmain.live.LiveSettingBean;
-import com.mobnote.golukmain.live.UserInfo;
+import com.mobnote.golukmain.userinfohome.bean.UserLabelBean;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.golukmain.videosuqare.ShareDataBean;
 import com.mobnote.golukmain.xdpush.SettingBean;
-//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 import com.mobnote.user.APPInfo;
 import com.mobnote.user.IPCInfo;
 
@@ -19,11 +15,12 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.tiros.api.CSLog;
 import cn.com.tiros.api.FileUtils;
+
+//import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 
 //import com.mobnote.golukmain.xdpush.XingGeMsgBean;
 
@@ -285,144 +282,9 @@ public class JsonUtil {
         }
     }
 
-    // vid 为视频id
-    public static String getStartLiveJson(String vid, LiveSettingBean beanData) {
-        try {
-
-            String desc = "";
-
-            if (null != beanData && null != beanData.desc) {
-                desc = URLEncoder.encode(beanData.desc, "utf-8");
-            }
-
-            String duration = null != beanData ? "" + beanData.duration : "3600";
-            String netCountStr = null != beanData ? "" + beanData.netCountStr : "";
-            String vtypStr = null != beanData ? "" + beanData.vtype : "";
-            String talk = "0";
-            if (beanData != null) {
-                talk = beanData.isCanTalk ? "1" : "0";
-            }
-
-            String voice = beanData.isEnableVoice ? "1" : "0";
-
-            JSONObject obj = new JSONObject();
-            obj.put("active", "1");
-            obj.put("talk", talk);
-            obj.put("tag", "android");
-            obj.put("vid", vid);
-            obj.put("desc", desc);
-            obj.put("restime", duration);
-            obj.put("flux", netCountStr);
-            obj.put("vtype", "" + vtypStr);
-            obj.put("voice", voice);
-
-            return obj.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static String getStopLiveJson() {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("tag", "android");
-            return obj.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return "";
-    }
-
-    public static String getStartLookLiveJson(String uid, String aid) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("uid", uid);
-            obj.put("aid", aid);
-
-            return obj.toString();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static String getJoinGroup(String grouptype, int membercount, String title, String groupid,
-                                      String groupnumber) {
-        try {
-            JSONObject json = new JSONObject();
-            json.put("grouptype", grouptype);
-            json.put("membercount", membercount);
-            json.put("title", title);
-            json.put("groupid", groupid);
-            json.put("groupnumber", groupnumber);
-            json.put("tag", 0);
-
-            return json.toString();
-        } catch (Exception e) {
-
-        }
-
-        return null;
-    }
-
-    public static String UserInfoToString(UserInfo userInfo) {
-        try {
-            JSONObject obj = new JSONObject();
-            obj.put("uid", userInfo.uid);
-            obj.put("aid", userInfo.aid);
-            obj.put("nickname", userInfo.nickname);
-            obj.put("active", "" + userInfo.active);
-            obj.put("tag", userInfo.tag);
-            obj.put("persons", "" + userInfo.persons);
-            obj.put("lon", userInfo.lon);
-            obj.put("lat", userInfo.lat);
-            obj.put("open", "1");
-            obj.put("speed", userInfo.speed);
-            obj.put("desc", "");
-            obj.put("talk", "1");
-            obj.put("zan", userInfo.zanCount);
-            obj.put("sex", userInfo.sex);
-            obj.put("head", userInfo.head);
-
-            return obj.toString();
-        } catch (Exception e) {
-
-        }
-
-        return null;
-    }
-
     public static UserInfo parseSingleUserInfoJson(JSONObject rootObj) {
         try {
             UserInfo userInfo = new UserInfo();
-            userInfo.uid = getJsonStringValue(rootObj, "uid", "");
-            userInfo.aid = getJsonStringValue(rootObj, "aid", "");
-            userInfo.nickname = getJsonStringValue(rootObj, "nickname", "");
-            userInfo.picurl = getJsonStringValue(rootObj, "picurl", "");
-            userInfo.sex = getJsonStringValue(rootObj, "sex", "");
-            userInfo.lon = getJsonStringValue(rootObj, "lon", "");
-            userInfo.lat = getJsonStringValue(rootObj, "lat", "");
-            userInfo.speed = String.valueOf(getJsonIntValue(rootObj, "speed", 0));
-            userInfo.active = getJsonStringValue(rootObj, "active", "");
-            userInfo.phone = getJsonStringValue(rootObj, "phone", "");
-
-            userInfo.tag = getJsonStringValue(rootObj, "tag", "");
-            userInfo.groupId = getJsonStringValue(rootObj, "gid", "");
-            userInfo.persons = String.valueOf(getJsonIntValue(rootObj, "persons", 0));
-            userInfo.zanCount = getJsonStringValue(rootObj, "zan", "0");
-            userInfo.liveDuration = Integer.valueOf(getJsonStringValue(rootObj, "restime", "60"));
-            userInfo.desc = getJsonStringValue(rootObj, "desc", "");
-            userInfo.head = getJsonStringValue(rootObj, "head", "7");
-            userInfo.customavatar = getJsonStringValue(rootObj, "customavatar", "");
-            userInfo.sharevideonumber = getJsonIntValue(rootObj, "sharevideonumber", 0);
-            userInfo.praisemenumber = getJsonIntValue(rootObj, "praisemenumber", 0);
-            userInfo.followingnumber = getJsonIntValue(rootObj, "followingnumber", 0);
-            userInfo.fansnumber = getJsonIntValue(rootObj, "fansnumber", 0);
-            userInfo.newfansnumber = getJsonIntValue(rootObj, "newfansnumber", 0);
-            userInfo.link = getJsonIntValue(rootObj, "link", 0);
             // 解析 用户标签
             if (rootObj.has("label")) {
                 JSONObject labelObj = rootObj.getJSONObject("label");
@@ -432,44 +294,9 @@ public class JsonUtil {
                 label.tarento = getJsonStringValue(labelObj, "tarento", "0");
                 label.headplusv = getJsonStringValue(labelObj, "headplusv", "0");
                 label.headplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
-                userInfo.mUserLabel = label;
             }
 
             return userInfo;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
-    }
-
-    public static LiveDataInfo parseLiveDataJson2(String data) {
-        try {
-            int code = 0;
-            String groupId = null;
-            String grouptype = null;
-            int membercount = 0;
-            String title = null;
-            String groupnumber = null;
-
-            JSONObject obj = new JSONObject(data);
-            code = Integer.valueOf(obj.getString("code"));
-
-            groupId = obj.getString("groupid");
-            groupnumber = obj.getString("groupnumber");
-            grouptype = obj.getString("grouptype");
-            membercount = obj.getInt("membercount");
-            title = obj.getString("title");
-
-            LiveDataInfo info = new LiveDataInfo();
-            info.code = code;
-            info.groupId = groupId;
-            info.groupnumber = groupnumber;
-            info.groupType = grouptype;
-            info.membercount = membercount;
-            info.title = title;
-            return info;
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -488,39 +315,6 @@ public class JsonUtil {
         }
 
         return "";
-    }
-
-    public static LiveDataInfo parseLiveDataJson(String data) {
-        try {
-            JSONObject obj = new JSONObject(data);
-
-            LiveDataInfo info = new LiveDataInfo();
-            info.code = Integer.valueOf(getJsonStringValue(obj, "code", "0"));
-            info.active = Integer.valueOf(getJsonStringValue(obj, "active", "1"));
-            info.groupId = getJsonStringValue(obj, "groupid", "");
-            info.groupnumber = getJsonStringValue(obj, "groupnumber", "");
-            info.groupType = getJsonStringValue(obj, "grouptype", "");
-            info.vurl = getJsonStringValue(obj, "vurl", "");
-
-            info.membercount = getJsonIntValue(obj, "membercount", 0);
-            info.title = getJsonStringValue(obj, "title", "");
-
-            info.vid = getJsonStringValue(obj, "vid", "");
-            String restime = getJsonStringValue(obj, "restime", "0");
-            if (null == restime || "".equals(restime)) {
-                restime = "0";
-            }
-            info.restime = Integer.valueOf(restime);
-            info.desc = getJsonStringValue(obj, "desc", "");
-            info.voice = getJsonStringValue(obj, "voice", "1");
-
-            return info;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     /**
@@ -737,7 +531,6 @@ public class JsonUtil {
      * ipc升级下载文件
      *
      * @param url
-     * @param savePath
      * @return
      */
     public static String ipcDownLoad(String url, String ipcVersion, String ipcModel) {
@@ -1062,85 +855,6 @@ public class JsonUtil {
 
         }
         return "";
-    }
-
-    public static ArrayList<CommentBean> parseCommentData(JSONArray array) {
-        if (null == array) {
-            return null;
-        }
-        try {
-            final int length = array.length();
-            ArrayList<CommentBean> list = new ArrayList<CommentBean>();
-            for (int i = 0; i < length; i++) {
-                CommentBean temp = new CommentBean();
-                final JSONObject obj = (JSONObject) array.get(i);
-                temp.mCommentId = getJsonStringValue(obj, "commentId", "");
-                temp.mCommentTime = getJsonStringValue(obj, "time", "");
-                temp.mCommentTxt = getJsonStringValue(obj, "text", "");
-                temp.mSeq = getJsonStringValue(obj, "seq", "");
-
-                JSONObject replyObj = obj.getJSONObject("reply");
-                temp.mReplyId = getJsonStringValue(replyObj, "id", "");
-                temp.mReplyName = getJsonStringValue(replyObj, "name", "");
-
-                JSONObject authorObj = obj.getJSONObject("author");
-                temp.mUserId = getJsonStringValue(authorObj, "id", "");
-                temp.mUserName = getJsonStringValue(authorObj, "name", "");
-                temp.mUserHead = getJsonStringValue(authorObj, "avatar", "");
-                temp.customavatar = getJsonStringValue(authorObj, "customavatar", "");
-
-                if (authorObj.has("label")) {
-                    JSONObject labelObj = authorObj.getJSONObject("label");
-                    temp.mApprove = getJsonStringValue(labelObj, "approve", "");
-                    temp.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
-                    temp.mTarento = getJsonStringValue(labelObj, "tarento", "");
-                    temp.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "");
-                    temp.mHeadplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
-                }
-
-                list.add(temp);
-            }
-
-            return list;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public static CommentBean parseAddCommentData(JSONObject dataObj) {
-        if (null == dataObj) {
-            return null;
-        }
-        try {
-            // JSONObject obj = new JSONObject(data);
-            CommentBean bean = new CommentBean();
-
-            bean.mCommentId = getJsonStringValue(dataObj, "commentid", "");
-            bean.mCommentTxt = getJsonStringValue(dataObj, "text", "");
-            bean.mUserHead = getJsonStringValue(dataObj, "authoravatar", "");
-            bean.mUserId = getJsonStringValue(dataObj, "authorid", "");
-            bean.mUserName = getJsonStringValue(dataObj, "authorname", "");
-            bean.mReplyId = getJsonStringValue(dataObj, "replyid", "");
-            bean.mReplyName = getJsonStringValue(dataObj, "replyname", "");
-            bean.customavatar = getJsonStringValue(dataObj, "customavatar", "");
-            bean.result = getJsonStringValue(dataObj, "result", "");
-            bean.mSeq = getJsonStringValue(dataObj, "seq", "");
-            if (dataObj.has("label")) {
-                JSONObject labelObj = dataObj.getJSONObject("label");
-                bean.mApprove = getJsonStringValue(labelObj, "approve", "");
-                bean.mApprovelabel = getJsonStringValue(labelObj, "approvelabel", "");
-                bean.mTarento = getJsonStringValue(labelObj, "tarento", "");
-                bean.mHeadplusv = getJsonStringValue(labelObj, "headplusv", "");
-                bean.mHeadplusvdes = getJsonStringValue(labelObj, "headplusvdes", "");
-            }
-
-            return bean;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return null;
     }
 
     /**

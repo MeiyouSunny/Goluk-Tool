@@ -27,9 +27,6 @@ import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
-import com.mobnote.golukmain.live.LiveDialogManager;
-import com.mobnote.golukmain.live.LiveDialogManager.ILiveDialogManagerFn;
-import com.mobnote.golukmain.livevideo.StartLiveActivity;
 import com.mobnote.golukmain.reportlog.ReportLog;
 import com.mobnote.golukmain.reportlog.ReportLogManager;
 import com.mobnote.golukmain.wifidatacenter.WifiBindDataCenter;
@@ -48,8 +45,7 @@ import cn.com.mobnote.module.msgreport.IMessageReportFn;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
-public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack,
-        ILiveDialogManagerFn {
+public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickListener, WifiConnCallBack {
     public static final String INTENT_ACTION_RETURN_LIVE = "returnToLive";
     private static final String TAG = "WiFiLinkBindAll";
     private static final String TAG_LOG = "WiFiLinkCompleteActivity";
@@ -162,9 +158,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
 //            mIPcType = intent.getStringExtra(WifiUnbindSelectTypeActivity.KEY_IPC_TYPE);
             mReturnToMainAlbum = intent.getBooleanExtra(MainActivity.INTENT_ACTION_RETURN_MAIN_ALBUM, false);
             mReturnToLive = intent.getBooleanExtra(INTENT_ACTION_RETURN_LIVE, false);
-            mShortLocation = intent.getStringExtra(StartLiveActivity.SHORT_LOCATION);
-            mLocationLat = intent.getDoubleExtra(StartLiveActivity.CURR_LAT,0.0);
-            mLocationLon = intent.getDoubleExtra(StartLiveActivity.CURR_LON,0.0);
         }
     }
 
@@ -465,7 +458,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             mWac.unbind();
             mWac = null;
         }
-        LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
         GolukDebugUtils.e("", "通知logic停止连接ipc---WiFiLinkCompleteActivity---onDestroy---1");
 
         GolukDebugUtils.e("", "jyf-----WifiBind-----WifiCompelete-----onDestroy----");
@@ -502,7 +494,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
     @Override
     protected void onResume() {
         mApp.setContext(this, TAG);
-        LiveDialogManager.getManagerInstance().setDialogManageFn(this);
         super.onResume();
     }
 
@@ -534,11 +525,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
             } if(mReturnToLive){
                 notStartActivity = false;
                 EventBus.getDefault().post(new EventHotSpotSuccess());
-                Intent intent = new Intent(this, StartLiveActivity.class);
-                intent.putExtra(StartLiveActivity.SHORT_LOCATION,mShortLocation);
-                intent.putExtra(StartLiveActivity.CURR_LON,mLocationLon);
-                intent.putExtra(StartLiveActivity.CURR_LAT,mLocationLat);
-                startActivity(intent);
                 finish();
             } else {
                 Intent it = new Intent(WiFiLinkCompleteActivity.this, CarRecorderActivity.class);
@@ -772,30 +758,6 @@ public class WiFiLinkCompleteActivity extends BaseActivity implements OnClickLis
                 break;
             default:
                 break;
-        }
-    }
-
-    @Override
-    public void dialogManagerCallBack(int dialogType, int function, String data) {
-        if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_RESTART_IPC == dialogType) {
-            if (LiveDialogManager.FUNCTION_DIALOG_OK == function) {
-                collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_RESTART_IPC---clickOK");
-                mWac = new WifiConnectManager(mWifiManager, this);
-                mWac.autoWifiManage(WiFiInfo.IPC_SSID, WiFiInfo.IPC_PWD, WiFiInfo.MOBILE_SSID, WiFiInfo.MOBILE_PWD);
-                mStep++;
-            }
-        } else if (LiveDialogManager.DIALOG_TYPE_WIFIBIND_FAILED == dialogType) {
-            collectLog("dialogManagerCallBack", "DIALOG_TYPE_WIFIBIND_FAILED---onclick");
-
-            ReportLogManager.getInstance().getReport(IMessageReportFn.KEY_WIFI_BIND).setType(ReportLog.TYPE_FAILED);
-            reportLog();
-
-            LiveDialogManager.getManagerInstance().dismissSingleBtnDialog();
-            EventBus.getDefault().post(new EventFinishWifiActivity());
-            if (null != mWac) {
-                mWac.unbind();
-            }
-            mWac = null;
         }
     }
 

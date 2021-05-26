@@ -1,8 +1,6 @@
 package com.mobnote.golukmain.photoalbum;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
@@ -11,9 +9,6 @@ import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Typeface;
-import android.media.MediaMetadataRetriever;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -24,7 +19,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -66,18 +60,14 @@ import com.mobnote.golukmain.carrecorder.util.SettingUtils;
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
-import com.mobnote.golukmain.http.HttpManager;
-import com.mobnote.golukmain.live.UserInfo;
 import com.mobnote.golukmain.photoalbum.OrientationManager.IOrientationFn;
-import com.mobnote.golukmain.player.ConfigData;
 import com.mobnote.golukmain.player.DensityUtil;
 import com.mobnote.golukmain.player.FullScreenVideoView;
 import com.mobnote.golukmain.player.factory.GolukPlayer;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnCompletionListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnErrorListener;
 import com.mobnote.golukmain.player.factory.GolukPlayer.OnPreparedListener;
-import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.thirdshare.SharePlatformUtil;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.log.app.LogConst;
 import com.mobnote.t1sp.download.DownloaderT1spImpl;
 import com.mobnote.t1sp.download.Task;
@@ -89,22 +79,8 @@ import com.mobnote.t1sp.file.IpcFileListener;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.util.GlideUtils;
 import com.mobnote.util.GolukUtils;
-import com.mobnote.util.SDKUtils;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
-import com.rd.lib.utils.CoreUtils;
-import com.rd.vecore.VirtualVideo;
-import com.rd.vecore.exception.InvalidArgumentException;
-import com.rd.vecore.listener.ExportListener;
-import com.rd.vecore.models.Trailer;
-import com.rd.vecore.models.VideoConfig;
-import com.rd.veuisdk.SdkEntry;
-import com.rd.veuisdk.SdkService;
-import com.rd.veuisdk.manager.CameraConfiguration;
-import com.rd.veuisdk.manager.ExportConfiguration;
-import com.rd.veuisdk.manager.UIConfiguration;
-import com.rd.veuisdk.manager.VEOSDBuilder;
-import com.rd.veuisdk.utils.PathUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -123,8 +99,6 @@ import cn.npnt.ae.model.VideoEncoderCapability;
 import cn.npnt.ae.model.VideoFile;
 import de.greenrobot.event.EventBus;
 import likly.dollar.$;
-
-import static com.rd.veuisdk.SdkEntry.editMedia;
 
 public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, OnPreparedListener, OnErrorListener,
         OnCompletionListener, IOrientationFn {
@@ -257,9 +231,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
     };
 
-    private ConfigData configData;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -282,8 +253,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         GlideUtils.loadImage(this, mPlayImg, mImageUrl, R.drawable.tacitly_pic);
         startPlay();
         mHandler.postDelayed(mPlayingChecker, 250);
-        initEditorUIAndExportConfig();
-        registerAllResultHandlers();
     }
 
     @Override
@@ -387,8 +356,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 //竖屏播放页访问即刻分享页面统计
                 ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
-                GolukUtils.startVideoShareActivity(this, mType, event.getExportPath(), mExportedFilename,
-                        true, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if (mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
                     mAddTailerDialog.dismissAllowingStateLoss();
                 }
@@ -397,8 +364,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
                 ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
 
                 //导出失败，则直接分享原视频
-                GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
-                        false, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
                 if (mAddTailerDialog != null && mAddTailerDialog.isVisible()) {
                     mAddTailerDialog.dismissAllowingStateLoss();
                 }
@@ -564,11 +529,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         mBtnDelete.setOnClickListener(this);
         mStartVideoeditLl.setOnClickListener(this);
         mTvShareRightnow.setOnClickListener(this);
-        if (videoEditSupport()) {
-            mStartVideoeditLl.setVisibility(View.VISIBLE);
-        } else {
-            mStartVideoeditLl.setVisibility(View.GONE);
-        }
+//        if (videoEditSupport()) {
+//            mStartVideoeditLl.setVisibility(View.VISIBLE);
+//        } else {
+//            mStartVideoeditLl.setVisibility(View.GONE);
+//        }
 
         if (mVideoFrom.equals("local")) {
             if (mType == PhotoAlbumConfig.PHOTO_BUM_IPC_URG || mType == PhotoAlbumConfig.PHOTO_BUM_IPC_WND) {
@@ -592,10 +557,10 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             /** 如果是本地循环视频，不显示分享按钮，但要显示编辑按钮 */
             if (!TextUtils.isEmpty(mFileName) && mFileName.startsWith("NRM")) {
                 mTvShareRightnow.setVisibility(View.GONE);
-                mStartVideoeditLl.setVisibility(View.VISIBLE);
+//                mStartVideoeditLl.setVisibility(View.VISIBLE);
             }
         } else {
-            mStartVideoeditLl.setVisibility(View.GONE);
+//            mStartVideoeditLl.setVisibility(View.GONE);
             mTvShareRightnow.setVisibility(View.GONE);
         }
         mTvT3Hint = (TextView) findViewById(R.id.tv_t3_hint);
@@ -707,17 +672,13 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         }
         if (id == R.id.ll_start_videoedit) {
             pauseVideo();
-            startEditVideo(mPath);
         } else if (id == R.id.imagebutton_back) {
             // 返回
             exit();
         } else if (id == R.id.tv_share_video_rightnow) {
-            if (!SharePlatformUtil.checkShareableWhenNotHotspot(PhotoAlbumPlayer.this)) return;
             pauseVideo();
             ZhugeUtils.eventShare(this, this.getString(R.string.str_zhuge_share_video_player));
             //addTailerByRd();
-            GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
-                    mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
         } else if (id == R.id.back_btn) {
 
             click_back();
@@ -827,11 +788,11 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             lp.leftMargin = 0;
             lp.addRule(RelativeLayout.BELOW, R.id.RelativeLayout_videoinfo);
             mVideoViewLayout.setLayoutParams(lp);
-            if (!mVideoFrom.equals("local")) {
-                mStartVideoeditLl.setVisibility(View.GONE);
-            } else {
-                mStartVideoeditLl.setVisibility(View.VISIBLE);
-            }
+//            if (!mVideoFrom.equals("local")) {
+//                mStartVideoeditLl.setVisibility(View.GONE);
+//            } else {
+//                mStartVideoeditLl.setVisibility(View.VISIBLE);
+//            }
 
         }
         mIsFullScreen = bFull;
@@ -1013,11 +974,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
      * @date 2015年6月5日
      */
     public boolean isNetworkConnected() {
-        ConnectivityManager mConnectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-        if (mNetworkInfo != null) {
-            return mNetworkInfo.isAvailable();
-        }
         return false;
     }
 
@@ -1289,8 +1245,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             e1.printStackTrace();
             Toast.makeText(this, getString(R.string.load_video_fail), Toast.LENGTH_SHORT);
             isExporting = false;
-            GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
-                    false, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
             return;
         }
         VideoFile videoFileInfo = mSimpleExporter.getVideoFileInfo();
@@ -1299,8 +1253,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
         if (capaList == null || capaList.size() == 0) {
             Toast.makeText(this, getString(R.string.not_supported_resolution), Toast.LENGTH_SHORT).show();
             isExporting = false;
-            GolukUtils.startVideoShareActivity(this, mType, mPath, mFileName,
-                    false, mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
             return;
         }
         VideoEncoderCapability vc = null;
@@ -1357,11 +1309,9 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             String nickName;
             if (GolukApplication.getInstance().isUserLoginSucess) {
                 UserInfo userInfo = mApp.getMyInfo();
-                nickName = userInfo.nickname;
             } else {
                 nickName = getString(R.string.str_default_video_edit_user_name);
             }
-            Bitmap tailerBitmap = mSimpleExporter.createTailer(bitmap, nickName, currDate, font);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -1625,370 +1575,6 @@ public class PhotoAlbumPlayer extends BaseActivity implements OnClickListener, O
             }
         }
 
-    }
-
-
-    private SparseArray<ActivityResultHandler> registeredActivityResultHandlers;
-
-
-    private ConfigData initAndGetConfigData() {
-        if (configData == null) {
-            configData = new ConfigData();
-        }
-//        Uri fileUri = Uri.parse("android.resource://"+  BuildConfig.APPLICATION_ID +"/" + R.drawable.img_ae_trailer);
-        String nickName;
-        if (GolukApplication.getInstance().isUserLoginSucess) {
-            UserInfo userInfo = mApp.getMyInfo();
-            nickName = userInfo.nickname;
-        } else {
-            nickName = getString(R.string.str_default_video_edit_user_name);
-        }
-        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
-        configData.musicUrl = HttpManager.getInstance().getWebDirectHost() + "/navidog4MeetTrans/videoCommon.htm?method=musicResources&commlocale=" + GolukUtils.getLanguageAndCountry();
-        return configData;
-    }
-
-
-    private void initEditorUIAndExportConfig() {
-        initAndGetConfigData();
-        // 视频编辑UI配置
-        UIConfiguration uiConfig = new UIConfiguration.Builder()
-                // 设置是否使用自定义相册
-                .useCustomAlbum(true)
-                // 设置向导化
-                .enableWizard(configData.enableWizard)
-                // 设置自动播放
-                .enableAutoRepeat(configData.enableAutoRepeat)
-                // 设置MV和mv网络地址
-                .enableMV(configData.enableMV, ConfigData.WEB_MV_URL)
-                // 配音模式
-                .setVoiceLayoutType(configData.voiceLayoutType)
-                // 设置秀拍客相册支持格式
-                .setAlbumSupportFormat(configData.albumSupportFormatType)
-                // 设置默认进入界面画面比例
-                .setVideoProportion(configData.videoProportionType)
-                // 设置滤镜界面风格
-                .setFilterType(configData.filterLayoutType)
-                // 设置相册媒体选择数量上限(目前只对相册接口生效)
-                .setMediaCountLimit(configData.albumMediaCountLimit)
-                // 设置相册是否显示跳转拍摄按钮(目前只对相册接口生效)
-                .enableAlbumCamera(configData.enableAlbumCamera)
-                // 编辑与导出模块显示与隐藏（默认不设置为显示）
-                .setEditAndExportModuleVisibility(
-                        UIConfiguration.EditAndExportModules.SOUNDTRACK,
-                        configData.enableSoundTrack)
-                .setEditAndExportModuleVisibility(UIConfiguration.EditAndExportModules.DUBBING,
-                        configData.enableDubbing)
-                .setEditAndExportModuleVisibility(UIConfiguration.EditAndExportModules.FILTER,
-                        configData.enableFilter)
-                .setEditAndExportModuleVisibility(UIConfiguration.EditAndExportModules.TITLING,
-                        configData.enableTitling)
-                .setEditAndExportModuleVisibility(
-                        UIConfiguration.EditAndExportModules.SPECIAL_EFFECTS,
-                        configData.enableSpecialEffects)
-                .setEditAndExportModuleVisibility(
-                        UIConfiguration.EditAndExportModules.CLIP_EDITING,
-                        configData.enableClipEditing)
-                // 片段编辑模块显示与隐藏（默认不设置为显示）
-                .setClipEditingModuleVisibility(
-                        UIConfiguration.ClipEditingModules.IMAGE_DURATION_CONTROL,
-                        configData.enableImageDuration)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.EDIT,
-                        configData.enableEdit)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.TRIM,
-                        configData.enableTrim)
-                .setClipEditingModuleVisibility(
-                        UIConfiguration.ClipEditingModules.VIDEO_SPEED_CONTROL,
-                        configData.enableVideoSpeed)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.SPLIT,
-                        configData.enableSplit)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.COPY,
-                        configData.enableCopy)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.PROPORTION,
-                        configData.enableProportion)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.SORT,
-                        configData.enableSort)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.TEXT,
-                        configData.enableText)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.REVERSE,
-                        configData.enableReverse)
-                .setClipEditingModuleVisibility(UIConfiguration.ClipEditingModules.TRANSITION, false)
-                .enableLocalMusic(configData.enableLocalMusic)
-                // 设置自定义的网络音乐
-                .setMusicUrl(configData.musicUrl)
-                // 设置云音乐
-                .setCloudMusicUrl("")
-                // 字幕、特效在mv的上面
-                .enableTitlingAndSpecialEffectOuter(configData.enableTitlingAndSpecialEffectOuter)
-                .get();
-
-        // 导出视频参数配置
-        ExportConfiguration.Builder builder =  new ExportConfiguration.Builder();
-        if (mVideoFrom.equals("local")) {
-            MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-            // Fix Bugly#348187
-            if (!TextUtils.isEmpty(mVideoUrl))
-                retriever.setDataSource(mVideoUrl);
-            // Fix Bugly#1677
-            int width = 0;
-            String widthVideo = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH);
-            if (!TextUtils.isEmpty(widthVideo))
-                width = Integer.valueOf(widthVideo);
-            builder.setVideoMaxWH(width);
-            retriever.release();
-        }
-        ExportConfiguration exportConfig =builder
-                // 设置保存路径，传null或不设置
-                // 将保存至默认路径(即调用SdkEntry.initialize初始时自定义路径）
-                //.setSavePath(null)
-                // 设置片尾图片路径，传null或者不设置 将没有片尾
-                .setTrailerPath(configData.videoTrailerPath)
-                // 设置片尾时长 单位s 默认2s
-                .setTrailerDuration(2)
-//                .setVideoBitRate(bitRate)
-                .setImportVideoDuration(90)
-                // 设置导出视频时长 单位ms 传0或者不设置 将导出完整视频
-                .setVideoDuration(configData.exportVideoDuration)
-                // 设置水印路径
-                //.setWatermarkPath(configData.enableWatermark ? EDIT_WATERMARK_PATH : null)
-                // 设置水印位置
-                .setWatermarkPosition(configData.watermarkShowRectF).get();
-
-        // 获取秀拍客配置服务器
-        SdkService sdkService = SdkEntry.getSdkService();
-        if (null != sdkService) {
-            // 初始化所有配置
-            sdkService.initConfiguration(exportConfig, uiConfig);
-        }
-    }
-
-    private void registerAllResultHandlers() {
-        registerActivityResultHandler(EDIT_REQUEST_CODE, editResultHandler);
-    }
-
-    private void registerActivityResultHandler(int requestCode,
-                                               ActivityResultHandler handler) {
-        if (null == registeredActivityResultHandlers) {
-            registeredActivityResultHandlers = new SparseArray<ActivityResultHandler>();
-        }
-        registeredActivityResultHandlers.put(requestCode, handler);
-    }
-
-
-    private ActivityResultHandler editResultHandler = new ActivityResultHandler() {
-
-        @Override
-        public void onActivityResult(Context context, int resultCode,
-                                     Intent data) {
-            if (resultCode == RESULT_OK && null != data) {
-                String mediaPath = data.getStringExtra(SdkEntry.EDIT_RESULT);
-                if (mediaPath != null) {
-                    Log.d(TAG, mediaPath);
-                    //Toast.makeText(context, mediaPath, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    };
-
-    private interface ActivityResultHandler {
-        /**
-         * 响应
-         *
-         * @param context
-         * @param resultCode The integer result code returned by the child activity
-         *                   through its setResult().
-         * @param data       An Intent, which can return result data to the caller
-         *                   (various data can be attached to Intent "extras").
-         */
-        void onActivityResult(Context context, int resultCode, Intent data);
-    }
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (null != registeredActivityResultHandlers) {
-            ActivityResultHandler handler = registeredActivityResultHandlers
-                    .get(requestCode);
-            if (null != handler) {
-                handler.onActivityResult(this, resultCode, data);
-            }
-        }
-    }
-
-    private void startEditVideo(String videoPath) {
-        //GolukUtils.startAEActivity(this, mType, mPath, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-        initCameraConfig(CameraConfiguration.SQUARE_SCREEN_CAN_CHANGE);
-//                SdkEntry.getSdkService().initConfiguration(
-//                        new CameraConfiguration.Builder().get());
-        ArrayList<String> list = new ArrayList<String>();
-        list.add(videoPath);
-        try {
-            editMedia(this, list, EDIT_REQUEST_CODE);
-        } catch (InvalidArgumentException e) {
-            e.printStackTrace();
-        }
-
-        XLog.tag(LogConst.TAG_PLAYER).i("Start edit video, video path:%s", videoPath);
-    }
-
-
-    private void initCameraConfig(int UIType) {
-        SdkEntry.getSdkService().initConfiguration(
-                new CameraConfiguration.Builder()
-                        // 可设置最小录制时长,0代表不限制
-                        .setVideoMinTime(configData.cameraMinTime)
-                        // 可设置最大录制时长,0代表不限制
-                        .setVideoMaxTime(configData.cameraMaxTime)
-                        // 为true代表多次拍摄，拍摄完成一段之后，将保存至相册并开始下一段拍摄，默认为false单次拍摄，拍摄完成后返回资源地址
-                        .useMultiShoot(configData.useMultiShoot)
-                        /**
-                         * 设置录制时默认界面:<br>
-                         * 默认16：9录制:<br>
-                         * CameraConfiguration. WIDE_SCREEN_CAN_CHANGE<br>
-                         * 默认1：1:<br>
-                         * CameraConfiguration. SQUARE_SCREEN_CAN_CHANGE<br>
-                         * 仅16：9录制:<br>
-                         * CameraConfiguration.ONLY_SCREEN_SCREEN 仅1：1录制:<br>
-                         * CameraConfiguration.ONLY_SQUARE_SCREEN
-                         */
-                        .setCameraUIType(UIType)
-                        // 设置拍摄完成后，是否保存至相册（仅单次拍摄方式有效），同时通过onActivityResult及SIMPLE_CAMERA_REQUEST_CODE返回
-                        .setSingleCameraSaveToAlbum(configData.isSaveToAlbum)
-                        // 设置录制时是否静音，true代表录制后无声音
-                        .setAudioMute(false)
-                        // 设置是否启用人脸贴纸功能
-                        .enableFaceu(configData.isDefaultFace)
-                        // 设置人脸贴纸鉴权证书
-                        //.setPack(authpack.A())
-                        // 设置是否默认为后置摄像头
-                        .setDefaultRearCamera(configData.isDefaultRearCamera)
-                        // 是否显示相册按钮
-                        .enableAlbum(configData.enableAlbum)
-                        // 是否使用自定义相册
-                        .useCustomAlbum(configData.useCustomAlbum)
-                        // 设置隐藏拍摄功能（全部隐藏将强制开启视频拍摄）
-                        .hideMV(configData.hideMV)
-                        .hidePhoto(configData.hidePhoto)
-                        .hideRec(configData.hideRec)
-                        // 设置mv最小时长
-                        .setCameraMVMinTime(configData.cameraMVMinTime)
-                        // 设置mv最大时长
-                        .setCameraMVMaxTime(configData.cameraMVMaxTime)
-                        // 开启相机水印时需注册水印
-                        // SdkEntry.registerOSDBuilder(CameraWatermarkBuilder.class);
-                        // 相机录制水印
-                        .enableWatermark(configData.enableCameraWatermark)
-                        // 相机水印片头
-                        .setCameraTrailerTime(VEOSDBuilder.OSDState.header, 2f)
-                        // 相机录制结束时片尾水印时长(0-1.0 单位：秒)
-                        .setCameraTrailerTime(VEOSDBuilder.OSDState.end,
-                                configData.cameraWatermarkEnd)
-                        // 是否启用防篡改录制
-                        .enableAntiChange(configData.enableAntiChange)
-                        // 启用前置输出时镜像
-                        .enableFrontMirror(configData.enableFrontMirror)
-                        // 固定录制界面的方向
-                        .setOrientation(configData.mRecordOrientation)
-                        // 是否支持录制时播放音乐
-                        .enablePlayMusic(configData.enablePlayMusic)
-                        // 是否美颜
-                        .enableBeauty(configData.enableBeauty).get());
-    }
-
-    private void addTailerByRd() {
-        VideoConfig config = new VideoConfig();
-        config.enableHWEncoder(CoreUtils.hasJELLY_BEAN_MR2());
-        config.enableHWDecoder(CoreUtils.hasJELLY_BEAN_MR2());
-        config.setVideoSize(mVideoView.getVideoWidth(), mVideoView.getVideoHeight());
-        String strSaveMp4FileName = PathUtils.getMp4FileNameForSdcard();
-        String nickName;
-        if (GolukApplication.getInstance().isUserLoginSucess) {
-            UserInfo userInfo = mApp.getMyInfo();
-            nickName = userInfo.nickname;
-        } else {
-            nickName = getString(R.string.str_default_video_edit_user_name);
-        }
-        configData.videoTrailerPath = SDKUtils.createVideoTrailerImage(this, nickName, 480, 50, 50);
-        Trailer trailer = new Trailer(configData.videoTrailerPath, 2, 0.5f);
-        ArrayList<String> videos = new ArrayList<>();
-        videos.add(mPath);
-        ExportVideoLisenter mExportListener = new ExportVideoLisenter(strSaveMp4FileName);
-        try {
-            SdkEntry.exportVideo(this, config, videos, strSaveMp4FileName, null, trailer, mExportListener);
-        } catch (InvalidArgumentException e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    /**
-     * 导出视频的回调演示
-     */
-    private class ExportVideoLisenter implements ExportListener {
-        private String mPath;
-        private AlertDialog mDialog;
-        private ProgressBar mProgressBar;
-        private Button mBtnCancel;
-        private TextView mTvTitle;
-
-        public ExportVideoLisenter(String videoPath) {
-            mPath = videoPath;
-        }
-
-        @Override
-        public void onExportStart() {
-            View v = LayoutInflater.from(PhotoAlbumPlayer.this).inflate(
-                    R.layout.progress_view, null);
-            mTvTitle = (TextView) v.findViewById(R.id.tvTitle);
-            mTvTitle.setText(R.string.exporting);
-            mProgressBar = (ProgressBar) v.findViewById(R.id.pbCompress);
-            mBtnCancel = (Button) v.findViewById(R.id.btnCancelCompress);
-            mBtnCancel.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    SdkEntry.cancelExport();
-                }
-            });
-            mDialog = new AlertDialog.Builder(PhotoAlbumPlayer.this).setView(v)
-                    .show();
-            mDialog.setCanceledOnTouchOutside(false);
-
-            XLog.tag(LogConst.TAG_PLAYER).i("Edit video: OnExportStart");
-        }
-
-        /**
-         * 导出进度回调
-         *
-         * @param progress 当前进度
-         * @param max      最大进度
-         * @return 返回是否继续执行，false为终止导出
-         */
-        @Override
-        public boolean onExporting(int progress, int max) {
-            if (mProgressBar != null) {
-                mProgressBar.setMax(max);
-                mProgressBar.setProgress(progress);
-            }
-
-            XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExporting");
-            return true;
-        }
-
-        @Override
-        public void onExportEnd(int result) {
-            if (mDialog != null && mDialog.isShowing()) {
-                mDialog.dismiss();
-            }
-            if (result >= VirtualVideo.RESULT_SUCCESS) {
-                GolukUtils.startVideoShareActivity(PhotoAlbumPlayer.this, mType, mPath, mFileName, false,
-                        mVideoView.getDuration(), mHP, (PromotionSelectItem) getIntent().getSerializableExtra(ACTIVITY_INFO));
-                XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExportEnd success");
-            } else if (result != VirtualVideo.RESULT_SAVE_CANCEL) {
-                Log.e(TAG, "onExportEnd: " + result);
-                Toast.makeText(PhotoAlbumPlayer.this, getString(R.string.export_error) + result, Toast.LENGTH_LONG).show();
-                XLog.tag(LogConst.TAG_PLAYER).i("Edit video: onExportEnd failed");
-            }
-        }
     }
 
     // T2S 下载

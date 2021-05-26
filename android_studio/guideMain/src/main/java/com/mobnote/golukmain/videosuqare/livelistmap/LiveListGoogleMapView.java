@@ -8,12 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
@@ -26,10 +21,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
-import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
-import com.mobnote.map.BaiduMapTools;
 import com.mobnote.map.GoogleMapTools;
 import com.mobnote.map.LngLat;
 import com.mobnote.util.GolukUtils;
@@ -38,7 +30,6 @@ import com.mobnote.util.JsonUtil;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.location.GolukPosition;
 import cn.com.mobnote.module.page.IPageNotifyFn;
@@ -268,10 +259,6 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
         // 保存经纬度
         LngLat.lng = location.rawLon;
         LngLat.lat = location.rawLat;
-
-        if (ma.mApp.getContext() instanceof CarRecorderActivity) {
-            GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-        }
     }
 
     @Override
@@ -279,9 +266,6 @@ public class LiveListGoogleMapView implements ILiveListMapView ,OnMapReadyCallba
         // 获取map对象
         mGoogleMap = googleMap;
         mGoogleMapTools = new GoogleMapTools(mContext, GolukApplication.getInstance(), mGoogleMap, "Main");
-
-        // 开启定位图层
-        mGoogleMap.setMyLocationEnabled(false);
 
         // 地图加载完成事件
         mGoogleMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {

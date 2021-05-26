@@ -554,4 +554,6 @@
     <string name="osd_rb_blur">Blur</string>
     <string name="osd_rb_pixl">Pixl</string>
     <string name="osd_rb_osd">Dewatermark</string>
+
+    <string name="device">Device</string>
 </resources>

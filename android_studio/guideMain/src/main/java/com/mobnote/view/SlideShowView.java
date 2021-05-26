@@ -1,21 +1,5 @@
 package com.mobnote.view;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-
-import com.bumptech.glide.Glide;
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.newest.BannerSlideBody;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.ZhugeUtils;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -34,6 +18,19 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.LinearLayout;
+
+import com.bumptech.glide.Glide;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.newest.BannerSlideBody;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.ZhugeUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
@@ -133,30 +130,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                 // do nothing
                 Log.d(TAG, "pure picture clicked");
             } else if(VIDEO_DETAIL.equals(type)) {
-                // launch video detail
-                String accessId = tag.data.getAccess();
-                if(null == accessId || accessId.trim().equals("")) {
-                    return;
-                } else {
-                    //视频详情页访问
-                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
-
-                    intent = new Intent(mContext,VideoDetailActivity.class);
-                    intent.putExtra(VideoDetailActivity.VIDEO_ID, tag.data.getAccess());
-                    intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-                    mContext.startActivity(intent);
-                }
             } else if(SPECIAL_LIST.equals(type)) {
-                // launch special list
-                String accessId = tag.data.getAccess();
-                if(null == accessId || accessId.trim().equals("")) {
-                    return;
-                } else {
-                    intent = new Intent(mContext, SpecialListActivity.class);
-                    intent.putExtra("ztid", tag.data.getAccess());
-                    intent.putExtra("title", tag.data.getTitle());
-                    mContext.startActivity(intent);
-                }
             } else if(LIVE_VIDEO.equals(type)) {
                 //TODO: This should proceed in future
 //                intent = new Intent(mContext, LiveActivity.class);
@@ -167,18 +141,6 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
 //                intent.putExtra(LiveActivity.KEY_USERINFO, user);
 //                mContext.startActivity(intent);
             } else if(ACTIVITY_TOGETHER.equals(type)) {
-                // launch topic
-                String accessId = tag.data.getAccess();
-                if(null == accessId || accessId.trim().equals("")) {
-                    return;
-                } else {
-                    intent = new Intent(mContext, ClusterActivity.class);
-                    intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
-//                    intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                    String topName = "#" + tag.data.getTitle();
-                    intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-                    mContext.startActivity(intent);
-                }
             } else if(H5_PAGE.equals(type)) {
                 // launch h5 page
                 String accessId = tag.data.getAccess();
@@ -196,32 +158,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
                     mContext.startActivity(intent);
                 }
             } else if(SPECIAL_SOLO.equals(type)) {
-                String accessId = tag.data.getAccess();
-                if(null == accessId || accessId.trim().equals("")) {
-                    return;
-                } else {
-                    //视频详情页访问
-                    ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
-
-                    intent = new Intent(mContext, VideoDetailActivity.class);
-                    intent.putExtra(VideoDetailActivity.TYPE, "Wonderful");
-                    intent.putExtra("imageurl", tag.data.getPicture());
-                    intent.putExtra("ztid", tag.data.getAccess());
-                    intent.putExtra("title", tag.data.getTitle());
-                    mContext.startActivity(intent);
-                }
             } else if(TAG_PAGE.equals(type)) {
-                // launch topic
-                String accessId = tag.data.getAccess();
-                if (null == accessId || accessId.trim().equals("")) {
-                    return;
-                } else {
-                    intent = new Intent(mContext, ClusterActivity.class);
-                    intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, tag.data.getAccess());
-                    String topName = "#" + tag.data.getTitle();
-                    intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-                    mContext.startActivity(intent);
-                }
             }
         }
     }

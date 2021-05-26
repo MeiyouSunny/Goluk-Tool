@@ -9,11 +9,6 @@ import java.util.regex.Pattern;
 
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.followed.VideoItemClickableSpan;
-import com.mobnote.golukmain.followed.bean.FollowedVideoObjectBean;
-import com.mobnote.golukmain.live.ILive;
-import com.mobnote.golukmain.usercenter.CopyOfShuoMClickableSpan;
-import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.util.GlideUtils;
 
 import android.app.Activity;
@@ -254,41 +249,6 @@ public class UserUtils {
         return true;
     }
 
-    /**
-     * 手机号格式化显示 3-4-4
-     *
-     * @param s
-     * @param cursorPosition
-     * @param before
-     * @param count
-     * @param mEditPhone
-     * @param mTextWatcher
-     */
-    public static void formatPhone(CharSequence s, EditText mEditPhone) {
-        String contents = s.toString();
-        int length = contents.length();
-        if (length == 4) {
-            if (contents.substring(3).equals(new String("-"))) { // -
-                contents = contents.substring(0, 3);
-                mEditPhone.setText(contents);
-                mEditPhone.setSelection(contents.length());
-            } else {
-                contents = contents.substring(0, 3) + "-" + contents.substring(3);
-                mEditPhone.setText(contents);
-                mEditPhone.setSelection(contents.length());
-            }
-        } else if (length == 9) {
-            if (contents.substring(8).equals(new String("-"))) { // -
-                contents = contents.substring(0, 8);
-                mEditPhone.setText(contents);
-                mEditPhone.setSelection(contents.length());
-            } else {
-                contents = contents.substring(0, 8) + "-" + contents.substring(8);
-                mEditPhone.setText(contents);
-                mEditPhone.setSelection(contents.length());
-            }
-        }
-    }
 
     public static boolean emailValidation(String email) {
         String regex = "\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*";
@@ -307,27 +267,6 @@ public class UserUtils {
         return a + "-" + b + "-" + c;
     }
 
-    /**
-     * 通过头像标识，得到头像图片
-     *
-     * @param headStr 头像标识 [1...6]
-     * @return 返回图片id (R.darwable.xxx)
-     * @author jyf
-     * @date 2015年8月7日
-     */
-    public static int getUserHeadImageResourceId(String headStr) {
-        try {
-            if (null != headStr && !"".equals(headStr)) {
-                int utype = Integer.valueOf(headStr);
-                int head = ILive.mHeadImg[utype];
-                return head;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        // 显示默认头像
-        return ILive.mHeadImg[7];
-    }
 
     /**
      * 设置普通评论显示
@@ -344,80 +283,7 @@ public class UserUtils {
         view.setText(style);
     }
 
-    /**
-     * 设置普通评论显示
-     *
-     * @param view
-     * @param nikename
-     * @param text
-     */
-    public static void showCommentText(Context context, boolean isCanClick, VideoSquareInfo videInfo, TextView view,
-                                       String nikename, String text, String got) {
-        boolean isHasGot = false;
-        String all = "";
-        if (null != got && got.length() > 0) {
-            isHasGot = true;
-            got = got.trim();
-        }
 
-        if (null != text) {
-            text = text.trim();
-        }
-        if (isHasGot) {
-            all = nikename + " " + text + " " + got;
-        } else {
-            all = nikename + " " + text;
-        }
-        SpannableString spanttt = new SpannableString(all);
-        spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        if (isHasGot) {
-            if (isCanClick) {
-                ClickableSpan clicksss = new CopyOfShuoMClickableSpan(context, got, videInfo);
-                spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
-                        Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            } else {
-                spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0, 128, 255)), nikename.length() + text.length() + 1,
-                        all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            }
-        }
-        view.setText(spanttt);
-        view.setMovementMethod(LinkMovementMethod.getInstance());
-    }
-
-    public static void showCommentText(Context context, boolean isCanClick, FollowedVideoObjectBean videInfo, TextView view,
-                                       String nikename, String text, String got) {
-        boolean isHasGot = false;
-        String all = "";
-        if (null != got && got.length() > 0) {
-            isHasGot = true;
-            got = got.trim();
-        }
-
-        if (null != text) {
-            text = text.trim();
-        }
-        if (isHasGot) {
-            all = nikename + " " + text + " " + got;
-        } else {
-            all = nikename + " " + text;
-        }
-        SpannableString spanttt = new SpannableString(all);
-        spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0x11, 0x63, 0xa2)), 0, nikename.length(),
-                Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-        if (isHasGot) {
-            if (isCanClick) {
-                ClickableSpan clicksss = new VideoItemClickableSpan(context, got, videInfo);
-                spanttt.setSpan(clicksss, nikename.length() + text.length() + 1, all.length(),
-                        Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            } else {
-                spanttt.setSpan(new ForegroundColorSpan(Color.rgb(0, 128, 255)), nikename.length() + text.length() + 1,
-                        all.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
-            }
-        }
-        view.setText(spanttt);
-        view.setMovementMethod(LinkMovementMethod.getInstance());
-    }
 
     /**
      * 评论列表中回复评论颜色设置
@@ -455,32 +321,6 @@ public class UserUtils {
                 nikename.length() + replyLabel.length() + replyText.length(),
                 Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
         view.setText(style);
-    }
-
-    /**
-     * 根据EditText所在坐标和用户点击的坐标相对比，来判断是否隐藏键盘，因为当用户点击EditText时没必要隐藏
-     *
-     * @param v
-     * @param event
-     * @return
-     */
-    public static boolean isShouldHideInput(View view, MotionEvent event) {
-        if (view != null) {
-            int[] l = {0, 0};
-            view.getLocationInWindow(l);
-            int left = l[0];
-            int top = l[1];
-            int bottom = top + view.getHeight();
-            int right = left + view.getWidth();
-            if (event.getX() > left && event.getX() < right && event.getY() > top && event.getY() < bottom) {
-                // 点击EditText的事件，忽略它。
-                return false;
-            } else {
-                return true;
-            }
-        }
-        // 如果焦点不是EditText则忽略，这个发生在视图刚绘制完，第一个焦点不在EditView上，和用户用轨迹球选择其他的焦点
-        return false;
     }
 
     /**

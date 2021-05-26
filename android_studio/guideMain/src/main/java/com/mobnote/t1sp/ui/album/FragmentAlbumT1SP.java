@@ -29,7 +29,6 @@ import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
 import com.mobnote.golukmain.photoalbum.CustomViewPager;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.promotion.PromotionSelectItem;
 import com.mobnote.t1sp.util.CollectionUtils;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
@@ -87,8 +86,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
     public boolean selectMode = false;
     public boolean fromCloud = false;
 
-    public PromotionSelectItem mPromotionSelectItem;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
@@ -97,13 +94,6 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
             selectMode = bundle.getBoolean(SELECT_MODE, false);
             fromCloud = bundle.getBoolean("from", false);
         }
-
-        if (savedInstanceState == null) {
-            mPromotionSelectItem = (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(ACTIVITY_INFO);
-        } else {
-            mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
-        }
-
         mAlbumRootView = inflater.inflate(R.layout.photo_album_t1sp, container, false);
         editState = false;
         mViewPager = (CustomViewPager) mAlbumRootView.findViewById(R.id.viewpager);

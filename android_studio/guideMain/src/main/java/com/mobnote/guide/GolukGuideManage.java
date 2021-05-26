@@ -92,14 +92,14 @@ public class GolukGuideManage {
 	public void getLocalOnLineVideoList() {
 		mListViews = new ArrayList<View>();
 		mBGBitmap2 = ImageManager.getBitmapFromResource(R.drawable.guide_2);
-		mBGBitmap3 = ImageManager.getBitmapFromResource(R.drawable.guide_3);
+//		mBGBitmap3 = ImageManager.getBitmapFromResource(R.drawable.guide_3);
 		if(GolukApplication.getInstance().isMainland()) {
 			mBGBitmap4 = ImageManager.getBitmapFromResource(R.drawable.guide_4);
 		}
 		mBGBitmap5 = ImageManager.getBitmapFromResource(R.drawable.guide_5);
 		ArrayList<Bitmap> imgId = new ArrayList<>();
 		imgId.add(mBGBitmap2);
-		imgId.add(mBGBitmap3);
+//		imgId.add(mBGBitmap3);
 //		if(GolukApplication.getInstance().isMainland()) {
 //			imgId.add(mBGBitmap4);
 //		}

@@ -4,15 +4,11 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -21,7 +17,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,14 +25,11 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.eventbus.Event;
 import com.mobnote.eventbus.EventUtil;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnLeftClickListener;
 import com.mobnote.golukmain.carrecorder.view.CustomDialog.OnRightClickListener;
-import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.wifibind.WiFiLinkListActivity;
-import com.mobnote.t1sp.ui.album.AlbumCloudAdapterListener;
 import com.mobnote.log.app.LogConst;
+import com.mobnote.t1sp.ui.album.AlbumCloudAdapterListener;
 import com.mobnote.util.GolukUtils;
 import com.mobnote.util.ZhugeUtils;
 
@@ -104,8 +96,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
     public boolean selectMode = false;
     public boolean fromCloud = false;
 
-    public PromotionSelectItem mPromotionSelectItem;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -128,12 +118,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
             parentViewIsMainActivity = bundle.getBoolean(PARENT_VIEW, true);
             selectMode = bundle.getBoolean(SELECT_MODE, false);
             fromCloud = bundle.getBoolean("from", false);
-        }
-
-        if (savedInstanceState == null) {
-            mPromotionSelectItem = (PromotionSelectItem) getActivity().getIntent().getSerializableExtra(ACTIVITY_INFO);
-        } else {
-            mPromotionSelectItem = (PromotionSelectItem) savedInstanceState.getSerializable(ACTIVITY_INFO);
         }
 
         mAlbumRootView = inflater.inflate(R.layout.photo_album, container, false);
@@ -310,11 +294,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
 
     }
 
-    /**
-     * 设置tab页的下划线显示和隐藏
-     *
-     * @param position 位置index
-     */
     public void setItemLineState(int currentType) {
         mTabLocal.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
         mTabTimeslapse.setTextColor(this.getResources().getColor(R.color.photoalbum_text_color_def));
@@ -482,8 +461,6 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
                 }
             }
             CustomDialog mCustomDialog = new CustomDialog(getActivity());
-            mCustomDialog.setMessage(this.getString(R.string.str_photo_deletepromote, selectedListData.size()),
-                    Gravity.CENTER);
             mCustomDialog.setLeftButton(getResources().getString(R.string.str_phote_delete_ok),
                     new OnLeftClickListener() {
                         @Override

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 29
     buildToolsVersion '26.0.2'
     dexOptions {
         jumboMode = true
@@ -51,7 +51,7 @@ android {
 
         international {
             dimension "default"
-            applicationId "com.mobnote.goluk"
+            applicationId "com.tool.goluk"
 //            applicationId "com.mobnote.golukmobile"
             resValue 'string', 'facebook_app_id', '"1693308594241132"'
             resValue 'string', 'ZhugeAppkey', '"373eb7ba28214c33810577442304d9fa"'

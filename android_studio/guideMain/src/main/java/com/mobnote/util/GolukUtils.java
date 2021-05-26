@@ -41,22 +41,11 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.MainActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UpdateActivity;
-import com.mobnote.golukmain.UserLoginActivity;
 import com.mobnote.golukmain.carrecorder.IPCControlManager;
 import com.mobnote.golukmain.carrecorder.entity.VideoInfo;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.cluster.bean.TagTagsBean;
-import com.mobnote.golukmain.fan.FanListActivity;
-import com.mobnote.golukmain.following.FollowingListActivity;
-import com.mobnote.golukmain.internation.login.InternationUserLoginActivity;
-import com.mobnote.golukmain.live.LiveSettingBean;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.livevideo.LiveActivity;
 import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
 import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.golukmain.startshare.VideoShareActivity;
-import com.mobnote.golukmain.usercenter.NewUserCenterActivity;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.golukmain.videosuqare.VideoSquareInfo;
 import com.mobnote.t1sp.ui.album.PhotoAlbumPlayerF5;
 import com.mobnote.user.IPCInfo;
@@ -692,55 +681,8 @@ public class GolukUtils {
         return getNewCategoryShowTime(context, formatter.format(date));
     }
 
-    @SuppressLint("SimpleDateFormat")
     public static String getNewCategoryShowTime(Context context, String date) {
-        final long MINTUE = 60 * 1000;
-        final long HOUR = 60 * MINTUE;
-        final long DAY = 24 * HOUR;
-        final long WEEK = 7 * DAY;
-
-        String time = null;
-        try {
-            long curTime = System.currentTimeMillis();
-            SimpleDateFormat formatter = new SimpleDateFormat(
-                    "yyyyMMddHHmmssSSS");
-            Date strtodate = formatter.parse(date);
-            long historytime = strtodate.getTime();
-
-            Date curDate = new Date(curTime);
-            int curYear = curDate.getYear();
-            int history = strtodate.getYear();
-
-            long diff = Math.abs(historytime - curTime);// 时间差
-            if (curYear == history) {
-                if (diff <= WEEK && diff > DAY) {
-                    return time = context.getString(R.string.str_day_refresh,
-                            (diff / DAY));// 天前更新
-                } else if (diff <= DAY && diff > HOUR) {
-                    return time = context.getString(R.string.str_hours_refresh,
-                            (diff / HOUR));// 小时前更新
-                } else if (diff <= HOUR) {
-                    int min = (int) (diff / MINTUE);
-                    if (min < 1) {
-                        min = 1;
-                    }
-                    return time = context.getString(
-                            R.string.str_minute_refresh, min);// 分钟前更新
-                } else {
-                    SimpleDateFormat jn = new SimpleDateFormat(
-                            context.getString(R.string.str_month_day_refresh));
-                    return jn.format(strtodate);// 今年内：月日更新
-                }
-            } else {
-                SimpleDateFormat jn = new SimpleDateFormat(
-                        context.getString(R.string.str_year_month_day_refresh));
-                return jn.format(strtodate);// 非今年：年月日更新
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        return time;
+        return "";
     }
 
     public static boolean isCanClick = true;
@@ -1059,56 +1001,6 @@ public class GolukUtils {
         return realZone;
     }
 
-    public static void startVideoDetailActivity(Context context, String videoId) {
-        Intent intent = null;
-        intent = new Intent(context, VideoDetailActivity.class);
-        intent.putExtra(VideoDetailActivity.VIDEO_ID, videoId);
-        intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
-        context.startActivity(intent);
-    }
-
-    public static void startFollowingListActivity(Context context, String uId) {
-
-        if (!isNetworkConnected(context)) {
-            Toast.makeText(context, context.getString(R.string.str_network_unavailable),
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Intent intent = null;
-        intent = new Intent(context, FollowingListActivity.class);
-        intent.putExtra("linkuid", uId);
-        context.startActivity(intent);
-    }
-
-    public static void startFanListActivity(Context context, String uId) {
-        if (!isNetworkConnected(context)) {
-            Toast.makeText(context, context.getString(R.string.str_network_unavailable),
-                    Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Intent intent = null;
-        intent = new Intent(context, FanListActivity.class);
-        intent.putExtra("linkuid", uId);
-        context.startActivity(intent);
-    }
-
-    /**
-     * 跳转到登录页面,国内则跳转到国内登录页面，否则跳转到国际版登录页面
-     *
-     * @param context
-     */
-    public static void startLoginActivity(Context context) {
-        Intent intent = new Intent();
-        if (GolukApplication.getInstance().isMainland()) {
-            intent.setClass(context, UserLoginActivity.class);
-        } else {
-            intent.setClass(context, InternationUserLoginActivity.class);
-        }
-        context.startActivity(intent);
-    }
-
     public static void startPhotoAlbumPlayerActivity(Context context, int type, String vidFrom, String path, String filename, String createTime,
                                                      String videoHP, String size, PromotionSelectItem promotionItem) {
         Intent intent = new Intent(context, PhotoAlbumPlayer.class);
@@ -1134,7 +1026,7 @@ public class GolukUtils {
         intent.putExtra(PhotoAlbumPlayer.DATE, createTime);
         intent.putExtra(PhotoAlbumPlayer.HP, videoHP);
         intent.putExtra(PhotoAlbumPlayer.SIZE, size);
-        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
+//        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionItem);
         context.startActivity(intent);
     }
 
@@ -1171,26 +1063,10 @@ public class GolukUtils {
     }
 
     public static void startUserCenterActivity(Context context, String userId) {
-        if (!UserUtils.isNetDeviceAvailable(context)) {
-            GolukUtils.showToast(context, context.getString(R.string.str_network_unavailable));
-            return;
-        }
-        Intent intent = new Intent(context, NewUserCenterActivity.class);
-        intent.putExtra("userId", userId);
-        context.startActivity(intent);
     }
 
     public static void startVideoShareActivity(Context context, int type, String path, String filename,
                                                boolean shouldDelete, int duration, String quality, PromotionSelectItem promotionSelectItem) {
-        Intent intent = new Intent(context, VideoShareActivity.class);
-        intent.putExtra("vidType", type);
-        intent.putExtra("vidPath", path);
-        intent.putExtra("filename", filename);
-        intent.putExtra("shouldDelete", shouldDelete);
-        intent.putExtra("video_duration", duration);
-        intent.putExtra("video_quality", quality);
-        intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionSelectItem);
-        context.startActivity(intent);
     }
 
     public static void startAEActivity(Context context, int type, String path, PromotionSelectItem promotionSelectItem) {
@@ -1201,29 +1077,6 @@ public class GolukUtils {
         intent.putExtra("vidPath", path);
         intent.putExtra(PhotoAlbumPlayer.ACTIVITY_INFO, promotionSelectItem);
         context.startActivity(intent);
-    }
-
-    /**
-     * 判断用户是否是当前登录用户
-     *
-     * @param userId
-     * @return
-     */
-    public static boolean isLoginUser(String userId) {
-        if (!GolukApplication.getInstance().isUserLoginToServerSuccess() || GolukApplication.getInstance().getMyInfo() == null) {
-            return false;
-        }
-        if (TextUtils.isEmpty(userId)) {
-            return false;
-        }
-        String currLoginUserId = GolukApplication.getInstance().getMyInfo().uid;
-        if (TextUtils.isEmpty(currLoginUserId)) {
-            return false;
-        }
-        if (!userId.equals(currLoginUserId)) {
-            return false;
-        }
-        return true;
     }
 
     public static void changePraiseStatus(List<VideoSquareInfo> dataList,
@@ -1249,21 +1102,6 @@ public class GolukUtils {
                 break;
             }
         }
-    }
-
-    public static boolean isAppInstalled(Context context, String appPackage) {
-        final PackageManager packageManager = context.getPackageManager();
-        List<PackageInfo> pinfo = packageManager.getInstalledPackages(0);
-        if (pinfo != null) {
-            for (int i = 0; i < pinfo.size(); i++) {
-                String pn = pinfo.get(i).packageName;
-                if (pn.equals(appPackage)) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
     }
 
     /**
@@ -1332,53 +1170,6 @@ public class GolukUtils {
         if (activity instanceof MainActivity) {
             MainActivity main = (MainActivity) activity;
             main.setTabHostVisibility(visible);
-        }
-    }
-
-    public static void startUserLogin(Context context) {
-        Intent loginIntent = null;
-        if (GolukApplication.getInstance().isMainland() == false) {
-            loginIntent = new Intent(context, InternationUserLoginActivity.class);
-        } else {
-            loginIntent = new Intent(context, UserLoginActivity.class);
-        }
-        context.startActivity(loginIntent);
-    }
-
-    /**
-     * 跳转到百度（谷歌）直播页面
-     * 此段代码用到反射，目的是为了国内国际版的编译和打包的优化
-     *
-     * @param mContext
-     * @param isLive
-     * @param isContinue
-     * @param mSettingData
-     * @param userInfo
-     */
-    public static void startPublishOrWatchLiveActivity(Context mContext, boolean isLive, boolean isContinue, String mVid, LiveSettingBean mSettingData, UserInfo userInfo) {
-        Intent intent = null;
-        String activityNameStr = "";
-        activityNameStr = "com.mobnote.golukmain.livevideo.LiveActivity";
-        try {
-            Class<?> c = Class.forName(activityNameStr);
-            if (null != c) {
-                intent = new Intent(mContext, c);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-        if (intent != null) {
-            intent.putExtra(LiveActivity.KEY_IS_LIVE, isLive);
-            intent.putExtra(LiveActivity.KEY_LIVE_CONTINUE, isContinue);
-            intent.putExtra(LiveActivity.KEY_GROUPID, "");
-            intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-            intent.putExtra(LiveActivity.KEY_VID, mVid);
-            intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-            intent.putExtra(LiveActivity.KEY_LIVE_SETTING_DATA, mSettingData);
-            intent.putExtra(LiveActivity.KEY_USERINFO, userInfo);
-            mContext.startActivity(intent);
-            ((Activity) mContext).finish();
         }
     }
 
@@ -1545,53 +1336,8 @@ public class GolukUtils {
         if (TextUtils.isEmpty(topicId)) {
             return;
         }
-        Intent intent = new Intent(context, ClusterActivity.class);
-        intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID, topicId);
-        intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, "#" + topicName);
-        intent.putExtra(ClusterActivity.CLUSTER_KEY_TYPE, topicType);
-        context.startActivity(intent);
     }
 
-    public static void addTagsViews(final Context context, List<TagTagsBean> tagsList, FlowLayout flowLayout) {
-        if (null == flowLayout) {
-            return;
-        }
-
-        if (null == context || null == tagsList) {
-            flowLayout.setVisibility(View.GONE);
-            return;
-        }
-
-        if (tagsList.size() > 0) {
-            flowLayout.removeAllViews();
-            for (int i = 0; i < tagsList.size(); i++) {
-                final TagTagsBean tagsBean = tagsList.get(i);
-                if (null == tagsBean) {
-                    continue;
-                }
-                TextView tagTV = new TextView(context);
-                RelativeLayout.LayoutParams tagParams = new RelativeLayout.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT);
-                tagTV.setLayoutParams(tagParams);
-                tagTV.setText("#" + tagsBean.name);
-                tagTV.setPadding(0, 0, 20, 0);
-                tagTV.setTextSize(14);
-                tagTV.setTextColor(Color.rgb(0x00, 0x80, 0xff));
-                tagTV.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        GolukUtils.startTagActivity(context, tagsBean.tagid, tagsBean.name, tagsBean.type);
-                    }
-                });
-
-                flowLayout.addView(tagTV);
-            }
-            flowLayout.setVisibility(View.VISIBLE);
-        } else {
-            flowLayout.setVisibility(View.GONE);
-        }
-    }
 
     public static boolean isCurrWifiGolukT(Context context) {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);

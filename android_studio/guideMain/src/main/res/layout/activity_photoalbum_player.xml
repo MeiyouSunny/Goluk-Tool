@@ -50,6 +50,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:textColor="#ffffff"
+            android:visibility="gone"
             android:paddingLeft="8dp"
             android:paddingRight="8dp" />
     </RelativeLayout>
@@ -323,6 +324,7 @@
 
     <LinearLayout
         android:id="@+id/ll_start_videoedit"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="48dp"
         android:orientation="horizontal"

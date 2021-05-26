@@ -39,11 +39,7 @@ import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.BaseActivity;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.carrecorder.view.CustomLoadingDialog;
-import com.mobnote.golukmain.live.UserInfo;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
-import com.mobnote.golukmain.photoalbum.PhotoAlbumPlayer;
-import com.mobnote.golukmain.promotion.PromotionSelectItem;
-import com.mobnote.util.GolukUtils;
+import com.mobnote.golukmain.userlogin.UserInfo;
 import com.mobnote.util.ZhugeUtils;
 import com.mobnote.videoedit.adapter.AEMusicAdapter;
 import com.mobnote.videoedit.adapter.ChannelLineAdapter;
@@ -293,8 +289,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         float position = (mGateLocationX - pX) / width * ((ChunkBean) bean).chunk.getDuration();
         if (position == 0f) {
             String org = getString(R.string.str_ae_can_not_split_from);
-            String formattedOrg = String.format(org, 0);
-            Toast.makeText(this, formattedOrg, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -465,7 +459,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
         String nickName = null;
         if (mApp.isUserLoginSucess) {
             UserInfo userInfo = mApp.getMyInfo();
-            nickName = userInfo.nickname;
         } else {
             nickName = getString(R.string.str_default_video_edit_user_name);
         }
@@ -595,10 +588,6 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
 
                     ZhugeUtils.eventVideoExport(this, durationStr, musicName, mExportQuality);
                 }
-
-                GolukUtils.startVideoShareActivity(AfterEffectActivity.this, PhotoAlbumConfig.PHOTO_BUM_IPC_WND,
-                        retBean.path, retBean.path, false, (int)(getChannelDuration() * 1000), mExportQuality,
-                        (PromotionSelectItem) getIntent().getSerializableExtra(PhotoAlbumPlayer.ACTIVITY_INFO));
                 finishAfterEffect();
             } else {
                 Toast.makeText(this, getString(R.string.str_video_export_failed), Toast.LENGTH_SHORT).show();
@@ -1113,15 +1102,11 @@ public class AfterEffectActivity extends BaseActivity implements AfterEffectList
             public void onClick(View v) {
                 if (getChannelDuration() < VideoEditConstant.MIN_VIDEO_DURATION) {
                     String org = AfterEffectActivity.this.getString(R.string.str_video_export_min_limit);
-                    String minLimit = String.format(org, (int) VideoEditConstant.MIN_VIDEO_DURATION);
-                    Toast.makeText(AfterEffectActivity.this, minLimit, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 if (getChannelDuration() > VideoEditConstant.MAX_VIDEO_DURATION) {
                     String org = AfterEffectActivity.this.getString(R.string.str_video_export_max_limit);
-                    String maxLimit = String.format(org, (int) VideoEditConstant.MAX_VIDEO_DURATION);
-                    Toast.makeText(AfterEffectActivity.this, maxLimit, Toast.LENGTH_SHORT).show();
                     return;
                 }
                 List<VideoEncoderCapability> capaList = mAfterEffect.getSuportedCapability();

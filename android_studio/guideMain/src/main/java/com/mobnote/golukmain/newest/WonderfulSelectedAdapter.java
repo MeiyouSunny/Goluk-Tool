@@ -1,21 +1,5 @@
 package com.mobnote.golukmain.newest;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.UserOpenUrlActivity;
-import com.mobnote.golukmain.carrecorder.util.SoundUtils;
-import com.mobnote.golukmain.carrecorder.util.Utils;
-import com.mobnote.golukmain.cluster.ClusterActivity;
-import com.mobnote.golukmain.special.SpecialListActivity;
-import com.mobnote.golukmain.videodetail.VideoDetailActivity;
-import com.mobnote.util.GlideUtils;
-import com.mobnote.util.GolukConfig;
-import com.mobnote.util.GolukUtils;
-import com.mobnote.util.ZhugeUtils;
-import com.mobnote.view.SlideShowView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -33,8 +17,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import cn.com.tiros.debug.GolukDebugUtils;
+import com.mobnote.golukmain.R;
+import com.mobnote.golukmain.UserOpenUrlActivity;
+import com.mobnote.golukmain.carrecorder.util.SoundUtils;
+import com.mobnote.golukmain.carrecorder.util.Utils;
+import com.mobnote.util.GlideUtils;
+import com.mobnote.util.GolukConfig;
+import com.mobnote.util.GolukUtils;
+import com.mobnote.util.ZhugeUtils;
+import com.mobnote.view.SlideShowView;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import cn.com.tiros.debug.GolukDebugUtils;
 
 public class WonderfulSelectedAdapter extends BaseAdapter {
     private Context mContext = null;
@@ -42,7 +38,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
     private List<Object> mDataList = null;
     private int count = 0;
     private int width = 0;
- //   private Typeface mTypeface = null;
+    //   private Typeface mTypeface = null;
     private final static int BANNER_ITEM = 0;
     private final static int VIDEO_ITEM = 1;
     private BannerDataModel mBannerData = null;
@@ -62,7 +58,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
         mContext = context;
         mDataList = new ArrayList<Object>();
         width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
- //       mTypeface = Typeface//Typeface.createFromAsset(context.getAssets(), "AdobeHebrew-Bold.otf");
+        //       mTypeface = Typeface//Typeface.createFromAsset(context.getAssets(), "AdobeHebrew-Bold.otf");
     }
 
     public void setBannerData(BannerDataModel model) {
@@ -207,16 +203,16 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                 } else {
                     String phoneDate = Utils.getDateStr(System.currentTimeMillis());
                     if (phoneDate.trim().equals(info.jxdate.trim())) {
- //                       holder.mDate.setTypeface(mTypeface);
+                        //                       holder.mDate.setTypeface(mTypeface);
                         holder.mDate.setText(mContext.getString(R.string.str_jx_today));
                         holder.mDate.setVisibility(View.VISIBLE);
                     } else {
                         if (position != 1) {
- //                           holder.mDate.setTypeface(mTypeface);
+                            //                           holder.mDate.setTypeface(mTypeface);
                             holder.mDate.setText(GolukUtils.getTime(info.jxdate));
                             holder.mDate.setVisibility(View.VISIBLE);
                         } else {
- //                           holder.mDate.setTypeface(mTypeface);
+                            //                           holder.mDate.setTypeface(mTypeface);
                             holder.mDate.setText(mContext.getString(R.string.str_jx_other_day));
                             holder.mDate.setVisibility(View.VISIBLE);
                         }
@@ -243,7 +239,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
                             }
                         }
                         for (int i = 1; i <= slidesList.size(); i++) {
-                            slidesList.get(i-1).setIndex(i);
+                            slidesList.get(i - 1).setIndex(i);
                         }
                         bannerHolder.mBannerSlide.clearImages();
                         bannerHolder.mBannerSlide.setImageDataList(slidesList);
@@ -371,9 +367,6 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             } else {
                 //视频详情页访问
                 ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
-                intent = new Intent(mContext, VideoDetailActivity.class);
-                intent.putExtra(VideoDetailActivity.VIDEO_ID, body.getAccess());
-                intent.putExtra(VideoDetailActivity.VIDEO_ISCAN_COMMENT, true);
                 mContext.startActivity(intent);
             }
         } else if (SPECIAL_LIST.equals(type)) {
@@ -382,34 +375,9 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             if (null == accessId || accessId.trim().equals("")) {
                 return;
             } else {
-                intent = new Intent(mContext, SpecialListActivity.class);
-                intent.putExtra("ztid", body.getAccess());
-                intent.putExtra("title", body.getTitle());
-                mContext.startActivity(intent);
             }
         } else if (LIVE_VIDEO.equals(type)) {
-            // TODO: This should proceed in future
-            // intent = new Intent(mContext, LiveActivity.class);
-            // intent.putExtra(LiveActivity.KEY_IS_LIVE, false);
-            // intent.putExtra(LiveActivity.KEY_GROUPID, "");
-            // intent.putExtra(LiveActivity.KEY_PLAY_URL, "");
-            // intent.putExtra(LiveActivity.KEY_JOIN_GROUP, "");
-            // intent.putExtra(LiveActivity.KEY_USERINFO, user);
-            // mContext.startActivity(intent);
         } else if (ACTIVITY_TOGETHER.equals(type)) {
-            // launch topic
-            String accessId = body.getAccess();
-            if (null == accessId || accessId.trim().equals("")) {
-                return;
-            } else {
-                intent = new Intent(mContext, ClusterActivity.class);
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
-                        body.getAccess());
-                // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                String topName = "#" + body.getTitle();
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-                mContext.startActivity(intent);
-            }
         } else if (H5_PAGE.equals(type)) {
             // launch h5 page
             String accessId = body.getAccess();
@@ -428,32 +396,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
             }
         } else if (SPECIAL_SOLO.equals(type)) {
             String accessId = body.getAccess();
-            if (null == accessId || accessId.trim().equals("")) {
-                return;
-            } else {
-                //视频详情页访问
-                ZhugeUtils.eventVideoDetail(mContext, mContext.getString(R.string.str_zhuge_share_video_network_other));
-
-                intent = new Intent(mContext, VideoDetailActivity.class);
-                // intent.putExtra("imageurl", body.getPicture());
-                intent.putExtra("ztid", body.getAccess());
-                intent.putExtra("title", body.getTitle());
-                mContext.startActivity(intent);
-            }
         } else if (TAG_PAGE.equals(type)) {
-            // launch topic
-            String accessId = body.getAccess();
-            if (null == accessId || accessId.trim().equals("")) {
-                return;
-            } else {
-                intent = new Intent(mContext, ClusterActivity.class);
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_ACTIVITYID,
-                        body.getAccess());
-                // intent.putExtra(ClusterActivity.CLUSTER_KEY_UID, "");
-                String topName = "#" + body.getTitle();
-                intent.putExtra(ClusterActivity.CLUSTER_KEY_TITLE, topName);
-                mContext.startActivity(intent);
-            }
         }
     }
 
@@ -476,7 +419,7 @@ public class WonderfulSelectedAdapter extends BaseAdapter {
 //		LinearLayout mVideoLayout;
 //		LinearLayout mLookLayout;
         TextView mVideoNum;
-//        TextView mLookNum;
+        //        TextView mLookNum;
         TextView mDate;
     }
 

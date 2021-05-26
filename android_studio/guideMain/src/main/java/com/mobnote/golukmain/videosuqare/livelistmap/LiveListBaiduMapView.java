@@ -20,8 +20,6 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.mobnote.application.GolukApplication;
 import com.mobnote.golukmain.R;
-import com.mobnote.golukmain.carrecorder.CarRecorderActivity;
-import com.mobnote.golukmain.live.GetBaiduAddress;
 import com.mobnote.golukmain.videosuqare.VideoCategoryActivity;
 import com.mobnote.map.BaiduMapTools;
 import com.mobnote.map.LngLat;
@@ -207,11 +205,6 @@ public class LiveListBaiduMapView implements ILiveListMapView {
 		// 保存经纬度
 		LngLat.lng = location.rawLon;
 		LngLat.lat = location.rawLat;
-
-		if (ma.mApp.getContext() instanceof CarRecorderActivity) {
-			GetBaiduAddress.getInstance().searchAddress(location.rawLat, location.rawLon);
-		}
-
 	}
 
 	/**
