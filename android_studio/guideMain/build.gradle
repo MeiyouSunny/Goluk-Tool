@@ -43,6 +43,7 @@ android {
 }
 
 dependencies {
+    implementation project(path: ':mvp')
     repositories {
         flatDir {
             dirs 'libs'
@@ -103,7 +104,7 @@ dependencies {
 //    implementation 'com.hmcx:dialogger:1.0.2'
 //    implementation 'com.hmcx:repeatview:1.0.9'
 
-    implementation 'com.hmcx:mvp:2.0.2'
+//    implementation 'com.hmcx:mvp:2.0.2'
     implementation 'com.hmcx:rxandroid:1.0.6'
     implementation 'com.hmcx:dialogger:1.0.2'
     implementation 'com.hmcx:repeatview:1.0.9'
@@ -119,7 +120,6 @@ dependencies {
     // butterknife
     implementation 'com.jakewharton:butterknife:8.8.1'
 //    annotationProcessor 'com.jakewharton:butterknife-implementationr:8.5.1'
-//    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     // Downloader
     implementation 'com.liulishuo.filedownloader:library:1.7.1'

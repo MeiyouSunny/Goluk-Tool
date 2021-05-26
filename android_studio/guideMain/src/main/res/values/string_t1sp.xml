@@ -42,7 +42,7 @@
         <item>@string/str_low</item>
         <item>@string/lower</item>
         <item>@string/str_middle</item>
-        <item>@string/higher</item>
+        <item>@string/highter</item>
         <item>@string/str_high</item>
     </array>
     <array name="gsendor_level_values">
