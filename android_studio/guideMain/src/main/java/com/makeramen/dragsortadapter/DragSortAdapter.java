@@ -19,7 +19,7 @@ package com.makeramen.dragsortadapter;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PointF;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 

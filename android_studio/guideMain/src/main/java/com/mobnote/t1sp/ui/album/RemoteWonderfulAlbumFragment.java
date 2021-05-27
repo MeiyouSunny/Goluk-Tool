@@ -1,10 +1,11 @@
 package com.mobnote.t1sp.ui.album;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.mobnote.golukmain.photoalbum.PhotoAlbumConfig;
+
+import androidx.annotation.Nullable;
 
 /**
  * T1SP远程精彩视频列表

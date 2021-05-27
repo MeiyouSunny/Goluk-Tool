@@ -3,11 +3,13 @@ package com.makeramen.dragsortadapter;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import java.lang.ref.WeakReference;
+
+import androidx.annotation.NonNull;
 
 public class NoForegroundShadowBuilder extends DragSortShadowBuilder {
 

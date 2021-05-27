@@ -105,7 +105,7 @@
         android:layout_marginRight="7dp"
         android:background="@color/edit_music_divider"/>
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewFilter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

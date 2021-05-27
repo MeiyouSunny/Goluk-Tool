@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.widget.Toast;
 
 import com.mobnote.application.GlobalWindow;
@@ -19,6 +18,8 @@ import com.mobnote.golukmobile.GuideActivity;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
+
+import androidx.fragment.app.FragmentActivity;
 
 /**
  * 基础Activity

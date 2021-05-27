@@ -1,11 +1,7 @@
 package com.mobnote.videoedit.adapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Point;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,11 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
-import cn.npnt.ae.AfterEffect;
-import cn.npnt.ae.model.Chunk;
-import cn.npnt.ae.model.ChunkThumbs;
-import cn.npnt.ae.model.VideoThumb;
-
 import com.makeramen.dragsortadapter.DragSortAdapter;
 import com.makeramen.dragsortadapter.NoForegroundShadowBuilder;
 import com.mobnote.golukmain.R;
@@ -34,9 +25,17 @@ import com.mobnote.videoedit.bean.DummyHeaderBean;
 import com.mobnote.videoedit.bean.ProjectItemBean;
 import com.mobnote.videoedit.bean.TailBean;
 import com.mobnote.videoedit.bean.TransitionBean;
-import com.mobnote.videoedit.constant.VideoEditConstant;
 import com.mobnote.videoedit.utils.DeviceUtil;
 import com.mobnote.videoedit.utils.VideoEditUtils;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
+import cn.npnt.ae.AfterEffect;
+import cn.npnt.ae.model.Chunk;
+import cn.npnt.ae.model.ChunkThumbs;
+import cn.npnt.ae.model.VideoThumb;
 
 
 public class ChannelLineAdapter extends

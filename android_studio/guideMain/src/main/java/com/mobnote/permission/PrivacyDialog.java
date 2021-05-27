@@ -12,12 +12,14 @@ import android.view.WindowManager;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.UserOpenUrlActivity;
 
+import androidx.appcompat.app.AlertDialog;
+
 public class PrivacyDialog {
 
     public void showClauseDialog(final Context context, final OnPrivacySelectListener listener) {
         final View dialogView = LayoutInflater.from(context)
                 .inflate(R.layout.dialog_privacy, null);
-        final Dialog dialog = new android.support.v7.app.AlertDialog
+        final Dialog dialog = new AlertDialog
                 .Builder(context)
                 .setView(dialogView)
                 .setCancelable(false)

@@ -3,7 +3,7 @@ package com.rd.veuisdk.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 import android.view.View;
 
 import com.rd.veuisdk.utils.SysAlertDialog;

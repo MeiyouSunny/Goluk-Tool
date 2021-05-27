@@ -69,7 +69,7 @@
     -->
     <!-- </FrameLayout> -->
 
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_ae_music"
         android:layout_width="match_parent"
         android:layout_height="143dp"
@@ -258,7 +258,7 @@
             android:layout_height="45dp"
             android:layout_centerInParent="true" >
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_video_edit_pic_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

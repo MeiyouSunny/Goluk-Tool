@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +25,8 @@ import com.mobnote.golukmobile.GuideActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * @ 功能描述:引导页管理
@@ -197,7 +197,7 @@ public class GolukGuideManage {
 	/**
 	 * 视频切换事件监听
 	 */
-	protected class GuideImageChangeListener implements OnPageChangeListener {
+	protected class GuideImageChangeListener implements ViewPager.OnPageChangeListener {
 		@Override
 		public void onPageSelected(int arg0) {
 			// arg0是表示你当前选中的页面，这事件是在你页面跳转完毕的时候调用的。

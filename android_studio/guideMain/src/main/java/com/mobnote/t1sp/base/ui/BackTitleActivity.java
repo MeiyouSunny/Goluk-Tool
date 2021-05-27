@@ -1,19 +1,16 @@
 package com.mobnote.t1sp.base.ui;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mobnote.golukmain.R2;
-import com.mobnote.t1sp.base.control.BackViewControl;
-import com.mobnote.t1sp.base.control.BindViewControl;
-import com.mobnote.t1sp.base.control.TitleViewControl;
 import com.mobnote.t1sp.base.dialog.LoadingDialogHolder;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import butterknife.BindView;
 import likly.dialogger.Dialogger;
 import likly.mvp.Presenter;

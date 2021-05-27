@@ -3,9 +3,6 @@ package com.mobnote.golukmain;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +23,8 @@ import com.mobnote.golukmain.videosuqare.VideoSquareAdapter;
 import com.mobnote.util.SharedPrefUtil;
 import com.mobnote.util.ZhugeUtils;
 
+import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 import cn.com.mobnote.eventbus.EventLocationFinish;
 import cn.com.tiros.baidu.BaiduLocation;
 import cn.com.tiros.debug.GolukDebugUtils;
@@ -121,7 +120,7 @@ public class FragmentDiscover extends Fragment implements OnClickListener {
         GolukApplication.getInstance().getVideoSquareManager().shareVideoUp(channel, shareVideoId);
     }
 
-    private OnPageChangeListener opcl = new OnPageChangeListener() {
+    private ViewPager.OnPageChangeListener opcl = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageSelected(int page) {
             GolukDebugUtils.e(TAG, "onPageSelected:" + page);

@@ -1,11 +1,12 @@
 package com.makeramen.dragsortadapter;
 
 import android.graphics.PointF;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
 import android.view.DragEvent;
 import android.view.View;
+
 import java.lang.ref.WeakReference;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import static java.lang.Float.MIN_VALUE;
 
@@ -15,7 +16,6 @@ final class DragManager implements View.OnDragListener {
 	private final DragSortAdapter<?> adapter;
 	private long draggingId = RecyclerView.NO_ID;
 	private final PointF nextMoveTouchPoint = new PointF(MIN_VALUE, MIN_VALUE);
-	@Nullable
 	private DragInfo lastDragInfo;
 
 	public DragManager(RecyclerView recyclerView, DragSortAdapter<?> adapter) {
@@ -177,7 +177,6 @@ final class DragManager implements View.OnDragListener {
 		return draggingId;
 	}
 
-	@Nullable
 	DragInfo getLastDragInfo() {
 		return lastDragInfo;
 	}

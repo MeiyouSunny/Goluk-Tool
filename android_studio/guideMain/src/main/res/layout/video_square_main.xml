@@ -55,12 +55,12 @@
             android:contentDescription="@string/imgdes" />
     </RelativeLayout>
 
-    <android.support.v4.view.ViewPager
+    <androidx.core.view.ViewPager
         android:id="@+id/mViewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/title" >
-    </android.support.v4.view.ViewPager>
+    </androidx.core.view.ViewPager>
 
 </RelativeLayout>

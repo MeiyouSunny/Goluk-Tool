@@ -14,8 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        app:canRefresh="false"
-        app:hasMore="false"
         app:viewHolderClass="com.mobnote.t1sp.ui.setting.selection.SettingSelectionViewHolder"
         app:viewHolderLayout="@layout/viewholder_setting_selection_item"/>
 

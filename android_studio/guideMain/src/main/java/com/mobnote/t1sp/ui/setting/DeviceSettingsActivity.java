@@ -1,7 +1,6 @@
 package com.mobnote.t1sp.ui.setting;
 
 import android.content.Intent;
-import android.support.annotation.StringRes;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.CompoundButton;
@@ -33,6 +32,7 @@ import com.mobnote.t1sp.ui.setting.version.VersionInfoActivity;
 import com.mobnote.t1sp.util.StringUtil;
 import com.mobnote.t1sp.util.ViewUtil;
 
+import androidx.annotation.StringRes;
 import butterknife.BindView;
 import butterknife.OnClick;
 import de.greenrobot.event.EventBus;

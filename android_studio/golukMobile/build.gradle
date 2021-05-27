@@ -3,7 +3,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 29
-    buildToolsVersion '26.0.2'
+    buildToolsVersion '30.0.2'
     dexOptions {
         jumboMode = true
         javaMaxHeapSize "4g"
@@ -86,13 +86,13 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
         debug {
             minifyEnabled false
             zipAlignEnabled false
             shrinkResources false
-            signingConfig signingConfigs.release
+//            signingConfig signingConfigs.release
         }
     }
 

@@ -62,7 +62,7 @@ public class SelectionActivity extends BackTitleActivity implements OnHolderClic
         if (mValues != null && !mValues.isEmpty()) {
             mRepeatView.viewManager().bind(mValues);
             mRepeatView.layoutAdapterManager().showRepeatView();
-            mRepeatView.complete();
+//            mRepeatView.complete();
         }
 
         mType = data.getIntExtra("type", -1);

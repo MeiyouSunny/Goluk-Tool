@@ -6,9 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -31,6 +28,9 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 /**
  * ViewPager实现的轮播图广告自定义视图，如京东首页的广告轮播图效果；
@@ -348,7 +348,7 @@ public class SlideShowView extends FrameLayout implements View.OnClickListener{
      * ViewPager的监听器
      * 当ViewPager中页面的状态发生改变时调用
      */
-    private class MyPageChangeListener implements OnPageChangeListener {
+    private class MyPageChangeListener implements ViewPager.OnPageChangeListener {
         boolean isAutoPlay = false;
 
         @Override

@@ -11,7 +11,6 @@ import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
-import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -100,6 +99,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
+import androidx.multidex.MultiDexApplication;
 import cn.com.mobnote.logic.GolukLogic;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerFn;
@@ -115,8 +115,6 @@ import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import likly.dollar.$;
 import likly.mvp.MVP;
-
-import static com.mobnote.videoedit.constant.VideoEditConstant.EXPORT_FOLDER_NAME;
 
 //import com.mobnote.golukmain.xdpush.GolukNotification;
 

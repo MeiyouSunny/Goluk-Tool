@@ -13,7 +13,6 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +35,7 @@ import com.mobnote.permission.PrivacyDialog;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 import pub.devrel.easypermissions.EasyPermissions;

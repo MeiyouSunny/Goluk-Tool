@@ -188,7 +188,7 @@
         </LinearLayout>
 
         <!--文字-->
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -205,7 +205,7 @@
             android:layout_marginRight="@dimen/dimen_10">
 
             <!--颜色-->
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_color"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

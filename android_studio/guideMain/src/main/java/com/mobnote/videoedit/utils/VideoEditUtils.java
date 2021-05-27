@@ -1,7 +1,6 @@
 package com.mobnote.videoedit.utils;
 
 import android.graphics.Bitmap;
-import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
 import com.mobnote.videoedit.bean.ChunkBean;
@@ -12,6 +11,7 @@ import com.mobnote.videoedit.constant.VideoEditConstant;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
 import cn.npnt.ae.AfterEffect;
 import cn.npnt.ae.model.Chunk;
 import cn.npnt.ae.model.ChunkThumbs;

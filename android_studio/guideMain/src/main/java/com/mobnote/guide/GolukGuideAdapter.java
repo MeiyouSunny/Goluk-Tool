@@ -1,14 +1,16 @@
 package com.mobnote.guide;
 
-import java.util.List;
+import android.os.Parcelable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.mobnote.golukmain.carrecorder.util.SoundUtils;
 
-import android.os.Parcelable;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.ViewGroup;
+import java.util.List;
+
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 /**
  * <pre>
  * 1.类命名首字母大写
@@ -30,7 +32,7 @@ import android.view.ViewGroup;
  * 
  */
 
-public class GolukGuideAdapter extends PagerAdapter{
+public class GolukGuideAdapter extends PagerAdapter {
 	public List<View> views;
 	private int width = SoundUtils.getInstance().getDisplayMetrics().widthPixels;
 	private int height = SoundUtils.getInstance().getDisplayMetrics().heightPixels;

@@ -1,7 +1,7 @@
 package com.mobnote.t1sp.base.ui;
 
 import android.app.Activity;
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.mobnote.t1sp.base.control.ViewControlBinder;
 

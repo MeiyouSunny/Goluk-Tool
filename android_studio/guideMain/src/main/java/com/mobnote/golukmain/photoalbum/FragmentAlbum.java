@@ -4,10 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -36,6 +32,10 @@ import com.mobnote.util.ZhugeUtils;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import cn.com.tiros.debug.GolukDebugUtils;
 import de.greenrobot.event.EventBus;
 
@@ -153,7 +153,7 @@ public class FragmentAlbum extends Fragment implements OnClickListener, AlbumClo
         mViewPager.setCurrentItem(0);
         initView();
         mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 GolukDebugUtils.e("", "crash zh start App ------ FragmentAlbum-----onPageSelected------------:");

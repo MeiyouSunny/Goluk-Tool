@@ -6,7 +6,6 @@ import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.StringRes;
 import android.text.TextUtils;
 
 import com.liulishuo.filedownloader.BaseDownloadTask;
@@ -24,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.StringRes;
 import de.greenrobot.event.EventBus;
 
 /**

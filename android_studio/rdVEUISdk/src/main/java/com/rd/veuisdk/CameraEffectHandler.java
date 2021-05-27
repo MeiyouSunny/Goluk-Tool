@@ -5,7 +5,7 @@ import android.content.res.Resources;
 import android.hardware.Camera;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 

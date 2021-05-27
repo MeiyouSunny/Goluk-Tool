@@ -1,15 +1,15 @@
 package com.mobnote.golukmain.videosuqare;
 
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.mobnote.golukmain.newest.NewestListView;
 import com.mobnote.golukmain.newest.WonderfulSelectedListView;
 import com.mobnote.util.ZhugeUtils;
 
+import androidx.viewpager.widget.PagerAdapter;
 import cn.com.tiros.debug.GolukDebugUtils;
-import android.content.Context;
-import android.content.Intent;
-import android.support.v4.view.PagerAdapter;
-import android.view.View;
-import android.view.ViewGroup;
 
 public class VideoSquareAdapter extends PagerAdapter {
 	private Context mContext = null;

@@ -88,7 +88,7 @@
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_15"/>
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"

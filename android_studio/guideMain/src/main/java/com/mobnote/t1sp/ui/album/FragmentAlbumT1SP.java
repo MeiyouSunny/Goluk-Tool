@@ -2,13 +2,7 @@ package com.mobnote.t1sp.ui.album;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +29,12 @@ import com.mobnote.util.ZhugeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 public class FragmentAlbumT1SP extends Fragment implements OnClickListener, AlbumCloudAdapterListener {
 
@@ -114,7 +114,7 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
         mViewPager.setCurrentItem(0);
         initView();
         mViewPager.setAdapter(new MyViewPagerAdapter(getChildFragmentManager()));
-        mViewPager.setOnPageChangeListener(new OnPageChangeListener() {
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 // 移除FooterView
@@ -344,7 +344,8 @@ public class FragmentAlbumT1SP extends Fragment implements OnClickListener, Albu
                 }
             }
             CustomDialog mCustomDialog = new CustomDialog(getActivity());
-            mCustomDialog.setMessage(this.getString(R.string.str_photo_deletepromote, selectedListData.size()),
+//            mCustomDialog.setMessage(getString(R.string.str_photo_deletepromote, selectedListData.size()),
+            mCustomDialog.setMessage(getString(R.string.str_photo_deletepromote),
                     Gravity.CENTER);
             mCustomDialog.setLeftButton(getResources().getString(R.string.str_phote_delete_ok),
                     new OnLeftClickListener() {

@@ -1,10 +1,7 @@
 package com.mobnote.golukmain.photoalbum;
 
-
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +13,8 @@ import com.mobnote.eventbus.EventAddTailer;
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.RingView;
 
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import cn.npnt.ae.AfterEffectListener.SimpleExporterListener;
 import cn.npnt.ae.SimpleExporter;
 import cn.npnt.ae.exceptions.EffectException;

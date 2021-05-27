@@ -18,7 +18,6 @@ package com.makeramen.dragsortadapter;
 
 import android.graphics.Canvas;
 import android.graphics.Point;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 
@@ -35,8 +34,8 @@ public class DragSortShadowBuilder extends View.DragShadowBuilder {
 	}
 
 	@Override
-	public void onProvideShadowMetrics(@NonNull Point shadowSize,
-			@NonNull Point shadowTouchPoint) {
+	public void onProvideShadowMetrics(Point shadowSize,
+			Point shadowTouchPoint) {
 		final View view = getView();
 		if (view != null) {
 			shadowSize.set(view.getWidth(), view.getHeight());
@@ -47,7 +46,7 @@ public class DragSortShadowBuilder extends View.DragShadowBuilder {
 	}
 
 	@Override
-	public void onDrawShadow(@NonNull Canvas canvas) {
+	public void onDrawShadow(Canvas canvas) {
 		super.onDrawShadow(canvas);
 	}
 }

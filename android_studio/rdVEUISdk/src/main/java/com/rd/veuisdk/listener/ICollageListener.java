@@ -1,6 +1,6 @@
 package com.rd.veuisdk.listener;
 
-import android.support.v4.app.Fragment;
+import androidx.fragment.app.Fragment;
 
 import com.rd.veuisdk.model.CollageInfo;
 

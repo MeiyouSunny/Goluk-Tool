@@ -1,9 +1,6 @@
 package com.mobnote.view;
 
-import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +9,9 @@ import android.widget.TextView;
 
 import com.mobnote.golukmain.R;
 import com.mobnote.golukmain.videosuqare.RingView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 
 /**
  * Created by crack on 2016/6/13.
