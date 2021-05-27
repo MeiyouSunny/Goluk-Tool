@@ -5,7 +5,7 @@
 	android:layout_height="match_parent">
 	
 	<!-- 推送消息滚动 -->
-	<androidx.core.view.ViewPager
+	<androidx.viewpager.widget.ViewPager
 		android:id="@+id/vPager"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
