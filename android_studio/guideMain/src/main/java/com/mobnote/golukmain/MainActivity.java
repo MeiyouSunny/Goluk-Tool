@@ -1,5 +1,6 @@
 package com.mobnote.golukmain;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -8,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.net.Uri;
@@ -75,6 +77,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import cn.com.mobnote.logic.GolukModule;
 import cn.com.mobnote.module.ipcmanager.IPCManagerAdapter;
 import cn.com.mobnote.module.location.LocationNotifyAdapter;
@@ -217,6 +221,7 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, IReq
 
         // 申请悬浮窗权限
         requestOverlayAuthority();
+        requestWriteStorage();
     }
 
     private void initConfig() {
@@ -344,21 +349,21 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, IReq
 
     public void connectGoluk(boolean returnToMainActivityWhenSuccess) {
         if (mApp.isIpcLoginSuccess) {
-            if (mApp.canNotUse()) {
-                GolukUtils.showToast(this, getResources().getString(R.string.interantion_ban_mainland_goluk));
+//            if (mApp.canNotUse()) {
+//                GolukUtils.showToast(this, getResources().getString(R.string.interantion_ban_mainland_goluk));
+//            } else {
+            Intent intent = new Intent();
+            if (mApp.getIPCControlManager().isT2S()) {
+                // T2S
+                intent.setClass(this, CarRecorderT1SPActivity.class);
             } else {
-                Intent intent = new Intent();
-                if (mApp.getIPCControlManager().isT2S()) {
-                    // T2S
-                    intent.setClass(this, CarRecorderT1SPActivity.class);
-                } else {
-                    // Other
-                    intent.setClass(this, CarRecorderActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                }
-                startActivity(intent);
+                // Other
+                intent.setClass(this, CarRecorderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
             }
+            startActivity(intent);
+//            }
             return;
         }
         Intent intent = new Intent(MainActivity.this, WiFiLinkListActivity.class);
@@ -399,7 +404,6 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, IReq
             }
         }
     }
-
 
     /**
      * 初始化第三方SDK
@@ -1102,6 +1106,18 @@ public class MainActivity extends BaseActivity implements WifiConnCallBack, IReq
                     Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + getPackageName()));
                     startActivityForResult(intent, REQUEST_CODE_OVERLAYS);
                     return;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void requestWriteStorage() {
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 }
             }
         } catch (Exception e) {

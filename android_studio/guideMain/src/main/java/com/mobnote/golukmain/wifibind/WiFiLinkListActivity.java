@@ -568,18 +568,18 @@ public class WiFiLinkListActivity extends BaseActivity implements OnClickListene
                 WiFiInfo.IPC_MODEL = model;
                 XLog.tag(LogConst.TAG_CONNECTION).i("Connect IPC info: model:%s, version:%s", model, version);
                 int regionType = GolukUtils.judgeIPCDistrict(model, version);
-                if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
-                    mApp.isIpcConnSuccess = false;
-                    mCurrentState = STATE_FAILED;
-                    mBaseHandler.sendEmptyMessage(MSG_H_REGION);
-                    collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version forbidden");
-                    return false;
-                } else {
+//                if (regionType == GolukUtils.GOLUK_APP_VERSION_MAINLAND && !mApp.isMainland()) {
+//                    mApp.isIpcConnSuccess = false;
+//                    mCurrentState = STATE_FAILED;
+//                    mBaseHandler.sendEmptyMessage(MSG_H_REGION);
+//                    collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version forbidden");
+//                    return false;
+//                } else {
                     mCurrentState = STATE_SUCCESS;
                     mNeverReceiveMessage = false;
                     collectLog(GolukDebugUtils.WIFI_CONNECT_LOG_TAG, "2.3.2 International check version allowed");
                     doConnect();
-                }
+//                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }

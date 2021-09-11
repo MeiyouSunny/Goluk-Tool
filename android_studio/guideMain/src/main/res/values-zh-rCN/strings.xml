@@ -209,7 +209,7 @@
     <string name="unbind_camera">名称</string>
     <string name="change_wifi_name">密码</string>
     <string name="unbind_camera_update_text">极路客固件升级</string>
-    <string name="app_name">Goluk</string>
+    <string name="app_name">极路客</string>
     <string name="str_ipc_number_text">设备编号：</string>
     <string name="str_ipc_version_text">固件版本：</string>
     <string name="unbind_camera_change_wifi_pwd_hint">当手机与极路客成功连接可修改密码</string>

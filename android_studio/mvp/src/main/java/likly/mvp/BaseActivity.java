@@ -10,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import butterknife.ButterKnife;
 
 public abstract class BaseActivity<P extends Presenter> extends AppCompatActivity implements ViewHandler<P> {
     private MVP mMVP;
@@ -22,6 +23,10 @@ public abstract class BaseActivity<P extends Presenter> extends AppCompatActivit
         this.mMVP = new MVP();
         this.mMVP.onCreate();
         this.mMVP.bind(this);
+
+        setContentView(initLayoutResId());
+        ButterKnife.bind(this);
+        onViewCreated();
     }
 
     public P getPresenter() {

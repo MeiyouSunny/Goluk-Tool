@@ -986,6 +986,9 @@ public class CarRecorderT1SPActivity extends AbsActivity<CarRecorderT1SPPresente
     }
 
     private void preExit() {
+        if(mApp == null)
+            return;
+
         if (mApp.getDownLoadList() == null || mApp.getDownLoadList().size() == 0 || !mApp.isDownloading()) {
             exit();
             return;
