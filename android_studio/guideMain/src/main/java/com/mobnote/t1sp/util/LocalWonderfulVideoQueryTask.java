@@ -8,8 +8,6 @@ import com.mobnote.golukmain.photoalbum.FileInfoManagerUtils;
 import com.mobnote.util.GolukVideoUtils;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -45,12 +43,12 @@ public class LocalWonderfulVideoQueryTask extends AsyncTask<Void, String, String
             }
         }
 
-        Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
-            @Override
-            public int compare(VideoInfo lhs, VideoInfo rhs) {
-                return GolukUtils.parseStringToMilli(rhs.videoCreateDate) > GolukUtils.parseStringToMilli(lhs.videoCreateDate) ? 1 : -1;
-            }
-        });
+//        Collections.sort(mLocalListData, new Comparator<VideoInfo>() {
+//            @Override
+//            public int compare(VideoInfo lhs, VideoInfo rhs) {
+//                return GolukUtils.parseStringToMilli(rhs.videoCreateDate) > GolukUtils.parseStringToMilli(lhs.videoCreateDate) ? 1 : -1;
+//            }
+//        });
 
         final List<VideoInfo> videoInfos = new ArrayList<>(2);
         if (mLocalListData.size() >= 1)
